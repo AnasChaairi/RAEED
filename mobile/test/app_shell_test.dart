@@ -14,6 +14,8 @@ import 'package:raeed/core/session/token_store.dart';
 import 'package:raeed/core/theme/raeed_theme.dart';
 import 'package:raeed/features/auth/presentation/consent_screen.dart';
 import 'package:raeed/features/auth/presentation/login_screen.dart';
+import 'package:raeed/features/children/presentation/child_profile_screen.dart';
+import 'package:raeed/features/children/presentation/home_screen.dart';
 
 /// Widget-level checks on the app shell (`RAEED-6`): the routing table and its
 /// guards, RTL-by-default, the theme reaching widgets, and the 130%+ text
@@ -96,17 +98,18 @@ void main() {
       expect(Directionality.of(context), TextDirection.ltr);
     });
 
-    testWidgets('all three locales resolve their strings', (tester) async {
-      for (final locale in supportedLocales) {
+    for (final locale in supportedLocales) {
+      testWidgets('${locale.languageCode} resolves its strings', (
+        tester,
+      ) async {
+        // One pumpApp per test: rebuilding the whole app several times inside
+        // a single testWidgets trips a framework assertion on a retained focus
+        // scope, which is a test-harness artefact rather than a real defect.
         await pumpApp(tester, locale: locale);
         final context = tester.element(find.byType(Scaffold).first);
-        expect(
-          AppL10n.of(context).appName,
-          isNotEmpty,
-          reason: '${locale.languageCode} must have strings',
-        );
-      }
-    });
+        expect(AppL10n.of(context).appName, isNotEmpty);
+      });
+    }
   });
 
   group('theme', () {
@@ -158,7 +161,7 @@ void main() {
 
     testWidgets('a consented parent reaches home', (tester) async {
       await pumpApp(tester);
-      expect(find.text('Home'), findsWidgets);
+      expect(find.byType(HomeScreen), findsOneWidget);
     });
 
     testWidgets('a parent asking for the dashboard is sent home', (
@@ -166,7 +169,7 @@ void main() {
     ) async {
       await pumpApp(tester, initialLocation: AppRoutes.dashboard);
       expect(find.text('Dashboard'), findsNothing);
-      expect(find.text('Home'), findsWidgets);
+      expect(find.byType(HomeScreen), findsOneWidget);
     });
 
     testWidgets('an executive reaches the dashboard', (tester) async {
@@ -182,7 +185,10 @@ void main() {
       tester,
     ) async {
       await pumpApp(tester, initialLocation: AppRoutes.childPath('child-42'));
-      expect(find.text('Child child-42'), findsWidgets);
+      final screen = tester.widget<ChildProfileScreen>(
+        find.byType(ChildProfileScreen),
+      );
+      expect(screen.childId, 'child-42');
     });
 
     testWidgets('an unknown deep link shows the not-found screen', (

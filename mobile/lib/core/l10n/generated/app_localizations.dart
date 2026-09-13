@@ -482,6 +482,198 @@ abstract class AppL10n {
   /// In ar, this message translates to:
   /// **'العودة إلى الرئيسية'**
   String get notFoundGoHome;
+
+  /// Parent home screen title.
+  ///
+  /// In ar, this message translates to:
+  /// **'أطفالي'**
+  String get homeTitleParent;
+
+  /// No description provided for @homeTitleEducator.
+  ///
+  /// In ar, this message translates to:
+  /// **'مجموعاتي'**
+  String get homeTitleEducator;
+
+  /// No description provided for @homeTitleExecutive.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأطفال'**
+  String get homeTitleExecutive;
+
+  /// Should not occur post-onboarding; if it does it signals a data problem, so the copy points at the association rather than at the user.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد أي طفل مرتبط بحسابك'**
+  String get homeEmptyTitle;
+
+  /// No description provided for @homeEmptyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى التواصل مع إدارة الأكاديمية لربط طفلك بحسابك.'**
+  String get homeEmptyBody;
+
+  /// A child's age. Arabic needs all six categories: 3-10 take few, 11-99 take many.
+  ///
+  /// In ar, this message translates to:
+  /// **'{years, plural, zero{أقل من سنة} one{سنة واحدة} two{سنتان} few{{years} سنوات} many{{years} سنة} other{{years} سنة}}'**
+  String childAgeYears(int years);
+
+  /// No description provided for @childNoSessionToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا حصة اليوم'**
+  String get childNoSessionToday;
+
+  /// No description provided for @childNextSession.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحصة القادمة: {when}'**
+  String childNextSession(String when);
+
+  /// A presence confirmation is open and unanswered — tappable.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار تأكيد الحضور'**
+  String get statusAwaitingAnswer;
+
+  /// No description provided for @statusPresenceConfirmed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤكَّد الحضور'**
+  String get statusPresenceConfirmed;
+
+  /// No description provided for @statusPresenceDeclined.
+  ///
+  /// In ar, this message translates to:
+  /// **'غياب معلَن'**
+  String get statusPresenceDeclined;
+
+  /// No description provided for @statusPresenceLate.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتأخر'**
+  String get statusPresenceLate;
+
+  /// No description provided for @statusPresent.
+  ///
+  /// In ar, this message translates to:
+  /// **'حاضر'**
+  String get statusPresent;
+
+  /// No description provided for @statusLate.
+  ///
+  /// In ar, this message translates to:
+  /// **'متأخر'**
+  String get statusLate;
+
+  /// No description provided for @statusAbsent.
+  ///
+  /// In ar, this message translates to:
+  /// **'غائب'**
+  String get statusAbsent;
+
+  /// No description provided for @statusExcused.
+  ///
+  /// In ar, this message translates to:
+  /// **'غياب بعذر'**
+  String get statusExcused;
+
+  /// A status this build predates; rendered neutrally rather than crashing.
+  ///
+  /// In ar, this message translates to:
+  /// **'—'**
+  String get statusUnknown;
+
+  /// High-contrast alert state overriding the status pill (ATT-07).
+  ///
+  /// In ar, this message translates to:
+  /// **'غياب بدون إشعار'**
+  String get absenceAlertTitle;
+
+  /// Screen-reader label for the icon-only health badge. The health text itself is never rendered in a list view.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيه صحي — اضغط للاطلاع'**
+  String get healthAlertBadgeLabel;
+
+  /// No description provided for @announcementsStripTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلانات'**
+  String get announcementsStripTitle;
+
+  /// No description provided for @announcementUrgent.
+  ///
+  /// In ar, this message translates to:
+  /// **'عاجل'**
+  String get announcementUrgent;
+
+  /// No description provided for @announcementsEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا إعلانات حاليًا'**
+  String get announcementsEmpty;
+
+  /// No description provided for @childProfileTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملف الطفل'**
+  String get childProfileTitle;
+
+  /// No description provided for @childProfileGroupLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموعة'**
+  String get childProfileGroupLabel;
+
+  /// No description provided for @childProfileHealthTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'معلومات صحية'**
+  String get childProfileHealthTitle;
+
+  /// No description provided for @childProfileNoHealthInfo.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد معلومات صحية مسجَّلة.'**
+  String get childProfileNoHealthInfo;
+
+  /// No description provided for @childProfileComingSoon.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتوفر هذا القسم قريبًا.'**
+  String get childProfileComingSoon;
+
+  /// No description provided for @pullToRefresh.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسحب للتحديث'**
+  String get pullToRefresh;
+
+  /// Child profile sub-tab.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجدول'**
+  String get childTabSchedule;
+
+  /// No description provided for @childTabAttendance.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحضور'**
+  String get childTabAttendance;
+
+  /// No description provided for @childTabHomework.
+  ///
+  /// In ar, this message translates to:
+  /// **'الواجبات'**
+  String get childTabHomework;
+
+  /// No description provided for @childTabMaterials.
+  ///
+  /// In ar, this message translates to:
+  /// **'المواد'**
+  String get childTabMaterials;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {
