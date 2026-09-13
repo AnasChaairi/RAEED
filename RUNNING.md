@@ -153,15 +153,28 @@ Verified against the running stack:
 - `GET`/`POST /consent`, `GET /announcements`
 - The health list payload carries a boolean flag and no health text; the detail
   route carries the record
+- **Attendance.** `GET`/`PATCH /sessions/{id}/attendance`, with the conflict
+  rule (a stale `recorded_at_client` is refused with both sides returned) and
+  corrections stored as a new row pointing at the superseded one
+- **The critical absence-alert pipeline.** An unexplained absence enqueues on
+  the dedicated `critical` queue before the PATCH returns, and the worker
+  dispatched it in **14 ms** from the write in local testing — the SLA is p95
+  under 30 s (`specs/02-architecture.md`). A declared absence correctly fires
+  nothing.
+- `GET /presence-confirmations/pending` and `POST .../answers`, including two
+  siblings sharing one confirmation
 
 ## Not built yet
 
-- **Attendance and presence endpoints** — the mobile screens and their offline
-  queue are done and tested, but `GET`/`PATCH /sessions/{id}/attendance` and the
-  presence routes are not implemented server-side, so those screens have nothing
-  to talk to.
-- The critical absence-alert pipeline (BullMQ queues, FCM, SMS fallback)
-- Messaging, Memories Wall, dashboard, audit interceptor, homework, materials
+- **FCM and SMS delivery.** The critical pipeline runs end to end and the worker
+  logs exactly what it would dispatch, but no provider is wired up — so a real
+  phone does not buzz yet. Both are deliberately explicit rather than stubbed as
+  no-ops, because a silent success would make a broken alert pipeline look
+  healthy.
+- The load test that proves the p95 SLA under realistic concurrency
+  (`RAEED-19`) — without it, Epic C is not done.
+- Session auto-generation from the weekly schedule, homework, materials
+- Messaging, Memories Wall, dashboard, the audit interceptor on other modules
 - The React executive dashboard
 
 ## Stopping

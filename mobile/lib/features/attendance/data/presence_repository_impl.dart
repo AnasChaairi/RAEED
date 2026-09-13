@@ -29,12 +29,23 @@ class OfflineFirstPresenceRepository implements PresenceRepository {
   final RaeedDatabase _db;
   final ApiClient _client;
 
-  /// Confirmations last fetched from the server, keyed by confirmation id.
+  /// Confirmations last fetched from the server, keyed by confirmation **and
+  /// child**.
+  ///
+  /// Not by confirmation alone: a confirmation belongs to a *session*, so it
+  /// covers a whole group, and a guardian with two children in that group owes
+  /// two answers against the same confirmation id. Keying on the confirmation
+  /// would silently collapse them and lose one child's prompt entirely — which
+  /// the seeded data reproduces, two siblings in الأشبال أ.
   ///
   /// Held in memory rather than in Drift: unlike an attendance sheet this is a
   /// prompt, not a record, and a stale prompt surviving a relaunch would ask a
   /// parent to answer something already answered.
   final Map<String, PendingPresenceConfirmation> _unanswered = {};
+
+  /// The composite key: one outstanding answer per (confirmation, child).
+  static String _promptKey(String confirmationId, String childId) =>
+      '$confirmationId:$childId';
   final StreamController<List<PendingPresenceConfirmation>> _unansweredStream =
       StreamController<List<PendingPresenceConfirmation>>.broadcast();
 
@@ -57,10 +68,9 @@ class OfflineFirstPresenceRepository implements PresenceRepository {
 
     // Answered locally, so stop prompting for it immediately — waiting for the
     // server would leave the card asking a question the parent just answered.
-    _unanswered.removeWhere(
-      (id, confirmation) =>
-          id == draft.confirmationId && confirmation.childId == draft.childId,
-    );
+    // Only this child's prompt is removed; a sibling in the same group still
+    // owes their own answer.
+    _unanswered.remove(_promptKey(draft.confirmationId, draft.childId));
     _emitUnanswered();
 
     unawaited(_drainQuietly());
@@ -94,8 +104,10 @@ class OfflineFirstPresenceRepository implements PresenceRepository {
               ),
             )
             .map(
-              (confirmation) =>
-                  MapEntry(confirmation.confirmationId, confirmation),
+              (confirmation) => MapEntry(
+                _promptKey(confirmation.confirmationId, confirmation.childId),
+                confirmation,
+              ),
             ),
       );
 
@@ -105,7 +117,7 @@ class OfflineFirstPresenceRepository implements PresenceRepository {
       kind: PendingWriteKind.presenceAnswer,
     );
     for (final write in queued) {
-      _unanswered.remove(write.targetId);
+      _unanswered.remove(_promptKey(write.targetId, write.childId));
     }
 
     _emitUnanswered();

@@ -79,9 +79,20 @@ export class ApiError extends HttpException {
    */
   static attendanceConflict(details: {
     child_id: string;
-    status: string;
-    recorded_at: string;
-    recorded_by_name?: string;
+    current: {
+      status: string;
+      recorded_at: string;
+      /**
+       * Who holds the winning mark.
+       *
+       * Absent for now: `app_user` has no display-name column
+       * (`specs/03-domain-model/schema.sql`), and the phone number is the only
+       * other identifier — which MSG-06 forbids returning to a non-executive
+       * role. The client renders the conflict without it rather than being
+       * handed something it must not show.
+       */
+      recorded_by_name?: string;
+    };
   }): ApiError {
     return new ApiError(
       ApiErrorCode.ATTENDANCE_CONFLICT,

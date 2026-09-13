@@ -92,11 +92,46 @@ components:
 
     AttendanceRecord:
       type: object
+      description: >
+        One row of the attendance sheet — a row per *enrolled child*, not per
+        existing record, since children with no mark yet are the point of
+        opening the sheet. `status`/`recorded_by`/`recorded_at` are therefore
+        null until someone marks them.
+
+
+        The nested `child` and `presence_answer` settle a gap between this file
+        and 06-mobile-app-spec.md: the marking screen needs each child's name,
+        a health-alert flag and the guardian's pre-fill, none of which the
+        original flat shape carried. `child.health_alert` is a boolean and the
+        health text is never included — an attendance list is read in a room
+        with parents at the door.
       properties:
         child_id: { type: string, format: uuid }
-        status: { type: string, enum: [present, absent, late, excused] }
-        recorded_by: { type: string, format: uuid }
-        recorded_at: { type: string, format: date-time }
+        child:
+          type: object
+          properties:
+            id: { type: string, format: uuid }
+            full_name: { type: string }
+            photo_url: { type: string, nullable: true }
+            health_alert:
+              type: boolean
+              description: Presence-only flag; never the health text itself.
+        presence_answer:
+          type: object
+          nullable: true
+          description: The guardian's answer, when they gave one (ATT-02/ATT-04).
+          properties:
+            answer: { type: string, enum: [yes, no, late] }
+            reason:
+              type: string
+              nullable: true
+              enum: [illness, travel, exam, other]
+        status:
+          type: string
+          nullable: true
+          enum: [present, absent, late, excused]
+        recorded_by: { type: string, format: uuid, nullable: true }
+        recorded_at: { type: string, format: date-time, nullable: true }
 
     PresenceAnswerInput:
       type: object
@@ -440,6 +475,12 @@ paths:
 
         Scoped to the caller's own children via `parent_child`, resolved
         server-side.
+
+
+        **One row per child, not per confirmation.** A confirmation belongs to a
+        session and so covers a whole group; a guardian with two children in
+        that group owes two answers against the same `id`, and collapsing them
+        loses one child's prompt.
       responses:
         '200':
           description: OK
@@ -500,6 +541,15 @@ paths:
                 type: object
                 properties:
                   data: { type: array, items: { $ref: '#/components/schemas/AttendanceRecord' } }
+                  session:
+                    type: object
+                    properties:
+                      id: { type: string, format: uuid }
+                      group_id: { type: string, format: uuid }
+                      group_name: { type: string }
+                      starts_at: { type: string, format: date-time }
+                      ends_at: { type: string, format: date-time, nullable: true }
+        '403': { $ref: '#/components/responses/Forbidden' }
     patch:
       summary: Submit/update the attendance sheet for a session
       description: >
@@ -525,9 +575,30 @@ paths:
                   type: array
                   items: { $ref: '#/components/schemas/AttendanceRecordInput' }
       responses:
-        '200': { description: Applied }
-        '409': { $ref: '#/components/responses/Conflict' }
-        '422': { description: Unknown child_id for this session }
+        '200':
+          description: Applied
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  applied:
+                    type: array
+                    items: { type: string, format: uuid }
+                  alerts_enqueued:
+                    type: array
+                    items: { type: string, format: uuid }
+                    description: >
+                      Children whose mark triggered a critical absence alert —
+                      `absent` with no prior `no`/`late` answer. Enqueued before
+                      this response is written.
+        '409':
+          description: >
+            `attendance.conflict`. `details` carries `child_id` and a `current`
+            object with the record that won, so the device can show the educator
+            what their mark lost to rather than silently discarding it.
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+        '422': { description: '`attendance.unknown_child` — not enrolled in this session''s group' }
 
   /memories/posts:
     post:
