@@ -41,11 +41,28 @@ Confirmed in `specs/01-product-brief.md` — build against these, don't re-deriv
 
 ```
 mobile/          Flutter app (parents, educators, executives-on-mobile)
+  lib/core/      theming, i18n, networking, router + guards, session, ability model, Drift database
+  lib/features/  one folder per feature, four layers each:
+                 domain/ (pure Dart) · data/ · application/ · presentation/
+  lib/shared/    cross-feature widgets (skeletons, error view, offline banner)
+  tool/          design-token generator
 specs/           Implementation specs — the contract, see above
 logo/            Brand assets
 ```
 
-`backend/` (NestJS) and `dashboard/` (React) are spec'd but not yet started.
+`backend/` (NestJS) and `dashboard/` (React) are spec'd but not yet started. **The
+app has no server to talk to yet** — every repository is written against
+`specs/04-api/openapi.yaml` and covered by tests with a stubbed client.
+
+### Mobile progress
+
+| Ticket | State |
+|---|---|
+| RAEED-6 app shell — theme, i18n, router + guards, ability model | Done |
+| RAEED-2/3/5 OTP sign-in, token refresh, consent capture | Done |
+| RAEED-12 Parent Home + child profile | Done |
+| RAEED-16/17/21 attendance, offline queue, presence confirmation | Done |
+| Everything else in `specs/13-roadmap-and-tickets.md` | Not started — routes render a `PlaceholderScreen` naming the ticket |
 
 ## Mobile: install, run, test, lint
 

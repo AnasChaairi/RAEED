@@ -427,6 +427,46 @@ paths:
         '201': { description: Confirmation sent, deadline scheduled }
         '403': { $ref: '#/components/responses/Forbidden' }
 
+  /presence-confirmations/pending:
+    get:
+      summary: Confirmations the caller has not answered yet
+      description: >
+        Backs the unanswered-confirmation surface on the Home card. A
+        confirmation that arrived only as a push is lost the moment the push is,
+        and `ATT-04` lets a guardian declare an absence in advance without
+        waiting for one at all — so this list is a real surface, not a cache of
+        notifications.
+
+
+        Scoped to the caller's own children via `parent_child`, resolved
+        server-side.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required: [confirmation_id, session_id, child_id, child_name, session_starts_at]
+                      properties:
+                        confirmation_id: { type: string, format: uuid }
+                        session_id: { type: string, format: uuid }
+                        child_id: { type: string, format: uuid }
+                        child_name: { type: string }
+                        session_starts_at: { type: string, format: date-time }
+                        group_name: { type: string, nullable: true }
+                        deadline_at:
+                          type: string
+                          format: date-time
+                          nullable: true
+                          description: After this, the confirmation stops accepting answers.
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
   /presence-confirmations/{confirmationId}/answers:
     post:
       summary: Submit a guardian's presence answer for one child (ATT-02/ATT-04)
