@@ -1,11 +1,39 @@
 import 'reflect-metadata';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { ValidationError } from 'class-validator';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app.module';
 import { loadConfig } from './common/config/env';
 import { ApiError } from './common/http/api-error';
 import { ErrorEnvelopeFilter } from './common/http/error.filter';
+
+/**
+ * Flattens class-validator's nested errors into `field.path` → messages.
+ *
+ * Without this, a bad value inside an array — `image_rights[0].level` — comes
+ * back as an empty list against `image_rights`, telling a client only that
+ * *something* in there is wrong. Naming the exact path is the difference
+ * between a 422 a developer can act on and one they have to bisect.
+ */
+function flatten(
+  errors: ValidationError[],
+  parentPath = '',
+): Record<string, string[]> {
+  const flattened: Record<string, string[]> = {};
+
+  for (const error of errors) {
+    const path = parentPath ? `${parentPath}.${error.property}` : error.property;
+    const messages = Object.values(error.constraints ?? {});
+    if (messages.length > 0) flattened[path] = messages;
+
+    if (error.children && error.children.length > 0) {
+      Object.assign(flattened, flatten(error.children, path));
+    }
+  }
+
+  return flattened;
+}
 
 async function bootstrap(): Promise<void> {
   const config = loadConfig();
@@ -25,15 +53,7 @@ async function bootstrap(): Promise<void> {
       // have it dropped and assume it worked.
       forbidNonWhitelisted: true,
       transform: true,
-      exceptionFactory: (errors) =>
-        ApiError.validationFailed(
-          Object.fromEntries(
-            errors.map((error) => [
-              error.property,
-              Object.values(error.constraints ?? {}),
-            ]),
-          ),
-        ),
+      exceptionFactory: (errors) => ApiError.validationFailed(flatten(errors)),
     }),
   );
 

@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm';
 
 import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
 import { ApiError } from '../../common/http/api-error';
+import { ImageRightsEntryDto } from './dto/consent.dto';
 import { ImageRightsLevel } from './entities/consent-record.entity';
 
 export interface ConsentRequirementView {
@@ -84,7 +85,7 @@ export class ConsentService {
   async submit(
     user: AuthenticatedUser,
     privacyPolicyAccepted: boolean,
-    imageRights: Record<string, ImageRightsLevel>,
+    imageRights: ImageRightsEntryDto[],
   ): Promise<void> {
     if (!privacyPolicyAccepted) {
       throw ApiError.validationFailed({
@@ -92,9 +93,9 @@ export class ConsentService {
       });
     }
 
-    const unguarded = Object.keys(imageRights).filter(
-      (childId) => !user.guards(childId),
-    );
+    const unguarded = imageRights
+      .map((entry) => entry.child_id)
+      .filter((childId) => !user.guards(childId));
     if (unguarded.length > 0) {
       throw ApiError.scopeForbidden(
         'Consent can only be recorded for your own children.',
@@ -110,7 +111,7 @@ export class ConsentService {
         [user.id],
       );
 
-      for (const [childId, level] of Object.entries(imageRights)) {
+      for (const { child_id: childId, level } of imageRights) {
         await tx.query(
           `insert into consent_record (guardian_id, child_id, type, level, version)
            values ($1, $2, 'image_rights', $3,
