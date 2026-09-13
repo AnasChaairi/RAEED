@@ -12,6 +12,8 @@ import 'package:raeed/core/session/session_bootstrap.dart';
 import 'package:raeed/core/session/session_controller.dart';
 import 'package:raeed/core/session/token_store.dart';
 import 'package:raeed/core/theme/raeed_theme.dart';
+import 'package:raeed/features/auth/presentation/consent_screen.dart';
+import 'package:raeed/features/auth/presentation/login_screen.dart';
 
 /// Widget-level checks on the app shell (`RAEED-6`): the routing table and its
 /// guards, RTL-by-default, the theme reaching widgets, and the 130%+ text
@@ -136,7 +138,7 @@ void main() {
   group('routing guards', () {
     testWidgets('a signed-out user lands on login', (tester) async {
       await pumpApp(tester, status: SessionStatus.signedOut);
-      expect(find.text('Login'), findsWidgets);
+      expect(find.byType(LoginScreen), findsOneWidget);
     });
 
     testWidgets('an unconsented user is held at the consent screen', (
@@ -148,8 +150,8 @@ void main() {
         initialLocation: AppRoutes.home,
       );
       expect(
-        find.text('Consent'),
-        findsWidgets,
+        find.byType(ConsentScreen),
+        findsOneWidget,
         reason: 'ACC-06 blocks everything past /consent',
       );
     });

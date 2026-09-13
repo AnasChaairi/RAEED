@@ -8,10 +8,11 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'app.dart';
 import 'core/config/app_environment.dart';
+import 'core/network/api_client_provider.dart';
 import 'core/observability/sentry_scrubber.dart';
 import 'core/router/app_router.dart';
-import 'core/session/session_bootstrap.dart';
 import 'core/session/session_controller.dart';
+import 'features/auth/presentation/auth_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,9 +30,14 @@ Future<void> main() async {
   final container = ProviderContainer(
     overrides: [
       appScreensProvider.overrideWithValue(appScreensTable),
-      // Replaced by the auth feature's implementation when RAEED-2/3 lands.
-      sessionBootstrapperProvider.overrideWithValue(
-        const UnauthenticatedSessionBootstrapper(),
+      // The two seams `core` declares and the `auth` feature fills: restoring a
+      // session on cold start, and rotating a refresh token. Both are API calls
+      // that belong to a feature, wired here so `core` never imports one.
+      sessionBootstrapperProvider.overrideWith(
+        (ref) => ref.watch(authSessionBootstrapperProvider),
+      ),
+      authTokenRefresherProvider.overrideWith(
+        (ref) => ref.watch(apiAuthTokenRefresherProvider),
       ),
     ],
   );

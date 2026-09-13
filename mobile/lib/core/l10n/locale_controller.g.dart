@@ -56,7 +56,7 @@ final class LocaleControllerProvider
   }
 }
 
-String _$localeControllerHash() => r'361fde56ce16f933cc6191656a89ae63f10ec505';
+String _$localeControllerHash() => r'e779e2f10a1c140b89085ff04dc65e021a6f1e45';
 
 /// Resolves which locale the UI runs in.
 ///
