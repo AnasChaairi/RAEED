@@ -26,6 +26,19 @@ class RaeedDatabase extends _$RaeedDatabase {
 
   static const String _databaseName = 'raeed';
 
+  /// Timestamps are stored as ISO-8601 text, not as unix seconds.
+  ///
+  /// Drift's default packs a DateTime into an integer and hands it back in the
+  /// device's local zone. `recorded_at_client` is the value the conflict rule
+  /// compares against the server's `recorded_at`
+  /// (`specs/03-domain-model/entities.md`), and it travels between a phone, a
+  /// server and another phone — losing its UTC offset on the way through
+  /// SQLite would make a mark look hours older or newer than it was, and the
+  /// conflict rule would resolve the wrong way. Text keeps the offset.
+  @override
+  DriftDatabaseOptions get options =>
+      const DriftDatabaseOptions(storeDateTimeAsText: true);
+
   /// How long a cached session stays useful.
   ///
   /// The offline scope is "today's sessions". Two days of slack covers a
@@ -140,4 +153,264 @@ RaeedDatabase raeedDatabase(Ref ref) {
   final database = RaeedDatabase();
   ref.onDispose(database.close);
   return database;
+}
+
+/// Queries and mutations the attendance/presence repositories build on.
+///
+/// Kept on the database rather than in the repositories so the claim protocol —
+/// the thing that makes a retried drain idempotent — lives in one place and is
+/// testable without a network.
+extension RaeedDatabaseQueries on RaeedDatabase {
+  // --- Cached sheet ---------------------------------------------------------
+
+  /// The cached session row, if one exists.
+  Future<CachedSession?> readCachedSession(String sessionId) => (select(
+    cachedSessions,
+  )..where((t) => t.id.equals(sessionId))).getSingleOrNull();
+
+  /// The cached entries for a session, in the server's order.
+  Future<List<CachedAttendanceEntry>> readCachedEntries(String sessionId) =>
+      (select(cachedAttendanceEntries)
+            ..where((t) => t.sessionId.equals(sessionId))
+            ..orderBy([(t) => OrderingTerm(expression: t.position)]))
+          .get();
+
+  /// Watches [readCachedEntries].
+  Stream<List<CachedAttendanceEntry>> watchCachedEntries(String sessionId) =>
+      (select(cachedAttendanceEntries)
+            ..where((t) => t.sessionId.equals(sessionId))
+            ..orderBy([(t) => OrderingTerm(expression: t.position)]))
+          .watch();
+
+  /// Replaces the cached sheet for one session.
+  ///
+  /// Deletes then inserts inside a transaction: a child removed from the group
+  /// server-side has to disappear locally too, and a half-applied refresh that
+  /// left them behind would put a child on an attendance sheet they are no
+  /// longer enrolled in.
+  Future<void> cacheSheetRows({
+    required String sessionId,
+    required String groupId,
+    String? groupName,
+    required DateTime startsAt,
+    required List<CachedAttendanceEntriesCompanion> rows,
+  }) => transaction(() async {
+    final now = DateTime.now().toUtc();
+    await into(cachedSessions).insertOnConflictUpdate(
+      CachedSessionsCompanion.insert(
+        id: sessionId,
+        groupId: groupId,
+        groupName: groupName ?? '',
+        startsAt: startsAt,
+        cachedAt: now,
+      ),
+    );
+    await (delete(
+      cachedAttendanceEntries,
+    )..where((t) => t.sessionId.equals(sessionId))).go();
+    await batch((b) => b.insertAll(cachedAttendanceEntries, rows));
+  });
+
+  // --- Pending write queue --------------------------------------------------
+
+  /// Adds or replaces the queued write for one child.
+  ///
+  /// The unique key on (kind, targetId, childId) coalesces repeated taps: an
+  /// educator cycling a chip four times produces one write carrying the latest
+  /// intent, not four the server has to apply in order.
+  ///
+  /// A conflicted row is deliberately overwritten — re-tapping a child after
+  /// seeing a conflict is a new decision, and it supersedes the refused one.
+  Future<void> enqueueWrite({
+    required PendingWriteKind kind,
+    required String targetId,
+    required String childId,
+    required String payload,
+    required DateTime recordedAtClient,
+  }) => into(pendingWrites).insert(
+    PendingWritesCompanion.insert(
+      kind: kind,
+      targetId: targetId,
+      childId: childId,
+      payload: payload,
+      recordedAtClient: recordedAtClient,
+      queuedAt: DateTime.now().toUtc(),
+      state: const Value(PendingWriteState.pending),
+      claimToken: const Value(null),
+      conflictPayload: const Value(null),
+      lastErrorCode: const Value(null),
+      attempts: const Value(0),
+    ),
+    mode: InsertMode.insertOrReplace,
+  );
+
+  /// The queued write for one child, if any.
+  Future<PendingWrite?> findPendingWrite({
+    required PendingWriteKind kind,
+    required String targetId,
+    required String childId,
+  }) =>
+      (select(pendingWrites)..where(
+            (t) =>
+                t.kind.equalsValue(kind) &
+                t.targetId.equals(targetId) &
+                t.childId.equals(childId),
+          ))
+          .getSingleOrNull();
+
+  /// Every queued write for a target.
+  Future<List<PendingWrite>> readPendingWrites({
+    required PendingWriteKind kind,
+    String? targetId,
+  }) {
+    final query = select(pendingWrites)..where((t) => t.kind.equalsValue(kind));
+    if (targetId != null) {
+      query.where((t) => t.targetId.equals(targetId));
+    }
+    query.orderBy([(t) => OrderingTerm(expression: t.queuedAt)]);
+    return query.get();
+  }
+
+  /// Watches [readPendingWrites].
+  Stream<List<PendingWrite>> watchPendingWrites({
+    required PendingWriteKind kind,
+    String? targetId,
+  }) {
+    final query = select(pendingWrites)..where((t) => t.kind.equalsValue(kind));
+    if (targetId != null) {
+      query.where((t) => t.targetId.equals(targetId));
+    }
+    query.orderBy([(t) => OrderingTerm(expression: t.queuedAt)]);
+    return query.watch();
+  }
+
+  /// Replaces a queued write's payload and returns it to [PendingWriteState.pending].
+  Future<void> replaceWrite({
+    required int id,
+    required String payload,
+    required DateTime recordedAtClient,
+    required PendingWriteState state,
+  }) => (update(pendingWrites)..where((t) => t.id.equals(id))).write(
+    PendingWritesCompanion(
+      payload: Value(payload),
+      recordedAtClient: Value(recordedAtClient),
+      state: Value(state),
+      claimToken: const Value(null),
+      conflictPayload: const Value(null),
+      lastErrorCode: const Value(null),
+    ),
+  );
+
+  /// Drops the queued write for one child.
+  Future<void> deletePendingWrite({
+    required PendingWriteKind kind,
+    required String targetId,
+    required String childId,
+  }) =>
+      (delete(pendingWrites)..where(
+            (t) =>
+                t.kind.equalsValue(kind) &
+                t.targetId.equals(targetId) &
+                t.childId.equals(childId),
+          ))
+          .go();
+
+  /// How many writes are waiting, across every session and kind.
+  ///
+  /// Conflicted rows are excluded: they are not waiting for anything, they are
+  /// waiting for a person.
+  Stream<int> watchQueueDepth() {
+    final count = pendingWrites.id.count();
+    final query = selectOnly(pendingWrites)
+      ..addColumns([count])
+      ..where(pendingWrites.state.equalsValue(PendingWriteState.pending));
+    return query.map((row) => row.read(count) ?? 0).watchSingle();
+  }
+
+  // --- The claim protocol ---------------------------------------------------
+
+  /// Claims every pending write for this drain, in one transaction.
+  ///
+  /// Claiming is what makes a retried or concurrent drain safe: only rows
+  /// stamped with *this* token are sent, and only the holder of the token may
+  /// later complete or release them. Two drains firing at once — a reconnect
+  /// and a manual submit — cannot both pick up the same row, so a queued mark
+  /// is never submitted twice.
+  Future<List<PendingWrite>> claimPendingWrites({
+    required PendingWriteKind kind,
+    String? targetId,
+    required String claimToken,
+  }) => transaction(() async {
+    final query = select(pendingWrites)
+      ..where(
+        (t) =>
+            t.kind.equalsValue(kind) &
+            t.state.equalsValue(PendingWriteState.pending),
+      );
+    if (targetId != null) {
+      query.where((t) => t.targetId.equals(targetId));
+    }
+    query.orderBy([(t) => OrderingTerm(expression: t.queuedAt)]);
+
+    final rows = await query.get();
+    if (rows.isEmpty) return const <PendingWrite>[];
+
+    await batch((b) {
+      for (final row in rows) {
+        b.update(
+          pendingWrites,
+          PendingWritesCompanion(
+            state: const Value(PendingWriteState.inFlight),
+            claimToken: Value(claimToken),
+            attempts: Value(row.attempts + 1),
+          ),
+          where: (t) => t.id.equals(row.id),
+        );
+      }
+    });
+
+    return rows;
+  });
+
+  /// Removes an accepted write — only if this drain still holds the claim.
+  Future<void> completeWrite({required int id, required String claimToken}) =>
+      (delete(
+        pendingWrites,
+      )..where((t) => t.id.equals(id) & t.claimToken.equals(claimToken))).go();
+
+  /// Returns an unsent write to the queue for a later drain.
+  Future<void> releaseWrite({
+    required int id,
+    required String claimToken,
+    String? errorCode,
+  }) =>
+      (update(
+        pendingWrites,
+      )..where((t) => t.id.equals(id) & t.claimToken.equals(claimToken))).write(
+        PendingWritesCompanion(
+          state: const Value(PendingWriteState.pending),
+          claimToken: const Value(null),
+          lastErrorCode: Value(errorCode),
+        ),
+      );
+
+  /// Parks a write the server refused as stale.
+  ///
+  /// It stays in the queue, out of the pending set, until a person decides.
+  Future<void> markWriteConflicted({
+    required int id,
+    required String claimToken,
+    required String conflictPayload,
+    required String errorCode,
+  }) =>
+      (update(
+        pendingWrites,
+      )..where((t) => t.id.equals(id) & t.claimToken.equals(claimToken))).write(
+        PendingWritesCompanion(
+          state: const Value(PendingWriteState.conflicted),
+          claimToken: const Value(null),
+          conflictPayload: Value(conflictPayload),
+          lastErrorCode: Value(errorCode),
+        ),
+      );
 }
