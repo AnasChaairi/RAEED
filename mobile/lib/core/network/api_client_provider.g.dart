@@ -63,47 +63,183 @@ final class AppEnvironmentProvider
 
 String _$appEnvironmentHash() => r'e68326545f2c52b5e24a1040210d7658eb2e8fe0';
 
-/// The app's single [ApiClient].
+/// A client with **no** auth interceptor.
+///
+/// `/auth/otp/request`, `/auth/otp/verify` and `/auth/refresh` are
+/// `security: []` in `specs/04-api/openapi.yaml`. Refreshing through the
+/// interceptor whose whole job is to trigger refreshes would recurse, so the
+/// refresh call in particular must go out on a client that cannot intercept
+/// it.
+
+@ProviderFor(anonymousApiClient)
+const anonymousApiClientProvider = AnonymousApiClientProvider._();
+
+/// A client with **no** auth interceptor.
+///
+/// `/auth/otp/request`, `/auth/otp/verify` and `/auth/refresh` are
+/// `security: []` in `specs/04-api/openapi.yaml`. Refreshing through the
+/// interceptor whose whole job is to trigger refreshes would recurse, so the
+/// refresh call in particular must go out on a client that cannot intercept
+/// it.
+
+final class AnonymousApiClientProvider
+    extends $FunctionalProvider<ApiClient, ApiClient, ApiClient>
+    with $Provider<ApiClient> {
+  /// A client with **no** auth interceptor.
+  ///
+  /// `/auth/otp/request`, `/auth/otp/verify` and `/auth/refresh` are
+  /// `security: []` in `specs/04-api/openapi.yaml`. Refreshing through the
+  /// interceptor whose whole job is to trigger refreshes would recurse, so the
+  /// refresh call in particular must go out on a client that cannot intercept
+  /// it.
+  const AnonymousApiClientProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'anonymousApiClientProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$anonymousApiClientHash();
+
+  @$internal
+  @override
+  $ProviderElement<ApiClient> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ApiClient create(Ref ref) {
+    return anonymousApiClient(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ApiClient value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ApiClient>(value),
+    );
+  }
+}
+
+String _$anonymousApiClientHash() =>
+    r'43980cabd25736c492a40e7227b3cfee6342e689';
+
+/// Rotates refresh tokens.
+///
+/// Declared here and overridden at app composition with the `auth` feature's
+/// implementation, for the same reason as `sessionBootstrapperProvider`: the
+/// interceptor is core infrastructure, but rotating a token is an API call
+/// that belongs to a feature. The narrow seam keeps the dependency pointing
+/// inward.
+///
+/// The default throws rather than returning a no-op refresher, which would
+/// look like a working app that silently signs everyone out after fifteen
+/// minutes.
+
+@ProviderFor(authTokenRefresher)
+const authTokenRefresherProvider = AuthTokenRefresherProvider._();
+
+/// Rotates refresh tokens.
+///
+/// Declared here and overridden at app composition with the `auth` feature's
+/// implementation, for the same reason as `sessionBootstrapperProvider`: the
+/// interceptor is core infrastructure, but rotating a token is an API call
+/// that belongs to a feature. The narrow seam keeps the dependency pointing
+/// inward.
+///
+/// The default throws rather than returning a no-op refresher, which would
+/// look like a working app that silently signs everyone out after fifteen
+/// minutes.
+
+final class AuthTokenRefresherProvider
+    extends
+        $FunctionalProvider<
+          AuthTokenRefresher,
+          AuthTokenRefresher,
+          AuthTokenRefresher
+        >
+    with $Provider<AuthTokenRefresher> {
+  /// Rotates refresh tokens.
+  ///
+  /// Declared here and overridden at app composition with the `auth` feature's
+  /// implementation, for the same reason as `sessionBootstrapperProvider`: the
+  /// interceptor is core infrastructure, but rotating a token is an API call
+  /// that belongs to a feature. The narrow seam keeps the dependency pointing
+  /// inward.
+  ///
+  /// The default throws rather than returning a no-op refresher, which would
+  /// look like a working app that silently signs everyone out after fifteen
+  /// minutes.
+  const AuthTokenRefresherProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authTokenRefresherProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$authTokenRefresherHash();
+
+  @$internal
+  @override
+  $ProviderElement<AuthTokenRefresher> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  AuthTokenRefresher create(Ref ref) {
+    return authTokenRefresher(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AuthTokenRefresher value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AuthTokenRefresher>(value),
+    );
+  }
+}
+
+String _$authTokenRefresherHash() =>
+    r'6c651a4ab2e5288d613f5f29731b0d8cfd626bc7';
+
+/// The app's authenticated [ApiClient] — what every feature outside `auth`
+/// should use.
 ///
 /// `keepAlive` because the underlying `dio` instance carries the auth
 /// interceptor and its connection pool; rebuilding it per screen would drop
-/// warm connections on a network where warm connections are the difference
+/// warm connections on a network where a warm connection is the difference
 /// between a card that loads and one that times out.
-///
-/// Constructed from configuration rather than thrown-until-overridden, unlike
-/// `sessionBootstrapperProvider`: there is exactly one correct client for a
-/// given build, so making composition remember to wire it up would be pure
-/// ceremony. Tests override it with a client built over a stub adapter.
 
 @ProviderFor(apiClient)
 const apiClientProvider = ApiClientProvider._();
 
-/// The app's single [ApiClient].
+/// The app's authenticated [ApiClient] — what every feature outside `auth`
+/// should use.
 ///
 /// `keepAlive` because the underlying `dio` instance carries the auth
 /// interceptor and its connection pool; rebuilding it per screen would drop
-/// warm connections on a network where warm connections are the difference
+/// warm connections on a network where a warm connection is the difference
 /// between a card that loads and one that times out.
-///
-/// Constructed from configuration rather than thrown-until-overridden, unlike
-/// `sessionBootstrapperProvider`: there is exactly one correct client for a
-/// given build, so making composition remember to wire it up would be pure
-/// ceremony. Tests override it with a client built over a stub adapter.
 
 final class ApiClientProvider
     extends $FunctionalProvider<ApiClient, ApiClient, ApiClient>
     with $Provider<ApiClient> {
-  /// The app's single [ApiClient].
+  /// The app's authenticated [ApiClient] — what every feature outside `auth`
+  /// should use.
   ///
   /// `keepAlive` because the underlying `dio` instance carries the auth
   /// interceptor and its connection pool; rebuilding it per screen would drop
-  /// warm connections on a network where warm connections are the difference
+  /// warm connections on a network where a warm connection is the difference
   /// between a card that loads and one that times out.
-  ///
-  /// Constructed from configuration rather than thrown-until-overridden, unlike
-  /// `sessionBootstrapperProvider`: there is exactly one correct client for a
-  /// given build, so making composition remember to wire it up would be pure
-  /// ceremony. Tests override it with a client built over a stub adapter.
   const ApiClientProvider._()
     : super(
         from: null,
@@ -137,4 +273,4 @@ final class ApiClientProvider
   }
 }
 
-String _$apiClientHash() => r'c82ed4eda8e4e554bf44669007b01f40577940ad';
+String _$apiClientHash() => r'cede417b20b89978e5487c57b36137b35d058201';

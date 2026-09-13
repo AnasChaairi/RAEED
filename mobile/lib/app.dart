@@ -8,6 +8,9 @@ import 'core/router/app_routes.dart';
 import 'core/session/app_session.dart';
 import 'core/session/session_controller.dart';
 import 'core/theme/raeed_theme.dart';
+import 'features/auth/presentation/consent_screen.dart';
+import 'features/auth/presentation/login_screen.dart';
+import 'features/auth/presentation/otp_screen.dart';
 import 'shared/widgets/not_found_screen.dart';
 import 'shared/widgets/placeholder_screen.dart';
 import 'shared/widgets/splash_screen.dart';
@@ -101,12 +104,9 @@ Widget applyTextScaleCeiling(BuildContext context, Widget? child) {
 /// and every deep link are exercisable from the first commit.
 final AppScreens appScreensTable = AppScreens(
   splash: (context, state) => const SplashScreen(),
-  login: (context, state) =>
-      const PlaceholderScreen(title: 'Login', ticket: 'RAEED-2'),
-  otp: (context, state) =>
-      const PlaceholderScreen(title: 'Verify code', ticket: 'RAEED-2'),
-  consent: (context, state) =>
-      const PlaceholderScreen(title: 'Consent', ticket: 'RAEED-5'),
+  login: (context, state) => const LoginScreen(),
+  otp: (context, state) => const OtpScreen(),
+  consent: (context, state) => const ConsentScreen(),
   home: (context, state) =>
       const PlaceholderScreen(title: 'Home', ticket: 'RAEED-12'),
   child: (context, state) => PlaceholderScreen(
