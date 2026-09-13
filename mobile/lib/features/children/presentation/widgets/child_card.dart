@@ -137,7 +137,9 @@ class _Headline extends StatelessWidget {
           children: [
             _ChildAvatar(child: child),
             const SizedBox(width: RaeedSpacing.md),
-            Expanded(child: _NameAndGroup(child: child, now: now)),
+            Expanded(
+              child: _NameAndGroup(child: child, now: now),
+            ),
             if (trailing >= _minPillWidth * scale) ...[
               const SizedBox(width: RaeedSpacing.sm),
               // Capped rather than flexed: the cap is what keeps the row inside

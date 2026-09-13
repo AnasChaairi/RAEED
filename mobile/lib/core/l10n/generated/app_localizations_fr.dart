@@ -318,6 +318,21 @@ class AppL10nFr extends AppL10n {
       'Aucune information de santé enregistrée.';
 
   @override
+  String get childHealthAllergies => 'Allergies';
+
+  @override
+  String get childHealthConditions => 'Pathologies';
+
+  @override
+  String get childHealthMedications => 'Traitements';
+
+  @override
+  String get childHealthDiet => 'Notes alimentaires';
+
+  @override
+  String get childHealthOther => 'Autres';
+
+  @override
   String get childProfileComingSoon => 'Cette section sera bientôt disponible.';
 
   @override

@@ -639,6 +639,36 @@ abstract class AppL10n {
   /// **'لا توجد معلومات صحية مسجَّلة.'**
   String get childProfileNoHealthInfo;
 
+  /// No description provided for @childHealthAllergies.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساسية'**
+  String get childHealthAllergies;
+
+  /// No description provided for @childHealthConditions.
+  ///
+  /// In ar, this message translates to:
+  /// **'حالات صحية'**
+  String get childHealthConditions;
+
+  /// No description provided for @childHealthMedications.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدوية'**
+  String get childHealthMedications;
+
+  /// No description provided for @childHealthDiet.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات غذائية'**
+  String get childHealthDiet;
+
+  /// No description provided for @childHealthOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'أخرى'**
+  String get childHealthOther;
+
   /// No description provided for @childProfileComingSoon.
   ///
   /// In ar, this message translates to:

@@ -134,7 +134,8 @@ class _PromptTileState extends ConsumerState<_PromptTile> {
           Text(
             l10n.presenceQuestion(
               confirmation.childName,
-              confirmation.groupName ?? _timeOfDay(confirmation.sessionStartsAt),
+              confirmation.groupName ??
+                  _timeOfDay(confirmation.sessionStartsAt),
             ),
             style: context.type.body.copyWith(color: palette.ink),
           ),

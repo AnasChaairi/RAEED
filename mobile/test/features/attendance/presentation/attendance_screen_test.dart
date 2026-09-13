@@ -481,7 +481,10 @@ void main() {
           greaterThanOrEqualTo(RaeedTouchTarget.primaryActionsPx),
           reason: 'buttons are tapped repeatedly, at speed, one-handed',
         );
-        expect(size.width, greaterThanOrEqualTo(RaeedTouchTarget.primaryActionsPx));
+        expect(
+          size.width,
+          greaterThanOrEqualTo(RaeedTouchTarget.primaryActionsPx),
+        );
       }
     });
 

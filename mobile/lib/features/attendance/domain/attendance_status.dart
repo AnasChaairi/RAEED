@@ -39,5 +39,4 @@ enum AttendanceStatus {
     }
     return null;
   }
-
 }

@@ -316,6 +316,21 @@ class AppL10nEn extends AppL10n {
   String get childProfileNoHealthInfo => 'No health information recorded.';
 
   @override
+  String get childHealthAllergies => 'Allergies';
+
+  @override
+  String get childHealthConditions => 'Conditions';
+
+  @override
+  String get childHealthMedications => 'Medication';
+
+  @override
+  String get childHealthDiet => 'Dietary notes';
+
+  @override
+  String get childHealthOther => 'Other';
+
+  @override
   String get childProfileComingSoon => 'This section is coming soon.';
 
   @override

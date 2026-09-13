@@ -321,6 +321,21 @@ class AppL10nAr extends AppL10n {
   String get childProfileNoHealthInfo => 'لا توجد معلومات صحية مسجَّلة.';
 
   @override
+  String get childHealthAllergies => 'حساسية';
+
+  @override
+  String get childHealthConditions => 'حالات صحية';
+
+  @override
+  String get childHealthMedications => 'أدوية';
+
+  @override
+  String get childHealthDiet => 'ملاحظات غذائية';
+
+  @override
+  String get childHealthOther => 'أخرى';
+
+  @override
   String get childProfileComingSoon => 'سيتوفر هذا القسم قريبًا.';
 
   @override
