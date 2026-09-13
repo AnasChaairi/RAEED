@@ -36,6 +36,10 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   bool _isResending = false;
   Object? _error;
 
+  /// True while the field is being emptied in response to a rejected code, so
+  /// the controller listener does not treat it as the user editing.
+  bool _isClearingAfterFailure = false;
+
   @override
   void initState() {
     super.initState();
@@ -54,7 +58,13 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   }
 
   void _onCodeChanged() {
-    if (_error != null) setState(() => _error = null);
+    // Guarded: clearing the field after a failed attempt fires this listener,
+    // and without the guard it would wipe the "wrong code" message in the same
+    // frame it was set — the user would see the field empty itself with no
+    // explanation.
+    if (_error != null && !_isClearingAfterFailure) {
+      setState(() => _error = null);
+    }
 
     // Submit as soon as the last digit lands. The code is fixed-length and
     // arrives by SMS, so making someone type six digits and then reach for a
@@ -108,10 +118,10 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
       // their consent state, which this screen has no business deciding.
     } on Object catch (error) {
       if (!mounted) return;
-      setState(() {
-        _error = error;
-        _codeController.clear();
-      });
+      _isClearingAfterFailure = true;
+      _codeController.clear();
+      _isClearingAfterFailure = false;
+      setState(() => _error = error);
       _codeFocus.requestFocus();
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

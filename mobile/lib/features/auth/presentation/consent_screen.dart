@@ -148,11 +148,15 @@ class _PrivacyPolicySection extends StatelessWidget {
     final l10n = AppL10n.of(context);
     final palette = context.palette;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: palette.surface,
+    // Material, not a decorated Container: ListTile paints its background and
+    // ink splashes on the nearest Material ancestor, and a DecoratedBox in
+    // between swallows them — Flutter asserts on exactly this.
+    return Material(
+      color: palette.surface,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(RaeedRadius.lg),
-        border: Border.all(color: palette.border),
+        side: BorderSide(color: palette.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -245,55 +249,58 @@ class _ChildImageRights extends StatelessWidget {
     final l10n = AppL10n.of(context);
     final palette = context.palette;
 
-    return Container(
-      padding: const EdgeInsets.all(RaeedSpacing.lg),
-      decoration: BoxDecoration(
-        color: palette.surface,
+    return Material(
+      color: palette.surface,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(RaeedRadius.lg),
-        border: Border.all(color: palette.border),
+        side: BorderSide(color: palette.border),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.consentImageRightsForChild(child.fullName),
-            style: context.type.h3.copyWith(color: palette.ink),
-          ),
-          const SizedBox(height: RaeedSpacing.md),
-          // RadioGroup owns the selection; the tiles below only declare
-          // their value. This is the non-deprecated shape as of Flutter 3.32.
-          RadioGroup<ImageRightsLevel>(
-            groupValue: selected,
-            // RadioGroup.onChanged is non-nullable, so "disabled" is enforced
-            // here rather than by passing null — a tap while the submission is
-            // in flight must not change a consent level under the request that
-            // is already carrying it.
-            onChanged: (value) {
-              if (enabled && value != null) onChanged(value);
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (final level in ImageRightsLevel.values)
-                  RadioListTile<ImageRightsLevel>(
-                    value: level,
-                    contentPadding: EdgeInsets.zero,
-                    controlAffinity: ListTileControlAffinity.leading,
-                    title: Text(
-                      _label(l10n, level),
-                      style: context.type.body.copyWith(color: palette.ink),
-                    ),
-                    subtitle: Text(
-                      _help(l10n, level),
-                      style: context.type.caption.copyWith(
-                        color: palette.inkDim,
+      child: Padding(
+        padding: const EdgeInsets.all(RaeedSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.consentImageRightsForChild(child.fullName),
+              style: context.type.h3.copyWith(color: palette.ink),
+            ),
+            const SizedBox(height: RaeedSpacing.md),
+            // RadioGroup owns the selection; the tiles below only declare
+            // their value. This is the non-deprecated shape as of Flutter 3.32.
+            RadioGroup<ImageRightsLevel>(
+              groupValue: selected,
+              // RadioGroup.onChanged is non-nullable, so "disabled" is enforced
+              // here rather than by passing null — a tap while the submission is
+              // in flight must not change a consent level under the request that
+              // is already carrying it.
+              onChanged: (value) {
+                if (enabled && value != null) onChanged(value);
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (final level in ImageRightsLevel.values)
+                    RadioListTile<ImageRightsLevel>(
+                      value: level,
+                      contentPadding: EdgeInsets.zero,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      title: Text(
+                        _label(l10n, level),
+                        style: context.type.body.copyWith(color: palette.ink),
+                      ),
+                      subtitle: Text(
+                        _help(l10n, level),
+                        style: context.type.caption.copyWith(
+                          color: palette.inkDim,
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

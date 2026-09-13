@@ -1,3 +1,4 @@
+import '../../../core/error/raeed_exception.dart';
 import '../../../core/session/session_controller.dart';
 import '../domain/auth_repository.dart';
 
@@ -25,6 +26,15 @@ class SignOut {
   Future<void> call() async {
     try {
       await _repository.signOut();
+    } on RaeedException {
+      // Swallowed, not rethrown. The user asked to be signed out of this
+      // device and they are — surfacing "couldn't reach the server" on top of
+      // a sign-out that visibly worked would read as a failure and invite them
+      // to tap again. A server session that outlives the local wipe expires on
+      // its own, and revocation can be re-attempted from another device.
+      //
+      // Only RaeedException is caught: a programming error here should still
+      // surface rather than hide behind a sign-out.
     } finally {
       await _session.signOut();
     }
