@@ -1,0 +1,18 @@
+# Localization codegen config.
+#
+# Arabic is the template, not a translation of an English original: RAEED's
+# users read Arabic first, and authoring the English ARB first would bake
+# English phrasing and English plural assumptions into every string. Arabic
+# needs all six ICU plural categories (zero/one/two/few/many/other) from day
+# one (specs/08-design-system/style-guide.md) — retrofitting them after the
+# fact means re-authoring every counted string.
+arb-dir: lib/core/l10n/arb
+template-arb-file: app_ar.arb
+output-dir: lib/core/l10n/generated
+output-localization-file: app_localizations.dart
+output-class: AppL10n
+nullable-getter: false
+
+# Fail the build on a missing translation rather than silently falling back to
+# Arabic in the French build.
+untranslated-messages-file: l10n-untranslated.txt

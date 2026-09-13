@@ -1,0 +1,520 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations_ar.dart';
+import 'app_localizations_en.dart';
+import 'app_localizations_fr.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppL10n
+/// returned by `AppL10n.of(context)`.
+///
+/// Applications need to include `AppL10n.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'generated/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppL10n.localizationsDelegates,
+///   supportedLocales: AppL10n.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppL10n.supportedLocales
+/// property.
+abstract class AppL10n {
+  AppL10n(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static AppL10n of(BuildContext context) {
+    return Localizations.of<AppL10n>(context, AppL10n)!;
+  }
+
+  static const LocalizationsDelegate<AppL10n> delegate = _AppL10nDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('ar'),
+    Locale('en'),
+    Locale('fr'),
+  ];
+
+  /// The application name as shown in the app bar and launcher.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرائد'**
+  String get appName;
+
+  /// Button that re-runs a failed request.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة المحاولة'**
+  String get commonRetry;
+
+  /// No description provided for @commonCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get commonCancel;
+
+  /// No description provided for @commonConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد'**
+  String get commonConfirm;
+
+  /// No description provided for @commonContinue.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة'**
+  String get commonContinue;
+
+  /// No description provided for @commonClose.
+  ///
+  /// In ar, this message translates to:
+  /// **'إغلاق'**
+  String get commonClose;
+
+  /// No description provided for @commonSave.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ'**
+  String get commonSave;
+
+  /// No description provided for @commonBack.
+  ///
+  /// In ar, this message translates to:
+  /// **'رجوع'**
+  String get commonBack;
+
+  /// Shown when the device cannot reach the server at all.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر الاتصال'**
+  String get errorNetworkTitle;
+
+  /// No description provided for @errorNetworkBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحقّق من اتصالك بالإنترنت ثم أعد المحاولة.'**
+  String get errorNetworkBody;
+
+  /// No description provided for @errorGenericTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدث خطأ'**
+  String get errorGenericTitle;
+
+  /// No description provided for @errorGenericBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم نتمكّن من إتمام العملية. أعد المحاولة بعد قليل.'**
+  String get errorGenericBody;
+
+  /// Shown for scope.forbidden — the caller is authenticated but outside their permission scope. Deliberately does not say whether the resource exists.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير متاح لك'**
+  String get errorForbiddenTitle;
+
+  /// No description provided for @errorForbiddenBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا تملك صلاحية الاطلاع على هذا المحتوى. تواصل مع إدارة الأكاديمية إن كنت ترى أن هذا خطأ.'**
+  String get errorForbiddenBody;
+
+  /// No description provided for @errorSessionExpiredTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت الجلسة'**
+  String get errorSessionExpiredTitle;
+
+  /// No description provided for @errorSessionExpiredBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى تسجيل الدخول من جديد.'**
+  String get errorSessionExpiredBody;
+
+  /// Shown when the server response does not match what this app build understands.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث مطلوب'**
+  String get errorContractTitle;
+
+  /// No description provided for @errorContractBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذه النسخة من التطبيق لم تعد متوافقة مع الخادم. يرجى تحديث التطبيق.'**
+  String get errorContractBody;
+
+  /// Persistent banner shown while the device is offline and the screen is showing cached data.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنت غير متصل بالإنترنت. تُعرض آخر البيانات المحفوظة.'**
+  String get offlineBannerMessage;
+
+  /// Subtle banner on a screen that is showing cached content because the refresh failed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر التحديث'**
+  String get offlineRefreshFailed;
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرحبًا بك في الرائد'**
+  String get loginTitle;
+
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقم هاتفك لتلقّي رمز الدخول.'**
+  String get loginSubtitle;
+
+  /// No description provided for @loginPhoneLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الهاتف'**
+  String get loginPhoneLabel;
+
+  /// No description provided for @loginPhoneHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'‎+212 6XX XXX XXX'**
+  String get loginPhoneHint;
+
+  /// No description provided for @loginPhoneInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقم هاتف صحيحًا.'**
+  String get loginPhoneInvalid;
+
+  /// No description provided for @loginRequestCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال رمز الدخول'**
+  String get loginRequestCode;
+
+  /// Registration is Executive/Admin-only (ACC-02) — there is no public sign-up.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحسابات تُنشأ من طرف إدارة الأكاديمية فقط. إن لم يكن لديك حساب، تواصل مع الإدارة.'**
+  String get loginNoAccountNotice;
+
+  /// No description provided for @otpTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رمز الدخول'**
+  String get otpTitle;
+
+  /// Confirms where the OTP was sent. The phone number is masked before it reaches this string.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسلنا رمزًا من ستة أرقام إلى {phone}.'**
+  String otpSentTo(String phone);
+
+  /// No description provided for @otpCodeLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرمز'**
+  String get otpCodeLabel;
+
+  /// No description provided for @otpVerify.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد'**
+  String get otpVerify;
+
+  /// No description provided for @otpInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرمز غير صحيح أو انتهت صلاحيته.'**
+  String get otpInvalid;
+
+  /// No description provided for @otpRateLimited.
+  ///
+  /// In ar, this message translates to:
+  /// **'لقد طلبت رموزًا كثيرة. حاول مجددًا بعد ساعة.'**
+  String get otpRateLimited;
+
+  /// No description provided for @otpResend.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة إرسال الرمز'**
+  String get otpResend;
+
+  /// Countdown before the resend button re-enables. All six Arabic plural categories are authored, not defaulted.
+  ///
+  /// In ar, this message translates to:
+  /// **'{seconds, plural, zero{يمكنك إعادة الإرسال الآن} one{إعادة الإرسال بعد ثانية واحدة} two{إعادة الإرسال بعد ثانيتين} few{إعادة الإرسال بعد {seconds} ثوانٍ} many{إعادة الإرسال بعد {seconds} ثانية} other{إعادة الإرسال بعد {seconds} ثانية}}'**
+  String otpResendIn(int seconds);
+
+  /// No description provided for @consentTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخصوصية وحقوق الصورة'**
+  String get consentTitle;
+
+  /// No description provided for @consentIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'قبل المتابعة، نحتاج موافقتك على سياسة الخصوصية وتحديد مستوى حقوق الصورة لكل طفل.'**
+  String get consentIntro;
+
+  /// No description provided for @consentPrivacyPolicyAccept.
+  ///
+  /// In ar, this message translates to:
+  /// **'أوافق على سياسة الخصوصية'**
+  String get consentPrivacyPolicyAccept;
+
+  /// No description provided for @consentPrivacyPolicyRead.
+  ///
+  /// In ar, this message translates to:
+  /// **'قراءة سياسة الخصوصية'**
+  String get consentPrivacyPolicyRead;
+
+  /// No description provided for @consentImageRightsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حقوق الصورة'**
+  String get consentImageRightsTitle;
+
+  /// No description provided for @consentImageRightsForChild.
+  ///
+  /// In ar, this message translates to:
+  /// **'حقوق الصورة لـ {childName}'**
+  String consentImageRightsForChild(String childName);
+
+  /// image_rights_level = allowed
+  ///
+  /// In ar, this message translates to:
+  /// **'مسموح'**
+  String get consentImageRightsAllowed;
+
+  /// No description provided for @consentImageRightsAllowedHelp.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكن نشر صور الطفل داخل التطبيق وفي القنوات الرسمية للأكاديمية.'**
+  String get consentImageRightsAllowedHelp;
+
+  /// image_rights_level = app_only
+  ///
+  /// In ar, this message translates to:
+  /// **'داخل التطبيق فقط'**
+  String get consentImageRightsAppOnly;
+
+  /// No description provided for @consentImageRightsAppOnlyHelp.
+  ///
+  /// In ar, this message translates to:
+  /// **'تُعرض صور الطفل داخل التطبيق فقط، ولا تُنشر خارجه.'**
+  String get consentImageRightsAppOnlyHelp;
+
+  /// image_rights_level = not_allowed — the most restrictive level, and the default.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير مسموح'**
+  String get consentImageRightsNotAllowed;
+
+  /// No description provided for @consentImageRightsNotAllowedHelp.
+  ///
+  /// In ar, this message translates to:
+  /// **'لن تُنشر أي صورة للطفل في أي مكان.'**
+  String get consentImageRightsNotAllowedHelp;
+
+  /// No description provided for @consentChangeLater.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكنك تغيير هذا الاختيار في أي وقت من إعدادات الطفل.'**
+  String get consentChangeLater;
+
+  /// No description provided for @consentSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ الموافقات'**
+  String get consentSubmit;
+
+  /// No description provided for @navHome.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرئيسية'**
+  String get navHome;
+
+  /// No description provided for @navSchedule.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجدول'**
+  String get navSchedule;
+
+  /// No description provided for @navMessages.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرسائل'**
+  String get navMessages;
+
+  /// No description provided for @navMemories.
+  ///
+  /// In ar, this message translates to:
+  /// **'الذكريات'**
+  String get navMemories;
+
+  /// No description provided for @navMore.
+  ///
+  /// In ar, this message translates to:
+  /// **'المزيد'**
+  String get navMore;
+
+  /// No description provided for @navGroups.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموعات'**
+  String get navGroups;
+
+  /// No description provided for @navDashboard.
+  ///
+  /// In ar, this message translates to:
+  /// **'لوحة القيادة'**
+  String get navDashboard;
+
+  /// No description provided for @roleParent.
+  ///
+  /// In ar, this message translates to:
+  /// **'وليّ الأمر'**
+  String get roleParent;
+
+  /// No description provided for @roleEducator.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤطِّر'**
+  String get roleEducator;
+
+  /// No description provided for @roleExecutive.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف'**
+  String get roleExecutive;
+
+  /// No description provided for @roleAdmin.
+  ///
+  /// In ar, this message translates to:
+  /// **'مدير النظام'**
+  String get roleAdmin;
+
+  /// A user may hold more than one role — e.g. an educator who is also a parent.
+  ///
+  /// In ar, this message translates to:
+  /// **'تبديل الدور'**
+  String get roleSwitchTitle;
+
+  /// No description provided for @notFoundTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصفحة غير موجودة'**
+  String get notFoundTitle;
+
+  /// No description provided for @notFoundBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرابط الذي فتحته لم يعد صالحًا.'**
+  String get notFoundBody;
+
+  /// No description provided for @notFoundGoHome.
+  ///
+  /// In ar, this message translates to:
+  /// **'العودة إلى الرئيسية'**
+  String get notFoundGoHome;
+}
+
+class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {
+  const _AppL10nDelegate();
+
+  @override
+  Future<AppL10n> load(Locale locale) {
+    return SynchronousFuture<AppL10n>(lookupAppL10n(locale));
+  }
+
+  @override
+  bool isSupported(Locale locale) =>
+      <String>['ar', 'en', 'fr'].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_AppL10nDelegate old) => false;
+}
+
+AppL10n lookupAppL10n(Locale locale) {
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'ar':
+      return AppL10nAr();
+    case 'en':
+      return AppL10nEn();
+    case 'fr':
+      return AppL10nFr();
+  }
+
+  throw FlutterError(
+    'AppL10n.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
+}

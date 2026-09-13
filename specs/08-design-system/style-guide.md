@@ -29,6 +29,8 @@ These raw values are logged in `design-tokens.json` under `color.logoSource` for
 
 **Semantic colors** (`success`/`warning`/`danger`/`info`) are deliberately not brand hues reused — a warning shouldn't look like "brand gold" and confuse the two systems. `info` reuses `primary`-adjacent blue since blue-as-informational is already the brand's own association.
 
+> **Corrected in v1.1:** `info` was originally `#0B84D6`, which is the raw logo blue in all but name and reaches only **3.76:1** on `color.light.bg` (3.97:1 on white) — the same shortfall this document gives as the reason `primary` isn't the logo blue either. The AA adjustment had been applied to `primary` but not carried across to `info`. It is now **`#0A70B6`** (4.97:1 on `bg`, 5.24:1 on white), the same hue darkened by the same method, and still clearly lighter than `primary` so the two stay distinguishable. The automated contrast test in `mobile/test/core/theme/design_tokens_test.dart` now asserts AA for all four semantic colors on both backgrounds, in both palettes, so this class of gap fails the build rather than reaching a device.
+
 ## Typography — Amiri for Arabic
 
 **Arabic (primary language) is set in [Amiri](https://fonts.google.com/specimen/Amiri)** — a Naskh text face designed for sustained, high-quality reading of classical and modern Arabic, which fits RAEED's Quran/hadith-adjacent educational content better than a geometric UI sans would. Load it from Google Fonts:
