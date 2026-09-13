@@ -674,6 +674,204 @@ abstract class AppL10n {
   /// In ar, this message translates to:
   /// **'المواد'**
   String get childTabMaterials;
+
+  /// Attendance marking screen title.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الحضور'**
+  String get attendanceTitle;
+
+  /// No description provided for @attendancePresent.
+  ///
+  /// In ar, this message translates to:
+  /// **'حاضر'**
+  String get attendancePresent;
+
+  /// No description provided for @attendanceLate.
+  ///
+  /// In ar, this message translates to:
+  /// **'متأخر'**
+  String get attendanceLate;
+
+  /// No description provided for @attendanceAbsent.
+  ///
+  /// In ar, this message translates to:
+  /// **'غائب'**
+  String get attendanceAbsent;
+
+  /// No description provided for @attendanceExcused.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعذر'**
+  String get attendanceExcused;
+
+  /// No description provided for @attendanceNotMarked.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يُسجَّل'**
+  String get attendanceNotMarked;
+
+  /// Live count of children whose guardian confirmed attendance. Arabic needs all six categories.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{لا مؤكَّد} one{مؤكَّد واحد} two{مؤكَّدان} few{{count} مؤكَّدين} many{{count} مؤكَّدًا} other{{count} مؤكَّد}}'**
+  String attendanceSummaryConfirmed(int count);
+
+  /// No description provided for @attendanceSummaryAbsent.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{لا غياب} one{غياب واحد} two{غيابان} few{{count} غيابات} many{{count} غيابًا} other{{count} غياب}}'**
+  String attendanceSummaryAbsent(int count);
+
+  /// No description provided for @attendanceSummaryNoAnswer.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{لا أحد بدون جواب} one{واحد بدون جواب} two{اثنان بدون جواب} few{{count} بدون جواب} many{{count} بدون جواب} other{{count} بدون جواب}}'**
+  String attendanceSummaryNoAnswer(int count);
+
+  /// No description provided for @attendanceMarkRemainingPresent.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الباقي حاضرين'**
+  String get attendanceMarkRemainingPresent;
+
+  /// No description provided for @attendanceSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال'**
+  String get attendanceSubmit;
+
+  /// No description provided for @attendanceSubmitted.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال الحضور'**
+  String get attendanceSubmitted;
+
+  /// Empty state for a group with no enrolled children.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد أطفال في هذه المجموعة بعد'**
+  String get attendanceEmptyGroup;
+
+  /// Offline banner on the attendance screen. Must never read as an error — marking offline is a supported flow, and submission is never blocked.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفوظ على هذا الجهاز، سيُرسل عند عودة الاتصال'**
+  String get attendanceOfflineSaved;
+
+  /// No description provided for @attendancePendingCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{لا شيء بانتظار الإرسال} one{تسجيل واحد بانتظار الإرسال} two{تسجيلان بانتظار الإرسال} few{{count} تسجيلات بانتظار الإرسال} many{{count} تسجيلًا بانتظار الإرسال} other{{count} تسجيل بانتظار الإرسال}}'**
+  String attendancePendingCount(int count);
+
+  /// A mark this device made was refused as stale. Never silently discarded.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعارض في التسجيل'**
+  String get attendanceConflictTitle;
+
+  /// No description provided for @attendanceConflictBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّلت {attempted} لهذا الطفل، لكن تم تسجيل {server} قبل ذلك من جهاز آخر.'**
+  String attendanceConflictBody(String attempted, String server);
+
+  /// No description provided for @attendanceConflictKeepMine.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد تسجيلي'**
+  String get attendanceConflictKeepMine;
+
+  /// No description provided for @attendanceConflictKeepServer.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد المسجَّل'**
+  String get attendanceConflictKeepServer;
+
+  /// No description provided for @attendanceUnknownChild.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يعد هذا الطفل ضمن هذه المجموعة، ولم يُسجَّل.'**
+  String get attendanceUnknownChild;
+
+  /// No description provided for @presenceTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الحضور'**
+  String get presenceTitle;
+
+  /// No description provided for @presenceQuestion.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل سيحضر {childName} حصة {when}؟'**
+  String presenceQuestion(String childName, String when);
+
+  /// No description provided for @presenceYes.
+  ///
+  /// In ar, this message translates to:
+  /// **'نعم'**
+  String get presenceYes;
+
+  /// No description provided for @presenceNo.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا'**
+  String get presenceNo;
+
+  /// No description provided for @presenceLate.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتأخر'**
+  String get presenceLate;
+
+  /// No description provided for @presenceReasonPrompt.
+  ///
+  /// In ar, this message translates to:
+  /// **'السبب (اختياري)'**
+  String get presenceReasonPrompt;
+
+  /// No description provided for @presenceReasonIllness.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرض'**
+  String get presenceReasonIllness;
+
+  /// No description provided for @presenceReasonTravel.
+  ///
+  /// In ar, this message translates to:
+  /// **'سفر'**
+  String get presenceReasonTravel;
+
+  /// No description provided for @presenceReasonExam.
+  ///
+  /// In ar, this message translates to:
+  /// **'امتحان'**
+  String get presenceReasonExam;
+
+  /// No description provided for @presenceReasonOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب آخر'**
+  String get presenceReasonOther;
+
+  /// No description provided for @presenceOtherNoteLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'اذكر السبب'**
+  String get presenceOtherNoteLabel;
+
+  /// No description provided for @presenceAnswered.
+  ///
+  /// In ar, this message translates to:
+  /// **'شكرًا، تم تسجيل جوابك'**
+  String get presenceAnswered;
+
+  /// No description provided for @presenceNoneOutstanding.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد تأكيدات معلّقة'**
+  String get presenceNoneOutstanding;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

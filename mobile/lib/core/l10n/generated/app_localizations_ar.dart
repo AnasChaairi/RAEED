@@ -337,4 +337,157 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get childTabMaterials => 'المواد';
+
+  @override
+  String get attendanceTitle => 'تسجيل الحضور';
+
+  @override
+  String get attendancePresent => 'حاضر';
+
+  @override
+  String get attendanceLate => 'متأخر';
+
+  @override
+  String get attendanceAbsent => 'غائب';
+
+  @override
+  String get attendanceExcused => 'بعذر';
+
+  @override
+  String get attendanceNotMarked => 'لم يُسجَّل';
+
+  @override
+  String attendanceSummaryConfirmed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count مؤكَّد',
+      many: '$count مؤكَّدًا',
+      few: '$count مؤكَّدين',
+      two: 'مؤكَّدان',
+      one: 'مؤكَّد واحد',
+      zero: 'لا مؤكَّد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String attendanceSummaryAbsent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count غياب',
+      many: '$count غيابًا',
+      few: '$count غيابات',
+      two: 'غيابان',
+      one: 'غياب واحد',
+      zero: 'لا غياب',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String attendanceSummaryNoAnswer(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count بدون جواب',
+      many: '$count بدون جواب',
+      few: '$count بدون جواب',
+      two: 'اثنان بدون جواب',
+      one: 'واحد بدون جواب',
+      zero: 'لا أحد بدون جواب',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get attendanceMarkRemainingPresent => 'تسجيل الباقي حاضرين';
+
+  @override
+  String get attendanceSubmit => 'إرسال';
+
+  @override
+  String get attendanceSubmitted => 'تم إرسال الحضور';
+
+  @override
+  String get attendanceEmptyGroup => 'لا يوجد أطفال في هذه المجموعة بعد';
+
+  @override
+  String get attendanceOfflineSaved =>
+      'محفوظ على هذا الجهاز، سيُرسل عند عودة الاتصال';
+
+  @override
+  String attendancePendingCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count تسجيل بانتظار الإرسال',
+      many: '$count تسجيلًا بانتظار الإرسال',
+      few: '$count تسجيلات بانتظار الإرسال',
+      two: 'تسجيلان بانتظار الإرسال',
+      one: 'تسجيل واحد بانتظار الإرسال',
+      zero: 'لا شيء بانتظار الإرسال',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get attendanceConflictTitle => 'تعارض في التسجيل';
+
+  @override
+  String attendanceConflictBody(String attempted, String server) {
+    return 'سجّلت $attempted لهذا الطفل، لكن تم تسجيل $server قبل ذلك من جهاز آخر.';
+  }
+
+  @override
+  String get attendanceConflictKeepMine => 'اعتماد تسجيلي';
+
+  @override
+  String get attendanceConflictKeepServer => 'اعتماد المسجَّل';
+
+  @override
+  String get attendanceUnknownChild =>
+      'لم يعد هذا الطفل ضمن هذه المجموعة، ولم يُسجَّل.';
+
+  @override
+  String get presenceTitle => 'تأكيد الحضور';
+
+  @override
+  String presenceQuestion(String childName, String when) {
+    return 'هل سيحضر $childName حصة $when؟';
+  }
+
+  @override
+  String get presenceYes => 'نعم';
+
+  @override
+  String get presenceNo => 'لا';
+
+  @override
+  String get presenceLate => 'سيتأخر';
+
+  @override
+  String get presenceReasonPrompt => 'السبب (اختياري)';
+
+  @override
+  String get presenceReasonIllness => 'مرض';
+
+  @override
+  String get presenceReasonTravel => 'سفر';
+
+  @override
+  String get presenceReasonExam => 'امتحان';
+
+  @override
+  String get presenceReasonOther => 'سبب آخر';
+
+  @override
+  String get presenceOtherNoteLabel => 'اذكر السبب';
+
+  @override
+  String get presenceAnswered => 'شكرًا، تم تسجيل جوابك';
+
+  @override
+  String get presenceNoneOutstanding => 'لا توجد تأكيدات معلّقة';
 }

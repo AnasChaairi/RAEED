@@ -334,4 +334,142 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get childTabMaterials => 'Ressources';
+
+  @override
+  String get attendanceTitle => 'Saisie des présences';
+
+  @override
+  String get attendancePresent => 'Présent';
+
+  @override
+  String get attendanceLate => 'En retard';
+
+  @override
+  String get attendanceAbsent => 'Absent';
+
+  @override
+  String get attendanceExcused => 'Excusé';
+
+  @override
+  String get attendanceNotMarked => 'Non saisi';
+
+  @override
+  String attendanceSummaryConfirmed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count confirmés',
+      one: '$count confirmé',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String attendanceSummaryAbsent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count absents',
+      one: '$count absent',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String attendanceSummaryNoAnswer(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sans réponse',
+      one: '$count sans réponse',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get attendanceMarkRemainingPresent => 'Marquer le reste présent';
+
+  @override
+  String get attendanceSubmit => 'Envoyer';
+
+  @override
+  String get attendanceSubmitted => 'Présences envoyées';
+
+  @override
+  String get attendanceEmptyGroup =>
+      'Aucun enfant dans ce groupe pour l\'instant';
+
+  @override
+  String get attendanceOfflineSaved =>
+      'Enregistré sur cet appareil, sera synchronisé';
+
+  @override
+  String attendancePendingCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count saisies en attente',
+      one: '$count saisie en attente',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get attendanceConflictTitle => 'Conflit de saisie';
+
+  @override
+  String attendanceConflictBody(String attempted, String server) {
+    return 'Vous avez saisi $attempted, mais $server a été enregistré avant depuis un autre appareil.';
+  }
+
+  @override
+  String get attendanceConflictKeepMine => 'Garder ma saisie';
+
+  @override
+  String get attendanceConflictKeepServer => 'Garder l\'enregistrement';
+
+  @override
+  String get attendanceUnknownChild =>
+      'Cet enfant n\'est plus dans ce groupe ; la saisie n\'a pas été enregistrée.';
+
+  @override
+  String get presenceTitle => 'Confirmation de présence';
+
+  @override
+  String presenceQuestion(String childName, String when) {
+    return '$childName sera-t-il présent à la séance de $when ?';
+  }
+
+  @override
+  String get presenceYes => 'Oui';
+
+  @override
+  String get presenceNo => 'Non';
+
+  @override
+  String get presenceLate => 'En retard';
+
+  @override
+  String get presenceReasonPrompt => 'Motif (facultatif)';
+
+  @override
+  String get presenceReasonIllness => 'Maladie';
+
+  @override
+  String get presenceReasonTravel => 'Voyage';
+
+  @override
+  String get presenceReasonExam => 'Examen';
+
+  @override
+  String get presenceReasonOther => 'Autre motif';
+
+  @override
+  String get presenceOtherNoteLabel => 'Précisez le motif';
+
+  @override
+  String get presenceAnswered => 'Merci, votre réponse est enregistrée';
+
+  @override
+  String get presenceNoneOutstanding => 'Aucune confirmation en attente';
 }
