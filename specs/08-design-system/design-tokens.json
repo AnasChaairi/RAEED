@@ -1,0 +1,81 @@
+{
+  "$schema": "raeed design tokens v1 — colors sourced from logo/logo.jpeg, see style-guide.md for derivation and contrast rationale",
+  "color": {
+    "light": {
+      "bg": "#F7F9FB",
+      "surface": "#FFFFFF",
+      "surfaceAlt": "#EEF3F8",
+      "ink": "#10161C",
+      "inkDim": "#4C5A66",
+      "border": "#DCE4EC",
+      "primary": "#0A4A8C",
+      "primaryOn": "#FFFFFF",
+      "primarySoft": "#E2EEFA",
+      "accent": "#9C6900",
+      "accentDecorative": "#F2A900",
+      "accentOn": "#FFFFFF",
+      "accentSoft": "#FBEDD2",
+      "success": "#1A7A44",
+      "warning": "#A85A0A",
+      "danger": "#B02A22",
+      "info": "#0B84D6"
+    },
+    "dark": {
+      "bg": "#0B0F14",
+      "surface": "#121820",
+      "surfaceAlt": "#1A222C",
+      "ink": "#E8EEF3",
+      "inkDim": "#9FB0BE",
+      "border": "#28323D",
+      "primary": "#29C4EF",
+      "primaryOn": "#06222E",
+      "primarySoft": "#113240",
+      "accent": "#F2A900",
+      "accentDecorative": "#F2A900",
+      "accentOn": "#2B1C00",
+      "accentSoft": "#33290F",
+      "success": "#34C185",
+      "warning": "#E0A544",
+      "danger": "#E2685A",
+      "info": "#29C4EF"
+    },
+    "logoSource": {
+      "note": "extracted directly from logo/logo.jpeg — kept for traceability, not for direct app use except in logo lockups",
+      "blueAverage": "#0A82DA",
+      "blueDark": "#06336A",
+      "blueLight": "#14E9FF",
+      "goldAverage": "#EFA80E",
+      "goldDark": "#9A5F19",
+      "goldLight": "#E4E74E",
+      "backdropBlack": "#000000"
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "arabic": "'Amiri', 'Traditional Arabic', serif",
+      "latinDisplay": "'Lora', Georgia, 'Times New Roman', serif",
+      "uiSans": "'Public Sans', -apple-system, 'Segoe UI', Tahoma, sans-serif",
+      "mono": "'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace"
+    },
+    "arabicWeights": [400, 700],
+    "note": "Amiri ships Regular (400) and Bold (700) only — no 500/600. Build Arabic hierarchy with size, color, and spacing, not intermediate weights. uiSans (Public Sans) carries the fuller weight range (400/500/600/700) for compact UI chrome (buttons, tabs, form labels) in both RTL and LTR layouts, and for French/English body text.",
+    "scale": {
+      "display": { "size": 32, "lineHeightArabic": 1.5, "lineHeightLatin": 1.25, "weight": 700 },
+      "h1":      { "size": 26, "lineHeightArabic": 1.55, "lineHeightLatin": 1.3,  "weight": 700 },
+      "h2":      { "size": 21, "lineHeightArabic": 1.6,  "lineHeightLatin": 1.3,  "weight": 700 },
+      "h3":      { "size": 18, "lineHeightArabic": 1.65, "lineHeightLatin": 1.35, "weight": 700 },
+      "body":    { "size": 16, "lineHeightArabic": 1.8,  "lineHeightLatin": 1.5,  "weight": 400 },
+      "bodySmall": { "size": 14, "lineHeightArabic": 1.8, "lineHeightLatin": 1.5, "weight": 400 },
+      "caption": { "size": 12, "lineHeightArabic": 1.7,  "lineHeightLatin": 1.4,  "weight": 500, "letterSpacing": 0.02 }
+    },
+    "numerals": "western (0-9) pinned to ar-MA — not Eastern Arabic-Indic digits, see 08-design-system/style-guide.md",
+    "tabularNumsFor": ["attendance counts", "dashboard stats", "dates", "durations"]
+  },
+  "spacing": { "xs": 4, "sm": 8, "md": 12, "lg": 16, "xl": 20, "2xl": 24, "3xl": 32, "4xl": 40, "5xl": 48, "6xl": 64 },
+  "radius": { "sm": 6, "md": 10, "lg": 14, "pill": 999 },
+  "elevation": {
+    "light": { "sm": "0 1px 2px rgba(16,22,28,.06), 0 4px 12px -6px rgba(16,22,28,.12)" },
+    "dark":  { "sm": "0 1px 2px rgba(0,0,0,.5), 0 8px 20px -10px rgba(0,0,0,.6)" }
+  },
+  "touchTarget": { "minPx": 44, "primaryActionsPx": 52 }
+}

@@ -1,0 +1,429 @@
+openapi: 3.0.3
+info:
+  title: RAEED API
+  version: "1.0"
+  description: >
+    Core-flow contract for the RAEED MVP. Covers the endpoints with the most business logic
+    (auth, children, sessions/attendance, memories, dashboard) in full; the remaining routes
+    follow the same envelope/auth/error conventions documented in conventions.md and are
+    listed there as a catalog rather than fully specified here — extend this file as each
+    module is implemented, it is the contract both the Flutter app and the React dashboard
+    generate typed clients from.
+servers:
+  - url: https://{host}/api/v1
+    variables:
+      host:
+        default: localhost:3000
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    cursor:
+      name: cursor
+      in: query
+      schema: { type: string }
+      description: Opaque pagination cursor from a previous response's `page.cursor`.
+    groupId:
+      name: group_id
+      in: query
+      schema: { type: string, format: uuid }
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string, example: attendance.already_recorded }
+            message: { type: string }
+            details: { type: object, additionalProperties: true }
+
+    Page:
+      type: object
+      properties:
+        cursor: { type: string, nullable: true }
+        has_more: { type: boolean }
+
+    Child:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        full_name: { type: string }
+        photo_url: { type: string, nullable: true }
+        group:
+          type: object
+          properties:
+            id: { type: string, format: uuid }
+            name: { type: string }
+        health_alert:
+          type: boolean
+          description: Presence-only flag; full health text is never inlined in a list response.
+
+    ChildDetail:
+      allOf:
+        - $ref: '#/components/schemas/Child'
+        - type: object
+          properties:
+            dob: { type: string, format: date }
+            school_level: { type: string, nullable: true }
+            health_json: { type: object, additionalProperties: true }
+            image_rights_level:
+              type: string
+              enum: [allowed, app_only, not_allowed]
+
+    AttendanceRecordInput:
+      type: object
+      required: [child_id, status, recorded_at_client]
+      properties:
+        child_id: { type: string, format: uuid }
+        status: { type: string, enum: [present, absent, late, excused] }
+        recorded_at_client: { type: string, format: date-time }
+
+    AttendanceRecord:
+      type: object
+      properties:
+        child_id: { type: string, format: uuid }
+        status: { type: string, enum: [present, absent, late, excused] }
+        recorded_by: { type: string, format: uuid }
+        recorded_at: { type: string, format: date-time }
+
+    PresenceAnswerInput:
+      type: object
+      required: [child_id, answer]
+      properties:
+        child_id: { type: string, format: uuid }
+        answer: { type: string, enum: [yes, no, late] }
+        reason: { type: string, enum: [illness, travel, exam, other], nullable: true }
+
+    MemoriesPostInput:
+      type: object
+      required: [album_id, media, tagged_child_ids]
+      properties:
+        album_id: { type: string, format: uuid }
+        media:
+          type: array
+          items:
+            type: object
+            required: [storage_key, media_kind]
+            properties:
+              storage_key: { type: string }
+              media_kind: { type: string, enum: [photo, video, banner] }
+        tagged_child_ids:
+          type: array
+          items: { type: string, format: uuid }
+
+    Announcement:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        body: { type: string, nullable: true }
+        priority: { type: string, enum: [normal, urgent] }
+        pinned: { type: boolean }
+        publish_at: { type: string, format: date-time }
+
+  responses:
+    Unauthorized:
+      description: Missing or invalid token
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    Forbidden:
+      description: Authenticated, but outside the caller's permission scope
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    Conflict:
+      description: State changed since the client last read it
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+
+paths:
+  /auth/otp/request:
+    post:
+      summary: Request a one-time login code
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone]
+              properties:
+                phone: { type: string, example: "+2126XXXXXXXX" }
+      responses:
+        '202': { description: OTP sent (SMS, WhatsApp fallback per ACC-03) }
+        '429': { description: Rate limited — 5 requests/hour/number }
+
+  /auth/otp/verify:
+    post:
+      summary: Exchange a verified OTP for tokens
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone, code]
+              properties:
+                phone: { type: string }
+                code: { type: string }
+      responses:
+        '200':
+          description: Issued tokens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token: { type: string }
+                  refresh_token: { type: string }
+                  roles:
+                    type: array
+                    items: { type: string, enum: [parent, educator, executive, admin] }
+        '401': { description: Invalid or expired code }
+
+  /auth/refresh:
+    post:
+      summary: Rotate a refresh token for a new access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties: { refresh_token: { type: string } }
+      responses:
+        '200': { description: New token pair issued }
+        '401': { description: Refresh token revoked or expired }
+
+  /auth/sessions/{deviceId}:
+    delete:
+      summary: Revoke one device's session (self-service, or Admin forcing a deactivated staff member off, ACC-07)
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Revoked }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /children:
+    get:
+      summary: List children the caller may see (own children / own groups / all, scoped per 05-authorization.md)
+      parameters:
+        - $ref: '#/components/parameters/groupId'
+        - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Child' } }
+                  page: { $ref: '#/components/schemas/Page' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /children/{childId}:
+    get:
+      summary: Get a child's full profile (health info access is separately audit-logged, AUD-03)
+      parameters:
+        - name: childId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ChildDetail' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { description: Not found }
+
+  /children/{childId}/change-requests:
+    post:
+      summary: Request a change to a child's profile (tiered — see CHD-04 recommendation in 01-product-brief.md)
+      parameters:
+        - name: childId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [field_path, proposed_value]
+              properties:
+                field_path: { type: string, example: health_json.allergies }
+                proposed_value: {}
+      responses:
+        '201': { description: Request created — auto-approved instantly for self-edit-instant fields, pending for the rest }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /groups/{groupId}/sessions:
+    get:
+      summary: List a group's sessions
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - $ref: '#/components/parameters/cursor'
+      responses:
+        '200': { description: OK }
+
+  /sessions/{sessionId}/presence-confirmation:
+    post:
+      summary: Send the presence confirmation for a session (ATT-01)
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '201': { description: Confirmation sent, deadline scheduled }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /presence-confirmations/{confirmationId}/answers:
+    post:
+      summary: Submit a guardian's presence answer for one child (ATT-02/ATT-04)
+      parameters:
+        - name: confirmationId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PresenceAnswerInput' }
+      responses:
+        '200': { description: Recorded }
+
+  /sessions/{sessionId}/attendance:
+    get:
+      summary: Get the attendance sheet, pre-filled from presence answers (ATT-06)
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/AttendanceRecord' } }
+    patch:
+      summary: Submit/update the attendance sheet for a session
+      description: >
+        Any `absent` status with no matching prior `no`/absence-declared PresenceAnswer
+        synchronously enqueues the critical absence-alert job before this call returns
+        (see 02-architecture.md and 09-notifications-spec.md). A record whose
+        `recorded_at_client` is older than the server's current `recorded_at` for that
+        child is rejected with `attendance.conflict`, not overwritten.
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [records]
+              properties:
+                records:
+                  type: array
+                  items: { $ref: '#/components/schemas/AttendanceRecordInput' }
+      responses:
+        '200': { description: Applied }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { description: Unknown child_id for this session }
+
+  /memories/posts:
+    post:
+      summary: Publish a Memories Wall post
+      description: >
+        Rejected with `memories.consent_blocked` (+ the offending child_id) if any tagged
+        child's current image_rights_level is `not_allowed` (WAL-06). Status is `pending`
+        if the album's moderation_mode is `approve_before_publish`, else `published`
+        immediately, visible only to guardians of tagged/group children.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/MemoriesPostInput' }
+      responses:
+        '201': { description: Created (published or pending) }
+        '422':
+          description: memories.consent_blocked
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+
+  /announcements:
+    get:
+      summary: List announcements visible to the caller
+      parameters:
+        - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Announcement' } }
+                  page: { $ref: '#/components/schemas/Page' }
+    post:
+      summary: Publish an announcement (Executives — any audience; Educators — own groups only, ANN-03)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, audience]
+              properties:
+                title: { type: string }
+                body: { type: string }
+                audience: { type: object, additionalProperties: true }
+                priority: { type: string, enum: [normal, urgent], default: normal }
+      responses:
+        '201': { description: Created }
+
+  /dashboard/overview:
+    get:
+      summary: Executive dashboard overview stats (DSH-01) — reuses the same permission-scoped services as the mobile API
+      responses:
+        '200': { description: OK }
+
+  /audit-log:
+    get:
+      summary: Read the audit log (Admin only)
+      parameters:
+        - $ref: '#/components/parameters/cursor'
+      responses:
+        '200': { description: OK }
+        '403': { $ref: '#/components/responses/Forbidden' }
