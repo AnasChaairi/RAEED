@@ -226,4 +226,112 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get notFoundGoHome => 'Revenir à l\'accueil';
+
+  @override
+  String get homeTitleParent => 'Mes enfants';
+
+  @override
+  String get homeTitleEducator => 'Mes groupes';
+
+  @override
+  String get homeTitleExecutive => 'Les enfants';
+
+  @override
+  String get homeEmptyTitle => 'Aucun enfant lié à votre compte';
+
+  @override
+  String get homeEmptyBody =>
+      'Veuillez contacter l\'administration de l\'académie pour lier votre enfant à votre compte.';
+
+  @override
+  String childAgeYears(int years) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: '$years ans',
+      one: '$years an',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get childNoSessionToday => 'Pas de séance aujourd\'hui';
+
+  @override
+  String childNextSession(String when) {
+    return 'Prochaine séance : $when';
+  }
+
+  @override
+  String get statusAwaitingAnswer => 'Confirmation de présence attendue';
+
+  @override
+  String get statusPresenceConfirmed => 'Présence confirmée';
+
+  @override
+  String get statusPresenceDeclined => 'Absence annoncée';
+
+  @override
+  String get statusPresenceLate => 'Arrivera en retard';
+
+  @override
+  String get statusPresent => 'Présent';
+
+  @override
+  String get statusLate => 'En retard';
+
+  @override
+  String get statusAbsent => 'Absent';
+
+  @override
+  String get statusExcused => 'Absence excusée';
+
+  @override
+  String get statusUnknown => '—';
+
+  @override
+  String get absenceAlertTitle => 'Absence sans justification';
+
+  @override
+  String get healthAlertBadgeLabel => 'Alerte santé — appuyez pour consulter';
+
+  @override
+  String get announcementsStripTitle => 'Annonces';
+
+  @override
+  String get announcementUrgent => 'Urgent';
+
+  @override
+  String get announcementsEmpty => 'Aucune annonce pour le moment';
+
+  @override
+  String get childProfileTitle => 'Fiche de l\'enfant';
+
+  @override
+  String get childProfileGroupLabel => 'Groupe';
+
+  @override
+  String get childProfileHealthTitle => 'Informations de santé';
+
+  @override
+  String get childProfileNoHealthInfo =>
+      'Aucune information de santé enregistrée.';
+
+  @override
+  String get childProfileComingSoon => 'Cette section sera bientôt disponible.';
+
+  @override
+  String get pullToRefresh => 'Tirez pour actualiser';
+
+  @override
+  String get childTabSchedule => 'Planning';
+
+  @override
+  String get childTabAttendance => 'Présence';
+
+  @override
+  String get childTabHomework => 'Devoirs';
+
+  @override
+  String get childTabMaterials => 'Ressources';
 }

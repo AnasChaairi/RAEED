@@ -11,6 +11,8 @@ import 'core/theme/raeed_theme.dart';
 import 'features/auth/presentation/consent_screen.dart';
 import 'features/auth/presentation/login_screen.dart';
 import 'features/auth/presentation/otp_screen.dart';
+import 'features/children/presentation/child_profile_screen.dart';
+import 'features/children/presentation/home_screen.dart';
 import 'shared/widgets/not_found_screen.dart';
 import 'shared/widgets/placeholder_screen.dart';
 import 'shared/widgets/splash_screen.dart';
@@ -107,11 +109,13 @@ final AppScreens appScreensTable = AppScreens(
   login: (context, state) => const LoginScreen(),
   otp: (context, state) => const OtpScreen(),
   consent: (context, state) => const ConsentScreen(),
-  home: (context, state) =>
-      const PlaceholderScreen(title: 'Home', ticket: 'RAEED-12'),
-  child: (context, state) => PlaceholderScreen(
-    title: 'Child ${state.pathParameters['childId'] ?? ''}',
-    ticket: 'RAEED-12',
+  home: (context, state) => const HomeScreen(),
+  child: (context, state) => ChildProfileScreen(
+    childId: state.pathParameters['childId'] ?? '',
+    // The sub-tab is the last path segment when one is present.
+    initialTab: ChildProfileTab.fromSlug(
+      state.uri.pathSegments.length > 2 ? state.uri.pathSegments.last : null,
+    ),
   ),
   group: (context, state) => PlaceholderScreen(
     title: 'Group ${state.pathParameters['groupId'] ?? ''}',

@@ -1,12 +1,10 @@
 {
   "@@locale": "ar",
   "@@x-notes": "Arabic is the template locale. Every new string is authored here first, with all six ICU plural categories where it counts something.",
-
   "appName": "الرائد",
   "@appName": {
     "description": "The application name as shown in the app bar and launcher."
   },
-
   "commonRetry": "إعادة المحاولة",
   "@commonRetry": {
     "description": "Button that re-runs a failed request."
@@ -23,7 +21,6 @@
   "@commonSave": {},
   "commonBack": "رجوع",
   "@commonBack": {},
-
   "errorNetworkTitle": "تعذّر الاتصال",
   "@errorNetworkTitle": {
     "description": "Shown when the device cannot reach the server at all."
@@ -50,7 +47,6 @@
   },
   "errorContractBody": "هذه النسخة من التطبيق لم تعد متوافقة مع الخادم. يرجى تحديث التطبيق.",
   "@errorContractBody": {},
-
   "offlineBannerMessage": "أنت غير متصل بالإنترنت. تُعرض آخر البيانات المحفوظة.",
   "@offlineBannerMessage": {
     "description": "Persistent banner shown while the device is offline and the screen is showing cached data."
@@ -59,7 +55,6 @@
   "@offlineRefreshFailed": {
     "description": "Subtle banner on a screen that is showing cached content because the refresh failed."
   },
-
   "loginTitle": "مرحبًا بك في الرائد",
   "@loginTitle": {},
   "loginSubtitle": "أدخل رقم هاتفك لتلقّي رمز الدخول.",
@@ -76,14 +71,16 @@
   "@loginNoAccountNotice": {
     "description": "Registration is Executive/Admin-only (ACC-02) — there is no public sign-up."
   },
-
   "otpTitle": "رمز الدخول",
   "@otpTitle": {},
   "otpSentTo": "أرسلنا رمزًا من ستة أرقام إلى {phone}.",
   "@otpSentTo": {
     "description": "Confirms where the OTP was sent. The phone number is masked before it reaches this string.",
     "placeholders": {
-      "phone": { "type": "String", "example": "+212 6•• ••• •12" }
+      "phone": {
+        "type": "String",
+        "example": "+212 6•• ••• •12"
+      }
     }
   },
   "otpCodeLabel": "الرمز",
@@ -100,10 +97,12 @@
   "@otpResendIn": {
     "description": "Countdown before the resend button re-enables. All six Arabic plural categories are authored, not defaulted.",
     "placeholders": {
-      "seconds": { "type": "int", "example": "45" }
+      "seconds": {
+        "type": "int",
+        "example": "45"
+      }
     }
   },
-
   "consentTitle": "الخصوصية وحقوق الصورة",
   "@consentTitle": {},
   "consentIntro": "قبل المتابعة، نحتاج موافقتك على سياسة الخصوصية وتحديد مستوى حقوق الصورة لكل طفل.",
@@ -117,7 +116,10 @@
   "consentImageRightsForChild": "حقوق الصورة لـ {childName}",
   "@consentImageRightsForChild": {
     "placeholders": {
-      "childName": { "type": "String", "example": "آدم" }
+      "childName": {
+        "type": "String",
+        "example": "آدم"
+      }
     }
   },
   "consentImageRightsAllowed": "مسموح",
@@ -142,7 +144,6 @@
   "@consentChangeLater": {},
   "consentSubmit": "حفظ الموافقات",
   "@consentSubmit": {},
-
   "navHome": "الرئيسية",
   "@navHome": {},
   "navSchedule": "الجدول",
@@ -157,7 +158,6 @@
   "@navGroups": {},
   "navDashboard": "لوحة القيادة",
   "@navDashboard": {},
-
   "roleParent": "وليّ الأمر",
   "@roleParent": {},
   "roleEducator": "مؤطِّر",
@@ -170,11 +170,103 @@
   "@roleSwitchTitle": {
     "description": "A user may hold more than one role — e.g. an educator who is also a parent."
   },
-
   "notFoundTitle": "الصفحة غير موجودة",
   "@notFoundTitle": {},
   "notFoundBody": "الرابط الذي فتحته لم يعد صالحًا.",
   "@notFoundBody": {},
   "notFoundGoHome": "العودة إلى الرئيسية",
-  "@notFoundGoHome": {}
+  "@notFoundGoHome": {},
+  "homeTitleParent": "أطفالي",
+  "@homeTitleParent": {
+    "description": "Parent home screen title."
+  },
+  "homeTitleEducator": "مجموعاتي",
+  "@homeTitleEducator": {},
+  "homeTitleExecutive": "الأطفال",
+  "@homeTitleExecutive": {},
+  "homeEmptyTitle": "لا يوجد أي طفل مرتبط بحسابك",
+  "@homeEmptyTitle": {
+    "description": "Should not occur post-onboarding; if it does it signals a data problem, so the copy points at the association rather than at the user."
+  },
+  "homeEmptyBody": "يرجى التواصل مع إدارة الأكاديمية لربط طفلك بحسابك.",
+  "@homeEmptyBody": {},
+  "childAgeYears": "{years, plural, zero{أقل من سنة} one{سنة واحدة} two{سنتان} few{{years} سنوات} many{{years} سنة} other{{years} سنة}}",
+  "@childAgeYears": {
+    "description": "A child's age. Arabic needs all six categories: 3-10 take few, 11-99 take many.",
+    "placeholders": {
+      "years": {
+        "type": "int",
+        "example": "7"
+      }
+    }
+  },
+  "childNoSessionToday": "لا حصة اليوم",
+  "@childNoSessionToday": {},
+  "childNextSession": "الحصة القادمة: {when}",
+  "@childNextSession": {
+    "placeholders": {
+      "when": {
+        "type": "String",
+        "example": "الثلاثاء 16:00"
+      }
+    }
+  },
+  "statusAwaitingAnswer": "بانتظار تأكيد الحضور",
+  "@statusAwaitingAnswer": {
+    "description": "A presence confirmation is open and unanswered — tappable."
+  },
+  "statusPresenceConfirmed": "مؤكَّد الحضور",
+  "@statusPresenceConfirmed": {},
+  "statusPresenceDeclined": "غياب معلَن",
+  "@statusPresenceDeclined": {},
+  "statusPresenceLate": "سيتأخر",
+  "@statusPresenceLate": {},
+  "statusPresent": "حاضر",
+  "@statusPresent": {},
+  "statusLate": "متأخر",
+  "@statusLate": {},
+  "statusAbsent": "غائب",
+  "@statusAbsent": {},
+  "statusExcused": "غياب بعذر",
+  "@statusExcused": {},
+  "statusUnknown": "—",
+  "@statusUnknown": {
+    "description": "A status this build predates; rendered neutrally rather than crashing."
+  },
+  "absenceAlertTitle": "غياب بدون إشعار",
+  "@absenceAlertTitle": {
+    "description": "High-contrast alert state overriding the status pill (ATT-07)."
+  },
+  "healthAlertBadgeLabel": "تنبيه صحي — اضغط للاطلاع",
+  "@healthAlertBadgeLabel": {
+    "description": "Screen-reader label for the icon-only health badge. The health text itself is never rendered in a list view."
+  },
+  "announcementsStripTitle": "إعلانات",
+  "@announcementsStripTitle": {},
+  "announcementUrgent": "عاجل",
+  "@announcementUrgent": {},
+  "announcementsEmpty": "لا إعلانات حاليًا",
+  "@announcementsEmpty": {},
+  "childProfileTitle": "ملف الطفل",
+  "@childProfileTitle": {},
+  "childProfileGroupLabel": "المجموعة",
+  "@childProfileGroupLabel": {},
+  "childProfileHealthTitle": "معلومات صحية",
+  "@childProfileHealthTitle": {},
+  "childProfileNoHealthInfo": "لا توجد معلومات صحية مسجَّلة.",
+  "@childProfileNoHealthInfo": {},
+  "childProfileComingSoon": "سيتوفر هذا القسم قريبًا.",
+  "@childProfileComingSoon": {},
+  "pullToRefresh": "اسحب للتحديث",
+  "@pullToRefresh": {},
+  "childTabSchedule": "الجدول",
+  "@childTabSchedule": {
+    "description": "Child profile sub-tab."
+  },
+  "childTabAttendance": "الحضور",
+  "@childTabAttendance": {},
+  "childTabHomework": "الواجبات",
+  "@childTabHomework": {},
+  "childTabMaterials": "المواد",
+  "@childTabMaterials": {}
 }

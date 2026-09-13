@@ -1,8 +1,6 @@
 {
   "@@locale": "en",
-
   "appName": "RAEED",
-
   "commonRetry": "Retry",
   "commonCancel": "Cancel",
   "commonConfirm": "Confirm",
@@ -10,7 +8,6 @@
   "commonClose": "Close",
   "commonSave": "Save",
   "commonBack": "Back",
-
   "errorNetworkTitle": "Can't connect",
   "errorNetworkBody": "Check your internet connection and try again.",
   "errorGenericTitle": "Something went wrong",
@@ -21,10 +18,8 @@
   "errorSessionExpiredBody": "Please sign in again.",
   "errorContractTitle": "Update required",
   "errorContractBody": "This version of the app is no longer compatible with the server. Please update it.",
-
   "offlineBannerMessage": "You're offline. Showing the last saved data.",
   "offlineRefreshFailed": "Couldn't refresh",
-
   "loginTitle": "Welcome to RAEED",
   "loginSubtitle": "Enter your phone number to receive a sign-in code.",
   "loginPhoneLabel": "Phone number",
@@ -32,7 +27,6 @@
   "loginPhoneInvalid": "Enter a valid phone number.",
   "loginRequestCode": "Send sign-in code",
   "loginNoAccountNotice": "Accounts are created by the academy's administration only. If you don't have one, get in touch with them.",
-
   "otpTitle": "Sign-in code",
   "otpSentTo": "We sent a six-digit code to {phone}.",
   "otpCodeLabel": "Code",
@@ -41,7 +35,6 @@
   "otpRateLimited": "You've requested too many codes. Try again in an hour.",
   "otpResend": "Resend code",
   "otpResendIn": "{seconds, plural, one{Resend in {seconds} second} other{Resend in {seconds} seconds}}",
-
   "consentTitle": "Privacy and image rights",
   "consentIntro": "Before you continue, we need your agreement to the privacy policy and an image-rights level for each child.",
   "consentPrivacyPolicyAccept": "I agree to the privacy policy",
@@ -56,7 +49,6 @@
   "consentImageRightsNotAllowedHelp": "No photo of the child will be published anywhere.",
   "consentChangeLater": "You can change this at any time in the child's settings.",
   "consentSubmit": "Save consents",
-
   "navHome": "Home",
   "navSchedule": "Schedule",
   "navMessages": "Messages",
@@ -64,14 +56,44 @@
   "navMore": "More",
   "navGroups": "Groups",
   "navDashboard": "Dashboard",
-
   "roleParent": "Parent",
   "roleEducator": "Educator",
   "roleExecutive": "Executive",
   "roleAdmin": "Administrator",
   "roleSwitchTitle": "Switch role",
-
   "notFoundTitle": "Page not found",
   "notFoundBody": "The link you opened is no longer valid.",
-  "notFoundGoHome": "Back to home"
+  "notFoundGoHome": "Back to home",
+  "homeTitleParent": "My children",
+  "homeTitleEducator": "My groups",
+  "homeTitleExecutive": "Children",
+  "homeEmptyTitle": "No child is linked to your account",
+  "homeEmptyBody": "Please contact the academy's administration to link your child to your account.",
+  "childAgeYears": "{years, plural, one{{years} year} other{{years} years}}",
+  "childNoSessionToday": "No session today",
+  "childNextSession": "Next session: {when}",
+  "statusAwaitingAnswer": "Presence confirmation needed",
+  "statusPresenceConfirmed": "Presence confirmed",
+  "statusPresenceDeclined": "Absence declared",
+  "statusPresenceLate": "Will be late",
+  "statusPresent": "Present",
+  "statusLate": "Late",
+  "statusAbsent": "Absent",
+  "statusExcused": "Excused absence",
+  "statusUnknown": "—",
+  "absenceAlertTitle": "Absent without notice",
+  "healthAlertBadgeLabel": "Health alert — tap to view",
+  "announcementsStripTitle": "Announcements",
+  "announcementUrgent": "Urgent",
+  "announcementsEmpty": "No announcements right now",
+  "childProfileTitle": "Child profile",
+  "childProfileGroupLabel": "Group",
+  "childProfileHealthTitle": "Health information",
+  "childProfileNoHealthInfo": "No health information recorded.",
+  "childProfileComingSoon": "This section is coming soon.",
+  "pullToRefresh": "Pull to refresh",
+  "childTabSchedule": "Schedule",
+  "childTabAttendance": "Attendance",
+  "childTabHomework": "Homework",
+  "childTabMaterials": "Materials"
 }

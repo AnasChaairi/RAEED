@@ -226,4 +226,115 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get notFoundGoHome => 'العودة إلى الرئيسية';
+
+  @override
+  String get homeTitleParent => 'أطفالي';
+
+  @override
+  String get homeTitleEducator => 'مجموعاتي';
+
+  @override
+  String get homeTitleExecutive => 'الأطفال';
+
+  @override
+  String get homeEmptyTitle => 'لا يوجد أي طفل مرتبط بحسابك';
+
+  @override
+  String get homeEmptyBody =>
+      'يرجى التواصل مع إدارة الأكاديمية لربط طفلك بحسابك.';
+
+  @override
+  String childAgeYears(int years) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: '$years سنة',
+      many: '$years سنة',
+      few: '$years سنوات',
+      two: 'سنتان',
+      one: 'سنة واحدة',
+      zero: 'أقل من سنة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get childNoSessionToday => 'لا حصة اليوم';
+
+  @override
+  String childNextSession(String when) {
+    return 'الحصة القادمة: $when';
+  }
+
+  @override
+  String get statusAwaitingAnswer => 'بانتظار تأكيد الحضور';
+
+  @override
+  String get statusPresenceConfirmed => 'مؤكَّد الحضور';
+
+  @override
+  String get statusPresenceDeclined => 'غياب معلَن';
+
+  @override
+  String get statusPresenceLate => 'سيتأخر';
+
+  @override
+  String get statusPresent => 'حاضر';
+
+  @override
+  String get statusLate => 'متأخر';
+
+  @override
+  String get statusAbsent => 'غائب';
+
+  @override
+  String get statusExcused => 'غياب بعذر';
+
+  @override
+  String get statusUnknown => '—';
+
+  @override
+  String get absenceAlertTitle => 'غياب بدون إشعار';
+
+  @override
+  String get healthAlertBadgeLabel => 'تنبيه صحي — اضغط للاطلاع';
+
+  @override
+  String get announcementsStripTitle => 'إعلانات';
+
+  @override
+  String get announcementUrgent => 'عاجل';
+
+  @override
+  String get announcementsEmpty => 'لا إعلانات حاليًا';
+
+  @override
+  String get childProfileTitle => 'ملف الطفل';
+
+  @override
+  String get childProfileGroupLabel => 'المجموعة';
+
+  @override
+  String get childProfileHealthTitle => 'معلومات صحية';
+
+  @override
+  String get childProfileNoHealthInfo => 'لا توجد معلومات صحية مسجَّلة.';
+
+  @override
+  String get childProfileComingSoon => 'سيتوفر هذا القسم قريبًا.';
+
+  @override
+  String get pullToRefresh => 'اسحب للتحديث';
+
+  @override
+  String get childTabSchedule => 'الجدول';
+
+  @override
+  String get childTabAttendance => 'الحضور';
+
+  @override
+  String get childTabHomework => 'الواجبات';
+
+  @override
+  String get childTabMaterials => 'المواد';
 }

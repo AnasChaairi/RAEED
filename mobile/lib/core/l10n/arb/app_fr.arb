@@ -1,8 +1,6 @@
 {
   "@@locale": "fr",
-
   "appName": "RAEED",
-
   "commonRetry": "Réessayer",
   "commonCancel": "Annuler",
   "commonConfirm": "Confirmer",
@@ -10,7 +8,6 @@
   "commonClose": "Fermer",
   "commonSave": "Enregistrer",
   "commonBack": "Retour",
-
   "errorNetworkTitle": "Connexion impossible",
   "errorNetworkBody": "Vérifiez votre connexion internet, puis réessayez.",
   "errorGenericTitle": "Une erreur est survenue",
@@ -21,10 +18,8 @@
   "errorSessionExpiredBody": "Veuillez vous reconnecter.",
   "errorContractTitle": "Mise à jour requise",
   "errorContractBody": "Cette version de l'application n'est plus compatible avec le serveur. Veuillez la mettre à jour.",
-
   "offlineBannerMessage": "Vous êtes hors ligne. Les dernières données enregistrées sont affichées.",
   "offlineRefreshFailed": "Actualisation impossible",
-
   "loginTitle": "Bienvenue sur RAEED",
   "loginSubtitle": "Saisissez votre numéro de téléphone pour recevoir un code de connexion.",
   "loginPhoneLabel": "Numéro de téléphone",
@@ -32,7 +27,6 @@
   "loginPhoneInvalid": "Saisissez un numéro de téléphone valide.",
   "loginRequestCode": "Envoyer le code",
   "loginNoAccountNotice": "Les comptes sont créés uniquement par l'administration de l'académie. Si vous n'avez pas de compte, contactez-la.",
-
   "otpTitle": "Code de connexion",
   "otpSentTo": "Nous avons envoyé un code à six chiffres au {phone}.",
   "otpCodeLabel": "Code",
@@ -41,7 +35,6 @@
   "otpRateLimited": "Vous avez demandé trop de codes. Réessayez dans une heure.",
   "otpResend": "Renvoyer le code",
   "otpResendIn": "{seconds, plural, one{Renvoi possible dans {seconds} seconde} other{Renvoi possible dans {seconds} secondes}}",
-
   "consentTitle": "Confidentialité et droit à l'image",
   "consentIntro": "Avant de continuer, nous avons besoin de votre accord sur la politique de confidentialité et du niveau de droit à l'image pour chaque enfant.",
   "consentPrivacyPolicyAccept": "J'accepte la politique de confidentialité",
@@ -56,7 +49,6 @@
   "consentImageRightsNotAllowedHelp": "Aucune photo de l'enfant ne sera publiée.",
   "consentChangeLater": "Vous pouvez modifier ce choix à tout moment dans les réglages de l'enfant.",
   "consentSubmit": "Enregistrer les consentements",
-
   "navHome": "Accueil",
   "navSchedule": "Planning",
   "navMessages": "Messages",
@@ -64,14 +56,44 @@
   "navMore": "Plus",
   "navGroups": "Groupes",
   "navDashboard": "Tableau de bord",
-
   "roleParent": "Parent",
   "roleEducator": "Encadrant",
   "roleExecutive": "Responsable",
   "roleAdmin": "Administrateur",
   "roleSwitchTitle": "Changer de rôle",
-
   "notFoundTitle": "Page introuvable",
   "notFoundBody": "Le lien que vous avez ouvert n'est plus valide.",
-  "notFoundGoHome": "Revenir à l'accueil"
+  "notFoundGoHome": "Revenir à l'accueil",
+  "homeTitleParent": "Mes enfants",
+  "homeTitleEducator": "Mes groupes",
+  "homeTitleExecutive": "Les enfants",
+  "homeEmptyTitle": "Aucun enfant lié à votre compte",
+  "homeEmptyBody": "Veuillez contacter l'administration de l'académie pour lier votre enfant à votre compte.",
+  "childAgeYears": "{years, plural, one{{years} an} other{{years} ans}}",
+  "childNoSessionToday": "Pas de séance aujourd'hui",
+  "childNextSession": "Prochaine séance : {when}",
+  "statusAwaitingAnswer": "Confirmation de présence attendue",
+  "statusPresenceConfirmed": "Présence confirmée",
+  "statusPresenceDeclined": "Absence annoncée",
+  "statusPresenceLate": "Arrivera en retard",
+  "statusPresent": "Présent",
+  "statusLate": "En retard",
+  "statusAbsent": "Absent",
+  "statusExcused": "Absence excusée",
+  "statusUnknown": "—",
+  "absenceAlertTitle": "Absence sans justification",
+  "healthAlertBadgeLabel": "Alerte santé — appuyez pour consulter",
+  "announcementsStripTitle": "Annonces",
+  "announcementUrgent": "Urgent",
+  "announcementsEmpty": "Aucune annonce pour le moment",
+  "childProfileTitle": "Fiche de l'enfant",
+  "childProfileGroupLabel": "Groupe",
+  "childProfileHealthTitle": "Informations de santé",
+  "childProfileNoHealthInfo": "Aucune information de santé enregistrée.",
+  "childProfileComingSoon": "Cette section sera bientôt disponible.",
+  "pullToRefresh": "Tirez pour actualiser",
+  "childTabSchedule": "Planning",
+  "childTabAttendance": "Présence",
+  "childTabHomework": "Devoirs",
+  "childTabMaterials": "Ressources"
 }

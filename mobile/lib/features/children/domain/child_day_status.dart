@@ -60,7 +60,9 @@ class ChildDayStatus {
   const ChildDayStatus({required this.kind, this.alertRaisedAt});
 
   /// The quiet default: nothing scheduled, nothing to report.
-  const ChildDayStatus.noSession() : kind = DayStatusKind.noSession, alertRaisedAt = null;
+  const ChildDayStatus.noSession()
+    : kind = DayStatusKind.noSession,
+      alertRaisedAt = null;
 
   /// Which state today is in.
   final DayStatusKind kind;

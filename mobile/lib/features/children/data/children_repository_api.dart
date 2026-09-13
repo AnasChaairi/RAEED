@@ -19,15 +19,13 @@ class ApiChildrenRepository implements ChildrenRepository {
   final ApiClient _client;
 
   @override
-  Future<Paginated<Child>> fetchChildren({
-    String? cursor,
-    String? groupId,
-  }) => _client.getList<Child>(
-    '/children',
-    childFromJson,
-    query: {'group_id': groupId},
-    cursor: cursor,
-  );
+  Future<Paginated<Child>> fetchChildren({String? cursor, String? groupId}) =>
+      _client.getList<Child>(
+        '/children',
+        childFromJson,
+        query: {'group_id': groupId},
+        cursor: cursor,
+      );
 
   @override
   Future<ChildDetail> fetchChild(String childId) async {
