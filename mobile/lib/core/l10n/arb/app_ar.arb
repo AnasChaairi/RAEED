@@ -389,5 +389,45 @@
   "presenceAnswered": "شكرًا، تم تسجيل جوابك",
   "@presenceAnswered": {},
   "presenceNoneOutstanding": "لا توجد تأكيدات معلّقة",
-  "@presenceNoneOutstanding": {}
+  "@presenceNoneOutstanding": {},
+  "brandTagline": "صالح في نفسه، مصلح لغيره",
+  "@brandTagline": {
+    "description": "The academy's motto, shown under the wordmark on sign-in."
+  },
+  "otpEnterCode": "أدخل الرمز",
+  "@otpEnterCode": {},
+  "consentStepOf": "الخطوة {current} من {total}",
+  "@consentStepOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "consentChoose": "اختر",
+  "@consentChoose": {
+    "description": "Compact affordance on a child whose level is not set yet."
+  },
+  "homeGreeting": "السلام عليكم",
+  "@homeGreeting": {},
+  "homeTodaySessions": "جلسات اليوم",
+  "@homeTodaySessions": {},
+  "homeNotifications": "الإشعارات",
+  "@homeNotifications": {},
+  "homeNotificationsWithUnread": "{count, plural, zero{الإشعارات} one{الإشعارات، إشعار غير مقروء} two{الإشعارات، إشعاران غير مقروءين} few{الإشعارات، {count} إشعارات غير مقروءة} many{الإشعارات، {count} إشعارًا غير مقروء} other{الإشعارات، {count} إشعار غير مقروء}}",
+  "@homeNotificationsWithUnread": {
+    "description": "Screen-reader label for the bell.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeNeedsYourReply": "يحتاج ردّك",
+  "@homeNeedsYourReply": {
+    "description": "Header of the presence-confirmation prompt on Home."
+  }
 }

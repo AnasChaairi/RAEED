@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,6 +12,7 @@ import '../domain/otp_policy.dart';
 import 'auth_providers.dart';
 import 'auth_scaffold.dart';
 import 'login_screen.dart' show AuthButtonSpinner;
+import 'widgets/otp_boxes.dart';
 
 /// Verifies the one-time code (`RAEED-2`).
 ///
@@ -170,35 +170,17 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
 
     final canResend = _resendSeconds == 0 && !_isResending;
 
-    return AuthScaffold(
+    return AuthScaffold.immersive(
       title: l10n.otpTitle,
       // Masked, never the full number — see MoroccanPhoneNumber.
       subtitle: l10n.otpSentTo(receipt.phone.masked),
       error: _error,
       onBack: _changeNumber,
-      showLogo: false,
       children: [
-        TextField(
+        OtpBoxes(
           controller: _codeController,
           focusNode: _codeFocus,
-          autofocus: true,
-          keyboardType: TextInputType.number,
-          textAlign: TextAlign.center,
-          // Digits read left-to-right in every locale RAEED ships.
-          textDirection: TextDirection.ltr,
           enabled: !_isSubmitting,
-          autofillHints: const [AutofillHints.oneTimeCode],
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(OtpPolicy.codeLength),
-          ],
-          style: context.type
-              .tabular(context.type.h1)
-              .copyWith(color: palette.ink, letterSpacing: 8),
-          decoration: InputDecoration(
-            labelText: l10n.otpCodeLabel,
-            counterText: '',
-          ),
         ),
         const SizedBox(height: RaeedSpacing.xl2),
         FilledButton(

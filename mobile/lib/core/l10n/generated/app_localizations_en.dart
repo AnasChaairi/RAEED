@@ -468,4 +468,41 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get presenceNoneOutstanding => 'No confirmations outstanding';
+
+  @override
+  String get brandTagline => 'Upright in himself, a force for good in others';
+
+  @override
+  String get otpEnterCode => 'Enter the code';
+
+  @override
+  String consentStepOf(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get consentChoose => 'Choose';
+
+  @override
+  String get homeGreeting => 'Assalamu alaykum';
+
+  @override
+  String get homeTodaySessions => 'Today\'s sessions';
+
+  @override
+  String get homeNotifications => 'Notifications';
+
+  @override
+  String homeNotificationsWithUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Notifications, $count unread',
+      one: 'Notifications, $count unread',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeNeedsYourReply => 'Needs your reply';
 }

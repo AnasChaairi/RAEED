@@ -128,5 +128,14 @@
   "presenceReasonOther": "Other reason",
   "presenceOtherNoteLabel": "Tell us the reason",
   "presenceAnswered": "Thanks, your answer is recorded",
-  "presenceNoneOutstanding": "No confirmations outstanding"
+  "presenceNoneOutstanding": "No confirmations outstanding",
+  "brandTagline": "Upright in himself, a force for good in others",
+  "otpEnterCode": "Enter the code",
+  "consentStepOf": "Step {current} of {total}",
+  "consentChoose": "Choose",
+  "homeGreeting": "Assalamu alaykum",
+  "homeTodaySessions": "Today's sessions",
+  "homeNotifications": "Notifications",
+  "homeNotificationsWithUnread": "{count, plural, one{Notifications, {count} unread} other{Notifications, {count} unread}}",
+  "homeNeedsYourReply": "Needs your reply"
 }

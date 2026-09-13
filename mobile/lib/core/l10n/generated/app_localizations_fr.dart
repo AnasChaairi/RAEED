@@ -472,4 +472,41 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get presenceNoneOutstanding => 'Aucune confirmation en attente';
+
+  @override
+  String get brandTagline => 'Vertueux pour lui-même, bienfaisant pour autrui';
+
+  @override
+  String get otpEnterCode => 'Saisissez le code';
+
+  @override
+  String consentStepOf(int current, int total) {
+    return 'Étape $current sur $total';
+  }
+
+  @override
+  String get consentChoose => 'Choisir';
+
+  @override
+  String get homeGreeting => 'Assalamu alaykum';
+
+  @override
+  String get homeTodaySessions => 'Séances du jour';
+
+  @override
+  String get homeNotifications => 'Notifications';
+
+  @override
+  String homeNotificationsWithUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Notifications, $count non lues',
+      one: 'Notifications, $count non lue',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeNeedsYourReply => 'Votre réponse est attendue';
 }

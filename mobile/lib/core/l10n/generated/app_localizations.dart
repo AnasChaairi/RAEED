@@ -872,6 +872,60 @@ abstract class AppL10n {
   /// In ar, this message translates to:
   /// **'لا توجد تأكيدات معلّقة'**
   String get presenceNoneOutstanding;
+
+  /// The academy's motto, shown under the wordmark on sign-in.
+  ///
+  /// In ar, this message translates to:
+  /// **'صالح في نفسه، مصلح لغيره'**
+  String get brandTagline;
+
+  /// No description provided for @otpEnterCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل الرمز'**
+  String get otpEnterCode;
+
+  /// No description provided for @consentStepOf.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخطوة {current} من {total}'**
+  String consentStepOf(int current, int total);
+
+  /// Compact affordance on a child whose level is not set yet.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر'**
+  String get consentChoose;
+
+  /// No description provided for @homeGreeting.
+  ///
+  /// In ar, this message translates to:
+  /// **'السلام عليكم'**
+  String get homeGreeting;
+
+  /// No description provided for @homeTodaySessions.
+  ///
+  /// In ar, this message translates to:
+  /// **'جلسات اليوم'**
+  String get homeTodaySessions;
+
+  /// No description provided for @homeNotifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعارات'**
+  String get homeNotifications;
+
+  /// Screen-reader label for the bell.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{الإشعارات} one{الإشعارات، إشعار غير مقروء} two{الإشعارات، إشعاران غير مقروءين} few{الإشعارات، {count} إشعارات غير مقروءة} many{الإشعارات، {count} إشعارًا غير مقروء} other{الإشعارات، {count} إشعار غير مقروء}}'**
+  String homeNotificationsWithUnread(int count);
+
+  /// Header of the presence-confirmation prompt on Home.
+  ///
+  /// In ar, this message translates to:
+  /// **'يحتاج ردّك'**
+  String get homeNeedsYourReply;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {
