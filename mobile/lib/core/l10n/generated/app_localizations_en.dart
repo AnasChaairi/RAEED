@@ -332,4 +332,140 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get childTabMaterials => 'Materials';
+
+  @override
+  String get attendanceTitle => 'Attendance';
+
+  @override
+  String get attendancePresent => 'Present';
+
+  @override
+  String get attendanceLate => 'Late';
+
+  @override
+  String get attendanceAbsent => 'Absent';
+
+  @override
+  String get attendanceExcused => 'Excused';
+
+  @override
+  String get attendanceNotMarked => 'Not marked';
+
+  @override
+  String attendanceSummaryConfirmed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count confirmed',
+      one: '$count confirmed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String attendanceSummaryAbsent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count absent',
+      one: '$count absent',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String attendanceSummaryNoAnswer(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count no answer',
+      one: '$count no answer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get attendanceMarkRemainingPresent => 'Mark remaining present';
+
+  @override
+  String get attendanceSubmit => 'Submit';
+
+  @override
+  String get attendanceSubmitted => 'Attendance submitted';
+
+  @override
+  String get attendanceEmptyGroup => 'No children in this group yet';
+
+  @override
+  String get attendanceOfflineSaved => 'Saved on this device, will sync';
+
+  @override
+  String attendancePendingCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count marks waiting to send',
+      one: '$count mark waiting to send',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get attendanceConflictTitle => 'Marking conflict';
+
+  @override
+  String attendanceConflictBody(String attempted, String server) {
+    return 'You marked $attempted, but $server was recorded first from another device.';
+  }
+
+  @override
+  String get attendanceConflictKeepMine => 'Keep mine';
+
+  @override
+  String get attendanceConflictKeepServer => 'Keep recorded';
+
+  @override
+  String get attendanceUnknownChild =>
+      'This child is no longer in this group, so the mark was not recorded.';
+
+  @override
+  String get presenceTitle => 'Presence confirmation';
+
+  @override
+  String presenceQuestion(String childName, String when) {
+    return 'Will $childName attend the $when session?';
+  }
+
+  @override
+  String get presenceYes => 'Yes';
+
+  @override
+  String get presenceNo => 'No';
+
+  @override
+  String get presenceLate => 'Will be late';
+
+  @override
+  String get presenceReasonPrompt => 'Reason (optional)';
+
+  @override
+  String get presenceReasonIllness => 'Illness';
+
+  @override
+  String get presenceReasonTravel => 'Travel';
+
+  @override
+  String get presenceReasonExam => 'Exam';
+
+  @override
+  String get presenceReasonOther => 'Other reason';
+
+  @override
+  String get presenceOtherNoteLabel => 'Tell us the reason';
+
+  @override
+  String get presenceAnswered => 'Thanks, your answer is recorded';
+
+  @override
+  String get presenceNoneOutstanding => 'No confirmations outstanding';
 }

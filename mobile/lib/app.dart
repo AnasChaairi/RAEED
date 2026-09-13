@@ -8,6 +8,7 @@ import 'core/router/app_routes.dart';
 import 'core/session/app_session.dart';
 import 'core/session/session_controller.dart';
 import 'core/theme/raeed_theme.dart';
+import 'features/attendance/presentation/attendance_screen.dart';
 import 'features/auth/presentation/consent_screen.dart';
 import 'features/auth/presentation/login_screen.dart';
 import 'features/auth/presentation/otp_screen.dart';
@@ -121,8 +122,10 @@ final AppScreens appScreensTable = AppScreens(
     title: 'Group ${state.pathParameters['groupId'] ?? ''}',
     ticket: 'RAEED-8',
   ),
-  attendance: (context, state) =>
-      const PlaceholderScreen(title: 'Attendance', ticket: 'RAEED-21'),
+  attendance: (context, state) => AttendanceScreen(
+    sessionId: state.pathParameters['sessionId'] ?? '',
+    groupId: state.pathParameters['groupId'] ?? '',
+  ),
   conversation: (context, state) =>
       const PlaceholderScreen(title: 'Conversation', ticket: 'Epic E'),
   memories: (context, state) =>

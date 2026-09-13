@@ -268,5 +268,126 @@
   "childTabHomework": "الواجبات",
   "@childTabHomework": {},
   "childTabMaterials": "المواد",
-  "@childTabMaterials": {}
+  "@childTabMaterials": {},
+  "attendanceTitle": "تسجيل الحضور",
+  "@attendanceTitle": {
+    "description": "Attendance marking screen title."
+  },
+  "attendancePresent": "حاضر",
+  "@attendancePresent": {},
+  "attendanceLate": "متأخر",
+  "@attendanceLate": {},
+  "attendanceAbsent": "غائب",
+  "@attendanceAbsent": {},
+  "attendanceExcused": "بعذر",
+  "@attendanceExcused": {},
+  "attendanceNotMarked": "لم يُسجَّل",
+  "@attendanceNotMarked": {},
+  "attendanceSummaryConfirmed": "{count, plural, zero{لا مؤكَّد} one{مؤكَّد واحد} two{مؤكَّدان} few{{count} مؤكَّدين} many{{count} مؤكَّدًا} other{{count} مؤكَّد}}",
+  "@attendanceSummaryConfirmed": {
+    "description": "Live count of children whose guardian confirmed attendance. Arabic needs all six categories.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "12"
+      }
+    }
+  },
+  "attendanceSummaryAbsent": "{count, plural, zero{لا غياب} one{غياب واحد} two{غيابان} few{{count} غيابات} many{{count} غيابًا} other{{count} غياب}}",
+  "@attendanceSummaryAbsent": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "attendanceSummaryNoAnswer": "{count, plural, zero{لا أحد بدون جواب} one{واحد بدون جواب} two{اثنان بدون جواب} few{{count} بدون جواب} many{{count} بدون جواب} other{{count} بدون جواب}}",
+  "@attendanceSummaryNoAnswer": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "attendanceMarkRemainingPresent": "تسجيل الباقي حاضرين",
+  "@attendanceMarkRemainingPresent": {},
+  "attendanceSubmit": "إرسال",
+  "@attendanceSubmit": {},
+  "attendanceSubmitted": "تم إرسال الحضور",
+  "@attendanceSubmitted": {},
+  "attendanceEmptyGroup": "لا يوجد أطفال في هذه المجموعة بعد",
+  "@attendanceEmptyGroup": {
+    "description": "Empty state for a group with no enrolled children."
+  },
+  "attendanceOfflineSaved": "محفوظ على هذا الجهاز، سيُرسل عند عودة الاتصال",
+  "@attendanceOfflineSaved": {
+    "description": "Offline banner on the attendance screen. Must never read as an error — marking offline is a supported flow, and submission is never blocked."
+  },
+  "attendancePendingCount": "{count, plural, zero{لا شيء بانتظار الإرسال} one{تسجيل واحد بانتظار الإرسال} two{تسجيلان بانتظار الإرسال} few{{count} تسجيلات بانتظار الإرسال} many{{count} تسجيلًا بانتظار الإرسال} other{{count} تسجيل بانتظار الإرسال}}",
+  "@attendancePendingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "4"
+      }
+    }
+  },
+  "attendanceConflictTitle": "تعارض في التسجيل",
+  "@attendanceConflictTitle": {
+    "description": "A mark this device made was refused as stale. Never silently discarded."
+  },
+  "attendanceConflictBody": "سجّلت {attempted} لهذا الطفل، لكن تم تسجيل {server} قبل ذلك من جهاز آخر.",
+  "@attendanceConflictBody": {
+    "placeholders": {
+      "attempted": {
+        "type": "String"
+      },
+      "server": {
+        "type": "String"
+      }
+    }
+  },
+  "attendanceConflictKeepMine": "اعتماد تسجيلي",
+  "@attendanceConflictKeepMine": {},
+  "attendanceConflictKeepServer": "اعتماد المسجَّل",
+  "@attendanceConflictKeepServer": {},
+  "attendanceUnknownChild": "لم يعد هذا الطفل ضمن هذه المجموعة، ولم يُسجَّل.",
+  "@attendanceUnknownChild": {},
+  "presenceTitle": "تأكيد الحضور",
+  "@presenceTitle": {},
+  "presenceQuestion": "هل سيحضر {childName} حصة {when}؟",
+  "@presenceQuestion": {
+    "placeholders": {
+      "childName": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "presenceYes": "نعم",
+  "@presenceYes": {},
+  "presenceNo": "لا",
+  "@presenceNo": {},
+  "presenceLate": "سيتأخر",
+  "@presenceLate": {},
+  "presenceReasonPrompt": "السبب (اختياري)",
+  "@presenceReasonPrompt": {},
+  "presenceReasonIllness": "مرض",
+  "@presenceReasonIllness": {},
+  "presenceReasonTravel": "سفر",
+  "@presenceReasonTravel": {},
+  "presenceReasonExam": "امتحان",
+  "@presenceReasonExam": {},
+  "presenceReasonOther": "سبب آخر",
+  "@presenceReasonOther": {},
+  "presenceOtherNoteLabel": "اذكر السبب",
+  "@presenceOtherNoteLabel": {},
+  "presenceAnswered": "شكرًا، تم تسجيل جوابك",
+  "@presenceAnswered": {},
+  "presenceNoneOutstanding": "لا توجد تأكيدات معلّقة",
+  "@presenceNoneOutstanding": {}
 }
