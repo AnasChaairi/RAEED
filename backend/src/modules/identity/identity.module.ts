@@ -11,14 +11,15 @@ import { TokenService } from './token.service';
  * `identity` — OTP, JWT issuance, role assignment, devices
  * (`specs/07-backend-spec.md`).
  *
- * Exports ScopeService because the auth guard in every other module needs to
- * resolve a caller's scope; that is the one service crossing this boundary,
- * and it is exported deliberately rather than by reaching for a repository.
+ * Exports ScopeService and JwtModule because `JwtAuthGuard` runs in every other
+ * module and needs both to verify a token and resolve the caller's live scope.
+ * That guard is the only thing crossing this boundary, and it crosses through
+ * an exported surface rather than by reaching for a repository.
  */
 @Module({
   imports: [JwtModule.register({})],
   controllers: [IdentityController],
   providers: [IdentityService, OtpService, TokenService, ScopeService],
-  exports: [ScopeService, TokenService],
+  exports: [ScopeService, TokenService, JwtModule],
 })
 export class IdentityModule {}

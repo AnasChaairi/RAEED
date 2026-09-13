@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { buildDataSourceOptions } from './database/data-source';
 import { RedisModule } from './common/redis/redis.module';
 import { HealthController } from './modules/health/health.controller';
+import { AnnouncementsModule } from './modules/announcements/announcements.module';
+import { ChildrenModule } from './modules/children/children.module';
 import { IdentityModule } from './modules/identity/identity.module';
 
 /**
@@ -21,6 +23,8 @@ import { IdentityModule } from './modules/identity/identity.module';
     TypeOrmModule.forRoot(buildDataSourceOptions()),
     RedisModule,
     IdentityModule,
+    ChildrenModule,
+    AnnouncementsModule,
   ],
   controllers: [HealthController],
 })
