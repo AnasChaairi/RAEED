@@ -2,23 +2,23 @@
   "$schema": "raeed design tokens v1 — colors sourced from logo/logo.jpeg, see style-guide.md for derivation and contrast rationale",
   "color": {
     "light": {
-      "bg": "#F7F9FB",
+      "bg": "#F6F9FC",
       "surface": "#FFFFFF",
       "surfaceAlt": "#EEF3F8",
-      "ink": "#10161C",
-      "inkDim": "#4C5A66",
-      "border": "#DCE4EC",
-      "primary": "#0A4A8C",
+      "ink": "#0E1726",
+      "inkDim": "#606F81",
+      "border": "#DCE6F0",
+      "primary": "#0C4A8B",
       "primaryOn": "#FFFFFF",
-      "primarySoft": "#E2EEFA",
-      "accent": "#9C6900",
-      "accentDecorative": "#F2A900",
-      "accentOn": "#FFFFFF",
-      "accentSoft": "#FBEDD2",
-      "success": "#1A7A44",
+      "primarySoft": "#EAF2FA",
+      "accent": "#8A6413",
+      "accentDecorative": "#F6A21E",
+      "accentOn": "#231402",
+      "accentSoft": "#FFF6E7",
+      "success": "#1C7A55",
       "warning": "#A85A0A",
-      "danger": "#B02A22",
-      "info": "#0A70B6"
+      "danger": "#CD331C",
+      "info": "#11769E"
     },
     "dark": {
       "bg": "#0B0F14",
@@ -27,17 +27,17 @@
       "ink": "#E8EEF3",
       "inkDim": "#9FB0BE",
       "border": "#28323D",
-      "primary": "#29C4EF",
-      "primaryOn": "#06222E",
-      "primarySoft": "#113240",
-      "accent": "#F2A900",
-      "accentDecorative": "#F2A900",
-      "accentOn": "#2B1C00",
+      "primary": "#2BB3E8",
+      "primaryOn": "#04202E",
+      "primarySoft": "#0E3346",
+      "accent": "#F6A21E",
+      "accentDecorative": "#F6A21E",
+      "accentOn": "#231402",
       "accentSoft": "#33290F",
       "success": "#34C185",
       "warning": "#E0A544",
       "danger": "#E2685A",
-      "info": "#29C4EF"
+      "info": "#2BB3E8"
     },
     "logoSource": {
       "note": "extracted directly from logo/logo.jpeg — kept for traceability, not for direct app use except in logo lockups",
@@ -57,25 +57,92 @@
       "uiSans": "'Public Sans', -apple-system, 'Segoe UI', Tahoma, sans-serif",
       "mono": "'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace"
     },
-    "arabicWeights": [400, 700],
+    "arabicWeights": [
+      400,
+      700
+    ],
     "note": "Amiri ships Regular (400) and Bold (700) only — no 500/600. Build Arabic hierarchy with size, color, and spacing, not intermediate weights. uiSans (Public Sans) carries the fuller weight range (400/500/600/700) for compact UI chrome (buttons, tabs, form labels) in both RTL and LTR layouts, and for French/English body text.",
     "scale": {
-      "display": { "size": 32, "lineHeightArabic": 1.5, "lineHeightLatin": 1.25, "weight": 700 },
-      "h1":      { "size": 26, "lineHeightArabic": 1.55, "lineHeightLatin": 1.3,  "weight": 700 },
-      "h2":      { "size": 21, "lineHeightArabic": 1.6,  "lineHeightLatin": 1.3,  "weight": 700 },
-      "h3":      { "size": 18, "lineHeightArabic": 1.65, "lineHeightLatin": 1.35, "weight": 700 },
-      "body":    { "size": 16, "lineHeightArabic": 1.8,  "lineHeightLatin": 1.5,  "weight": 400 },
-      "bodySmall": { "size": 14, "lineHeightArabic": 1.8, "lineHeightLatin": 1.5, "weight": 400 },
-      "caption": { "size": 12, "lineHeightArabic": 1.7,  "lineHeightLatin": 1.4,  "weight": 500, "letterSpacing": 0.02 }
+      "display": {
+        "size": 32,
+        "lineHeightArabic": 1.5,
+        "lineHeightLatin": 1.25,
+        "weight": 700
+      },
+      "h1": {
+        "size": 26,
+        "lineHeightArabic": 1.55,
+        "lineHeightLatin": 1.3,
+        "weight": 700
+      },
+      "h2": {
+        "size": 21,
+        "lineHeightArabic": 1.6,
+        "lineHeightLatin": 1.3,
+        "weight": 700
+      },
+      "h3": {
+        "size": 18,
+        "lineHeightArabic": 1.65,
+        "lineHeightLatin": 1.35,
+        "weight": 700
+      },
+      "body": {
+        "size": 16,
+        "lineHeightArabic": 1.8,
+        "lineHeightLatin": 1.5,
+        "weight": 400
+      },
+      "bodySmall": {
+        "size": 14,
+        "lineHeightArabic": 1.8,
+        "lineHeightLatin": 1.5,
+        "weight": 400
+      },
+      "caption": {
+        "size": 12,
+        "lineHeightArabic": 1.7,
+        "lineHeightLatin": 1.4,
+        "weight": 500,
+        "letterSpacing": 0.02
+      }
     },
     "numerals": "western (0-9) pinned to ar-MA — not Eastern Arabic-Indic digits, see 08-design-system/style-guide.md",
-    "tabularNumsFor": ["attendance counts", "dashboard stats", "dates", "durations"]
+    "tabularNumsFor": [
+      "attendance counts",
+      "dashboard stats",
+      "dates",
+      "durations"
+    ]
   },
-  "spacing": { "xs": 4, "sm": 8, "md": 12, "lg": 16, "xl": 20, "2xl": 24, "3xl": 32, "4xl": 40, "5xl": 48, "6xl": 64 },
-  "radius": { "sm": 6, "md": 10, "lg": 14, "pill": 999 },
+  "spacing": {
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 20,
+    "2xl": 24,
+    "3xl": 32,
+    "4xl": 40,
+    "5xl": 48,
+    "6xl": 64
+  },
+  "radius": {
+    "sm": 6,
+    "md": 10,
+    "lg": 14,
+    "pill": 999
+  },
   "elevation": {
-    "light": { "sm": "0 1px 2px rgba(16,22,28,.06), 0 4px 12px -6px rgba(16,22,28,.12)" },
-    "dark":  { "sm": "0 1px 2px rgba(0,0,0,.5), 0 8px 20px -10px rgba(0,0,0,.6)" }
+    "light": {
+      "sm": "0 1px 2px rgba(16,22,28,.06), 0 4px 12px -6px rgba(16,22,28,.12)"
+    },
+    "dark": {
+      "sm": "0 1px 2px rgba(0,0,0,.5), 0 8px 20px -10px rgba(0,0,0,.6)"
+    }
   },
-  "touchTarget": { "minPx": 44, "primaryActionsPx": 52 }
+  "touchTarget": {
+    "minPx": 44,
+    "primaryActionsPx": 52
+  }
 }

@@ -20,15 +20,18 @@ These raw values are logged in `design-tokens.json` under `color.logoSource` for
 
 | Token | Hex | Contrast | Where it's used |
 |---|---|---|---|
-| `primary` (light) | `#0A4A8C` | 8.86:1 on white | Buttons, links, primary UI on light backgrounds — this is the deep end of the logo's blue gradient |
-| `primary` (dark) | `#29C4EF` | 8.74:1 on `bg` (dark) | Buttons, links on dark backgrounds — the bright end of the same gradient |
-| `accent` (light, text use) | `#9C6900` | 4.74:1 on white | Text-bearing gold accents (a badge label, an inline highlight) |
-| `accentDecorative` | `#F2A900` | 2.01:1 on white — **decorative/large-scale only in light mode** (icons, illustration fills, borders ≥3px); on dark backgrounds it's 8.92:1 and safe for text too | The star/highlight gold from the logo |
+| `primary` (light) | `#0C4A8B` | 8.39:1 on white | Buttons, links, primary UI on light backgrounds — the deep end of the logo's blue gradient, and the gradient header's base |
+| `primary` (dark) | `#2BB3E8` | 7.98:1 on `bg` (dark) | Buttons, links on dark backgrounds — the bright end of the same gradient |
+| `accent` (light, text use) | `#8A6413` | 5.08:1 on white | Text-bearing gold accents (a badge label, an inline highlight) |
+| `accentDecorative` | `#F6A21E` | 2.08:1 on white — **decorative/large-scale only in light mode** (icons, illustration fills, borders ≥3px, and the amber primary-action fill, whose own label is `accentOn` at 8.62:1) | The star/highlight gold from the logo |
+| `accentOn` | `#231402` | 8.62:1 on `accentDecorative` | The label on an amber primary action |
 
 **Why the logo's blue isn't the token directly:** the raw average blue (`#0A82DA`) only reaches 3.97:1 on white — enough for large text and icons (WCAG's 3:1 threshold) but not body text or button labels. `primary` uses the darker end of the same gradient instead of a different hue, so brand identity holds while small text stays legible. Reach for `accentDecorative` freely in illustration, gradients, and the star motif itself; reach for `accent` (or the dark-mode `accentDecorative`, which is already accessible) whenever gold carries actual text.
 
 **Semantic colors** (`success`/`warning`/`danger`/`info`) are deliberately not brand hues reused — a warning shouldn't look like "brand gold" and confuse the two systems. `info` reuses `primary`-adjacent blue since blue-as-informational is already the brand's own association.
 
+> **Updated in v1.2 (design refresh):** the palette was re-derived from the `RAEED App` design canvas. The hues are the designer's; five of them were darkened along their own hue before becoming tokens, because they were used for body text below WCAG AA — `inkDim` `#6B7C90`→`#606F81`, `info` `#2BB3E8`→`#11769E`, `danger` `#E5533D`→`#CD331C`, and the gold split into a text-safe `accent` (`#8A6413`) and a decorative-only fill (`#F6A21E`). The bright cyan and amber survive intact where they belong: as fills, as the dark-mode primary, and as large-scale accents. The automated contrast test asserts every text-bearing token on both backgrounds in both palettes, so this class of gap fails the build.
+>
 > **Corrected in v1.1:** `info` was originally `#0B84D6`, which is the raw logo blue in all but name and reaches only **3.76:1** on `color.light.bg` (3.97:1 on white) — the same shortfall this document gives as the reason `primary` isn't the logo blue either. The AA adjustment had been applied to `primary` but not carried across to `info`. It is now **`#0A70B6`** (4.97:1 on `bg`, 5.24:1 on white), the same hue darkened by the same method, and still clearly lighter than `primary` so the two stay distinguishable. The automated contrast test in `mobile/test/core/theme/design_tokens_test.dart` now asserts AA for all four semantic colors on both backgrounds, in both palettes, so this class of gap fails the build rather than reaching a device.
 
 ## Typography — Amiri for Arabic
