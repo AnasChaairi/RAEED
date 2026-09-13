@@ -39,7 +39,11 @@ Confirmed in `specs/01-product-brief.md` — build against these, don't re-deriv
 
 ## Repository layout
 
+See [RUNNING.md](./RUNNING.md) to start the stack and sign in.
+
 ```
+backend/         NestJS API — modular monolith, Postgres + Redis
+infrastructure/  docker-compose stack (works with rootless Podman too)
 mobile/          Flutter app (parents, educators, executives-on-mobile)
   lib/core/      theming, i18n, networking, router + guards, session, ability model, Drift database
   lib/features/  one folder per feature, four layers each:
@@ -50,9 +54,7 @@ specs/           Implementation specs — the contract, see above
 logo/            Brand assets
 ```
 
-`backend/` (NestJS) and `dashboard/` (React) are spec'd but not yet started. **The
-app has no server to talk to yet** — every repository is written against
-`specs/04-api/openapi.yaml` and covered by tests with a stubbed client.
+`dashboard/` (React, executives) is spec'd but not yet started.
 
 ### Mobile progress
 
@@ -61,8 +63,19 @@ app has no server to talk to yet** — every repository is written against
 | RAEED-6 app shell — theme, i18n, router + guards, ability model | Done |
 | RAEED-2/3/5 OTP sign-in, token refresh, consent capture | Done |
 | RAEED-12 Parent Home + child profile | Done |
-| RAEED-16/17/21 attendance, offline queue, presence confirmation | Done |
+| RAEED-16/17/21 attendance, offline queue, presence confirmation | Done (mobile); **no server endpoints yet** |
 | Everything else in `specs/13-roadmap-and-tickets.md` | Not started — routes render a `PlaceholderScreen` naming the ticket |
+
+### Backend progress
+
+| Ticket | State |
+|---|---|
+| RAEED-1 local stack, schema migration, audit-log grants | Done |
+| RAEED-2/3 OTP, JWT, refresh rotation, devices | Done |
+| RAEED-4 CASL abilities + `@CheckAbility` guard | Done |
+| RAEED-9/10 children, consent, announcements (read) | Done |
+| RAEED-13..21 sessions, attendance, the critical-alert queue | Not started |
+| Messaging, Memories Wall, dashboard, audit interceptor | Not started |
 
 ## Mobile: install, run, test, lint
 
