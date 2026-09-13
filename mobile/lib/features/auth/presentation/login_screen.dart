@@ -100,9 +100,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final l10n = AppL10n.of(context);
     final palette = context.palette;
 
-    return AuthScaffold(
+    return AuthScaffold.immersive(
       title: l10n.loginTitle,
       subtitle: l10n.loginSubtitle,
+      tagline: l10n.brandTagline,
       error: _error,
       children: [
         TextField(
@@ -128,7 +129,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             hintText: l10n.loginPhoneHint,
             hintTextDirection: TextDirection.ltr,
             errorText: _validationError,
-            prefixIcon: const Icon(Icons.phone_outlined),
+            prefixIcon: const _CountryCodePrefix(),
+            prefixIconConstraints: const BoxConstraints(),
           ),
         ),
         const SizedBox(height: RaeedSpacing.xl2),
@@ -148,6 +150,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   /// more — a longer string is never a Moroccan mobile number.
   static const int _maxPhoneInputLength =
       MoroccanPhoneNumber.nationalDigitCount + 12;
+}
+
+/// The country code, fixed inside the field as the design draws it.
+///
+/// Fixed rather than editable: RAEED is one association in one country, and a
+/// country picker would be a control that is always set to the same value.
+class _CountryCodePrefix extends StatelessWidget {
+  const _CountryCodePrefix();
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(
+        start: RaeedSpacing.lg,
+        end: RaeedSpacing.md,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '+${MoroccanPhoneNumber.countryCode}',
+            textDirection: TextDirection.ltr,
+            style: context.type.body.copyWith(color: palette.inkDim),
+          ),
+          const SizedBox(width: RaeedSpacing.md),
+          Container(width: 1, height: 18, color: palette.border),
+        ],
+      ),
+    );
+  }
 }
 
 /// The "accounts are created by the association" note.

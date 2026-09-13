@@ -639,6 +639,36 @@ abstract class AppL10n {
   /// **'لا توجد معلومات صحية مسجَّلة.'**
   String get childProfileNoHealthInfo;
 
+  /// No description provided for @childHealthAllergies.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساسية'**
+  String get childHealthAllergies;
+
+  /// No description provided for @childHealthConditions.
+  ///
+  /// In ar, this message translates to:
+  /// **'حالات صحية'**
+  String get childHealthConditions;
+
+  /// No description provided for @childHealthMedications.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدوية'**
+  String get childHealthMedications;
+
+  /// No description provided for @childHealthDiet.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات غذائية'**
+  String get childHealthDiet;
+
+  /// No description provided for @childHealthOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'أخرى'**
+  String get childHealthOther;
+
   /// No description provided for @childProfileComingSoon.
   ///
   /// In ar, this message translates to:
@@ -728,6 +758,12 @@ abstract class AppL10n {
   /// In ar, this message translates to:
   /// **'{count, plural, zero{لا أحد بدون جواب} one{واحد بدون جواب} two{اثنان بدون جواب} few{{count} بدون جواب} many{{count} بدون جواب} other{{count} بدون جواب}}'**
   String attendanceSummaryNoAnswer(int count);
+
+  /// Progress line above the marking bar. Two numbers, so not a plural — Arabic would need six categories for each and the pair reads as a fraction anyway.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تسجيل {marked} من {total}'**
+  String attendanceMarkedOf(int marked, int total);
 
   /// No description provided for @attendanceMarkRemainingPresent.
   ///
@@ -872,6 +908,60 @@ abstract class AppL10n {
   /// In ar, this message translates to:
   /// **'لا توجد تأكيدات معلّقة'**
   String get presenceNoneOutstanding;
+
+  /// The academy's motto, shown under the wordmark on sign-in.
+  ///
+  /// In ar, this message translates to:
+  /// **'صالح في نفسه، مصلح لغيره'**
+  String get brandTagline;
+
+  /// No description provided for @otpEnterCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل الرمز'**
+  String get otpEnterCode;
+
+  /// No description provided for @consentStepOf.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخطوة {current} من {total}'**
+  String consentStepOf(int current, int total);
+
+  /// Compact affordance on a child whose level is not set yet.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر'**
+  String get consentChoose;
+
+  /// No description provided for @homeGreeting.
+  ///
+  /// In ar, this message translates to:
+  /// **'السلام عليكم'**
+  String get homeGreeting;
+
+  /// No description provided for @homeTodaySessions.
+  ///
+  /// In ar, this message translates to:
+  /// **'جلسات اليوم'**
+  String get homeTodaySessions;
+
+  /// No description provided for @homeNotifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعارات'**
+  String get homeNotifications;
+
+  /// Screen-reader label for the bell.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{الإشعارات} one{الإشعارات، إشعار غير مقروء} two{الإشعارات، إشعاران غير مقروءين} few{الإشعارات، {count} إشعارات غير مقروءة} many{الإشعارات، {count} إشعارًا غير مقروء} other{الإشعارات، {count} إشعار غير مقروء}}'**
+  String homeNotificationsWithUnread(int count);
+
+  /// Header of the presence-confirmation prompt on Home.
+  ///
+  /// In ar, this message translates to:
+  /// **'يحتاج ردّك'**
+  String get homeNeedsYourReply;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

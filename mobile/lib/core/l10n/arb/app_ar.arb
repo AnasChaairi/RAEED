@@ -255,6 +255,16 @@
   "@childProfileHealthTitle": {},
   "childProfileNoHealthInfo": "لا توجد معلومات صحية مسجَّلة.",
   "@childProfileNoHealthInfo": {},
+  "childHealthAllergies": "حساسية",
+  "@childHealthAllergies": {},
+  "childHealthConditions": "حالات صحية",
+  "@childHealthConditions": {},
+  "childHealthMedications": "أدوية",
+  "@childHealthMedications": {},
+  "childHealthDiet": "ملاحظات غذائية",
+  "@childHealthDiet": {},
+  "childHealthOther": "أخرى",
+  "@childHealthOther": {},
   "childProfileComingSoon": "سيتوفر هذا القسم قريبًا.",
   "@childProfileComingSoon": {},
   "pullToRefresh": "اسحب للتحديث",
@@ -308,6 +318,20 @@
       "count": {
         "type": "int",
         "example": "5"
+      }
+    }
+  },
+  "attendanceMarkedOf": "تم تسجيل {marked} من {total}",
+  "@attendanceMarkedOf": {
+    "description": "Progress line above the marking bar. Two numbers, so not a plural — Arabic would need six categories for each and the pair reads as a fraction anyway.",
+    "placeholders": {
+      "marked": {
+        "type": "int",
+        "example": "8"
+      },
+      "total": {
+        "type": "int",
+        "example": "20"
       }
     }
   },
@@ -389,5 +413,45 @@
   "presenceAnswered": "شكرًا، تم تسجيل جوابك",
   "@presenceAnswered": {},
   "presenceNoneOutstanding": "لا توجد تأكيدات معلّقة",
-  "@presenceNoneOutstanding": {}
+  "@presenceNoneOutstanding": {},
+  "brandTagline": "صالح في نفسه، مصلح لغيره",
+  "@brandTagline": {
+    "description": "The academy's motto, shown under the wordmark on sign-in."
+  },
+  "otpEnterCode": "أدخل الرمز",
+  "@otpEnterCode": {},
+  "consentStepOf": "الخطوة {current} من {total}",
+  "@consentStepOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "consentChoose": "اختر",
+  "@consentChoose": {
+    "description": "Compact affordance on a child whose level is not set yet."
+  },
+  "homeGreeting": "السلام عليكم",
+  "@homeGreeting": {},
+  "homeTodaySessions": "جلسات اليوم",
+  "@homeTodaySessions": {},
+  "homeNotifications": "الإشعارات",
+  "@homeNotifications": {},
+  "homeNotificationsWithUnread": "{count, plural, zero{الإشعارات} one{الإشعارات، إشعار غير مقروء} two{الإشعارات، إشعاران غير مقروءين} few{الإشعارات، {count} إشعارات غير مقروءة} many{الإشعارات، {count} إشعارًا غير مقروء} other{الإشعارات، {count} إشعار غير مقروء}}",
+  "@homeNotificationsWithUnread": {
+    "description": "Screen-reader label for the bell.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeNeedsYourReply": "يحتاج ردّك",
+  "@homeNeedsYourReply": {
+    "description": "Header of the presence-confirmation prompt on Home."
+  }
 }

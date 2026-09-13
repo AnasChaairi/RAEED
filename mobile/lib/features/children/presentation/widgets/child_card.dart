@@ -10,11 +10,13 @@ import '../../domain/child_age.dart';
 import 'health_alert_badge.dart';
 import 'status_pill_chip.dart';
 
-/// One child on the parent home screen.
+/// One child on the parent home screen, as the design draws it.
 ///
-/// The screen spec's components, in order of what a parent looks for: photo,
-/// name, age, group, next session, today's status pill. The pill sits last and
-/// widest because it is the thing being scanned for.
+/// A rounded card with the photo, the name and its health badge, the group
+/// underneath, and a status pill pulled to the trailing edge — then a hairline
+/// and a footer line carrying whatever is next. The footer is the part a parent
+/// reads second: the pill says *where the child is*, the footer says *what is
+/// coming*.
 class ChildCard extends StatelessWidget {
   const ChildCard({
     required this.child,
@@ -32,26 +34,20 @@ class ChildCard extends StatelessWidget {
   /// the status it set up.
   final DateTime now;
 
-  /// Opens the child's profile.
   final VoidCallback? onTap;
-
-  /// Opens presence confirmation or attendance detail.
   final VoidCallback? onStatusTap;
-
-  /// Opens the full health record.
   final VoidCallback? onHealthTap;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
-    final l10n = AppL10n.of(context);
     final pill = resolveStatusPill(child, now);
 
     return Material(
       color: palette.surface,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(RaeedRadius.lg),
+        borderRadius: BorderRadius.circular(RaeedRadius.xl2),
         // A fresh alert outlines the whole card, not only the pill: on a list
         // of four children the card is what the eye lands on first.
         side: BorderSide(
@@ -66,73 +62,220 @@ class ChildCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _ChildAvatar(child: child),
-                  const SizedBox(width: RaeedSpacing.lg),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                child.fullName,
-                                style: context.type.h3.copyWith(
-                                  color: palette.ink,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            if (child.healthAlert) ...[
-                              const SizedBox(width: RaeedSpacing.xs),
-                              // Icon only. The health text itself never appears
-                              // in a list view — see HealthAlertBadge.
-                              HealthAlertBadge(onTap: onHealthTap),
-                            ],
-                          ],
-                        ),
-                        const SizedBox(height: RaeedSpacing.xs),
-                        Text(
-                          _subtitle(l10n),
-                          style: context.type.bodySmall.copyWith(
-                            color: palette.inkDim,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              _Headline(
+                child: child,
+                now: now,
+                pill: pill,
+                onStatusTap: onStatusTap,
               ),
-              const SizedBox(height: RaeedSpacing.md),
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: StatusPillChip(
-                  pill: pill,
-                  onTap: pill.isActionable ? onStatusTap : null,
-                ),
-              ),
+              if (child.nextSession != null) ...[
+                const SizedBox(height: RaeedSpacing.md),
+                Divider(height: 1, color: palette.surfaceAlt),
+                const SizedBox(height: RaeedSpacing.md),
+                _FooterLine(child: child),
+              ],
             ],
           ),
         ),
       ),
     );
   }
+}
 
-  /// Age and group on one line — both are context for the name above, not
-  /// facts a parent hunts for.
-  String _subtitle(AppL10n l10n) {
+/// The avatar, the name block, and the status pill.
+///
+/// The pill sits at the trailing edge while the row can hold it, and drops to
+/// its own line when it cannot. It is never ellipsized: "غياب غير مبرَّر" is the
+/// one label in the product a parent must be able to read in full, and a
+/// truncated safety-critical status is worse than a taller card. The break is
+/// driven by the space actually available rather than by a scale threshold, so
+/// a narrow phone at 100% and a wide one at 130% each get the right answer.
+class _Headline extends StatelessWidget {
+  const _Headline({
+    required this.child,
+    required this.now,
+    required this.pill,
+    this.onStatusTap,
+  });
+
+  final Child child;
+  final DateTime now;
+  final StatusPill pill;
+  final VoidCallback? onStatusTap;
+
+  /// What the name needs before the pill may share its line: roughly eight
+  /// Arabic characters, below which the name is no longer a name.
+  static const double _minNameWidth = 96;
+
+  /// What a pill needs to be worth placing inline at all.
+  static const double _minPillWidth = 104;
+
+  /// Body size, used only to read the user's scaling out of the text scaler —
+  /// which is a curve on recent platforms, not a single factor.
+  static const double _referenceFontSize = 14;
+
+  @override
+  Widget build(BuildContext context) {
+    final chip = StatusPillChip(
+      pill: pill,
+      onTap: pill.isActionable ? onStatusTap : null,
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final scale =
+            MediaQuery.textScalerOf(context).scale(_referenceFontSize) /
+            _referenceFontSize;
+        final trailing =
+            constraints.maxWidth -
+            _ChildAvatar.size -
+            RaeedSpacing.md -
+            RaeedSpacing.sm -
+            _minNameWidth * scale;
+
+        final leading = Row(
+          children: [
+            _ChildAvatar(child: child),
+            const SizedBox(width: RaeedSpacing.md),
+            Expanded(
+              child: _NameAndGroup(child: child, now: now),
+            ),
+            if (trailing >= _minPillWidth * scale) ...[
+              const SizedBox(width: RaeedSpacing.sm),
+              // Capped rather than flexed: the cap is what keeps the row inside
+              // its constraints, and anything left over goes to the name.
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: trailing),
+                child: chip,
+              ),
+            ],
+          ],
+        );
+
+        if (trailing >= _minPillWidth * scale) return leading;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            leading,
+            const SizedBox(height: RaeedSpacing.sm),
+            chip,
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _NameAndGroup extends StatelessWidget {
+  const _NameAndGroup({required this.child, required this.now});
+
+  final Child child;
+  final DateTime now;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final l10n = AppL10n.of(context);
     final dob = child.dateOfBirth;
     final age = dob == null ? null : ageInYearsOn(dob, now);
-    final parts = <String>[
+
+    final subtitle = [
       if (age != null) l10n.childAgeYears(age),
       if (child.group != null) child.group!.name,
-    ];
-    return parts.join(' · ');
+    ].join(' · ');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            Flexible(
+              child: Text(
+                child.fullName,
+                style: context.type.h3.copyWith(color: palette.ink),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            if (child.healthAlert) ...[
+              const SizedBox(width: RaeedSpacing.xs),
+              // The design puts the allergy itself in this slot. It stays a
+              // badge here: RAEED-12 requires the health-alert badge to be
+              // icon-only in list views, and a home screen is read in waiting
+              // rooms and corridors. The full record is one tap away, on the
+              // profile.
+              const HealthAlertBadge(size: 14),
+            ],
+          ],
+        ),
+        if (subtitle.isNotEmpty) ...[
+          const SizedBox(height: RaeedSpacing.xs),
+          Text(
+            subtitle,
+            style: context.type.caption.copyWith(color: palette.inkDim),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ],
+    );
   }
+}
+
+/// The hairline-separated footer: what is next for this child.
+class _FooterLine extends StatelessWidget {
+  const _FooterLine({required this.child});
+
+  final Child child;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final l10n = AppL10n.of(context);
+    final session = child.nextSession;
+    if (session == null) return const SizedBox.shrink();
+
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            l10n.childNextSession(_when(context, session.startsAt)),
+            style: context.type
+                .tabular(context.type.caption)
+                .copyWith(color: palette.inkDim),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        if (session.title != null) ...[
+          const SizedBox(width: RaeedSpacing.sm),
+          Flexible(
+            child: Text(
+              session.title!,
+              style: context.type.caption.copyWith(color: palette.primary),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  /// Time of day for today, otherwise the weekday and time.
+  String _when(BuildContext context, DateTime at) {
+    final local = at.toLocal();
+    final now = DateTime.now();
+    final isToday =
+        local.year == now.year &&
+        local.month == now.month &&
+        local.day == now.day;
+    final time =
+        '${local.hour.toString().padLeft(2, '0')}:'
+        '${local.minute.toString().padLeft(2, '0')}';
+    return isToday ? time : '${_weekday(context, local)} $time';
+  }
+
+  String _weekday(BuildContext context, DateTime at) =>
+      MaterialLocalizations.of(context).formatShortDate(at);
 }
 
 /// The child's photo, or their initial when there is none.
@@ -141,7 +284,8 @@ class _ChildAvatar extends StatelessWidget {
 
   final Child child;
 
-  static const double _size = 48;
+  /// Read by [_Headline] when it budgets the row.
+  static const double size = 56;
 
   @override
   Widget build(BuildContext context) {
@@ -149,19 +293,18 @@ class _ChildAvatar extends StatelessWidget {
     final photoUrl = child.photoUrl;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(RaeedRadius.md),
+      borderRadius: BorderRadius.circular(RaeedRadius.xl),
       child: SizedBox(
-        width: _size,
-        height: _size,
+        width: size,
+        height: size,
         child: photoUrl == null || photoUrl.isEmpty
             ? _InitialAvatar(child: child)
             : CachedNetworkImage(
                 imageUrl: photoUrl,
                 fit: BoxFit.cover,
-                // Photos of children are served behind short-lived signed URLs
-                // (specs/10-security-and-privacy.md). A failed load is normal
-                // once one expires, so it degrades to the initial rather than
-                // showing a broken-image glyph.
+                // Photos are served behind short-lived signed URLs, so a failed
+                // load is normal once one expires — it degrades to the initial
+                // rather than a broken-image glyph.
                 placeholder: (_, _) => ColoredBox(color: palette.surfaceAlt),
                 errorWidget: (_, _, _) => _InitialAvatar(child: child),
               ),
@@ -187,7 +330,7 @@ class _InitialAvatar extends StatelessWidget {
       child: Center(
         child: Text(
           initial,
-          style: context.type.h3.copyWith(color: palette.primary),
+          style: context.type.h2.copyWith(color: palette.primary),
         ),
       ),
     );

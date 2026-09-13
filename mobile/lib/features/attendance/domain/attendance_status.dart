@@ -1,8 +1,12 @@
 /// `attendance_status` from `specs/03-domain-model/schema.sql`.
 ///
-/// The order of the constants is the order the one-tap chip cycles through, and
-/// that order is a product decision, not an alphabetical accident — see
-/// [AttendanceStatus.next].
+/// The order of the constants is the order the marking buttons appear in, and
+/// that order is a product decision, not an alphabetical accident: `present`
+/// comes first because it is overwhelmingly the common case and the sheet
+/// arrives pre-filled from presence answers, and `absent` sits after `late`
+/// because reaching it can page a parent. `excused` is last and has no button
+/// of its own — it is an excuse accepted afterwards, not a mark made while
+/// walking a hall.
 enum AttendanceStatus {
   /// The child is here.
   present('present'),
@@ -35,15 +39,4 @@ enum AttendanceStatus {
     }
     return null;
   }
-
-  /// The next status in the one-tap cycle: present → late → absent → excused →
-  /// present.
-  ///
-  /// `present` comes first because it is overwhelmingly the common case and the
-  /// sheet arrives pre-filled from presence answers; `absent` sits third so it
-  /// takes a deliberate number of taps to reach, since reaching it can page a
-  /// parent. `excused` follows `absent` because the correction an educator
-  /// makes most often is "absent, but actually excused".
-  AttendanceStatus get next =>
-      AttendanceStatus.values[(index + 1) % AttendanceStatus.values.length];
 }

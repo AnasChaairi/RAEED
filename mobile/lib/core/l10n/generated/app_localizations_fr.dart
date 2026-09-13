@@ -318,6 +318,21 @@ class AppL10nFr extends AppL10n {
       'Aucune information de santé enregistrée.';
 
   @override
+  String get childHealthAllergies => 'Allergies';
+
+  @override
+  String get childHealthConditions => 'Pathologies';
+
+  @override
+  String get childHealthMedications => 'Traitements';
+
+  @override
+  String get childHealthDiet => 'Notes alimentaires';
+
+  @override
+  String get childHealthOther => 'Autres';
+
+  @override
   String get childProfileComingSoon => 'Cette section sera bientôt disponible.';
 
   @override
@@ -384,6 +399,11 @@ class AppL10nFr extends AppL10n {
       one: '$count sans réponse',
     );
     return '$_temp0';
+  }
+
+  @override
+  String attendanceMarkedOf(int marked, int total) {
+    return '$marked sur $total enregistrés';
   }
 
   @override
@@ -472,4 +492,41 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get presenceNoneOutstanding => 'Aucune confirmation en attente';
+
+  @override
+  String get brandTagline => 'Vertueux pour lui-même, bienfaisant pour autrui';
+
+  @override
+  String get otpEnterCode => 'Saisissez le code';
+
+  @override
+  String consentStepOf(int current, int total) {
+    return 'Étape $current sur $total';
+  }
+
+  @override
+  String get consentChoose => 'Choisir';
+
+  @override
+  String get homeGreeting => 'Assalamu alaykum';
+
+  @override
+  String get homeTodaySessions => 'Séances du jour';
+
+  @override
+  String get homeNotifications => 'Notifications';
+
+  @override
+  String homeNotificationsWithUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Notifications, $count non lues',
+      one: 'Notifications, $count non lue',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeNeedsYourReply => 'Votre réponse est attendue';
 }

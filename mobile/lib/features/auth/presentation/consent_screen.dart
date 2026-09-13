@@ -86,6 +86,16 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
         title: l10n.consentTitle,
         subtitle: l10n.consentIntro,
         error: _submitError,
+        // Consent is the last of three onboarding steps: phone, code, consent.
+        progress: 1,
+        footer: FilledButton(
+          onPressed: _privacyPolicyAccepted && !_isSubmitting
+              ? () => _submit(data)
+              : null,
+          child: _isSubmitting
+              ? const AuthButtonSpinner()
+              : Text(l10n.consentSubmit),
+        ),
         children: [
           _PrivacyPolicySection(
             accepted: _privacyPolicyAccepted,
@@ -116,15 +126,6 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
               ),
             ),
           ],
-          const SizedBox(height: RaeedSpacing.xl2),
-          FilledButton(
-            onPressed: _privacyPolicyAccepted && !_isSubmitting
-                ? () => _submit(data)
-                : null,
-            child: _isSubmitting
-                ? const AuthButtonSpinner()
-                : Text(l10n.consentSubmit),
-          ),
         ],
       ),
     );

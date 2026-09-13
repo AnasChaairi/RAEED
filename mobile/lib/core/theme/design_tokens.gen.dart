@@ -33,6 +33,10 @@ class RaeedPalette {
     required this.warning,
     required this.danger,
     required this.info,
+    required this.successSoft,
+    required this.dangerSoft,
+    required this.warningSoft,
+    required this.infoSoft,
   });
 
   /// `color.<brightness>.bg`
@@ -85,27 +89,43 @@ class RaeedPalette {
 
   /// `color.<brightness>.info`
   final Color info;
+
+  /// `color.<brightness>.successSoft`
+  final Color successSoft;
+
+  /// `color.<brightness>.dangerSoft`
+  final Color dangerSoft;
+
+  /// `color.<brightness>.warningSoft`
+  final Color warningSoft;
+
+  /// `color.<brightness>.infoSoft`
+  final Color infoSoft;
 }
 
 /// The light-mode palette.
 const RaeedPalette raeedLightPalette = RaeedPalette(
-  bg: Color(0xFFF7F9FB),
+  bg: Color(0xFFF6F9FC),
   surface: Color(0xFFFFFFFF),
   surfaceAlt: Color(0xFFEEF3F8),
-  ink: Color(0xFF10161C),
-  inkDim: Color(0xFF4C5A66),
-  border: Color(0xFFDCE4EC),
-  primary: Color(0xFF0A4A8C),
+  ink: Color(0xFF0E1726),
+  inkDim: Color(0xFF606F81),
+  border: Color(0xFFDCE6F0),
+  primary: Color(0xFF0C4A8B),
   primaryOn: Color(0xFFFFFFFF),
-  primarySoft: Color(0xFFE2EEFA),
-  accent: Color(0xFF9C6900),
-  accentDecorative: Color(0xFFF2A900),
-  accentOn: Color(0xFFFFFFFF),
-  accentSoft: Color(0xFFFBEDD2),
-  success: Color(0xFF1A7A44),
+  primarySoft: Color(0xFFEAF2FA),
+  accent: Color(0xFF8A6413),
+  accentDecorative: Color(0xFFF6A21E),
+  accentOn: Color(0xFF231402),
+  accentSoft: Color(0xFFFFF6E7),
+  success: Color(0xFF1C7A55),
   warning: Color(0xFFA85A0A),
-  danger: Color(0xFFB02A22),
-  info: Color(0xFF0A70B6),
+  danger: Color(0xFFCD331C),
+  info: Color(0xFF11769E),
+  successSoft: Color(0xFFE4F5EC),
+  dangerSoft: Color(0xFFFEE9E3),
+  warningSoft: Color(0xFFFFF3DC),
+  infoSoft: Color(0xFFEAF7FE),
 );
 
 /// The dark-mode palette.
@@ -116,17 +136,21 @@ const RaeedPalette raeedDarkPalette = RaeedPalette(
   ink: Color(0xFFE8EEF3),
   inkDim: Color(0xFF9FB0BE),
   border: Color(0xFF28323D),
-  primary: Color(0xFF29C4EF),
-  primaryOn: Color(0xFF06222E),
-  primarySoft: Color(0xFF113240),
-  accent: Color(0xFFF2A900),
-  accentDecorative: Color(0xFFF2A900),
-  accentOn: Color(0xFF2B1C00),
+  primary: Color(0xFF2BB3E8),
+  primaryOn: Color(0xFF04202E),
+  primarySoft: Color(0xFF0E3346),
+  accent: Color(0xFFF6A21E),
+  accentDecorative: Color(0xFFF6A21E),
+  accentOn: Color(0xFF231402),
   accentSoft: Color(0xFF33290F),
   success: Color(0xFF34C185),
   warning: Color(0xFFE0A544),
   danger: Color(0xFFE2685A),
-  info: Color(0xFF29C4EF),
+  info: Color(0xFF2BB3E8),
+  successSoft: Color(0xFF10301F),
+  dangerSoft: Color(0xFF3A1710),
+  warningSoft: Color(0xFF332711),
+  infoSoft: Color(0xFF0E3346),
 );
 
 /// Raw colours sampled from `logo/logo.jpeg`.
@@ -288,6 +312,8 @@ abstract final class RaeedRadius {
   static const double sm = 6.0;
   static const double md = 10.0;
   static const double lg = 14.0;
+  static const double xl = 18.0;
+  static const double xl2 = 22.0;
   static const double pill = 999.0;
 }
 

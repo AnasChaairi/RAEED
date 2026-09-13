@@ -4,15 +4,17 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/generated/app_localizations.dart';
 import '../../../core/router/app_routes.dart';
+import '../../../core/session/session_controller.dart';
 import '../../../core/theme/design_tokens.gen.dart';
 import '../../../core/theme/raeed_theme.dart';
 import '../../../shared/widgets/offline_banner.dart';
 import '../../../shared/widgets/raeed_error_view.dart';
-import '../application/home_scope.dart';
 import '../domain/announcement.dart';
 import 'home_providers.dart';
 import 'widgets/child_card.dart';
+import 'widgets/home_header.dart';
 import 'widgets/home_skeleton.dart';
+import 'widgets/presence_prompt_card.dart';
 
 /// The role-scoped home (`RAEED-12`).
 ///
@@ -28,33 +30,37 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppL10n.of(context);
-    final scope = ref.watch(homeScopeProvider);
     final home = ref.watch(homeControllerProvider);
+    final displayName = ref.watch(
+      sessionControllerProvider.select((s) => s.user?.displayName ?? ''),
+    );
 
     return Scaffold(
       backgroundColor: context.palette.bg,
-      appBar: AppBar(title: Text(_titleFor(l10n, scope))),
-      body: SafeArea(
-        child: home.when(
-          // Skeleton child cards — never a bare spinner. A shape that already
-          // looks like the answer reads as "almost there".
-          loading: () => const HomeSkeleton(),
-          error: (error, _) => RaeedErrorView(
-            error: error,
-            onRetry: () => ref.read(homeControllerProvider.notifier).refresh(),
+      body: Column(
+        children: [
+          HomeHeader(
+            greetingName: displayName,
+            today: DateTime.now(),
+            unreadCount: home.value?.announcements.length ?? 0,
           ),
-          data: (state) => _HomeBody(state: state),
-        ),
+          Expanded(
+            child: home.when(
+              // Skeleton child cards — never a bare spinner. A shape that
+              // already looks like the answer reads as "almost there".
+              loading: () => const HomeSkeleton(),
+              error: (error, _) => RaeedErrorView(
+                error: error,
+                onRetry: () =>
+                    ref.read(homeControllerProvider.notifier).refresh(),
+              ),
+              data: (state) => _HomeBody(state: state),
+            ),
+          ),
+        ],
       ),
     );
   }
-
-  String _titleFor(AppL10n l10n, HomeScope scope) => switch (scope) {
-    HomeScope.ownChildren || HomeScope.none => l10n.homeTitleParent,
-    HomeScope.groupChildren => l10n.homeTitleEducator,
-    HomeScope.allChildren => l10n.homeTitleExecutive,
-  };
 }
 
 class _HomeBody extends ConsumerWidget {
@@ -81,6 +87,9 @@ class _HomeBody extends ConsumerWidget {
                     : StaleDataReason.refreshFailed,
               ),
             ),
+          // Above the announcements: an announcement is something to read, a
+          // pending confirmation is something to do.
+          const SliverToBoxAdapter(child: PresencePromptCard()),
           if (state.announcements.isNotEmpty)
             SliverToBoxAdapter(
               child: _AnnouncementsStrip(announcements: state.announcements),

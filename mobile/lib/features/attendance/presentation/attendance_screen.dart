@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,7 +12,7 @@ import '../../children/presentation/widgets/health_alert_badge.dart';
 import '../domain/attendance_sheet.dart';
 import '../domain/attendance_status.dart';
 import 'attendance_providers.dart';
-import 'widgets/status_chip.dart';
+import 'widgets/status_selector.dart';
 
 /// Attendance marking (`RAEED-21`).
 ///
@@ -90,7 +91,7 @@ class _SheetBody extends ConsumerWidget {
 
     return Column(
       children: [
-        _SummaryHeader(sheet: sheet),
+        _MarkingHeader(sheet: sheet),
         if (sheet.isFromCache || pendingCount > 0)
           OfflineBanner(
             reason: StaleDataReason.offline,
@@ -106,7 +107,7 @@ class _SheetBody extends ConsumerWidget {
               final entry = sheet.entries[index];
               return _AttendanceRow(
                 entry: entry,
-                onCycle: () => controller.cycle(entry),
+                onSelect: (status) => controller.setStatus(entry, status),
                 onPick: () => _pickStatus(context, controller, entry),
                 onResolveConflict: () =>
                     _resolveConflict(context, controller, entry),
@@ -219,14 +220,19 @@ class _SheetBody extends ConsumerWidget {
   }
 }
 
-/// The live confirmed / absent / no-answer counts.
+/// The design's marking header: how far through the group you are, then the
+/// live confirmed / absent / no-answer counts.
 ///
-/// Set in tabular figures so the numbers do not shift the layout as they
-/// change — on this screen they change on every tap, and a header that jitters
-/// under the reader's eye is the fastest way to lose their place in a list of
-/// twenty children.
-class _SummaryHeader extends StatelessWidget {
-  const _SummaryHeader({required this.sheet});
+/// The bar carries one segment per child, coloured by that child's status, so
+/// the educator can see at a glance both how much is left and what they have
+/// been marking — a plain percentage would answer only the first.
+///
+/// The counts are set in tabular figures so the numbers do not shift the layout
+/// as they change. On this screen they change on every tap, and a header that
+/// jitters under the reader's eye is the fastest way to lose their place in a
+/// list of twenty children.
+class _MarkingHeader extends StatelessWidget {
+  const _MarkingHeader({required this.sheet});
 
   final AttendanceSheet sheet;
 
@@ -235,29 +241,55 @@ class _SummaryHeader extends StatelessWidget {
     final l10n = AppL10n.of(context);
     final palette = context.palette;
     final style = context.type.tabular(context.type.caption);
+    final marked = sheet.entries.where((entry) => !entry.isUnmarked).length;
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        horizontal: RaeedSpacing.lg,
-        vertical: RaeedSpacing.md,
+      padding: const EdgeInsets.fromLTRB(
+        RaeedSpacing.lg,
+        RaeedSpacing.md,
+        RaeedSpacing.lg,
+        RaeedSpacing.md,
       ),
-      color: palette.surface,
-      child: Wrap(
-        spacing: RaeedSpacing.lg,
-        runSpacing: RaeedSpacing.xs,
+      decoration: BoxDecoration(
+        color: palette.surface,
+        border: Border(bottom: BorderSide(color: palette.border)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            l10n.attendanceSummaryConfirmed(sheet.confirmedCount),
-            style: style.copyWith(color: palette.success),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.attendanceMarkedOf(marked, sheet.entries.length),
+                  style: context.type
+                      .tabular(context.type.label)
+                      .copyWith(color: palette.ink),
+                ),
+              ),
+            ],
           ),
-          Text(
-            l10n.attendanceSummaryAbsent(sheet.declaredAbsentCount),
-            style: style.copyWith(color: palette.danger),
-          ),
-          Text(
-            l10n.attendanceSummaryNoAnswer(sheet.noAnswerCount),
-            style: style.copyWith(color: palette.inkDim),
+          const SizedBox(height: RaeedSpacing.sm),
+          _ProgressSegments(sheet: sheet),
+          const SizedBox(height: RaeedSpacing.md),
+          Wrap(
+            spacing: RaeedSpacing.lg,
+            runSpacing: RaeedSpacing.xs,
+            children: [
+              Text(
+                l10n.attendanceSummaryConfirmed(sheet.confirmedCount),
+                style: style.copyWith(color: palette.success),
+              ),
+              Text(
+                l10n.attendanceSummaryAbsent(sheet.declaredAbsentCount),
+                style: style.copyWith(color: palette.danger),
+              ),
+              Text(
+                l10n.attendanceSummaryNoAnswer(sheet.noAnswerCount),
+                style: style.copyWith(color: palette.inkDim),
+              ),
+            ],
           ),
         ],
       ),
@@ -265,30 +297,89 @@ class _SummaryHeader extends StatelessWidget {
   }
 }
 
-/// One child: name, health badge, status chip.
+/// One segment per child, in list order, coloured by status.
+class _ProgressSegments extends StatelessWidget {
+  const _ProgressSegments({required this.sheet});
+
+  final AttendanceSheet sheet;
+
+  /// Below the smallest spacing token: at twenty children a 4px gap would be
+  /// wider than the segments it separates.
+  static const double _gap = 2;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+
+    return Semantics(
+      // The bar is decoration over information the counts below already carry
+      // in words; announcing twenty segments would be noise.
+      excludeSemantics: true,
+      child: SizedBox(
+        height: 6,
+        child: Row(
+          children: [
+            for (final entry in sheet.entries) ...[
+              if (entry != sheet.entries.first) const SizedBox(width: _gap),
+              Expanded(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: switch (entry.effectiveStatus) {
+                      AttendanceStatus.present => palette.success,
+                      AttendanceStatus.late => palette.accent,
+                      AttendanceStatus.absent => palette.danger,
+                      AttendanceStatus.excused => palette.primary,
+                      null => palette.surfaceAlt,
+                    },
+                    borderRadius: BorderRadius.circular(RaeedRadius.sm),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// One child: avatar, name, health badge, status buttons.
 class _AttendanceRow extends StatelessWidget {
   const _AttendanceRow({
     required this.entry,
-    required this.onCycle,
+    required this.onSelect,
     required this.onPick,
     required this.onResolveConflict,
   });
 
   final AttendanceEntry entry;
-  final VoidCallback onCycle;
+  final ValueChanged<AttendanceStatus> onSelect;
   final VoidCallback onPick;
   final VoidCallback onResolveConflict;
+
+  /// What the name needs before the buttons may share its line.
+  static const double _minNameWidth = 72;
+
+  /// Body size, used only to read the user's scaling out of the text scaler.
+  static const double _referenceFontSize = 14;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
     final l10n = AppL10n.of(context);
 
+    final selector = AttendanceStatusSelector(
+      status: entry.effectiveStatus,
+      isPending: entry.isPending,
+      onSelected: onSelect,
+      onPickOther: onPick,
+    );
+
     return Material(
       color: palette.surface,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(RaeedRadius.lg),
+        borderRadius: BorderRadius.circular(RaeedRadius.xl),
         side: BorderSide(
           color: entry.hasConflict ? palette.warning : palette.border,
           width: entry.hasConflict ? 2 : 1,
@@ -298,35 +389,60 @@ class _AttendanceRow extends StatelessWidget {
         padding: const EdgeInsets.all(RaeedSpacing.md),
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          entry.childName,
-                          style: context.type.body.copyWith(color: palette.ink),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final scale =
+                    MediaQuery.textScalerOf(context).scale(_referenceFontSize) /
+                    _referenceFontSize;
+                final name = Row(
+                  children: [
+                    _RowAvatar(entry: entry),
+                    const SizedBox(width: RaeedSpacing.sm),
+                    Flexible(
+                      child: Text(
+                        entry.childName,
+                        style: context.type.body.copyWith(color: palette.ink),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      if (entry.hasHealthAlert) ...[
-                        const SizedBox(width: RaeedSpacing.xs),
-                        // Icon only here too: an attendance list is read in a
-                        // classroom with parents at the door.
-                        const HealthAlertBadge(),
-                      ],
+                    ),
+                    if (entry.hasHealthAlert) ...[
+                      const SizedBox(width: RaeedSpacing.xs),
+                      // Icon only here too: an attendance list is read in a
+                      // classroom with parents at the door.
+                      const HealthAlertBadge(),
                     ],
-                  ),
-                ),
-                const SizedBox(width: RaeedSpacing.md),
-                StatusChip(
-                  status: entry.effectiveStatus,
-                  isPending: entry.isPending,
-                  onTap: onCycle,
-                  onLongPress: onPick,
-                ),
-              ],
+                  ],
+                );
+
+                // The buttons never shrink and never ellipsize — they are the
+                // whole screen. When the name can no longer hold its floor
+                // beside them, they take their own line instead.
+                final budget =
+                    constraints.maxWidth -
+                    AttendanceStatusSelector.widthFor(
+                      entry.effectiveStatus,
+                      scale,
+                    ) -
+                    RaeedSpacing.md;
+                if (budget >= _minNameWidth * scale) {
+                  return Row(
+                    children: [
+                      Expanded(child: name),
+                      const SizedBox(width: RaeedSpacing.md),
+                      selector,
+                    ],
+                  );
+                }
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    name,
+                    const SizedBox(height: RaeedSpacing.sm),
+                    selector,
+                  ],
+                );
+              },
             ),
             if (entry.hasConflict) ...[
               const SizedBox(height: RaeedSpacing.sm),
@@ -349,6 +465,65 @@ class _AttendanceRow extends StatelessWidget {
               ),
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The child's photo, or their initial when there is none.
+///
+/// Smaller than the parent home's avatar: an educator marking twenty children
+/// is scanning names down a column, and a row that is taller than the control
+/// it carries costs them a screenful.
+class _RowAvatar extends StatelessWidget {
+  const _RowAvatar({required this.entry});
+
+  final AttendanceEntry entry;
+
+  static const double _size = 40;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final photoUrl = entry.photoUrl;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(RaeedRadius.md),
+      child: SizedBox(
+        width: _size,
+        height: _size,
+        child: photoUrl == null || photoUrl.isEmpty
+            ? _InitialAvatar(name: entry.childName)
+            : CachedNetworkImage(
+                imageUrl: photoUrl,
+                fit: BoxFit.cover,
+                // Photos are served behind short-lived signed URLs, so a failed
+                // load is normal once one expires.
+                placeholder: (_, _) => ColoredBox(color: palette.surfaceAlt),
+                errorWidget: (_, _, _) => _InitialAvatar(name: entry.childName),
+              ),
+      ),
+    );
+  }
+}
+
+class _InitialAvatar extends StatelessWidget {
+  const _InitialAvatar({required this.name});
+
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final initial = name.trim().isEmpty ? '؟' : name.trim().characters.first;
+
+    return ColoredBox(
+      color: palette.primarySoft,
+      child: Center(
+        child: Text(
+          initial,
+          style: context.type.h3.copyWith(color: palette.primary),
         ),
       ),
     );
@@ -441,13 +616,22 @@ class _SheetSkeleton extends StatelessWidget {
     separatorBuilder: (_, _) => const SizedBox(height: RaeedSpacing.sm),
     itemBuilder: (_, _) => Row(
       children: [
+        SkeletonBox(
+          width: 40,
+          height: 40,
+          borderRadius: BorderRadius.circular(RaeedRadius.md),
+        ),
+        const SizedBox(width: RaeedSpacing.sm),
         const Expanded(child: SkeletonLine(widthFactor: 0.6, height: 16)),
         const SizedBox(width: RaeedSpacing.md),
-        SkeletonBox(
-          width: 116,
-          height: RaeedTouchTarget.primaryActionsPx,
-          borderRadius: BorderRadius.circular(RaeedRadius.pill),
-        ),
+        for (var index = 0; index < 3; index++) ...[
+          if (index > 0) const SizedBox(width: RaeedSpacing.xs),
+          SkeletonBox(
+            width: RaeedTouchTarget.primaryActionsPx,
+            height: RaeedTouchTarget.primaryActionsPx,
+            borderRadius: BorderRadius.circular(RaeedRadius.md),
+          ),
+        ],
       ],
     ),
   );

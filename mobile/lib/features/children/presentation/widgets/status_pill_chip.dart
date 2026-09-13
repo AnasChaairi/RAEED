@@ -35,23 +35,27 @@ class StatusPillChip extends StatelessWidget {
 
     final chip = Container(
       padding: const EdgeInsetsDirectional.symmetric(
-        horizontal: RaeedSpacing.md,
-        vertical: RaeedSpacing.sm,
+        horizontal: RaeedSpacing.sm,
+        vertical: RaeedSpacing.xs,
       ),
       decoration: BoxDecoration(
         color: colors.background,
-        borderRadius: BorderRadius.circular(RaeedRadius.pill),
-        border: Border.all(color: colors.border, width: pill.isAlert ? 2 : 1),
+        borderRadius: BorderRadius.circular(RaeedRadius.sm),
+        // Tinted fills carry the state; only the alert takes an outline, which
+        // is what makes it the one pill that reads as urgent at a glance.
+        border: pill.isAlert
+            ? Border.all(color: colors.border, width: 1.5)
+            : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(_iconFor(), size: 14, color: colors.foreground),
-          const SizedBox(width: RaeedSpacing.xs),
+          Icon(_iconFor(), size: 13, color: colors.foreground),
+          const SizedBox(width: 3),
           Flexible(
             child: Text(
               label,
-              style: context.type.caption.copyWith(color: colors.foreground),
+              style: context.type.label.copyWith(color: colors.foreground),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -82,6 +86,9 @@ class StatusPillChip extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: RaeedTouchTarget.minPx),
           child: Align(
             alignment: AlignmentDirectional.centerStart,
+            // Shrink-wraps rather than filling its slot, so a short pill hands
+            // the space it does not need back to the name beside it.
+            widthFactor: 1,
             child: chip,
           ),
         ),
@@ -122,7 +129,7 @@ class StatusPillChip extends StatelessWidget {
     final palette = context.palette;
     return switch (pill.tone) {
       StatusPillTone.critical => _PillColors(
-        background: palette.surface,
+        background: palette.dangerSoft,
         foreground: palette.danger,
         border: palette.danger,
       ),
@@ -132,9 +139,9 @@ class StatusPillChip extends StatelessWidget {
         border: palette.accent,
       ),
       StatusPillTone.positive => _PillColors(
-        background: palette.surfaceAlt,
+        background: palette.successSoft,
         foreground: palette.success,
-        border: palette.border,
+        border: palette.success,
       ),
       StatusPillTone.info => _PillColors(
         background: palette.primarySoft,
