@@ -1,0 +1,77 @@
+# Local development stack (`specs/12-devops-and-environments.md`).
+#
+# Current phase is local only — no Development/Staging/Production infrastructure
+# is provisioned, and nothing here should be pointed at a real environment.
+#
+# Works with Docker and with rootless Podman. For Podman, enable the API socket
+# once (`systemctl --user enable --now podman.socket`) and use
+# `podman compose` in place of `docker compose`.
+name: raeed
+
+services:
+  postgres:
+    image: docker.io/library/postgres:15
+    environment:
+      POSTGRES_DB: raeed
+      POSTGRES_USER: raeed
+      POSTGRES_PASSWORD: local_dev_only
+      # Deterministic collation, so ORDER BY on Arabic names is the same on
+      # every developer's machine and in CI.
+      POSTGRES_INITDB_ARGS: "--locale=C --encoding=UTF8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U raeed -d raeed"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: docker.io/library/redis:7
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      target: development
+    env_file:
+      - ./.env.local
+    environment:
+      # Inside the compose network the services are reachable by name; the
+      # .env.local defaults assume localhost for running the API on the host.
+      DATABASE_URL: postgres://raeed_app:local_dev_only@postgres:5432/raeed
+      MIGRATION_DATABASE_URL: postgres://raeed:local_dev_only@postgres:5432/raeed
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      # Source is mounted so a change restarts the API without a rebuild.
+      # node_modules stays in the image — the host's may be built for a
+      # different libc.
+      - ../backend/src:/app/src:z
+      - ../specs:/specs:ro,z
+      - media:/var/lib/raeed/media
+
+volumes:
+  pgdata:
+  redisdata:
+  # Local disk media for the MVP's StorageProvider. OVH Object Storage replaces
+  # this post-MVP without touching calling code (`specs/07-backend-spec.md`).
+  media:

@@ -28,3 +28,9 @@ mobile/l10n-untranslated.txt
 
 # Agent worktrees — transient, never part of the repo
 .claude/worktrees/
+
+# Backend
+backend/node_modules/
+backend/dist/
+backend/coverage/
+infrastructure/.env.local
