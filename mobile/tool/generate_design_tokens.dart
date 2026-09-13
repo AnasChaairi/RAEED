@@ -32,9 +32,14 @@ void main(List<String> args) {
 
   final outFile = File(_outputPath);
   final isCheck = args.contains('--check');
+
   if (isCheck) {
+    // Compare against a formatted candidate, not the raw buffer: the committed
+    // file goes through `dart format` like every other source file, so a raw
+    // comparison would report "stale" on a file that is perfectly current.
+    final candidate = _format(generated);
     final current = outFile.existsSync() ? outFile.readAsStringSync() : '';
-    if (current != generated) {
+    if (current != candidate) {
       stderr.writeln(
         '$_outputPath is stale. Run: dart run tool/generate_design_tokens.dart',
       );
@@ -47,7 +52,35 @@ void main(List<String> args) {
 
   outFile.parent.createSync(recursive: true);
   outFile.writeAsStringSync(generated);
+  _formatInPlace(_outputPath);
   stdout.writeln('Wrote $_outputPath');
+}
+
+/// Formats [source] the way the repository formats every other Dart file.
+String _format(String source) {
+  final temporary = File(
+    '${Directory.systemTemp.path}/raeed_tokens_${pid}_candidate.dart',
+  )..writeAsStringSync(source);
+  try {
+    _formatInPlace(temporary.path);
+    return temporary.readAsStringSync();
+  } finally {
+    if (temporary.existsSync()) temporary.deleteSync();
+  }
+}
+
+/// Runs `dart format` over [path], failing loudly rather than silently leaving
+/// an unformatted file that CI will then reject.
+void _formatInPlace(String path) {
+  final result = Process.runSync(Platform.resolvedExecutable, ['format', path]);
+  if (result.exitCode != 0) {
+    throw ProcessException(
+      'dart',
+      ['format', path],
+      result.stderr.toString(),
+      result.exitCode,
+    );
+  }
 }
 
 class _Generator {
@@ -442,12 +475,18 @@ List<String> _parseBoxShadows(String css) {
         '${r.toRadixString(16).padLeft(2, '0').toUpperCase()}'
         '${g.toRadixString(16).padLeft(2, '0').toUpperCase()}'
         '${b.toRadixString(16).padLeft(2, '0').toUpperCase()})';
+    // `spreadRadius` is omitted when zero: it is BoxShadow's default, and
+    // passing it explicitly trips `avoid_redundant_argument_values`, which this
+    // repo treats as fatal in CI.
+    final spreadArgument = spread == 0
+        ? ''
+        : ', spreadRadius: ${_double(spread)}';
     shadows.add(
       'BoxShadow('
       'color: $color, '
       'offset: Offset(${_double(lengths[0])}, ${_double(lengths[1])}), '
-      'blurRadius: ${_double(lengths[2])}, '
-      'spreadRadius: ${_double(spread)})',
+      'blurRadius: ${_double(lengths[2])}'
+      '$spreadArgument)',
     );
   }
   return shadows;
