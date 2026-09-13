@@ -132,14 +132,17 @@ cd build/web && python3 -m http.server 8080
 
 Open <http://localhost:8080>.
 
-**Two caveats on the web build.** It is a convenience for looking at screens,
-not a supported target:
+**One caveat on the web build.** It is a convenience for looking at screens,
+not a supported target: secure storage falls back to browser storage, so "stay
+signed in" behaves differently from a real device.
 
-- **The attendance screen will not work.** Its offline queue is Drift over
-  SQLite, and running that on the web needs a `sqlite3.wasm` worker that is not
-  set up here. On Android it works as tested.
-- Secure storage falls back to browser storage, so "stay signed in" behaves
-  differently from a real device.
+The attendance screen now works here too. Its offline queue is Drift over
+SQLite, which on the web runs SQLite compiled to WebAssembly in a worker —
+`mobile/web/sqlite3.wasm` and `mobile/web/drift_worker.js`, both committed and
+pinned to the locked `drift` / `sqlite3` versions. The queue then lives in the
+browser's OPFS or IndexedDB rather than a device file. Refresh the versions
+alongside a `flutter pub upgrade` of those two packages — a worker built for a
+different drift version will refuse to open the database.
 
 ## What works end to end today
 

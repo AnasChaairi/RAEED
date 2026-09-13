@@ -17,8 +17,24 @@ part 'raeed_database.g.dart';
 /// piece of children's data sitting at rest on a volunteer educator's phone.
 @DriftDatabase(tables: [CachedSessions, CachedAttendanceEntries, PendingWrites])
 class RaeedDatabase extends _$RaeedDatabase {
-  /// Opens the on-device database file.
-  RaeedDatabase() : super(driftDatabase(name: _databaseName));
+  /// Opens the on-device database.
+  ///
+  /// On the web, drift runs SQLite compiled to WebAssembly in a worker; the two
+  /// files that takes are served from `web/` (`sqlite3.wasm`, `drift_worker.js`)
+  /// and named here by relative URL. On native platforms [DriftWebOptions] is
+  /// simply ignored, so this one constructor serves every target — the web is a
+  /// convenience for looking at screens, not a supported runtime, and this is
+  /// what lets the attendance screen open there at all.
+  RaeedDatabase()
+    : super(
+        driftDatabase(
+          name: _databaseName,
+          web: DriftWebOptions(
+            sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+            driftWorker: Uri.parse('drift_worker.js'),
+          ),
+        ),
+      );
 
   /// Opens a database on [executor] — used by tests with an in-memory one, and
   /// the reason no test ever touches the real file.
