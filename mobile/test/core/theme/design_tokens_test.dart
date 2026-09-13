@@ -343,9 +343,13 @@ void expectPaletteMatches(
     'accentOn': palette.accentOn,
     'accentSoft': palette.accentSoft,
     'success': palette.success,
+    'successSoft': palette.successSoft,
     'warning': palette.warning,
+    'warningSoft': palette.warningSoft,
     'danger': palette.danger,
+    'dangerSoft': palette.dangerSoft,
     'info': palette.info,
+    'infoSoft': palette.infoSoft,
   };
 
   expect(

@@ -18,7 +18,11 @@
       "success": "#1C7A55",
       "warning": "#A85A0A",
       "danger": "#CD331C",
-      "info": "#11769E"
+      "info": "#11769E",
+      "successSoft": "#E4F5EC",
+      "dangerSoft": "#FEE9E3",
+      "warningSoft": "#FFF3DC",
+      "infoSoft": "#EAF7FE"
     },
     "dark": {
       "bg": "#0B0F14",
@@ -37,7 +41,11 @@
       "success": "#34C185",
       "warning": "#E0A544",
       "danger": "#E2685A",
-      "info": "#2BB3E8"
+      "info": "#2BB3E8",
+      "successSoft": "#10301F",
+      "dangerSoft": "#3A1710",
+      "warningSoft": "#332711",
+      "infoSoft": "#0E3346"
     },
     "logoSource": {
       "note": "extracted directly from logo/logo.jpeg — kept for traceability, not for direct app use except in logo lockups",

@@ -33,6 +33,10 @@ class RaeedPalette {
     required this.warning,
     required this.danger,
     required this.info,
+    required this.successSoft,
+    required this.dangerSoft,
+    required this.warningSoft,
+    required this.infoSoft,
   });
 
   /// `color.<brightness>.bg`
@@ -85,6 +89,18 @@ class RaeedPalette {
 
   /// `color.<brightness>.info`
   final Color info;
+
+  /// `color.<brightness>.successSoft`
+  final Color successSoft;
+
+  /// `color.<brightness>.dangerSoft`
+  final Color dangerSoft;
+
+  /// `color.<brightness>.warningSoft`
+  final Color warningSoft;
+
+  /// `color.<brightness>.infoSoft`
+  final Color infoSoft;
 }
 
 /// The light-mode palette.
@@ -106,6 +122,10 @@ const RaeedPalette raeedLightPalette = RaeedPalette(
   warning: Color(0xFFA85A0A),
   danger: Color(0xFFCD331C),
   info: Color(0xFF11769E),
+  successSoft: Color(0xFFE4F5EC),
+  dangerSoft: Color(0xFFFEE9E3),
+  warningSoft: Color(0xFFFFF3DC),
+  infoSoft: Color(0xFFEAF7FE),
 );
 
 /// The dark-mode palette.
@@ -127,6 +147,10 @@ const RaeedPalette raeedDarkPalette = RaeedPalette(
   warning: Color(0xFFE0A544),
   danger: Color(0xFFE2685A),
   info: Color(0xFF2BB3E8),
+  successSoft: Color(0xFF10301F),
+  dangerSoft: Color(0xFF3A1710),
+  warningSoft: Color(0xFF332711),
+  infoSoft: Color(0xFF0E3346),
 );
 
 /// Raw colours sampled from `logo/logo.jpeg`.
