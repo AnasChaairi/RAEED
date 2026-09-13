@@ -85,8 +85,8 @@ Full loading/empty/error/success breakdown for the five screens with the most bu
 | | |
 |---|---|
 | Purpose | Mark a whole group in under a minute, offline-capable |
-| Components | Pre-filled list from presence answers, large one-tap status chips, health-alert badge (icon only — full text on tap-through), live confirmed/absent/no-answer summary header |
-| User actions | Tap a chip (cycles present→late→absent→excused); "mark remaining present"; submit |
+| Components | Pre-filled list from presence answers, one large button per status (present / late / absent), health-alert badge (icon only — full text on tap-through), segmented marking-progress bar over the live confirmed/absent/no-answer summary header |
+| User actions | Tap a status button (any status is one tap from any other); long-press for "excused", which has no button of its own; "mark remaining present"; submit |
 | API | `GET/PATCH /sessions/{id}/attendance` — PATCH is queued locally (Drift) when offline |
 | Loading/Empty/Error | Skeleton rows; "no children in this group yet"; offline banner "saved on this device, will sync" — never blocks submission |
 | Success | Confirmation toast; any unexplained-absent mark triggers the critical-alert pipeline (`02-architecture.md`) |

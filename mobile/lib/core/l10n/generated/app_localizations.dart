@@ -729,6 +729,12 @@ abstract class AppL10n {
   /// **'{count, plural, zero{لا أحد بدون جواب} one{واحد بدون جواب} two{اثنان بدون جواب} few{{count} بدون جواب} many{{count} بدون جواب} other{{count} بدون جواب}}'**
   String attendanceSummaryNoAnswer(int count);
 
+  /// Progress line above the marking bar. Two numbers, so not a plural — Arabic would need six categories for each and the pair reads as a fraction anyway.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تسجيل {marked} من {total}'**
+  String attendanceMarkedOf(int marked, int total);
+
   /// No description provided for @attendanceMarkRemainingPresent.
   ///
   /// In ar, this message translates to:

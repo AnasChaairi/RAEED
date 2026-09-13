@@ -385,6 +385,11 @@ class AppL10nEn extends AppL10n {
   }
 
   @override
+  String attendanceMarkedOf(int marked, int total) {
+    return '$marked of $total marked';
+  }
+
+  @override
   String get attendanceMarkRemainingPresent => 'Mark remaining present';
 
   @override

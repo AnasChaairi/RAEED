@@ -11,7 +11,7 @@ import 'package:raeed/features/attendance/domain/attendance_status.dart';
 import 'package:raeed/features/attendance/domain/presence_answer.dart';
 import 'package:raeed/features/attendance/presentation/attendance_providers.dart';
 import 'package:raeed/features/attendance/presentation/attendance_screen.dart';
-import 'package:raeed/features/attendance/presentation/widgets/status_chip.dart';
+import 'package:raeed/features/attendance/presentation/widgets/status_selector.dart';
 import 'package:raeed/features/children/presentation/widgets/health_alert_badge.dart';
 import 'package:raeed/shared/widgets/offline_banner.dart';
 import 'package:raeed/shared/widgets/skeleton.dart';
@@ -55,6 +55,14 @@ void main() {
     entries: entries,
     isFromCache: isFromCache,
   );
+
+  /// One status button, by its glyph — the row draws no text, so the icon is
+  /// what a reader of this screen actually distinguishes them by.
+  Finder segmentFor(WidgetTester tester, AttendanceStatus status) =>
+      find.ancestor(
+        of: find.byIcon(iconForStatus(status)),
+        matching: find.byType(InkWell),
+      );
 
   setUpAll(() {
     registerFallbackValue(AttendanceStatus.present);
@@ -164,21 +172,21 @@ void main() {
 
       final l10n = AppL10n.of(tester.element(find.byType(AttendanceScreen)));
       expect(find.text(l10n.attendanceEmptyGroup), findsOneWidget);
-      expect(find.byType(StatusChip), findsNothing);
+      expect(find.byType(AttendanceStatusSelector), findsNothing);
     });
   });
 
   group('marking', () {
-    testWidgets('renders one chip per child', (tester) async {
+    testWidgets('renders one selector per child', (tester) async {
       stubSheet(sheetOf([entry('child-1', 'آدم'), entry('child-2', 'مريم')]));
 
       await pumpScreen(tester);
       await tester.pumpAndSettle();
 
-      expect(find.byType(StatusChip), findsNWidgets(2));
+      expect(find.byType(AttendanceStatusSelector), findsNWidgets(2));
     });
 
-    testWidgets('a tap cycles the status and records the tap time', (
+    testWidgets('one tap marks that status and records the tap time', (
       tester,
     ) async {
       stubSheet(sheetOf([entry('child-1', 'آدم')]));
@@ -186,7 +194,7 @@ void main() {
       await pumpScreen(tester);
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byType(StatusChip));
+      await tester.tap(segmentFor(tester, AttendanceStatus.present));
       await tester.pumpAndSettle();
 
       final captured = verify(
@@ -198,11 +206,7 @@ void main() {
         ),
       ).captured;
 
-      expect(
-        captured[0],
-        AttendanceStatus.present,
-        reason: 'an unmarked child cycles to present first',
-      );
+      expect(captured[0], AttendanceStatus.present);
       expect(
         captured[1],
         isA<DateTime>().having((d) => d.isUtc, 'isUtc', isTrue),
@@ -212,7 +216,9 @@ void main() {
       );
     });
 
-    testWidgets('cycles present → late from an existing mark', (tester) async {
+    testWidgets('any status is one tap from any other', (tester) async {
+      // The point of discrete buttons over a cycling chip: correcting a
+      // present mark to absent costs one tap, not three.
       stubSheet(
         sheetOf([
           entry('child-1', 'آدم', serverStatus: AttendanceStatus.present),
@@ -221,7 +227,7 @@ void main() {
 
       await pumpScreen(tester);
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(StatusChip));
+      await tester.tap(segmentFor(tester, AttendanceStatus.absent));
       await tester.pumpAndSettle();
 
       final captured = verify(
@@ -232,7 +238,7 @@ void main() {
           recordedAtClient: any(named: 'recordedAtClient'),
         ),
       ).captured;
-      expect(captured.single, AttendanceStatus.late);
+      expect(captured.single, AttendanceStatus.absent);
     });
 
     testWidgets('"mark remaining present" leaves deliberate marks alone', (
@@ -309,9 +315,11 @@ void main() {
       await pumpScreen(tester, queueDepth: 1);
       await tester.pumpAndSettle();
 
-      final chip = tester.widget<StatusChip>(find.byType(StatusChip));
-      expect(chip.isPending, isTrue);
-      expect(chip.status, AttendanceStatus.absent);
+      final selector = tester.widget<AttendanceStatusSelector>(
+        find.byType(AttendanceStatusSelector),
+      );
+      expect(selector.isPending, isTrue);
+      expect(selector.status, AttendanceStatus.absent);
     });
   });
 
@@ -458,18 +466,23 @@ void main() {
   });
 
   group('accessibility', () {
-    testWidgets('chips meet the primary-action touch target', (tester) async {
+    testWidgets('every status button meets the primary-action target', (
+      tester,
+    ) async {
       stubSheet(sheetOf([entry('child-1', 'آدم')]));
 
       await pumpScreen(tester);
       await tester.pumpAndSettle();
 
-      final size = tester.getSize(find.byType(StatusChip));
-      expect(
-        size.height,
-        greaterThanOrEqualTo(RaeedTouchTarget.primaryActionsPx),
-        reason: 'chips are tapped repeatedly, at speed, one-handed',
-      );
+      for (final status in AttendanceStatusSelector.fastStatuses) {
+        final size = tester.getSize(segmentFor(tester, status));
+        expect(
+          size.height,
+          greaterThanOrEqualTo(RaeedTouchTarget.primaryActionsPx),
+          reason: 'buttons are tapped repeatedly, at speed, one-handed',
+        );
+        expect(size.width, greaterThanOrEqualTo(RaeedTouchTarget.primaryActionsPx));
+      }
     });
 
     testWidgets('the row holds up at 130% text scaling', (tester) async {

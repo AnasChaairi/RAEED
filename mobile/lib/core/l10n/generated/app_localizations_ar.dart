@@ -402,6 +402,11 @@ class AppL10nAr extends AppL10n {
   }
 
   @override
+  String attendanceMarkedOf(int marked, int total) {
+    return 'تم تسجيل $marked من $total';
+  }
+
+  @override
   String get attendanceMarkRemainingPresent => 'تسجيل الباقي حاضرين';
 
   @override

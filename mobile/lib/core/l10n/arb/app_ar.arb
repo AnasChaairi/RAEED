@@ -311,6 +311,20 @@
       }
     }
   },
+  "attendanceMarkedOf": "تم تسجيل {marked} من {total}",
+  "@attendanceMarkedOf": {
+    "description": "Progress line above the marking bar. Two numbers, so not a plural — Arabic would need six categories for each and the pair reads as a fraction anyway.",
+    "placeholders": {
+      "marked": {
+        "type": "int",
+        "example": "8"
+      },
+      "total": {
+        "type": "int",
+        "example": "20"
+      }
+    }
+  },
   "attendanceMarkRemainingPresent": "تسجيل الباقي حاضرين",
   "@attendanceMarkRemainingPresent": {},
   "attendanceSubmit": "إرسال",

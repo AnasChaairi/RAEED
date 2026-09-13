@@ -59,18 +59,12 @@ class AttendanceSheetController extends _$AttendanceSheetController {
     yield* repository.watchSheet(sessionId: sessionId, groupId: groupId);
   }
 
-  /// Cycles one child's status: present → late → absent → excused → present.
+  /// Sets one child's status.
   ///
   /// [tappedAt] is the moment of the tap and is carried all the way to
   /// `recorded_at_client`. Defaulting it at sync time would make every offline
   /// mark look freshly authoritative and silently overwrite whoever marked the
   /// child in the meantime.
-  Future<void> cycle(AttendanceEntry entry, {DateTime? tappedAt}) {
-    final next = (entry.effectiveStatus ?? AttendanceStatus.excused).next;
-    return _mark(entry.childId, next, tappedAt ?? DateTime.now().toUtc());
-  }
-
-  /// Sets one child's status explicitly.
   Future<void> setStatus(
     AttendanceEntry entry,
     AttendanceStatus status, {

@@ -105,6 +105,7 @@
   "attendanceSummaryConfirmed": "{count, plural, one{{count} confirmé} other{{count} confirmés}}",
   "attendanceSummaryAbsent": "{count, plural, one{{count} absent} other{{count} absents}}",
   "attendanceSummaryNoAnswer": "{count, plural, one{{count} sans réponse} other{{count} sans réponse}}",
+  "attendanceMarkedOf": "{marked} sur {total} enregistrés",
   "attendanceMarkRemainingPresent": "Marquer le reste présent",
   "attendanceSubmit": "Envoyer",
   "attendanceSubmitted": "Présences envoyées",
