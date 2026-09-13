@@ -14,6 +14,7 @@ import 'home_providers.dart';
 import 'widgets/child_card.dart';
 import 'widgets/home_header.dart';
 import 'widgets/home_skeleton.dart';
+import 'widgets/presence_prompt_card.dart';
 
 /// The role-scoped home (`RAEED-12`).
 ///
@@ -86,6 +87,9 @@ class _HomeBody extends ConsumerWidget {
                     : StaleDataReason.refreshFailed,
               ),
             ),
+          // Above the announcements: an announcement is something to read, a
+          // pending confirmation is something to do.
+          const SliverToBoxAdapter(child: PresencePromptCard()),
           if (state.announcements.isNotEmpty)
             SliverToBoxAdapter(
               child: _AnnouncementsStrip(announcements: state.announcements),

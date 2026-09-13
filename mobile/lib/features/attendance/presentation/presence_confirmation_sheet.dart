@@ -22,19 +22,34 @@ import 'attendance_providers.dart';
 ///
 /// The answer is queued locally first, so it survives that lost signal.
 class PresenceConfirmationSheet extends ConsumerStatefulWidget {
-  const PresenceConfirmationSheet({required this.confirmation, super.key});
+  const PresenceConfirmationSheet({
+    required this.confirmation,
+    this.initialAnswer,
+    super.key,
+  });
 
   /// The confirmation being answered.
   final PendingPresenceConfirmation confirmation;
 
+  /// An answer already chosen elsewhere — the Home prompt's "لا" and "سيتأخر".
+  ///
+  /// Only ever pre-selects; it never submits, because both answers it can carry
+  /// have an optional reason behind them and collecting that is the whole
+  /// reason the sheet opened.
+  final PresenceAnswerValue? initialAnswer;
+
   /// Opens this as a modal bottom sheet.
   static Future<void> show(
     BuildContext context,
-    PendingPresenceConfirmation confirmation,
-  ) => showModalBottomSheet<void>(
+    PendingPresenceConfirmation confirmation, {
+    PresenceAnswerValue? initialAnswer,
+  }) => showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    builder: (_) => PresenceConfirmationSheet(confirmation: confirmation),
+    builder: (_) => PresenceConfirmationSheet(
+      confirmation: confirmation,
+      initialAnswer: initialAnswer,
+    ),
   );
 
   @override
@@ -48,6 +63,12 @@ class _PresenceConfirmationSheetState
   AbsenceReason? _reason;
   final TextEditingController _noteController = TextEditingController();
   bool _isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _answer = widget.initialAnswer;
+  }
 
   @override
   void dispose() {
