@@ -266,10 +266,20 @@ create table attendance_record (
   recorded_at timestamptz not null default now(),
   recorded_at_client timestamptz not null,   -- offline conflict rule uses this, see below
   corrected_from uuid references attendance_record(id), -- self-reference on correction
-  created_at timestamptz not null default now(),
-  unique (session_id, child_id)
+  superseded_at timestamptz,                  -- set when a later mark corrects this row
+  created_at timestamptz not null default now()
 );
 create index on attendance_record (session_id);
+-- Uniqueness is PARTIAL, and deliberately so. A correction creates a new row
+-- pointing at the one it supersedes (RAEED-17, entities.md) rather than
+-- rewriting it — so "one record per child per session" can only hold for
+-- *current* rows. A total unique constraint here makes the correction history
+-- unrepresentable: the only way to satisfy it is to delete the row the new one
+-- points at, which is the update-in-place the design exists to avoid.
+create unique index attendance_record_current_unique
+  on attendance_record (session_id, child_id) where superseded_at is null;
+create index attendance_record_corrected_from_idx
+  on attendance_record (corrected_from) where corrected_from is not null;
 -- Conflict rule (02-architecture.md / 04-api/conventions.md): an incoming write whose
 -- recorded_at_client is older than the current row's recorded_at is rejected with
 -- attendance.conflict, not silently overwritten.
