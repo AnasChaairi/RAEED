@@ -371,11 +371,20 @@ paths:
               properties:
                 privacy_policy_accepted: { type: boolean }
                 image_rights:
-                  type: object
-                  additionalProperties:
-                    type: string
-                    enum: [allowed, app_only, not_allowed]
-                  description: Map of child id to the chosen level.
+                  type: array
+                  description: >
+                    One entry per child the screen displayed. A list rather than
+                    a map keyed by child id: each entry is a typed object the
+                    contract can describe and the server can validate per field,
+                    and the order the screen showed is preserved.
+                  items:
+                    type: object
+                    required: [child_id, level]
+                    properties:
+                      child_id: { type: string, format: uuid }
+                      level:
+                        type: string
+                        enum: [allowed, app_only, not_allowed]
       responses:
         '204': { description: Recorded }
         '403': { $ref: '#/components/responses/Forbidden' }

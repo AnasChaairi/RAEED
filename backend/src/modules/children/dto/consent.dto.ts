@@ -1,37 +1,48 @@
-import { IsBoolean, IsObject } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsBoolean,
+  IsIn,
+  IsUUID,
+  ValidateNested,
+} from 'class-validator';
 
 import { ImageRightsLevel } from '../entities/consent-record.entity';
 
-const LEVELS: ReadonlySet<string> = new Set([
-  'allowed',
-  'app_only',
-  'not_allowed',
-]);
+/** One child's image-rights choice. */
+export class ImageRightsEntryDto {
+  @IsUUID()
+  child_id: string;
 
-/** `POST /consent`. */
+  @IsIn(['allowed', 'app_only', 'not_allowed'])
+  level: ImageRightsLevel;
+}
+
+/**
+ * `POST /consent`.
+ *
+ * `image_rights` is a **list**, not a map keyed by child id. The list is the
+ * better contract for two reasons: each entry is a typed object OpenAPI can
+ * describe and class-validator can check per field, rather than a free-form
+ * `additionalProperties` map whose values nothing validates; and the ordering
+ * the screen displayed is preserved, which matters when a guardian is asked to
+ * confirm what they just chose.
+ *
+ * It carries an entry for **every** child the screen displayed, including ones
+ * left at the default. "The guardian looked at this and left it at
+ * not-allowed" and "the guardian was never asked" must be distinguishable rows
+ * in `consent_record`, and a missing entry is never read as permission.
+ */
 export class SubmitConsentDto {
   @IsBoolean()
   privacy_policy_accepted: boolean;
 
-  /**
-   * Map of child id to level, carrying an entry for **every** child the screen
-   * displayed — including ones left at the default.
-   *
-   * "The guardian looked at this and left it at not-allowed" and "the guardian
-   * was never asked" must be distinguishable rows, and a missing entry is not
-   * treated as permission.
-   */
-  @IsObject()
-  image_rights: Record<string, ImageRightsLevel>;
-}
-
-/** Validates the map's values, which `@IsObject` alone cannot. */
-export function assertValidLevels(
-  imageRights: Record<string, string>,
-): asserts imageRights is Record<string, ImageRightsLevel> {
-  for (const [childId, level] of Object.entries(imageRights)) {
-    if (!LEVELS.has(level)) {
-      throw new Error(`image_rights.${childId} is not a valid level`);
-    }
-  }
+  @IsArray()
+  // A guardian has a handful of children, not a hundred. An unbounded list is
+  // an unbounded transaction.
+  @ArrayMaxSize(50)
+  @ValidateNested({ each: true })
+  @Type(() => ImageRightsEntryDto)
+  image_rights: ImageRightsEntryDto[];
 }

@@ -15,10 +15,9 @@ import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
 import { CheckAbilityGuard } from '../../common/abilities/check-ability.guard';
 import { CurrentUser } from '../../common/auth/current-user.decorator';
 import { JwtAuthGuard } from '../../common/auth/jwt-auth.guard';
-import { ApiError } from '../../common/http/api-error';
 import { ChildDetailView, ChildListItem, ChildrenService } from './children.service';
 import { ConsentService, ConsentRequirementView } from './consent.service';
-import { assertValidLevels, SubmitConsentDto } from './dto/consent.dto';
+import { SubmitConsentDto } from './dto/consent.dto';
 
 @Controller()
 @UseGuards(JwtAuthGuard, CheckAbilityGuard)
@@ -73,13 +72,8 @@ export class ChildrenController {
     @CurrentUser() user: AuthenticatedUser,
     @Body() body: SubmitConsentDto,
   ): Promise<void> {
-    try {
-      assertValidLevels(body.image_rights);
-    } catch (error) {
-      throw ApiError.validationFailed({
-        image_rights: [(error as Error).message],
-      });
-    }
+    // Every field is validated by the DTO now, including each entry's level,
+    // so there is nothing left for the controller to check by hand.
     await this.consent.submit(
       user,
       body.privacy_policy_accepted,
