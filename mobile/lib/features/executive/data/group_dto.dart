@@ -1,0 +1,66 @@
+/// Wire → domain mapping for groups and their sessions.
+///
+/// `GET /groups/{id}/sessions` is contracted; the group list and detail
+/// shapes are proposed (EXEC-M-05) and read tolerantly.
+library;
+
+import '../../../core/network/api_envelope.dart';
+import '../domain/executive_group.dart';
+import 'wire_helpers.dart';
+
+const Map<String, SessionStatus> _sessionStatusByWire = {
+  'planned': SessionStatus.planned,
+  'delivered': SessionStatus.delivered,
+  'cancelled': SessionStatus.cancelled,
+};
+
+ExecutiveGroup executiveGroupFromJson(Map<String, Object?> json) {
+  final category = objectOrNull(json['category']);
+  final educators = objectList(json['educators'], field: 'educators');
+  return ExecutiveGroup(
+    id: requireField<String>(json, 'id'),
+    name: requireField<String>(json, 'name'),
+    categoryName:
+        stringOrNull(category?['name']) ??
+        stringOrNull(json['category_name']) ??
+        '',
+    enrolledCount: intOrNull(json['enrolled_count']) ?? 0,
+    capacity: intOrNull(json['capacity']),
+    educatorNames: educators.isNotEmpty
+        ? [
+            for (final educator in educators)
+              if (firstString(educator, ['full_name', 'display_name'])
+                  case final String name)
+                name,
+          ]
+        : stringList(json['educator_names']),
+    scheduleLabel: stringOrNull(json['schedule_label']),
+    place: stringOrNull(json['place']),
+  );
+}
+
+GroupSession groupSessionFromJson(Map<String, Object?> json) {
+  final attendance = objectOrNull(json['attendance']);
+  return GroupSession(
+    id: requireField<String>(json, 'id'),
+    groupId: requireField<String>(json, 'group_id'),
+    title: stringOrNull(json['title']),
+    startsAt: requireDateTime(json, 'starts_at'),
+    endsAt: requireDateTime(json, 'ends_at'),
+    status: enumFromWire(
+      json['status'],
+      _sessionStatusByWire,
+      fallback: SessionStatus.planned,
+    ),
+    attendanceRecorded: boolOr(
+      attendance?['recorded'] ?? json['attendance_recorded'],
+      false,
+    ),
+    presentCount: intOrNull(
+      attendance?['present_count'] ?? json['present_count'],
+    ),
+    enrolledCount: intOrNull(
+      attendance?['enrolled_count'] ?? json['enrolled_count'],
+    ),
+  );
+}

@@ -12,8 +12,14 @@ abstract interface class AttendanceReviewRepository {
     required String groupId,
   });
 
-  /// Applies [draft] and returns the record the server created.
-  Future<AttendanceRecordEntry> correct({
+  /// Applies [draft].
+  ///
+  /// Returns nothing on purpose: the trail the screen shows afterwards is
+  /// re-read from the server, which is the only party that knows the new
+  /// record's id, its `recorded_at`, and the device it was attributed to.
+  /// A client that fabricated that row would be showing an audit trail it
+  /// made up.
+  Future<void> correct({
     required String sessionId,
     required AttendanceCorrectionDraft draft,
   });

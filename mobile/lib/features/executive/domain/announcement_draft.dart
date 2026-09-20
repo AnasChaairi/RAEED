@@ -173,8 +173,9 @@ class ExecutiveAnnouncement {
     if (isDraft) return AnnouncementState.draft;
     if (publishAt.isAfter(utc)) return AnnouncementState.scheduled;
     final expiry = expireAt;
-    if (expiry != null && !expiry.isAfter(utc))
+    if (expiry != null && !expiry.isAfter(utc)) {
       return AnnouncementState.expired;
+    }
     return AnnouncementState.published;
   }
 }
