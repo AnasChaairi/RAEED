@@ -453,5 +453,613 @@
   "homeNeedsYourReply": "يحتاج ردّك",
   "@homeNeedsYourReply": {
     "description": "Header of the presence-confirmation prompt on Home."
-  }
+  },
+  "execTabDashboard": "اللوحة",
+  "@execTabDashboard": {},
+  "execTabAnnouncements": "الإعلانات",
+  "@execTabAnnouncements": {},
+  "execTabMessages": "الرسائل",
+  "@execTabMessages": {},
+  "execTabMemories": "الذكريات",
+  "@execTabMemories": {},
+  "execTabGroups": "المجموعات",
+  "@execTabGroups": {},
+  "execNavLabel": "التنقل",
+  "@execNavLabel": {},
+  "execMore": "المزيد",
+  "@execMore": {},
+  "execScopeAllBranches": "كل الفروع",
+  "@execScopeAllBranches": {},
+  "execScopeRestricted": "فرعك فقط (مقيَّد)",
+  "@execScopeRestricted": {},
+  "execStaleOffline": "بلا اتصال — تُعرض آخر نسخة ({time}).",
+  "@execStaleOffline": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "execStaleRefreshFailed": "تعذّر التحديث — تُعرض نسخة {time}.",
+  "@execStaleRefreshFailed": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "recordedActionMarker": "هذا الإجراء يُسجَّل باسمك مع الوقت والجهاز.",
+  "@recordedActionMarker": {},
+  "recordedShort": "مُسجَّل",
+  "@recordedShort": {},
+  "dashSessionsToday": "{count, plural, zero{لا جلسات اليوم} one{جلسة واحدة اليوم} two{جلستان اليوم} few{{count} جلسات اليوم} many{{count} جلسة اليوم} other{{count} جلسة اليوم}}",
+  "@dashSessionsToday": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "6"
+      }
+    }
+  },
+  "dashSessionsBreakdown": "{live} جارية · {upcoming} قادمة",
+  "@dashSessionsBreakdown": {
+    "placeholders": {
+      "live": {
+        "type": "int"
+      },
+      "upcoming": {
+        "type": "int"
+      }
+    }
+  },
+  "dashNeedsAttention": "يحتاج انتباهك",
+  "@dashNeedsAttention": {},
+  "dashNoAlertsTitle": "لا شيء يحتاج انتباهك اليوم",
+  "@dashNoAlertsTitle": {},
+  "dashNoAlertsBody": "لا تنبيهات ولا طلبات معلقة الآن.",
+  "@dashNoAlertsBody": {},
+  "severityDanger": "خطر",
+  "@severityDanger": {},
+  "severityWarning": "تنبيه",
+  "@severityWarning": {},
+  "severityInfo": "للعلم",
+  "@severityInfo": {},
+  "statChildren": "الأطفال",
+  "@statChildren": {},
+  "statFamilies": "الأسر",
+  "@statFamilies": {},
+  "statGroups": "المجموعات",
+  "@statGroups": {},
+  "statEducators": "المؤطرون",
+  "@statEducators": {},
+  "dashWeeklyAttendance": "حضور الأسبوع",
+  "@dashWeeklyAttendance": {},
+  "dashTooLittleData": "بيانات غير كافية بعد",
+  "@dashTooLittleData": {},
+  "dashTodaySessions": "جلسات اليوم",
+  "@dashTodaySessions": {},
+  "dashNoSessionsToday": "لا جلسات اليوم",
+  "@dashNoSessionsToday": {},
+  "sessionAttendanceRecorded": "مسجَّل",
+  "@sessionAttendanceRecorded": {},
+  "sessionAttendanceNotRecorded": "غير مسجَّل",
+  "@sessionAttendanceNotRecorded": {},
+  "sessionAttendanceLive": "جارية",
+  "@sessionAttendanceLive": {},
+  "sessionAttendanceUpcoming": "قادمة",
+  "@sessionAttendanceUpcoming": {},
+  "annNew": "إعلان جديد",
+  "@annNew": {},
+  "annStatePublished": "منشور",
+  "@annStatePublished": {},
+  "annStateScheduled": "مجدوَل",
+  "@annStateScheduled": {},
+  "annStateDraft": "مسودة",
+  "@annStateDraft": {},
+  "annStateExpired": "منتهٍ",
+  "@annStateExpired": {},
+  "annReadBy": "قرأه {percent}%",
+  "@annReadBy": {
+    "placeholders": {
+      "percent": {
+        "type": "int",
+        "example": "62"
+      }
+    }
+  },
+  "annPinned": "مثبَّت",
+  "@annPinned": {},
+  "annEmptyTitle": "لا إعلانات بعد",
+  "@annEmptyTitle": {},
+  "annEmptyBody": "أنشئ أول إعلان لأولياء الأمور أو المؤطرين.",
+  "@annEmptyBody": {},
+  "annMetaPublished": "نُشر {when}",
+  "@annMetaPublished": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "annMetaScheduled": "مجدوَل {when}",
+  "@annMetaScheduled": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "annMetaExpires": "ينتهي {when}",
+  "@annMetaExpires": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "annFieldTitle": "العنوان",
+  "@annFieldTitle": {},
+  "annFieldBody": "النص",
+  "@annFieldBody": {},
+  "annTitleHint": "عنوان الإعلان",
+  "@annTitleHint": {},
+  "annBodyHint": "نص الإعلان",
+  "@annBodyHint": {},
+  "annFieldAudience": "الجمهور",
+  "@annFieldAudience": {},
+  "annChange": "تغيير",
+  "@annChange": {},
+  "annPublishTiming": "النشر",
+  "@annPublishTiming": {},
+  "annPublishNow": "الآن",
+  "@annPublishNow": {},
+  "annExpires": "ينتهي",
+  "@annExpires": {},
+  "annNoExpiry": "بلا انتهاء",
+  "@annNoExpiry": {},
+  "annUrgentTitle": "أولوية عاجلة",
+  "@annUrgentTitle": {},
+  "annUrgentBody": "إشعار فوري + SMS لمن لم يفتح التطبيق. للطوارئ فقط.",
+  "@annUrgentBody": {},
+  "annSend": "نشر الإعلان",
+  "@annSend": {},
+  "annSendUrgent": "إرسال عاجل · {reach}",
+  "@annSendUrgent": {
+    "placeholders": {
+      "reach": {
+        "type": "int"
+      }
+    }
+  },
+  "annAudienceSheetTitle": "من يصله الإعلان؟",
+  "@annAudienceSheetTitle": {},
+  "audAll": "الجميع",
+  "@audAll": {},
+  "audParents": "أولياء الأمور فقط",
+  "@audParents": {},
+  "audEducators": "المؤطرون فقط",
+  "@audEducators": {},
+  "audCategories": "فئات محددة",
+  "@audCategories": {},
+  "audCategoriesHeading": "الفئات",
+  "@audCategoriesHeading": {},
+  "audPeople": "{count, plural, zero{لا أحد} one{شخص واحد} two{شخصان} few{{count} أشخاص} many{{count} شخصًا} other{{count} شخص}}",
+  "@audPeople": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "246"
+      }
+    }
+  },
+  "audDone": "تم",
+  "@audDone": {},
+  "audSummaryAll": "كل الأولياء والمؤطرين في نطاقك.",
+  "@audSummaryAll": {},
+  "audSummaryParents": "كل أولياء أمور الأطفال المسجَّلين.",
+  "@audSummaryParents": {},
+  "audSummaryEducators": "المؤطرون دون الأولياء.",
+  "@audSummaryEducators": {},
+  "audSummaryCategories": "أولياء أطفال: {names}.",
+  "@audSummaryCategories": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "audSummaryNone": "لم تختر فئة — لن يصل لأحد.",
+  "@audSummaryNone": {},
+  "annUrgentConfirmKind": "واسع الأثر — قناة حرجة",
+  "@annUrgentConfirmKind": {},
+  "annUrgentConfirmTitle": "{count, plural, zero{إرسال عاجل إلى لا أحد؟} one{إرسال عاجل إلى شخص واحد؟} two{إرسال عاجل إلى شخصين؟} few{إرسال عاجل إلى {count} أشخاص؟} many{إرسال عاجل إلى {count} شخصًا؟} other{إرسال عاجل إلى {count} شخص؟}}",
+  "@annUrgentConfirmTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "246"
+      }
+    }
+  },
+  "annUrgentConfirmBody": "إشعار فوري للجميع، وSMS لمن لم يفتح التطبيق خلال 10 دقائق، بتكلفة على الجمعية. للطوارئ فقط.",
+  "@annUrgentConfirmBody": {},
+  "annUrgentConfirmLog": "يُسجَّل الإرسال العاجل باسمك مع الجمهور والتكلفة.",
+  "@annUrgentConfirmLog": {},
+  "annUrgentConfirmCta": "نعم، إرسال عاجل",
+  "@annUrgentConfirmCta": {},
+  "annPublished": "{count, plural, zero{نُشر الإعلان} one{نُشر الإعلان إلى شخص واحد} two{نُشر الإعلان إلى شخصين} few{نُشر الإعلان إلى {count} أشخاص} many{نُشر الإعلان إلى {count} شخصًا} other{نُشر الإعلان إلى {count} شخص}}",
+  "@annPublished": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "246"
+      }
+    }
+  },
+  "annPublishedUrgent": "{count, plural, zero{أُرسل الإعلان العاجل} one{أُرسل الإعلان العاجل إلى شخص واحد} two{أُرسل الإعلان العاجل إلى شخصين} few{أُرسل الإعلان العاجل إلى {count} أشخاص} many{أُرسل الإعلان العاجل إلى {count} شخصًا} other{أُرسل الإعلان العاجل إلى {count} شخص}}",
+  "@annPublishedUrgent": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "246"
+      }
+    }
+  },
+  "annUrgentTag": "عاجل",
+  "@annUrgentTag": {},
+  "msgOversightSubtitle": "إشراف — قراءتك للمحادثات التي لست عضوًا فيها تُسجَّل.",
+  "@msgOversightSubtitle": {},
+  "msgSectionChildren": "محادثات الأطفال",
+  "@msgSectionChildren": {},
+  "msgSectionStaff": "قنوات المؤطرين",
+  "@msgSectionStaff": {},
+  "msgSectionExecutives": "المشرفون",
+  "@msgSectionExecutives": {},
+  "msgEmptyTitle": "لا محادثات بعد",
+  "@msgEmptyTitle": {},
+  "msgEmptyBody": "تُنشأ محادثة لكل طفل عند تسجيله.",
+  "@msgEmptyBody": {},
+  "msgOversightNotice": "لست عضوًا هنا — قراءتك إشرافٌ مُسجَّل ومعلوم للأعضاء.",
+  "@msgOversightNotice": {},
+  "msgReportedBy": "بلاغ من {name}: {reason}",
+  "@msgReportedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "msgHide": "إخفاء",
+  "@msgHide": {},
+  "msgDismissReport": "رفض البلاغ",
+  "@msgDismissReport": {},
+  "msgHiddenStub": "مخفية · أخفاها {name} {time} · يراها المشرفون فقط",
+  "@msgHiddenStub": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "msgComposerHint": "اكتب كمشرف…",
+  "@msgComposerHint": {},
+  "msgSend": "إرسال",
+  "@msgSend": {},
+  "msgVoiceNote": "تسجيل صوتي",
+  "@msgVoiceNote": {},
+  "msgHideConfirmKind": "إخفاء — قابل للتراجع",
+  "@msgHideConfirmKind": {},
+  "msgHideConfirmTitle": "إخفاء رسالة {name}؟",
+  "@msgHideConfirmTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "msgHideConfirmBody": "تختفي عن الأعضاء وتبقى للمشرفين بعلامة «مخفية». لا حذف نهائي. سيُبلَّغ المرسل بالسبب.",
+  "@msgHideConfirmBody": {},
+  "msgHideConfirmLog": "يُسجَّل الإخفاء باسمك ويُقفل البلاغ.",
+  "@msgHideConfirmLog": {},
+  "msgHideConfirmCta": "إخفاء الرسالة",
+  "@msgHideConfirmCta": {},
+  "msgHiddenToast": "أُخفيت الرسالة",
+  "@msgHiddenToast": {},
+  "msgReportDismissedToast": "رُفض البلاغ",
+  "@msgReportDismissedToast": {},
+  "msgThreadEmpty": "لا رسائل بعد",
+  "@msgThreadEmpty": {},
+  "memTitle": "مراجعة الذكريات",
+  "@memTitle": {},
+  "memQueueLeft": "{count, plural, zero{لا منشورات بانتظارك} one{منشور واحد بانتظارك} two{منشوران بانتظارك} few{{count} منشورات بانتظارك} many{{count} منشورًا بانتظارك} other{{count} منشور بانتظارك}}",
+  "@memQueueLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "memModeApproveFirst": "الاعتماد أولًا",
+  "@memModeApproveFirst": {},
+  "memModePublishThenReview": "النشر ثم المراجعة",
+  "@memModePublishThenReview": {},
+  "memModeUnset": "وضع المراجعة لم يُحدَّد بعد",
+  "@memModeUnset": {},
+  "memBlockedBadge": "محجوب — حقوق الصورة تغيّرت بعد النشر",
+  "@memBlockedBadge": {},
+  "memBlockedBody": "{name} صار «غير مسموح». أزل الصورة أو أبقِ المنشور مخفيًا.",
+  "@memBlockedBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "memCounter": "{index} / {count}",
+  "@memCounter": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "imageRightsAllowed": "مسموح",
+  "@imageRightsAllowed": {},
+  "imageRightsAppOnly": "داخل التطبيق فقط",
+  "@imageRightsAppOnly": {},
+  "imageRightsNotAllowed": "غير مسموح",
+  "@imageRightsNotAllowed": {},
+  "imageRightsLabel": "حقوق الصورة: {level}",
+  "@imageRightsLabel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "memHide": "إخفاء",
+  "@memHide": {},
+  "memEdit": "تعديل",
+  "@memEdit": {},
+  "memApprove": "اعتماد",
+  "@memApprove": {},
+  "memKeep": "إبقاء",
+  "@memKeep": {},
+  "memReapprove": "إعادة الاعتماد",
+  "@memReapprove": {},
+  "memHideHint": "الإخفاء ليس حذفًا — يبقى المنشور للمشرفين.",
+  "@memHideHint": {},
+  "memAllReviewedTitle": "راجعت كل شيء",
+  "@memAllReviewedTitle": {},
+  "memAllReviewedBody": "لا منشورات بانتظارك.",
+  "@memAllReviewedBody": {},
+  "memWall": "الجدار",
+  "@memWall": {},
+  "memAlbumPosts": "{count, plural, zero{لا منشورات} one{منشور واحد} two{منشوران} few{{count} منشورات} many{{count} منشورًا} other{{count} منشور}}",
+  "@memAlbumPosts": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "7"
+      }
+    }
+  },
+  "memNoAlbums": "لا ألبومات هذا الموسم",
+  "@memNoAlbums": {},
+  "memApprovedToast": "اعتُمد المنشور",
+  "@memApprovedToast": {},
+  "memHiddenToast": "أُخفي المنشور (لا حذف)",
+  "@memHiddenToast": {},
+  "grpCount": "{count, plural, zero{لا مجموعات} one{مجموعة واحدة} two{مجموعتان} few{{count} مجموعات} many{{count} مجموعة} other{{count} مجموعة}}",
+  "@grpCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "14"
+      }
+    }
+  },
+  "grpEmptyTitle": "لا مجموعات هذا الموسم",
+  "@grpEmptyTitle": {},
+  "grpEmptyBody": "تُنشأ المجموعات من لوحة الويب.",
+  "@grpEmptyBody": {},
+  "grpOverCapacity": "فوق السعة",
+  "@grpOverCapacity": {},
+  "grpTabSessions": "الجلسات",
+  "@grpTabSessions": {},
+  "grpTabRoster": "القائمة",
+  "@grpTabRoster": {},
+  "grpSessionsEmpty": "لا جلسات بعد",
+  "@grpSessionsEmpty": {},
+  "grpRosterEmpty": "لا أطفال في هذه المجموعة",
+  "@grpRosterEmpty": {},
+  "sessionEnded": "انتهت",
+  "@sessionEnded": {},
+  "sessionCancelled": "ملغاة",
+  "@sessionCancelled": {},
+  "sessionToday": "اليوم",
+  "@sessionToday": {},
+  "reviewTitle": "حضور {group}",
+  "@reviewTitle": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRecordedBy": "سجّله {name} {time}",
+  "@reviewRecordedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCorrect": "تصحيح",
+  "@reviewCorrect": {},
+  "reviewGuardianNoAnswer": "بلا رد",
+  "@reviewGuardianNoAnswer": {},
+  "reviewGuardianConfirmed": "أكّد الولي الحضور",
+  "@reviewGuardianConfirmed": {},
+  "reviewGuardianDeclared": "أعلن الولي الغياب",
+  "@reviewGuardianDeclared": {},
+  "reviewGuardianLate": "أعلن الولي تأخره",
+  "@reviewGuardianLate": {},
+  "reviewTrailOriginal": "سُجّل {status} — {name} · {time}",
+  "@reviewTrailOriginal": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTrailCorrected": "صُحّح إلى {status} — {name} · {time}",
+  "@reviewTrailCorrected": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTrailRefers": "يشير إلى #{id}",
+  "@reviewTrailRefers": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTrailNotified": "أُبلغ الأولياء",
+  "@reviewTrailNotified": {},
+  "corrTitle": "تصحيح حضور {name}",
+  "@corrTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "corrBody": "سجل جديد يشير إلى السجل الأصلي — لا يُمحى شيء. يظهر للأولياء والمؤطر.",
+  "@corrBody": {},
+  "corrNoteHint": "ملاحظة (اختيارية)",
+  "@corrNoteHint": {},
+  "corrSave": "حفظ التصحيح",
+  "@corrSave": {},
+  "corrSavedToast": "أُضيف سجل تصحيح",
+  "@corrSavedToast": {},
+  "notifTitle": "الإشعارات",
+  "@notifTitle": {},
+  "notifMarkAllRead": "تعليم الكل كمقروء",
+  "@notifMarkAllRead": {},
+  "notifFilterAll": "الكل",
+  "@notifFilterAll": {},
+  "notifFilterCritical": "حرِج",
+  "@notifFilterCritical": {},
+  "notifFilterRequests": "طلبات",
+  "@notifFilterRequests": {},
+  "notifFilterMemories": "الذكريات",
+  "@notifFilterMemories": {},
+  "notifEmptyTitle": "لا جديد",
+  "@notifEmptyTitle": {},
+  "notifEmptyBody": "أنت على اطلاع بكل شيء.",
+  "@notifEmptyBody": {},
+  "timeJustNow": "الآن",
+  "@timeJustNow": {},
+  "timeAgoMinutes": "{count, plural, zero{الآن} one{قبل دقيقة} two{قبل دقيقتين} few{قبل {count} دقائق} many{قبل {count} دقيقة} other{قبل {count} دقيقة}}",
+  "@timeAgoMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "40"
+      }
+    }
+  },
+  "timeAgoHours": "{count, plural, zero{الآن} one{قبل ساعة} two{قبل ساعتين} few{قبل {count} ساعات} many{قبل {count} ساعة} other{قبل {count} ساعة}}",
+  "@timeAgoHours": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "timeAgoDays": "{count, plural, zero{اليوم} one{أمس} two{قبل يومين} few{قبل {count} أيام} many{قبل {count} يومًا} other{قبل {count} يوم}}",
+  "@timeAgoDays": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "moreCurrentRole": "الدور الحالي",
+  "@moreCurrentRole": {},
+  "moreRolesCount": "{count, plural, zero{لا أدوار} one{لديك دور واحد} two{لديك دوران} few{لديك {count} أدوار} many{لديك {count} دورًا} other{لديك {count} دور}}",
+  "@moreRolesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "roleHintExecutive": "لوحة المتابعة والإشراف على المجموعات كلها",
+  "@roleHintExecutive": {},
+  "roleHintAdmin": "كل صلاحيات المشرف مع إدارة الهيكل والمستخدمين",
+  "@roleHintAdmin": {},
+  "roleHintEducator": "تسجيل الحضور والواجبات لمجموعاتك",
+  "@roleHintEducator": {},
+  "roleHintParent": "متابعة أطفالك",
+  "@roleHintParent": {},
+  "moreDarkMode": "الوضع الليلي",
+  "@moreDarkMode": {},
+  "moreLanguage": "اللغة",
+  "@moreLanguage": {},
+  "languageArabic": "العربية",
+  "@languageArabic": {},
+  "languageFrench": "Français",
+  "@languageFrench": {},
+  "languageEnglish": "English",
+  "@languageEnglish": {},
+  "moreCriticalChannel": "إشعارات القناة الحرجة",
+  "@moreCriticalChannel": {},
+  "moreCriticalChannelLocked": "مقفلة: تنبيهات الغياب والإعلانات العاجلة وتغييرات الجلسات خلال 24 ساعة تصل دائمًا.",
+  "@moreCriticalChannelLocked": {},
+  "moreVersion": "الإصدار {version}",
+  "@moreVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "moreTagline": "صالح في نفسه، مصلح لغيره",
+  "@moreTagline": {},
+  "dialogCancel": "إلغاء",
+  "@dialogCancel": {}
 }
