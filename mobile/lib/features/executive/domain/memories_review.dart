@@ -1,19 +1,8 @@
 import 'package:meta/meta.dart';
 
-/// `image_rights_level` from `specs/03-domain-model/schema.sql`.
-enum ImageRightsLevel {
-  allowed('allowed'),
+import '../../children/domain/child_detail.dart' show ImageRightsLevel;
 
-  /// May be shown inside the app only — never shared out.
-  appOnly('app_only'),
-
-  /// Must not appear in any post.
-  notAllowed('not_allowed');
-
-  const ImageRightsLevel(this.wireValue);
-
-  final String wireValue;
-}
+export '../../children/domain/child_detail.dart' show ImageRightsLevel;
 
 /// `album.moderation_mode` — open product decision #3.
 ///

@@ -8,6 +8,7 @@ import 'core/router/app_routes.dart';
 import 'core/session/app_session.dart';
 import 'core/session/session_controller.dart';
 import 'core/theme/raeed_theme.dart';
+import 'core/theme/theme_mode_controller.dart';
 import 'features/attendance/presentation/attendance_screen.dart';
 import 'features/auth/presentation/consent_screen.dart';
 import 'features/auth/presentation/login_screen.dart';
@@ -41,6 +42,7 @@ class RaeedApp extends ConsumerWidget {
     }
 
     final router = ref.watch(appRouterProvider);
+    final themeMode = ref.watch(themeModeControllerProvider);
 
     return MaterialApp.router(
       onGenerateTitle: (context) => AppL10n.of(context).appName,
@@ -51,6 +53,7 @@ class RaeedApp extends ConsumerWidget {
       localizationsDelegates: AppL10n.localizationsDelegates,
       theme: RaeedTheme.light(locale),
       darkTheme: RaeedTheme.dark(locale),
+      themeMode: themeMode,
       builder: applyTextScaleCeiling,
     );
   }
@@ -136,6 +139,12 @@ final AppScreens appScreensTable = AppScreens(
       const PlaceholderScreen(title: 'New announcement', ticket: 'Epic E'),
   dashboard: (context, state) =>
       const PlaceholderScreen(title: 'Dashboard', ticket: 'Epic G'),
+  notifications: (context, state) =>
+      const PlaceholderScreen(title: 'Notifications', ticket: 'EXEC-M-06'),
+  more: (context, state) =>
+      const PlaceholderScreen(title: 'More', ticket: 'EXEC-M-07'),
+  attendanceReview: (context, state) =>
+      const PlaceholderScreen(title: 'Attendance review', ticket: 'EXEC-M-05'),
   notFound: (context, state) => const NotFoundScreen(),
 );
 

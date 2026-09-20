@@ -64,7 +64,25 @@ String? resolveRedirect({
   if (path == AppRoutes.consent) return AppRoutes.home;
 
   // 4. Ability.
-  return _abilityRedirect(session: session, path: path);
+  final abilityRedirect = _abilityRedirect(session: session, path: path);
+  if (abilityRedirect != null) return abilityRedirect;
+
+  // 5. The executive's home is the dashboard.
+  return _homeRedirect(session: session, path: path);
+}
+
+/// Sends an executive from `/home` to the shell that *is* their home.
+///
+/// Consults the presented role, not the role set: a user who is both
+/// executive and parent and has switched to the parent surface asked for the
+/// parent home and gets it. The ability check above already guaranteed that
+/// whoever lands on `/dashboard` may read it — this only decides where the
+/// oversight surface lives.
+String? _homeRedirect({required AppSession session, required String path}) {
+  if (path != AppRoutes.home) return null;
+  final role = session.effectiveRole;
+  if (role == null || !role.hasOversight) return null;
+  return AppRoutes.dashboard;
 }
 
 /// Redirects away from a route the user's abilities do not permit.

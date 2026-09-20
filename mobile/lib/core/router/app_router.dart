@@ -42,6 +42,9 @@ class AppScreens {
     required this.memoriesCompose,
     required this.announcementCompose,
     required this.dashboard,
+    required this.notifications,
+    required this.more,
+    required this.attendanceReview,
     required this.notFound,
   });
 
@@ -81,8 +84,17 @@ class AppScreens {
   /// Announcement composer.
   final ScreenBuilder announcementCompose;
 
-  /// Executive mobile dashboard.
+  /// Executive mobile dashboard — the shell with its tabs.
   final ScreenBuilder dashboard;
+
+  /// The notification centre.
+  final ScreenBuilder notifications;
+
+  /// Settings and the role switcher.
+  final ScreenBuilder more;
+
+  /// The executive's attendance review for one session.
+  final ScreenBuilder attendanceReview;
 
   /// Fallback for an unknown or stale deep link.
   final ScreenBuilder notFound;
@@ -192,6 +204,13 @@ GoRouter appRouter(Ref ref) {
             path: 'sessions/:sessionId/attendance',
             name: AppRoutes.attendanceName,
             builder: screens.attendance,
+            routes: [
+              GoRoute(
+                path: 'review',
+                name: AppRoutes.attendanceReviewName,
+                builder: screens.attendanceReview,
+              ),
+            ],
           ),
         ],
       ),
@@ -221,6 +240,16 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.dashboard,
         name: AppRoutes.dashboardName,
         builder: screens.dashboard,
+      ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        name: AppRoutes.notificationsName,
+        builder: screens.notifications,
+      ),
+      GoRoute(
+        path: AppRoutes.more,
+        name: AppRoutes.moreName,
+        builder: screens.more,
       ),
     ],
   );
