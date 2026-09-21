@@ -204,6 +204,36 @@ void main() {
       );
     });
 
+    test('an executive asking for home lands on the dashboard', () {
+      final session = sessionWith(
+        status: SessionStatus.active,
+        roles: {RaeedRole.executive},
+      );
+      expect(
+        resolveRedirect(session: session, location: AppRoutes.home),
+        AppRoutes.dashboard,
+      );
+    });
+
+    test('an executive who switched to the parent surface keeps home', () {
+      final session = sessionWith(
+        status: SessionStatus.active,
+        roles: {RaeedRole.executive, RaeedRole.parent},
+      ).withActiveRole(RaeedRole.parent);
+      expect(
+        resolveRedirect(session: session, location: AppRoutes.home),
+        isNull,
+      );
+    });
+
+    test('a parent asking for home stays home', () {
+      final session = sessionWith(status: SessionStatus.active);
+      expect(
+        resolveRedirect(session: session, location: AppRoutes.home),
+        isNull,
+      );
+    });
+
     test('an executive can reach the dashboard', () {
       final session = sessionWith(
         status: SessionStatus.active,

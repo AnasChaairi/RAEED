@@ -72,9 +72,27 @@ abstract final class AppRoutes {
   static const String announcementCompose = '/announcements/compose';
   static const String announcementComposeName = 'announcementCompose';
 
-  /// Executive mobile dashboard.
+  /// Executive mobile dashboard — the executive shell with its five tabs.
+  ///
+  /// `?tab=` selects a tab (`dashboard`, `announcements`, `messages`,
+  /// `memories`, `groups`), so an alert or a push can open the right one.
   static const String dashboard = '/dashboard';
   static const String dashboardName = 'dashboard';
+  static const String dashboardTabParam = 'tab';
+
+  /// The notification centre (EXEC-M-06).
+  static const String notifications = '/notifications';
+  static const String notificationsName = 'notifications';
+
+  /// Settings and the role switcher (EXEC-M-07).
+  static const String more = '/more';
+  static const String moreName = 'more';
+
+  /// The executive's after-the-fact attendance review for one session, with
+  /// the correction flow and its visible history (EXEC-M-05).
+  static const String attendanceReview =
+      '/groups/:groupId/sessions/:sessionId/attendance/review';
+  static const String attendanceReviewName = 'attendanceReview';
 
   // --- Path builders -------------------------------------------------------
   // Used instead of string interpolation at call sites so a path and its
@@ -97,4 +115,11 @@ abstract final class AppRoutes {
   /// Path to [conversationId].
   static String conversationPath(String conversationId) =>
       '/messages/$conversationId';
+
+  /// Path to the executive shell opened on [tab].
+  static String dashboardTabPath(String tab) => '/dashboard?tab=$tab';
+
+  /// Path to the attendance review for [sessionId] within [groupId].
+  static String attendanceReviewPath(String groupId, String sessionId) =>
+      '/groups/$groupId/sessions/$sessionId/attendance/review';
 }

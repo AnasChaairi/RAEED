@@ -8,6 +8,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'app.dart';
 import 'core/config/app_environment.dart';
+import 'core/l10n/western_digits.dart';
 import 'core/network/api_client_provider.dart';
 import 'core/observability/sentry_scrubber.dart';
 import 'core/router/app_router.dart';
@@ -18,6 +19,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final environment = AppEnvironment.fromDartDefines();
+  useWesternDigitsForArabic();
 
   // RAEED is portrait-only. The attendance list, the child cards and the
   // Memories Wall are all vertical lists read one-handed; a landscape layout

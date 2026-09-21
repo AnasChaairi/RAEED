@@ -99,8 +99,82 @@ Push → one-tap Yes/No/Late with an optional reason chip set (illness/travel/ex
 
 Pick media → choose album (season-scoped) → tag children, where the picker visibly marks any child whose `image_rights_level` is `not_allowed` and blocks submission until that photo is removed → publish (immediate or pending, per the album's `moderation_mode`).
 
-### Executive mobile dashboard
+### Executive mobile (`/dashboard` shell, executive/admin) — EXEC-M-01..07
 
-Stat tiles (children/families/groups/educators), an alerts panel (sessions missing attendance, over-capacity groups) that escalates by severity as a colored chip, not just a number — this screen is scanned, not read.
+One shell, five tabs (Dashboard · Announcements · Messages · Memories · Groups) plus Notifications and More reached from the header. The shell is the executive's `/home`; every tab is scanned standing up, so alerts and severity chips come before numbers, and numbers before lists. Every oversight action carries the small "this action is recorded" marker (`AUD-03`) at the moment it happens, never in a footer.
+
+#### EXEC-M-01 · Dashboard (`/dashboard`)
+
+| | |
+|---|---|
+| Purpose | Answer "is any child unaccounted for right now?" before anything else, then "is the association running?" |
+| Entry points | App launch for executives/admins, role switch, bottom nav, alert push tap-through |
+| Components | Brand-gradient header (greeting + role, both calendars, today's session count, bell, more), alerts panel (severity-chipped cards: danger / warning / info, danger outlined), four stat tiles (children / families / groups / educators, tabular figures, delta), weekly attendance card (rate, delta, eight-week bars), today's sessions list with attendance state chip (recorded / not recorded / live / upcoming) |
+| User actions | Tap alert → the tab that resolves it; tap session → group detail; bell → notifications; more → settings; pull to refresh |
+| API | `GET /dashboard/overview` |
+| Loading | Skeleton alert rows and stat tiles — never a bare spinner |
+| Empty | No alerts → the reassuring "nothing needs your attention today" card, in `successSoft`. Stat tiles never go empty: zero is a value |
+| Error | Cached last overview + the offline banner ("showing the version from 10:42"); no cache → error view with retry |
+| Success | Alerts ordered danger → warning → info, then by recency; the badge on the Groups tab counts danger alerts about groups |
+
+#### EXEC-M-02 · Announcements (tab) + composer (`/announcements/compose`)
+
+| | |
+|---|---|
+| Purpose | See what was said to whom and how many read it; publish to any audience, with urgent gated behind a high-reach confirm |
+| Components | List filtered by state chips (published / scheduled / draft / expired), one card per announcement (title, state tag, audience · timing · pinned, read-rate bar); composer: title, body, audience card opening the audience sheet (all / parents only / educators only / chosen categories, live reach count and plain-language summary), publish-now and expiry, urgent toggle, primary send button whose label carries the reach when urgent |
+| User actions | Filter; tap "+"; pick audience; toggle urgent; send → urgent opens the *high-reach* confirm (amber weight) naming the reach and the SMS fallback cost, else publishes directly |
+| API | `GET /announcements`, `POST /announcements` (`audience` object + `priority`), audience reach counts from `GET /announcements/reach` — proposed, not yet in `openapi.yaml` |
+| Loading | Skeleton cards |
+| Empty | "No announcements yet" with the compose button as the only action |
+| Error | Error view with retry on the list; on send, the composer keeps the draft and shows the failure inline |
+| Success | Toast "published to N people"; urgent sends are recorded with the audience and cost |
+
+#### EXEC-M-03 · Messages (tab) + conversation (`/messages/:conversationId`)
+
+| | |
+|---|---|
+| Purpose | Oversight of every thread, disclosed by design (`MSG-08`); act on reports without deleting anything |
+| Components | Thread list grouped by kind (child conversations / educator channels / executives) with unread counts; conversation header with member list and, when the executive is *not* a member, the oversight notice ("your reading here is recorded and known to the members"); bubbles with sender + role, voice-note bubble (playback only), reported message with hide / dismiss actions, hidden-message stub visible to executives only; composer bar "write as executive" |
+| User actions | Open thread; hide a reported message → *reversible* confirm (primary weight) → stub replaces the bubble; dismiss report; send a text message |
+| API | `GET /conversations`, `GET /conversations/{id}/messages`, `POST /conversations/{id}/messages`, `POST /messages/{id}/hide`, `POST /messages/{id}/report/dismiss` — all proposed (Epic E, not yet in `openapi.yaml`) |
+| Loading | Skeleton rows / bubbles |
+| Empty | List: "no conversations yet"; thread: "no messages yet" |
+| Error | Error view with retry; `scope.forbidden` renders "not available to you", never "not found" |
+| Success | Hidden message shows who hid it and when; phone numbers never appear anywhere on this screen (`MSG-06`) |
+
+#### EXEC-M-04 · Memories review (tab)
+
+| | |
+|---|---|
+| Purpose | Clear the moderation queue one card at a time, seeing every tagged child's image-rights level before deciding |
+| Components | Header with queue count and the album's moderation mode as the server reports it (never a client-side default — open decision), one review card (media, `1 / N`, tag chips with the three-level image-rights indicator, album · author · time, blocked banner when a tagged child's consent has since changed), hide / edit / approve actions at 52px, wall albums grid, indicator legend |
+| User actions | Approve (or re-approve a blocked post once the offending media is removed) / hide — hide is never delete |
+| API | `GET /memories/review-queue`, `POST /memories/posts/{id}/approve`, `POST /memories/posts/{id}/hide`, `GET /memories/albums` — proposed (Epic F) |
+| Loading | Skeleton card |
+| Empty | "You've reviewed everything" (reassuring kind), wall still shown |
+| Error | Error view with retry |
+| Success | Card advances to the next post; toast carries the recorded marker |
+
+#### EXEC-M-05 · Groups (tab) → group (`/groups/:id`) → attendance review (`/groups/:id/sessions/:sessionId/attendance/review`)
+
+| | |
+|---|---|
+| Purpose | Find the session with no attendance, open its sheet, correct a record with a visible history |
+| Components | Group list (name · category, educator · schedule, capacity chip escalating to warning when over capacity); group header (primary ground, category · educator · schedule · room · enrolled/capacity) with segment chips; sessions list with state (recorded n/m / not recorded / upcoming); review sheet header with recorded-by and status counts; one row per child (name, health badge icon-only, guardian's answer, status chip, correct button); a corrected row shows its trail (original record → correction, who, when, device, the superseded record's id, recorded marker) |
+| User actions | Open group; open session; correct → bottom sheet with the four statuses, a note, and the recorded marker → save |
+| API | `GET /groups`, `GET /groups/{id}` (proposed), `GET /groups/{id}/sessions`, `GET /sessions/{id}/attendance`, `PATCH /sessions/{id}/attendance` — a correction is a **new** `attendance_record` with `corrected_from`, never an in-place edit |
+| Loading | Skeleton rows |
+| Empty | "No groups this season" / "No sessions yet" / "No children in this group" |
+| Error | Error view with retry; offline → cached sheet with the offline banner |
+| Success | The row outlines in `info`, the trail appears beneath it, and the summary counts move |
+
+#### EXEC-M-06 · Notifications (`/notifications`)
+
+Filter chips (all / critical / requests / memories), one card per notification (icon tile by kind, title, body, relative time), read ones dimmed. `GET /notifications` — proposed. Empty: "you're up to date".
+
+#### EXEC-M-07 · More (`/more`)
+
+Profile card (name, masked phone, branch scope), role switcher when the user holds more than one role (presentation only — abilities stay the union), dark mode, language, the locked critical channel row (absence alerts, urgent announcements and session changes within 24h always arrive), version line. No network call.
 
 Remaining screens (calendar, materials library, staff channel, announcement composer, structure/people admin on web) follow the same template; write one before implementing, don't skip it because it "looks simple".

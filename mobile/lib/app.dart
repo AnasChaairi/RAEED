@@ -8,12 +8,21 @@ import 'core/router/app_routes.dart';
 import 'core/session/app_session.dart';
 import 'core/session/session_controller.dart';
 import 'core/theme/raeed_theme.dart';
+import 'core/theme/theme_mode_controller.dart';
 import 'features/attendance/presentation/attendance_screen.dart';
 import 'features/auth/presentation/consent_screen.dart';
 import 'features/auth/presentation/login_screen.dart';
 import 'features/auth/presentation/otp_screen.dart';
 import 'features/children/presentation/child_profile_screen.dart';
 import 'features/children/presentation/home_screen.dart';
+import 'features/executive/presentation/announcement_composer_screen.dart';
+import 'features/executive/presentation/attendance_review_screen.dart';
+import 'features/executive/presentation/conversation_screen.dart';
+import 'features/executive/presentation/executive_providers.dart';
+import 'features/executive/presentation/executive_shell.dart';
+import 'features/executive/presentation/group_detail_screen.dart';
+import 'features/executive/presentation/more_screen.dart';
+import 'features/executive/presentation/notifications_screen.dart';
 import 'shared/widgets/not_found_screen.dart';
 import 'shared/widgets/placeholder_screen.dart';
 import 'shared/widgets/splash_screen.dart';
@@ -41,6 +50,7 @@ class RaeedApp extends ConsumerWidget {
     }
 
     final router = ref.watch(appRouterProvider);
+    final themeMode = ref.watch(themeModeControllerProvider);
 
     return MaterialApp.router(
       onGenerateTitle: (context) => AppL10n.of(context).appName,
@@ -51,6 +61,7 @@ class RaeedApp extends ConsumerWidget {
       localizationsDelegates: AppL10n.localizationsDelegates,
       theme: RaeedTheme.light(locale),
       darkTheme: RaeedTheme.dark(locale),
+      themeMode: themeMode,
       builder: applyTextScaleCeiling,
     );
   }
@@ -118,24 +129,31 @@ final AppScreens appScreensTable = AppScreens(
       state.uri.pathSegments.length > 2 ? state.uri.pathSegments.last : null,
     ),
   ),
-  group: (context, state) => PlaceholderScreen(
-    title: 'Group ${state.pathParameters['groupId'] ?? ''}',
-    ticket: 'RAEED-8',
-  ),
+  group: (context, state) =>
+      GroupDetailScreen(groupId: state.pathParameters['groupId'] ?? ''),
   attendance: (context, state) => AttendanceScreen(
     sessionId: state.pathParameters['sessionId'] ?? '',
     groupId: state.pathParameters['groupId'] ?? '',
   ),
-  conversation: (context, state) =>
-      const PlaceholderScreen(title: 'Conversation', ticket: 'Epic E'),
+  conversation: (context, state) => ConversationScreen(
+    conversationId: state.pathParameters['conversationId'] ?? '',
+  ),
   memories: (context, state) =>
       const PlaceholderScreen(title: 'Memories Wall', ticket: 'Epic F'),
   memoriesCompose: (context, state) =>
       const PlaceholderScreen(title: 'New post', ticket: 'Epic F'),
-  announcementCompose: (context, state) =>
-      const PlaceholderScreen(title: 'New announcement', ticket: 'Epic E'),
-  dashboard: (context, state) =>
-      const PlaceholderScreen(title: 'Dashboard', ticket: 'Epic G'),
+  announcementCompose: (context, state) => const AnnouncementComposerScreen(),
+  dashboard: (context, state) => ExecutiveShell(
+    initialTab: ExecutiveTab.fromSlug(
+      state.uri.queryParameters[AppRoutes.dashboardTabParam],
+    ),
+  ),
+  notifications: (context, state) => const NotificationsScreen(),
+  more: (context, state) => const MoreScreen(),
+  attendanceReview: (context, state) => AttendanceReviewScreen(
+    sessionId: state.pathParameters['sessionId'] ?? '',
+    groupId: state.pathParameters['groupId'] ?? '',
+  ),
   notFound: (context, state) => const NotFoundScreen(),
 );
 

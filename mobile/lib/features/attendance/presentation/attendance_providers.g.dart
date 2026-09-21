@@ -265,7 +265,7 @@ final class AttendanceSheetControllerProvider
 }
 
 String _$attendanceSheetControllerHash() =>
-    r'399b094aae035417ca36310c83779c8ac55ae7c7';
+    r'cdd2ff2fc5311002d7bebd81896d3c703245f9a6';
 
 /// The attendance sheet for one session, kept live as writes queue and drain.
 

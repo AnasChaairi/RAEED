@@ -529,4 +529,723 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get homeNeedsYourReply => 'Votre réponse est attendue';
+
+  @override
+  String get execTabDashboard => 'Tableau';
+
+  @override
+  String get execTabAnnouncements => 'Annonces';
+
+  @override
+  String get execTabMessages => 'Messages';
+
+  @override
+  String get execTabMemories => 'Souvenirs';
+
+  @override
+  String get execTabGroups => 'Groupes';
+
+  @override
+  String get execNavLabel => 'Navigation';
+
+  @override
+  String get execMore => 'Plus';
+
+  @override
+  String get execScopeAllBranches => 'Toutes les antennes';
+
+  @override
+  String get execScopeRestricted => 'Votre antenne seulement (restreint)';
+
+  @override
+  String execStaleOffline(String time) {
+    return 'Hors ligne — dernière version affichée ($time).';
+  }
+
+  @override
+  String execStaleRefreshFailed(String time) {
+    return 'Actualisation impossible — version de $time affichée.';
+  }
+
+  @override
+  String get recordedActionMarker =>
+      'Cette action est enregistrée à votre nom, avec l\'heure et l\'appareil.';
+
+  @override
+  String get recordedShort => 'enregistré';
+
+  @override
+  String dashSessionsToday(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count séances aujourd\'hui',
+      one: '1 séance aujourd\'hui',
+      zero: 'Aucune séance aujourd\'hui',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dashSessionsBreakdown(int live, int upcoming) {
+    return '$live en cours · $upcoming à venir';
+  }
+
+  @override
+  String get dashNeedsAttention => 'Requiert votre attention';
+
+  @override
+  String get dashNoAlertsTitle =>
+      'Rien ne requiert votre attention aujourd\'hui';
+
+  @override
+  String get dashNoAlertsBody =>
+      'Aucune alerte ni demande en attente pour l\'instant.';
+
+  @override
+  String get severityDanger => 'Urgent';
+
+  @override
+  String get severityWarning => 'Attention';
+
+  @override
+  String get severityInfo => 'Info';
+
+  @override
+  String get statChildren => 'Enfants';
+
+  @override
+  String get statFamilies => 'Familles';
+
+  @override
+  String get statGroups => 'Groupes';
+
+  @override
+  String get statEducators => 'Éducateurs';
+
+  @override
+  String get dashWeeklyAttendance => 'Présence de la semaine';
+
+  @override
+  String get dashTooLittleData => 'Pas encore assez de données';
+
+  @override
+  String get dashTodaySessions => 'Séances du jour';
+
+  @override
+  String get dashNoSessionsToday => 'Aucune séance aujourd\'hui';
+
+  @override
+  String get sessionAttendanceRecorded => 'Enregistrée';
+
+  @override
+  String get sessionAttendanceNotRecorded => 'Non enregistrée';
+
+  @override
+  String get sessionAttendanceLive => 'En cours';
+
+  @override
+  String get sessionAttendanceUpcoming => 'À venir';
+
+  @override
+  String get annNew => 'Nouvelle annonce';
+
+  @override
+  String get annStatePublished => 'Publiée';
+
+  @override
+  String get annStateScheduled => 'Programmée';
+
+  @override
+  String get annStateDraft => 'Brouillon';
+
+  @override
+  String get annStateExpired => 'Expirée';
+
+  @override
+  String annReadBy(int percent) {
+    return 'Lue par $percent %';
+  }
+
+  @override
+  String get annPinned => 'Épinglée';
+
+  @override
+  String get annEmptyTitle => 'Aucune annonce pour l\'instant';
+
+  @override
+  String get annEmptyBody =>
+      'Créez la première annonce pour les parents ou les éducateurs.';
+
+  @override
+  String annMetaPublished(String when) {
+    return 'Publiée $when';
+  }
+
+  @override
+  String annMetaScheduled(String when) {
+    return 'Programmée $when';
+  }
+
+  @override
+  String annMetaExpires(String when) {
+    return 'Expire $when';
+  }
+
+  @override
+  String get annFieldTitle => 'Titre';
+
+  @override
+  String get annFieldBody => 'Texte';
+
+  @override
+  String get annTitleHint => 'Titre de l\'annonce';
+
+  @override
+  String get annBodyHint => 'Texte de l\'annonce';
+
+  @override
+  String get annFieldAudience => 'Destinataires';
+
+  @override
+  String get annChange => 'Modifier';
+
+  @override
+  String get annPublishTiming => 'Publication';
+
+  @override
+  String get annPublishNow => 'Maintenant';
+
+  @override
+  String get annExpires => 'Expire';
+
+  @override
+  String get annNoExpiry => 'Sans expiration';
+
+  @override
+  String get annUrgentTitle => 'Priorité urgente';
+
+  @override
+  String get annUrgentBody =>
+      'Notification immédiate + SMS à qui n\'ouvre pas l\'application. Urgences uniquement.';
+
+  @override
+  String get annSend => 'Publier l\'annonce';
+
+  @override
+  String annSendUrgent(int reach) {
+    return 'Envoi urgent · $reach';
+  }
+
+  @override
+  String get annAudienceSheetTitle => 'Qui reçoit l\'annonce ?';
+
+  @override
+  String get audAll => 'Tout le monde';
+
+  @override
+  String get audParents => 'Parents seulement';
+
+  @override
+  String get audEducators => 'Éducateurs seulement';
+
+  @override
+  String get audCategories => 'Catégories choisies';
+
+  @override
+  String get audCategoriesHeading => 'Catégories';
+
+  @override
+  String audPeople(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count personnes',
+      one: '1 personne',
+      zero: 'personne',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get audDone => 'OK';
+
+  @override
+  String get audSummaryAll =>
+      'Tous les parents et éducateurs de votre périmètre.';
+
+  @override
+  String get audSummaryParents => 'Tous les parents des enfants inscrits.';
+
+  @override
+  String get audSummaryEducators => 'Les éducateurs, sans les parents.';
+
+  @override
+  String audSummaryCategories(String names) {
+    return 'Parents des enfants : $names.';
+  }
+
+  @override
+  String get audSummaryNone =>
+      'Aucune catégorie choisie — personne ne le recevra.';
+
+  @override
+  String get annUrgentConfirmKind => 'Large portée — canal critique';
+
+  @override
+  String annUrgentConfirmTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Envoi urgent à $count personnes ?',
+      one: 'Envoi urgent à 1 personne ?',
+      zero: 'Envoi urgent à personne ?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get annUrgentConfirmBody =>
+      'Notification immédiate à tous, puis SMS à qui n\'ouvre pas l\'application sous 10 minutes, aux frais de l\'association. Urgences uniquement.';
+
+  @override
+  String get annUrgentConfirmLog =>
+      'L\'envoi urgent est enregistré à votre nom, avec les destinataires et le coût.';
+
+  @override
+  String get annUrgentConfirmCta => 'Oui, envoyer en urgence';
+
+  @override
+  String annPublished(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Annonce publiée à $count personnes',
+      one: 'Annonce publiée à 1 personne',
+      zero: 'Annonce publiée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String annPublishedUrgent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Annonce urgente envoyée à $count personnes',
+      one: 'Annonce urgente envoyée à 1 personne',
+      zero: 'Annonce urgente envoyée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get annUrgentTag => 'Urgent';
+
+  @override
+  String get msgOversightSubtitle =>
+      'Supervision — la lecture des conversations dont vous n\'êtes pas membre est enregistrée.';
+
+  @override
+  String get msgSectionChildren => 'Conversations des enfants';
+
+  @override
+  String get msgSectionStaff => 'Canaux des éducateurs';
+
+  @override
+  String get msgSectionExecutives => 'Responsables';
+
+  @override
+  String get msgEmptyTitle => 'Aucune conversation pour l\'instant';
+
+  @override
+  String get msgEmptyBody =>
+      'Une conversation est créée pour chaque enfant à son inscription.';
+
+  @override
+  String get msgOversightNotice =>
+      'Vous n\'êtes pas membre ici — votre lecture est une supervision enregistrée et connue des membres.';
+
+  @override
+  String msgReportedBy(String name, String reason) {
+    return 'Signalé par $name : $reason';
+  }
+
+  @override
+  String get msgHide => 'Masquer';
+
+  @override
+  String get msgDismissReport => 'Rejeter le signalement';
+
+  @override
+  String msgHiddenStub(String name, String time) {
+    return 'Masqué · par $name $time · visible des responsables seulement';
+  }
+
+  @override
+  String get msgComposerHint => 'Écrire en tant que responsable…';
+
+  @override
+  String get msgSend => 'Envoyer';
+
+  @override
+  String get msgVoiceNote => 'Message vocal';
+
+  @override
+  String get msgHideConfirmKind => 'Masquage — réversible';
+
+  @override
+  String msgHideConfirmTitle(String name) {
+    return 'Masquer le message de $name ?';
+  }
+
+  @override
+  String get msgHideConfirmBody =>
+      'Il disparaît pour les membres et reste visible des responsables, marqué « masqué ». Aucune suppression. L\'expéditeur sera informé du motif.';
+
+  @override
+  String get msgHideConfirmLog =>
+      'Le masquage est enregistré à votre nom et clôt le signalement.';
+
+  @override
+  String get msgHideConfirmCta => 'Masquer le message';
+
+  @override
+  String get msgHiddenToast => 'Message masqué';
+
+  @override
+  String get msgReportDismissedToast => 'Signalement rejeté';
+
+  @override
+  String get msgThreadEmpty => 'Aucun message pour l\'instant';
+
+  @override
+  String get memTitle => 'Modération des souvenirs';
+
+  @override
+  String memQueueLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count publications en attente',
+      one: '1 publication en attente',
+      zero: 'Aucune publication en attente',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get memModeApproveFirst => 'Approbation avant publication';
+
+  @override
+  String get memModePublishThenReview => 'Publication puis modération';
+
+  @override
+  String get memModeUnset => 'Mode de modération pas encore défini';
+
+  @override
+  String get memBlockedBadge =>
+      'Bloqué — droits à l\'image modifiés après publication';
+
+  @override
+  String memBlockedBody(String name) {
+    return '$name est passé à « non autorisé ». Retirez la photo ou laissez la publication masquée.';
+  }
+
+  @override
+  String memCounter(int index, int count) {
+    return '$index / $count';
+  }
+
+  @override
+  String get imageRightsAllowed => 'Autorisé';
+
+  @override
+  String get imageRightsAppOnly => 'Dans l\'application seulement';
+
+  @override
+  String get imageRightsNotAllowed => 'Non autorisé';
+
+  @override
+  String imageRightsLabel(String level) {
+    return 'Droits à l\'image : $level';
+  }
+
+  @override
+  String get memHide => 'Masquer';
+
+  @override
+  String get memEdit => 'Modifier';
+
+  @override
+  String get memApprove => 'Approuver';
+
+  @override
+  String get memKeep => 'Conserver';
+
+  @override
+  String get memReapprove => 'Réapprouver';
+
+  @override
+  String get memHideHint =>
+      'Masquer n\'est pas supprimer — la publication reste visible des responsables.';
+
+  @override
+  String get memAllReviewedTitle => 'Vous avez tout passé en revue';
+
+  @override
+  String get memAllReviewedBody => 'Aucune publication en attente.';
+
+  @override
+  String get memWall => 'Le mur';
+
+  @override
+  String memAlbumPosts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count publications',
+      one: '1 publication',
+      zero: 'aucune publication',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get memNoAlbums => 'Aucun album cette saison';
+
+  @override
+  String get memApprovedToast => 'Publication approuvée';
+
+  @override
+  String get memHiddenToast => 'Publication masquée (non supprimée)';
+
+  @override
+  String grpCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count groupes',
+      one: '1 groupe',
+      zero: 'aucun groupe',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get grpEmptyTitle => 'Aucun groupe cette saison';
+
+  @override
+  String get grpEmptyBody =>
+      'Les groupes se créent depuis le tableau de bord web.';
+
+  @override
+  String get grpOverCapacity => 'Au-delà de la capacité';
+
+  @override
+  String get grpTabSessions => 'Séances';
+
+  @override
+  String get grpTabRoster => 'Liste';
+
+  @override
+  String get grpSessionsEmpty => 'Aucune séance pour l\'instant';
+
+  @override
+  String get grpRosterEmpty => 'Aucun enfant dans ce groupe';
+
+  @override
+  String get sessionEnded => 'Terminée';
+
+  @override
+  String get sessionCancelled => 'Annulée';
+
+  @override
+  String get sessionToday => 'Aujourd\'hui';
+
+  @override
+  String reviewTitle(String group) {
+    return 'Présence — $group';
+  }
+
+  @override
+  String reviewRecordedBy(String name, String time) {
+    return 'Enregistrée par $name $time';
+  }
+
+  @override
+  String get reviewCorrect => 'Corriger';
+
+  @override
+  String get reviewGuardianNoAnswer => 'Sans réponse';
+
+  @override
+  String get reviewGuardianConfirmed => 'Le parent a confirmé';
+
+  @override
+  String get reviewGuardianDeclared => 'Le parent a déclaré l\'absence';
+
+  @override
+  String get reviewGuardianLate => 'Le parent a annoncé un retard';
+
+  @override
+  String reviewTrailOriginal(String status, String name, String time) {
+    return 'Enregistré $status — $name · $time';
+  }
+
+  @override
+  String reviewTrailCorrected(String status, String name, String time) {
+    return 'Corrigé en $status — $name · $time';
+  }
+
+  @override
+  String reviewTrailRefers(String id) {
+    return 'Réfère à #$id';
+  }
+
+  @override
+  String get reviewTrailNotified => 'Parents prévenus';
+
+  @override
+  String corrTitle(String name) {
+    return 'Corriger la présence de $name';
+  }
+
+  @override
+  String get corrBody =>
+      'Un nouvel enregistrement référence l\'original — rien n\'est effacé. Visible des parents et de l\'éducateur.';
+
+  @override
+  String get corrNoteHint => 'Note (facultative)';
+
+  @override
+  String get corrSave => 'Enregistrer la correction';
+
+  @override
+  String get corrSavedToast => 'Correction enregistrée';
+
+  @override
+  String get notifTitle => 'Notifications';
+
+  @override
+  String get notifMarkAllRead => 'Tout marquer comme lu';
+
+  @override
+  String get notifFilterAll => 'Tout';
+
+  @override
+  String get notifFilterCritical => 'Critique';
+
+  @override
+  String get notifFilterRequests => 'Demandes';
+
+  @override
+  String get notifFilterMemories => 'Souvenirs';
+
+  @override
+  String get notifEmptyTitle => 'Rien de nouveau';
+
+  @override
+  String get notifEmptyBody => 'Vous êtes à jour.';
+
+  @override
+  String get timeJustNow => 'à l\'instant';
+
+  @override
+  String timeAgoMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'il y a $count min',
+      one: 'il y a 1 min',
+      zero: 'à l\'instant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'il y a $count h',
+      one: 'il y a 1 h',
+      zero: 'à l\'instant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeAgoDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'il y a $count jours',
+      one: 'hier',
+      zero: 'aujourd\'hui',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get moreCurrentRole => 'Rôle actuel';
+
+  @override
+  String moreRolesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'vous avez $count rôles',
+      one: 'vous avez 1 rôle',
+      zero: 'aucun rôle',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get roleHintExecutive =>
+      'Tableau de suivi et supervision de tous les groupes';
+
+  @override
+  String get roleHintAdmin =>
+      'Tout ce que voit un responsable, plus la structure et les utilisateurs';
+
+  @override
+  String get roleHintEducator => 'Présence et devoirs de vos groupes';
+
+  @override
+  String get roleHintParent => 'Le suivi de vos enfants';
+
+  @override
+  String get moreDarkMode => 'Mode sombre';
+
+  @override
+  String get moreLanguage => 'Langue';
+
+  @override
+  String get languageArabic => 'العربية';
+
+  @override
+  String get languageFrench => 'Français';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get moreCriticalChannel => 'Notifications du canal critique';
+
+  @override
+  String get moreCriticalChannelLocked =>
+      'Verrouillé : les alertes d\'absence, les annonces urgentes et les changements de séance sous 24 h arrivent toujours.';
+
+  @override
+  String moreVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get moreTagline => 'صالح في نفسه، مصلح لغيره';
+
+  @override
+  String get dialogCancel => 'Annuler';
 }
