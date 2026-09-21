@@ -302,6 +302,51 @@ components:
         sent_at: { type: string, format: date-time }
         read_at: { type: string, format: date-time, nullable: true }
 
+    Family:
+      type: object
+      properties:
+        id: { type: string, description: The sorted guardian ids, joined — stable across requests }
+        label: { type: string }
+        guardians:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string, format: uuid }
+              display_name: { type: string }
+              account: { type: string, enum: [active, pending] }
+        children:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string, format: uuid }
+              full_name: { type: string }
+              group:
+                type: object
+                nullable: true
+                properties:
+                  id: { type: string, format: uuid }
+                  name: { type: string }
+        status: { type: string, enum: [active, partial, pending] }
+
+    AuditEntry:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        at: { type: string, format: date-time }
+        actor:
+          type: object
+          properties:
+            id: { type: string, format: uuid, nullable: true }
+            display_name: { type: string }
+            role: { type: string, nullable: true }
+        action: { type: string, example: child.health_view }
+        resource_type: { type: string }
+        resource_id: { type: string, format: uuid, nullable: true }
+        resource_label: { type: string, nullable: true }
+        device_meta: { type: object, nullable: true, additionalProperties: true }
+
   responses:
     Unauthorized:
       description: Missing or invalid token
@@ -526,8 +571,16 @@ paths:
 
   /children:
     get:
+      description: >
+        `q` searches the name, `category_id` and `group_id` narrow, and
+        `unassigned=true` lists children with no current main group. For
+        oversight callers each row also carries `image_rights_level` and this
+        season's `attendance { present, expected }`; guardians' rows never do.
       summary: List children the caller may see (own children / own groups / all, scoped per 05-authorization.md)
       parameters:
+        - { name: category_id, in: query, schema: { type: string, format: uuid } }
+        - { name: q, in: query, schema: { type: string } }
+        - { name: unassigned, in: query, schema: { type: boolean } }
         - $ref: '#/components/parameters/groupId'
         - $ref: '#/components/parameters/cursor'
       responses:
@@ -873,6 +926,33 @@ paths:
         '403': { $ref: '#/components/responses/Forbidden' }
 
   /groups:
+    post:
+      summary: Create a group in the active season with its educators and any unassigned children (recorded)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, category_id, educator_ids]
+              properties:
+                name: { type: string }
+                category_id: { type: string, format: uuid }
+                capacity: { type: integer }
+                weekly_schedule:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      weekday: { type: integer, minimum: 0, maximum: 6, description: 0 is Sunday }
+                      starts_at: { type: string, example: "16:00" }
+                      ends_at: { type: string, example: "18:00" }
+                educator_ids: { type: array, items: { type: string, format: uuid } }
+                child_ids: { type: array, items: { type: string, format: uuid } }
+      responses:
+        '201':
+          description: Created
+          content: { application/json: { schema: { $ref: '#/components/schemas/Group' } } }
     get:
       summary: Groups the caller may see (EXEC-M-05) — an executive's branch scope, an educator's own groups
       responses:
@@ -886,6 +966,34 @@ paths:
                   data: { type: array, items: { $ref: '#/components/schemas/Group' } }
                   page: { $ref: '#/components/schemas/Page' }
         '403': { $ref: '#/components/responses/Forbidden' }
+
+  /groups/{groupId}/children:
+    post:
+      summary: Assign children to a group as their main group — a new child_group row, the previous one closed (ORG-04); recorded
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [child_ids]
+              properties:
+                child_ids: { type: array, items: { type: string, format: uuid } }
+      responses:
+        '200':
+          description: Applied
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  enrolled_count: { type: integer }
+                  capacity: { type: integer, nullable: true }
 
   /groups/{groupId}:
     get:
@@ -1070,11 +1178,251 @@ paths:
       responses:
         '204': { description: Done }
 
-  /audit-log:
+  /children/{childId}/health:
     get:
-      summary: Read the audit log (Admin only)
+      summary: A deliberate, recorded read of a child's health information (AUD-03, EXEC-M-09)
+      description: >
+        Oversight only. The audit entry (`child.health_view`) is written
+        before the text is read, and `GET /children/{id}` withholds
+        `health_json` from oversight callers so that fetching the profile can
+        never log or leak it by accident. Guardians and educators keep the
+        text on the profile, by relationship.
       parameters:
-        - $ref: '#/components/parameters/cursor'
+        - name: childId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  child_id: { type: string, format: uuid }
+                  health_json: { type: object, additionalProperties: true }
+                  health_json_version: { type: integer }
+                  special_needs_notes: { type: string, nullable: true }
+                  viewed_at: { type: string, format: date-time }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /children/{childId}/guardians/{guardianId}/phone:
+    get:
+      summary: A recorded reveal of a guardian's phone number (MSG-06) — oversight only
+      parameters:
+        - name: childId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: guardianId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK — logged as `guardian.phone_reveal`
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  guardian_id: { type: string, format: uuid }
+                  phone: { type: string, nullable: true }
+                  revealed_at: { type: string, format: date-time }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /families:
+    get:
+      summary: Households (EXEC-M-10), derived — children sharing the same current guardians
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Family' } }
+                  page: { $ref: '#/components/schemas/Page' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    post:
+      summary: Create a household — guardians (invited to sign in), their children and links, in one recorded act (ACC-02)
+      description: >
+        A guardian whose phone already has an account is linked, not
+        duplicated. Children carry no health information here: the guardian
+        enters it from their own account (CHD-04).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [guardians, children]
+              properties:
+                guardians:
+                  type: array
+                  items:
+                    type: object
+                    required: [display_name, phone, relationship]
+                    properties:
+                      display_name: { type: string }
+                      phone: { type: string, example: "+2126XXXXXXXX" }
+                      relationship: { type: string, example: mother }
+                children:
+                  type: array
+                  items:
+                    type: object
+                    required: [full_name, dob]
+                    properties:
+                      full_name: { type: string }
+                      dob: { type: string, format: date }
+                      group_id: { type: string, format: uuid }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  guardian_ids: { type: array, items: { type: string, format: uuid } }
+                  child_ids: { type: array, items: { type: string, format: uuid } }
+                  invitations: { type: integer }
+
+  /invitations:
+    post:
+      summary: Re-send a guardian's sign-in invitation (recorded)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [user_id]
+              properties:
+                user_id: { type: string, format: uuid }
+      responses:
+        '204': { description: Sent }
+
+  /educators:
+    get:
+      summary: Educators with their group count, for the new-group form
       responses:
         '200': { description: OK }
+
+  /reports/attendance:
+    get:
+      summary: Attendance this season by educator and by category, as raw present/expected pairs (EXEC-M-11)
+      responses:
+        '200': { description: OK }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /reports/educators:
+    get:
+      summary: Per educator — sessions planned, delivered, and marked within 30 minutes of the end
+      responses:
+        '200': { description: OK }
+
+  /reports/engagement:
+    get:
+      summary: Guardians who have signed in, presence answers given; homework is null until it exists
+      responses:
+        '200': { description: OK }
+
+  /reports/exports:
+    post:
+      summary: A children list as CSV with exactly the fields named (recorded as `report.export` with the field list)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fields]
+              properties:
+                fields:
+                  type: array
+                  items: { type: string, enum: [name, dob, group, guardian, phone, consent, allergies, medications] }
+                group_id: { type: string, format: uuid }
+      responses:
+        '201':
+          description: Created — `content` is UTF-8 CSV with a BOM
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  filename: { type: string }
+                  content_type: { type: string, enum: [text/csv] }
+                  content: { type: string }
+                  fields: { type: array, items: { type: string } }
+                  contains_health: { type: boolean }
+                  row_count: { type: integer }
+                  created_at: { type: string, format: date-time }
+
+  /seasons:
+    get:
+      summary: Seasons with group and child counts (Admin only, EXEC-M-12)
+      responses:
+        '200': { description: OK }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /seasons/{seasonId}/archive:
+    post:
+      summary: Archive a season — read-only afterwards, never deleted (Admin only)
+      parameters:
+        - name: seasonId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Archived }
+
+  /categories:
+    get:
+      summary: The categories (فئات) with counts; age range and gender are null until decided (open decision #1)
+      responses:
+        '200': { description: OK }
+
+  /branches:
+    get:
+      summary: Branches with their executives (Admin only)
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create a branch (Admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string }
+                address: { type: string }
+      responses:
+        '201': { description: Created }
+
+  /audit-log:
+    get:
+      summary: Read the audit log (Admin only, EXEC-M-13). `?action=child.health_view` is the health-access view.
+      parameters:
+        - name: action
+          in: query
+          schema: { type: string }
+        - name: limit
+          in: query
+          schema: { type: integer, maximum: 500 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/AuditEntry' } }
+                  page: { $ref: '#/components/schemas/Page' }
         '403': { $ref: '#/components/responses/Forbidden' }

@@ -59,6 +59,11 @@ async function seed(): Promise<void> {
         values ('2026-2027', '2026-09-01', '2027-06-30', 'active')
         returning id
       `);
+      // Last season, kept for the structure screen: archived, never deleted.
+      await tx.query(`
+        insert into season (label, start_date, end_date, status)
+        values ('2025-2026', '2025-09-07', '2026-06-28', 'archived')
+      `);
 
       // The eight category names from the product scope (§5.2). Age ranges and
       // gender stay null: that is open decision #1, and guessing values into
@@ -102,13 +107,36 @@ async function seed(): Promise<void> {
       // Phone numbers are documentation-range Moroccan mobiles. In development
       // the OTP is printed to the API's stdout, so no SMS account is needed.
       const [{ id: parentId }] = await tx.query(
-        `insert into app_user (phone, preferred_locale) values ('+212600000001', 'ar') returning id`,
+        `insert into app_user (phone, display_name, preferred_locale)
+         values ('+212600000001', 'سعاد الإدريسي', 'ar') returning id`,
       );
       const [{ id: educatorId }] = await tx.query(
-        `insert into app_user (phone, preferred_locale) values ('+212600000002', 'ar') returning id`,
+        `insert into app_user (phone, display_name, preferred_locale)
+         values ('+212600000002', 'عبد الله المرابط', 'ar') returning id`,
       );
       const [{ id: executiveId }] = await tx.query(
-        `insert into app_user (phone, preferred_locale) values ('+212600000003', 'ar') returning id`,
+        `insert into app_user (phone, display_name, preferred_locale)
+         values ('+212600000003', 'أنس الشعيري', 'ar') returning id`,
+      );
+      // A guardian who was invited and has not signed in yet, and a child
+      // enrolled with no group — the two states the families and groups hub
+      // exists to resolve.
+      const [{ id: pendingParentId }] = await tx.query(
+        `insert into app_user (phone, display_name, preferred_locale)
+         values ('+212600000004', 'نعيمة التازي', 'ar') returning id`,
+      );
+      await tx.query(
+        `insert into role_assignment (user_id, role) values ($1, 'parent')`,
+        [pendingParentId],
+      );
+      // The seeded accounts that "have signed in": a device row with a last
+      // seen time is what the activation figures count.
+      await tx.query(
+        `insert into user_device (user_id, platform, last_seen_at)
+         values ($1, 'android', now() - interval '1 day'),
+                ($2, 'android', now() - interval '2 hours'),
+                ($3, 'android', now())`,
+        [parentId, educatorId, executiveId],
       );
 
       await tx.query(
@@ -134,6 +162,7 @@ async function seed(): Promise<void> {
       // --- Children -------------------------------------------------------
       // Image rights vary on purpose so the Memories review shows all three
       // levels; the default for a real enrolment stays `not_allowed`.
+      // `childIds` below is indexed by this list; the unassigned child is last.
       const children = [
         { name: 'آدم', dob: '2018-05-02', group: ashbalId, guardian: parentId,
           health: { allergies: ['حساسية من الفول السوداني'], dietary_notes: 'بدون مكسرات' },
@@ -144,6 +173,8 @@ async function seed(): Promise<void> {
           health: {}, imageRights: 'allowed' },
         { name: 'عمر', dob: '2017-07-09', group: ashbalId, guardian: parentId,
           health: { conditions: ['ربو خفيف'] }, imageRights: 'not_allowed' },
+        { name: 'إلياس التازي', dob: '2017-03-11', group: null, guardian: pendingParentId,
+          health: {}, imageRights: 'not_allowed' },
       ];
 
       const childIds: string[] = [];
@@ -158,10 +189,15 @@ async function seed(): Promise<void> {
            values ($1, $2, 'parent')`,
           [child.guardian, id],
         );
-        await tx.query(
-          `insert into child_group (child_id, group_id, is_main) values ($1, $2, true)`,
-          [id, child.group],
-        );
+        if (child.group) {
+          // Enrolled before the seeded sessions, so the season's attendance
+          // counts them.
+          await tx.query(
+            `insert into child_group (child_id, group_id, is_main, valid_from)
+             values ($1, $2, true, now() - interval '30 days')`,
+            [id, child.group],
+          );
+        }
         // Consent is recorded for every child so the app opens past the
         // consent gate. Image rights start at the most restrictive level —
         // the same default the app applies.
