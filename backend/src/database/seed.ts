@@ -36,7 +36,7 @@ async function seed(): Promise<void> {
       // Order matters only for readability — the truncate cascades.
       await tx.query(`
         truncate table
-          audit_log_entry, post_tag, post, album,
+          audit_log_entry, notification, post_tag, post, album,
           announcement_read, announcement,
           message_report, message, conversation,
           homework_status, homework,
@@ -132,15 +132,18 @@ async function seed(): Promise<void> {
       );
 
       // --- Children -------------------------------------------------------
+      // Image rights vary on purpose so the Memories review shows all three
+      // levels; the default for a real enrolment stays `not_allowed`.
       const children = [
         { name: 'آدم', dob: '2018-05-02', group: ashbalId, guardian: parentId,
-          health: { allergies: ['حساسية من الفول السوداني'], dietary_notes: 'بدون مكسرات' } },
+          health: { allergies: ['حساسية من الفول السوداني'], dietary_notes: 'بدون مكسرات' },
+          imageRights: 'app_only' },
         { name: 'مريم', dob: '2016-11-20', group: zahratId, guardian: parentId,
-          health: {} },
+          health: {}, imageRights: 'allowed' },
         { name: 'يوسف', dob: '2018-02-14', group: ashbalId, guardian: educatorId,
-          health: {} },
+          health: {}, imageRights: 'allowed' },
         { name: 'عمر', dob: '2017-07-09', group: ashbalId, guardian: parentId,
-          health: { conditions: ['ربو خفيف'] } },
+          health: { conditions: ['ربو خفيف'] }, imageRights: 'not_allowed' },
       ];
 
       const childIds: string[] = [];
@@ -164,8 +167,8 @@ async function seed(): Promise<void> {
         // the same default the app applies.
         await tx.query(
           `insert into consent_record (guardian_id, child_id, type, level, version)
-           values ($1, $2, 'image_rights', 'not_allowed', 1)`,
-          [child.guardian, id],
+           values ($1, $2, 'image_rights', $3, 1)`,
+          [child.guardian, id, child.imageRights],
         );
       }
       await tx.query(
@@ -197,6 +200,148 @@ async function seed(): Promise<void> {
         `insert into presence_confirmation (session_id, sent_at, deadline_at)
          values ($1, now(), date_trunc('day', now()) + interval '14 hours')`,
         [ashbalSessionId],
+      );
+
+      // --- Past sessions and their attendance -------------------------------
+      // Last week's الأشبال session was marked, and one mark was corrected
+      // afterwards: the trail the executive's review screen shows.
+      const [{ id: lastWeekSessionId }] = await tx.query(
+        `insert into session (group_id, starts_at, ends_at, place, title, status)
+         values ($1, date_trunc('day', now()) - interval '7 days' + interval '16 hours',
+                     date_trunc('day', now()) - interval '7 days' + interval '18 hours',
+                 'القاعة الكبرى', 'حلقة القرآن — سورة الملك', 'delivered')
+         returning id`,
+        [ashbalId],
+      );
+      const [adamId, , yousefId, omarId] = childIds;
+      await tx.query(
+        `insert into attendance_record
+           (session_id, child_id, status, recorded_by, recorded_at, recorded_at_client)
+         values ($1, $2, 'present', $5, $6, $6),
+                ($1, $3, 'present', $5, $6, $6),
+                ($1, $4, 'absent',  $5, $6, $6)`,
+        [
+          lastWeekSessionId, adamId, yousefId, omarId, educatorId,
+          new Date(Date.now() - 7 * 24 * 3600 * 1000 + 16.2 * 3600 * 1000),
+        ],
+      );
+      const [{ id: omarOriginalId }] = await tx.query(
+        `select id from attendance_record where session_id = $1 and child_id = $2`,
+        [lastWeekSessionId, omarId],
+      );
+      await tx.query(
+        `update attendance_record set superseded_at = now() - interval '6 days' where id = $1`,
+        [omarOriginalId],
+      );
+      await tx.query(
+        `insert into attendance_record
+           (session_id, child_id, status, recorded_by, recorded_at, recorded_at_client, corrected_from, note)
+         values ($1, $2, 'excused', $3, now() - interval '6 days', now() - interval '6 days', $4,
+                 'اتصلت الأم: مرض مفاجئ، عُذر مقبول.')`,
+        [lastWeekSessionId, omarId, executiveId, omarOriginalId],
+      );
+      // Yesterday's الزهرات session ended with no attendance at all — the
+      // danger alert on the dashboard.
+      await tx.query(
+        `insert into session (group_id, starts_at, ends_at, place, title, status)
+         values ($1, date_trunc('day', now()) - interval '1 day' + interval '17 hours',
+                     date_trunc('day', now()) - interval '1 day' + interval '19 hours',
+                 'القاعة الصغرى', 'حديث الأسبوع', 'planned')`,
+        [zahratId],
+      );
+
+      // --- Conversations ------------------------------------------------------
+      // One thread per child, a staff channel for الأشبال أ, and the executive
+      // channel. One message in آدم's thread has been reported.
+      const [{ id: adamThreadId }] = await tx.query(
+        `insert into conversation (type, ref_child_id) values ('child', $1) returning id`,
+        [adamId],
+      );
+      await tx.query(
+        `insert into conversation (type, ref_child_id) values ('child', $1), ('child', $2)`,
+        [yousefId, omarId],
+      );
+      const [{ id: staffThreadId }] = await tx.query(
+        `insert into conversation (type, ref_group_id) values ('staff', $1) returning id`,
+        [ashbalId],
+      );
+      const [{ id: executiveThreadId }] = await tx.query(
+        `insert into conversation (type) values ('executive') returning id`,
+      );
+      await tx.query(
+        `insert into message (conversation_id, sender_id, kind, body, created_at)
+         values ($1, $2, 'text', 'السلام عليكم، آدم أتمّ حفظ الآيات الخمس الأولى من سورة الملك اليوم ما شاء الله.', now() - interval '2 days'),
+                ($1, $3, 'text', 'وعليكم السلام، جزاكم الله خيرًا أستاذ.', now() - interval '2 days' + interval '20 minutes')`,
+        [adamThreadId, educatorId, parentId],
+      );
+      const [{ id: reportedMessageId }] = await tx.query(
+        `insert into message (conversation_id, sender_id, kind, body, created_at)
+         values ($1, $2, 'text', 'هل يمكن مشاركة رقم هاتف الأم مع مؤطر النادي؟', now() - interval '1 day')
+         returning id`,
+        [adamThreadId, educatorId],
+      );
+      await tx.query(
+        `insert into message_report (message_id, reported_by, reason)
+         values ($1, $2, 'طلب معلومات شخصية')`,
+        [reportedMessageId, parentId],
+      );
+      await tx.query(
+        `insert into message (conversation_id, sender_id, kind, body, created_at)
+         values ($1, $2, 'text', 'أرفقت ورقة الحفظ لهذا الأسبوع.', now() - interval '3 days'),
+                ($3, $4, 'text', 'الجمع العام يوم 4 أكتوبر — يرجى تأكيد الحضور.', now() - interval '4 days')`,
+        [staffThreadId, educatorId, executiveThreadId, executiveId],
+      );
+
+      // --- Memories Wall ----------------------------------------------------
+      // Two albums. One pending post awaits approval; one published post was
+      // auto-hidden after a tagged child's guardian withdrew image rights —
+      // the consent-downgrade case the review screen has to show.
+      const [{ id: quranAlbumId }] = await tx.query(
+        `insert into album (season_id, group_id, title, moderation_mode)
+         values ($1, $2, 'ختم سورة الملك', 'approve_before_publish') returning id`,
+        [seasonId, ashbalId],
+      );
+      const [{ id: tripAlbumId }] = await tx.query(
+        `insert into album (season_id, group_id, title, moderation_mode)
+         values ($1, $2, 'رحلة الغابة', 'approve_before_publish') returning id`,
+        [seasonId, zahratId],
+      );
+      const [{ id: pendingPostId }] = await tx.query(
+        `insert into post (album_id, author_id, storage_key, media_kind, moderation_status, created_at)
+         values ($1, $2, 'seed/quran-1.jpg', 'photo', 'pending', now() - interval '3 hours') returning id`,
+        [quranAlbumId, educatorId],
+      );
+      await tx.query(
+        `insert into post_tag (post_id, child_id) values ($1, $2), ($1, $3)`,
+        [pendingPostId, adamId, yousefId],
+      );
+      const [{ id: blockedPostId }] = await tx.query(
+        `insert into post (album_id, author_id, storage_key, media_kind, moderation_status, hidden_reason, created_at)
+         values ($1, $2, 'seed/trip-1.jpg', 'photo', 'hidden', 'consent_blocked', now() - interval '8 days') returning id`,
+        [tripAlbumId, educatorId],
+      );
+      await tx.query(
+        `insert into post_tag (post_id, child_id) values ($1, $2), ($1, $3)`,
+        [blockedPostId, omarId, childIds[1]],
+      );
+      await tx.query(
+        `insert into post (album_id, author_id, storage_key, media_kind, moderation_status, created_at)
+         values ($1, $2, 'seed/quran-2.jpg', 'photo', 'published', now() - interval '9 days'),
+                ($1, $2, 'seed/quran-3.jpg', 'photo', 'published', now() - interval '9 days'),
+                ($3, $2, 'seed/trip-2.jpg', 'photo', 'published', now() - interval '8 days')`,
+        [quranAlbumId, educatorId, tripAlbumId],
+      );
+
+      // --- Notification centre -------------------------------------------------
+      await tx.query(
+        `insert into notification (user_id, kind, title, body, destination, sent_at, read_at)
+         values
+           ($1, 'critical', 'غياب دون إشعار — عمر', 'الأشبال أ · أُبلغ الأولياء، لم يردّوا بعد.', 'groups', now() - interval '1 hour', null),
+           ($1, 'critical', 'جلسة بلا تسجيل حضور', 'الزهرات أ · أمس 17:00', 'groups', now() - interval '40 minutes', null),
+           ($1, 'request', 'طلب تغيير معلق — حقل صحي', 'طلب تعديل المعلومات الصحية لآدم.', null, now() - interval '5 hours', null),
+           ($1, 'memories', 'منشور جديد في «ختم سورة الملك»', 'بانتظار اعتمادك.', 'memories', now() - interval '3 hours', now() - interval '2 hours'),
+           ($1, 'security', 'دخول من جهاز جديد', 'Android · الدار البيضاء', null, now() - interval '1 day', now() - interval '1 day')`,
+        [executiveId],
       );
 
       // --- Announcements ---------------------------------------------------
