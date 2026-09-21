@@ -15,6 +15,14 @@ import 'features/auth/presentation/login_screen.dart';
 import 'features/auth/presentation/otp_screen.dart';
 import 'features/children/presentation/child_profile_screen.dart';
 import 'features/children/presentation/home_screen.dart';
+import 'features/executive/presentation/announcement_composer_screen.dart';
+import 'features/executive/presentation/attendance_review_screen.dart';
+import 'features/executive/presentation/conversation_screen.dart';
+import 'features/executive/presentation/executive_providers.dart';
+import 'features/executive/presentation/executive_shell.dart';
+import 'features/executive/presentation/group_detail_screen.dart';
+import 'features/executive/presentation/more_screen.dart';
+import 'features/executive/presentation/notifications_screen.dart';
 import 'shared/widgets/not_found_screen.dart';
 import 'shared/widgets/placeholder_screen.dart';
 import 'shared/widgets/splash_screen.dart';
@@ -121,30 +129,31 @@ final AppScreens appScreensTable = AppScreens(
       state.uri.pathSegments.length > 2 ? state.uri.pathSegments.last : null,
     ),
   ),
-  group: (context, state) => PlaceholderScreen(
-    title: 'Group ${state.pathParameters['groupId'] ?? ''}',
-    ticket: 'RAEED-8',
-  ),
+  group: (context, state) =>
+      GroupDetailScreen(groupId: state.pathParameters['groupId'] ?? ''),
   attendance: (context, state) => AttendanceScreen(
     sessionId: state.pathParameters['sessionId'] ?? '',
     groupId: state.pathParameters['groupId'] ?? '',
   ),
-  conversation: (context, state) =>
-      const PlaceholderScreen(title: 'Conversation', ticket: 'Epic E'),
+  conversation: (context, state) => ConversationScreen(
+    conversationId: state.pathParameters['conversationId'] ?? '',
+  ),
   memories: (context, state) =>
       const PlaceholderScreen(title: 'Memories Wall', ticket: 'Epic F'),
   memoriesCompose: (context, state) =>
       const PlaceholderScreen(title: 'New post', ticket: 'Epic F'),
-  announcementCompose: (context, state) =>
-      const PlaceholderScreen(title: 'New announcement', ticket: 'Epic E'),
-  dashboard: (context, state) =>
-      const PlaceholderScreen(title: 'Dashboard', ticket: 'Epic G'),
-  notifications: (context, state) =>
-      const PlaceholderScreen(title: 'Notifications', ticket: 'EXEC-M-06'),
-  more: (context, state) =>
-      const PlaceholderScreen(title: 'More', ticket: 'EXEC-M-07'),
-  attendanceReview: (context, state) =>
-      const PlaceholderScreen(title: 'Attendance review', ticket: 'EXEC-M-05'),
+  announcementCompose: (context, state) => const AnnouncementComposerScreen(),
+  dashboard: (context, state) => ExecutiveShell(
+    initialTab: ExecutiveTab.fromSlug(
+      state.uri.queryParameters[AppRoutes.dashboardTabParam],
+    ),
+  ),
+  notifications: (context, state) => const NotificationsScreen(),
+  more: (context, state) => const MoreScreen(),
+  attendanceReview: (context, state) => AttendanceReviewScreen(
+    sessionId: state.pathParameters['sessionId'] ?? '',
+    groupId: state.pathParameters['groupId'] ?? '',
+  ),
   notFound: (context, state) => const NotFoundScreen(),
 );
 

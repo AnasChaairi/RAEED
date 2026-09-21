@@ -16,6 +16,7 @@ import 'package:raeed/features/auth/presentation/consent_screen.dart';
 import 'package:raeed/features/auth/presentation/login_screen.dart';
 import 'package:raeed/features/children/presentation/child_profile_screen.dart';
 import 'package:raeed/features/children/presentation/home_screen.dart';
+import 'package:raeed/features/executive/presentation/executive_shell.dart';
 
 /// Widget-level checks on the app shell (`RAEED-6`): the routing table and its
 /// guards, RTL-by-default, the theme reaching widgets, and the 130%+ text
@@ -168,7 +169,7 @@ void main() {
       tester,
     ) async {
       await pumpApp(tester, initialLocation: AppRoutes.dashboard);
-      expect(find.text('Dashboard'), findsNothing);
+      expect(find.byType(ExecutiveShell), findsNothing);
       expect(find.byType(HomeScreen), findsOneWidget);
     });
 
@@ -178,7 +179,15 @@ void main() {
         roles: {RaeedRole.executive},
         initialLocation: AppRoutes.dashboard,
       );
-      expect(find.text('Dashboard'), findsWidgets);
+      expect(find.byType(ExecutiveShell), findsOneWidget);
+    });
+
+    testWidgets('an executive asking for home lands on the shell', (
+      tester,
+    ) async {
+      await pumpApp(tester, roles: {RaeedRole.executive});
+      expect(find.byType(ExecutiveShell), findsOneWidget);
+      expect(find.byType(HomeScreen), findsNothing);
     });
 
     testWidgets('a deep link to a child profile resolves its id', (
