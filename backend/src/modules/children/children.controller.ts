@@ -18,6 +18,12 @@ import { JwtAuthGuard } from '../../common/auth/jwt-auth.guard';
 import { ChildDetailView, ChildListItem, ChildrenService } from './children.service';
 import { ConsentService, ConsentRequirementView } from './consent.service';
 import { SubmitConsentDto } from './dto/consent.dto';
+import {
+  ExecutiveChildrenService,
+  ExecutiveChildView,
+  GuardianPhoneView,
+  HealthView,
+} from './executive-children.service';
 
 @Controller()
 @UseGuards(JwtAuthGuard, CheckAbilityGuard)
@@ -25,12 +31,16 @@ export class ChildrenController {
   constructor(
     private readonly children: ChildrenService,
     private readonly consent: ConsentService,
+    private readonly executive: ExecutiveChildrenService,
   ) {}
 
   @Get('children')
   async list(
     @CurrentUser() user: AuthenticatedUser,
     @Query('group_id') groupId?: string,
+    @Query('category_id') categoryId?: string,
+    @Query('q') query?: string,
+    @Query('unassigned') unassigned?: string,
     @Query('cursor') cursor?: string,
   ): Promise<{
     data: ChildListItem[];
@@ -38,6 +48,9 @@ export class ChildrenController {
   }> {
     const { items, nextCursor } = await this.children.list(user, {
       groupId,
+      categoryId,
+      query,
+      unassigned: unassigned === 'true',
       cursor,
       limit: 50,
     });
@@ -51,12 +64,32 @@ export class ChildrenController {
   async detail(
     @CurrentUser() user: AuthenticatedUser,
     @Param('childId', ParseUUIDPipe) childId: string,
-  ): Promise<ChildDetailView> {
-    // Every read of a child's health information is separately audit-logged
-    // (`AUD-03`). The audit interceptor covering this route lands with the
-    // audit module; until then the read is still scope-checked against the
-    // loaded row inside the service.
+  ): Promise<ChildDetailView | ExecutiveChildView> {
+    // An executive gets the oversight profile — guardians, consents, groups —
+    // with the health text withheld; they read that through the logged
+    // route below (`AUD-03`). A guardian or educator gets the profile as
+    // before, health included, by relationship.
+    if (user.hasOversight) return this.executive.detail(user, childId);
     return this.children.detail(user, childId);
+  }
+
+  /** A deliberate, recorded read of a child's health information (`AUD-03`). */
+  @Get('children/:childId/health')
+  health(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('childId', ParseUUIDPipe) childId: string,
+  ): Promise<HealthView> {
+    return this.executive.health(user, childId);
+  }
+
+  /** A recorded reveal of a guardian's phone number (`MSG-06`). */
+  @Get('children/:childId/guardians/:guardianId/phone')
+  guardianPhone(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('childId', ParseUUIDPipe) childId: string,
+    @Param('guardianId', ParseUUIDPipe) guardianId: string,
+  ): Promise<GuardianPhoneView> {
+    return this.executive.guardianPhone(user, childId, guardianId);
   }
 
   @Get('consent')

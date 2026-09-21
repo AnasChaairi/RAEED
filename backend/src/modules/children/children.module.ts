@@ -4,6 +4,7 @@ import { IdentityModule } from '../identity/identity.module';
 import { ChildrenController } from './children.controller';
 import { ChildrenService } from './children.service';
 import { ConsentService } from './consent.service';
+import { ExecutiveChildrenService } from './executive-children.service';
 
 /**
  * `children` — child, parent_child, child_group, consent_record
@@ -16,7 +17,7 @@ import { ConsentService } from './consent.service';
 @Module({
   imports: [IdentityModule],
   controllers: [ChildrenController],
-  providers: [ChildrenService, ConsentService],
+  providers: [ChildrenService, ConsentService, ExecutiveChildrenService],
   exports: [ChildrenService, ConsentService],
 })
 export class ChildrenModule {}
