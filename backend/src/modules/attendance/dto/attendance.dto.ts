@@ -31,6 +31,24 @@ export class AttendanceRecordInputDto {
    */
   @IsISO8601({ strict: true })
   recorded_at_client: string;
+
+  /**
+   * The record this mark corrects, when the client knows it.
+   *
+   * Informational: the server links a correction to the *current* row for
+   * (session, child) regardless, so a stale or missing value cannot rewrite
+   * history. It is kept so the audit entry can say what the corrector was
+   * looking at.
+   */
+  @IsOptional()
+  @IsUUID()
+  corrected_from?: string;
+
+  /** The reason given with a correction (EXEC-M-05). */
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  note?: string;
 }
 
 export class PatchAttendanceDto {
