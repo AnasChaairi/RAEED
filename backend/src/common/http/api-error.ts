@@ -112,6 +112,22 @@ export class ApiError extends HttpException {
     );
   }
 
+  /**
+   * 422 — a tagged child's current image rights forbid this post (`WAL-06`).
+   *
+   * Raised at publish time and again at approval time, because consent can
+   * change between the two; `details.child_ids` names the children whose
+   * guardians said no, so the educator knows which photo to remove.
+   */
+  static memoriesConsentBlocked(childIds: string[]): ApiError {
+    return new ApiError(
+      ApiErrorCode.MEMORIES_CONSENT_BLOCKED,
+      'A tagged child’s image rights do not allow this post.',
+      HttpStatus.UNPROCESSABLE_ENTITY,
+      { child_ids: childIds },
+    );
+  }
+
   /** 422 — DTO-level validation failure; `details` carries the field errors. */
   static validationFailed(details: Record<string, unknown>): ApiError {
     return new ApiError(

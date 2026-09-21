@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 
+import { IdentityModule } from '../identity/identity.module';
 import { AbsenceAlertWorker } from './absence-alert.worker';
+import { NotificationsController } from './notifications.controller';
 import { PushDispatcher } from './push.dispatcher';
 
 /**
@@ -13,6 +15,8 @@ import { PushDispatcher } from './push.dispatcher';
  * change to FCM cannot alter when an alert fires.
  */
 @Module({
+  imports: [IdentityModule],
+  controllers: [NotificationsController],
   providers: [PushDispatcher, AbsenceAlertWorker],
   exports: [PushDispatcher],
 })
