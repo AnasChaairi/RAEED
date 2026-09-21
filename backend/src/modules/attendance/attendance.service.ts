@@ -28,6 +28,24 @@ export interface AttendanceSheetRow {
   status: AttendanceStatus | null;
   recorded_by: string | null;
   recorded_at: string | null;
+  /**
+   * Every record ever made for this child in this session, oldest first —
+   * the original mark and each correction pointing at what it superseded.
+   * Read straight from `attendance_record`, which is what keeping corrected
+   * rows was for.
+   */
+  records: AttendanceRecordEntryView[];
+}
+
+export interface AttendanceRecordEntryView {
+  id: string;
+  status: AttendanceStatus;
+  recorded_by: string;
+  recorded_at: string;
+  corrected_from: string | null;
+  note: string | null;
+  /** Whether this mark was an unexplained absence that paged the guardians. */
+  guardians_notified: boolean;
 }
 
 export interface AttendanceSheetView {
@@ -118,6 +136,8 @@ export class AttendanceService {
       [sessionId, session.group_id],
     );
 
+    const history = await this.recordHistory(sessionId);
+
     return {
       data: rows.map((row) => ({
         child_id: row.child_id,
@@ -135,6 +155,7 @@ export class AttendanceService {
         status: row.status,
         recorded_by: row.recorded_by,
         recorded_at: row.recorded_at ? row.recorded_at.toISOString() : null,
+        records: history.get(row.child_id) ?? [],
       })),
       session: {
         id: session.id,
@@ -144,6 +165,52 @@ export class AttendanceService {
         ends_at: session.ends_at ? session.ends_at.toISOString() : null,
       },
     };
+  }
+
+  /** Every record of the session, grouped by child and ordered oldest first. */
+  private async recordHistory(
+    sessionId: string,
+  ): Promise<Map<string, AttendanceRecordEntryView[]>> {
+    const rows: Array<{
+      id: string;
+      child_id: string;
+      status: AttendanceStatus;
+      recorded_by: string;
+      recorded_at: Date;
+      corrected_from: string | null;
+      note: string | null;
+      guardians_notified: boolean;
+    }> = await this.dataSource.query(
+      `select ar.id, ar.child_id, ar.status, ar.recorded_by, ar.recorded_at,
+              ar.corrected_from, ar.note,
+              (ar.status = 'absent' and not exists (
+                 select 1
+                   from presence_answer pa
+                   join presence_confirmation pc on pc.id = pa.presence_confirmation_id
+                  where pc.session_id = ar.session_id
+                    and pa.child_id = ar.child_id
+                    and pa.answer in ('no', 'late'))) as guardians_notified
+         from attendance_record ar
+        where ar.session_id = $1
+        order by ar.recorded_at, ar.id`,
+      [sessionId],
+    );
+
+    const byChild = new Map<string, AttendanceRecordEntryView[]>();
+    for (const row of rows) {
+      const chain = byChild.get(row.child_id) ?? [];
+      chain.push({
+        id: row.id,
+        status: row.status,
+        recorded_by: row.recorded_by,
+        recorded_at: row.recorded_at.toISOString(),
+        corrected_from: row.corrected_from,
+        note: row.note,
+        guardians_notified: row.guardians_notified,
+      });
+      byChild.set(row.child_id, chain);
+    }
+    return byChild;
   }
 
   /**
@@ -271,6 +338,8 @@ export class AttendanceService {
         child_id: record.child_id,
         from: current.status,
         to: record.status,
+        note: record.note ?? null,
+        client_corrected_from: record.corrected_from ?? null,
       });
 
       return this.alertFor(tx, session, record, inserted);
@@ -289,8 +358,8 @@ export class AttendanceService {
   ): Promise<{ id: string; recorded_at: Date }> {
     const rows: Array<{ id: string; recorded_at: Date }> = await tx.query(
       `insert into attendance_record
-         (session_id, child_id, status, recorded_by, recorded_at_client, corrected_from)
-       values ($1, $2, $3, $4, $5, $6)
+         (session_id, child_id, status, recorded_by, recorded_at_client, corrected_from, note)
+       values ($1, $2, $3, $4, $5, $6, $7)
        returning id, recorded_at`,
       [
         session.id,
@@ -299,6 +368,7 @@ export class AttendanceService {
         recordedBy,
         record.recorded_at_client,
         correctedFrom,
+        record.note?.trim() || null,
       ],
     );
     return rows[0];

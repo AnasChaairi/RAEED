@@ -26,6 +26,16 @@ components:
       bearerFormat: JWT
 
   parameters:
+    conversationId:
+      name: conversationId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    postId:
+      name: postId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
     cursor:
       name: cursor
       in: query
@@ -167,6 +177,130 @@ components:
         priority: { type: string, enum: [normal, urgent] }
         pinned: { type: boolean }
         publish_at: { type: string, format: date-time }
+
+    Group:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        category:
+          type: object
+          properties:
+            id: { type: string, format: uuid }
+            name: { type: string }
+        enrolled_count: { type: integer }
+        capacity: { type: integer, nullable: true }
+        educators:
+          type: array
+          description: Ids only — app_user carries no display name yet
+          items:
+            type: object
+            properties:
+              id: { type: string, format: uuid }
+        schedule_label: { type: string, nullable: true, description: Rendered server-side from weekly_schedule_json in the caller's locale }
+        place: { type: string, nullable: true }
+
+    GroupSession:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        group_id: { type: string, format: uuid }
+        title: { type: string, nullable: true }
+        starts_at: { type: string, format: date-time }
+        ends_at: { type: string, format: date-time }
+        status: { type: string, enum: [planned, delivered, cancelled] }
+        attendance:
+          type: object
+          properties:
+            recorded: { type: boolean }
+            present_count: { type: integer, nullable: true }
+            enrolled_count: { type: integer, nullable: true }
+
+    ConversationSummary:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        type: { type: string, enum: [child, staff, executive] }
+        title: { type: string }
+        is_member: { type: boolean, description: False means the caller reads by oversight, which is logged }
+        last_message:
+          type: object
+          nullable: true
+          properties:
+            preview: { type: string, nullable: true }
+            sent_at: { type: string, format: date-time }
+        unread_count: { type: integer }
+        has_open_report: { type: boolean }
+
+    Message:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        sender:
+          type: object
+          properties:
+            id: { type: string, format: uuid }
+            display_name: { type: string }
+            role: { type: string, nullable: true, enum: [parent, educator, executive, admin] }
+        kind: { type: string, enum: [text, voice, file] }
+        body: { type: string, nullable: true, description: Null for members once hidden; oversight keeps the text }
+        duration_seconds: { type: integer, nullable: true }
+        created_at: { type: string, format: date-time }
+        hidden:
+          type: object
+          nullable: true
+          properties:
+            by_id: { type: string, format: uuid }
+            by_name: { type: string }
+            at: { type: string, format: date-time }
+        report:
+          type: object
+          nullable: true
+          description: Only sent to oversight callers while the report is open
+          properties:
+            id: { type: string, format: uuid }
+            reporter_id: { type: string, format: uuid }
+            reporter_name: { type: string }
+            reason: { type: string }
+
+    ReviewPost:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        album:
+          type: object
+          properties:
+            id: { type: string, format: uuid }
+            title: { type: string }
+            group_name: { type: string, nullable: true }
+            moderation_mode: { type: string, enum: [publish_then_moderate, approve_before_publish] }
+        author_id: { type: string, format: uuid }
+        author_name: { type: string }
+        created_at: { type: string, format: date-time }
+        media_count: { type: integer }
+        media_kind: { type: string, enum: [photo, video, banner] }
+        thumbnail_url: { type: string, nullable: true }
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              child_id: { type: string, format: uuid }
+              full_name: { type: string }
+              image_rights_level: { type: string, enum: [allowed, app_only, not_allowed], description: The child's current level, resolved at read time }
+        moderation_status: { type: string, enum: [pending, published, hidden] }
+        is_blocked: { type: boolean, description: Hidden by a consent downgrade after publication }
+
+    Notification:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        kind: { type: string, enum: [critical, request, memories, security, other] }
+        title: { type: string }
+        body: { type: string, nullable: true }
+        destination: { type: string, nullable: true, enum: [groups, memories, messages, announcements, notifications] }
+        sent_at: { type: string, format: date-time }
+        read_at: { type: string, format: date-time, nullable: true }
 
   responses:
     Unauthorized:
@@ -449,6 +583,7 @@ paths:
 
   /groups/{groupId}/sessions:
     get:
+      description: Most recent first, with each session's attendance state (recorded / present count / enrolled).
       summary: List a group's sessions
       parameters:
         - name: groupId
@@ -653,18 +788,287 @@ paths:
               type: object
               required: [title, audience]
               properties:
-                title: { type: string }
-                body: { type: string }
-                audience: { type: object, additionalProperties: true }
-                priority: { type: string, enum: [normal, urgent], default: normal }
+                title: { type: string, maxLength: 200 }
+                body: { type: string, maxLength: 5000 }
+                audience:
+                  type: object
+                  description: audience_json — `{ type, category_ids?, group_ids? }`; educators may only use `groups` with their own groups (ANN-03)
+                  required: [type]
+                  properties:
+                    type: { type: string, enum: [all, parents, educators, categories, groups] }
+                    category_ids: { type: array, items: { type: string, format: uuid } }
+                    group_ids: { type: array, items: { type: string, format: uuid } }
+                priority: { type: string, enum: [normal, urgent], default: normal, description: urgent is placed on the critical lane before the response is written }
+                expire_at: { type: string, format: date-time }
       responses:
-        '201': { description: Created }
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string, format: uuid }
+        '403': { $ref: '#/components/responses/Forbidden' }
 
   /dashboard/overview:
     get:
-      summary: Executive dashboard overview stats (DSH-01) — reuses the same permission-scoped services as the mobile API
+      summary: Executive dashboard overview (DSH-01, EXEC-M-01) — reuses the same permission-scoped services as the mobile API
+      description: >
+        Executives and admins only, narrowed to the caller's branch when their
+        role assignment carries one. Alerts are ordered by the executive's
+        questions: sessions that ended with no mark and today's unexplained
+        absences (danger), groups over capacity (warning), posts and reports
+        awaiting a decision (info). Day and week boundaries are taken in the
+        association's timezone.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  alerts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: string }
+                        severity: { type: string, enum: [danger, warning, info] }
+                        text: { type: string, description: Already localised to the caller's preferred_locale }
+                        destination: { type: string, enum: [groups, memories, messages, announcements, notifications] }
+                        raised_at: { type: string, format: date-time }
+                        group_id: { type: string, format: uuid, nullable: true }
+                        session_id: { type: string, format: uuid, nullable: true }
+                  stats:
+                    type: object
+                    description: children / families / groups / educators, each `{ value, delta }`; delta is null until a previous period exists to compare against
+                    additionalProperties:
+                      type: object
+                      properties:
+                        value: { type: integer }
+                        delta: { type: integer, nullable: true }
+                  weekly_attendance:
+                    type: object
+                    nullable: true
+                    properties:
+                      present_count: { type: integer }
+                      expected_count: { type: integer }
+                      weekly_rates: { type: array, items: { type: integer }, description: Percent per trailing week, oldest first, weeks with nothing expected omitted }
+                      delta_points: { type: integer, nullable: true }
+                  today_sessions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: string, format: uuid }
+                        group_id: { type: string, format: uuid }
+                        group_name: { type: string }
+                        title: { type: string, nullable: true }
+                        educator_name: { type: string, nullable: true }
+                        starts_at: { type: string, format: date-time }
+                        ends_at: { type: string, format: date-time }
+                        attendance_recorded: { type: boolean }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /groups:
+    get:
+      summary: Groups the caller may see (EXEC-M-05) — an executive's branch scope, an educator's own groups
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Group' } }
+                  page: { $ref: '#/components/schemas/Page' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /groups/{groupId}:
+    get:
+      summary: One group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+          content: { application/json: { schema: { $ref: '#/components/schemas/Group' } } }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /announcements/reach:
+    get:
+      summary: How many people each audience reaches right now, in the caller's scope (EXEC-M-02)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  all: { type: integer }
+                  parents: { type: integer }
+                  educators: { type: integer }
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: string, format: uuid }
+                        name: { type: string }
+                        guardian_count: { type: integer }
+
+  /conversations:
+    get:
+      summary: Conversations the caller may see — as a member, or by oversight (MSG-08)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/ConversationSummary' } }
+                  page: { $ref: '#/components/schemas/Page' }
+
+  /conversations/{conversationId}:
+    get:
+      summary: A conversation's header — title, membership and member labels (never a phone number, MSG-06)
+      parameters:
+        - $ref: '#/components/parameters/conversationId'
       responses:
         '200': { description: OK }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /conversations/{conversationId}/messages:
+    get:
+      summary: The thread, oldest first. A non-member's read is oversight and is audit-logged before the rows are returned.
+      parameters:
+        - $ref: '#/components/parameters/conversationId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Message' } }
+                  page: { $ref: '#/components/schemas/Page' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    post:
+      summary: Send a text message
+      parameters:
+        - $ref: '#/components/parameters/conversationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [kind, body]
+              properties:
+                kind: { type: string, enum: [text] }
+                body: { type: string, maxLength: 4000 }
+      responses:
+        '201':
+          description: Created
+          content: { application/json: { schema: { $ref: '#/components/schemas/Message' } } }
+
+  /messages/{messageId}/hide:
+    post:
+      summary: Hide a message (oversight only). Reversible, audit-logged, closes any open report; never a deletion.
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Hidden }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /message-reports/{reportId}/dismiss:
+    post:
+      summary: Close a report without hiding the message (oversight only, audit-logged)
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Dismissed }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /memories/review-queue:
+    get:
+      summary: Posts awaiting moderation (EXEC-M-04) — pending, plus published posts auto-hidden by a consent downgrade
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  moderation_mode:
+                    type: string
+                    nullable: true
+                    enum: [publish_then_moderate, approve_before_publish]
+                    description: The one mode every album in scope runs under; null when unset or mixed (open decision #3)
+                  data: { type: array, items: { $ref: '#/components/schemas/ReviewPost' } }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /memories/albums:
+    get:
+      summary: The active season's albums with their published post counts
+      responses:
+        '200': { description: OK }
+
+  /memories/posts/{postId}/approve:
+    post:
+      summary: Publish a pending post, or re-publish a blocked one. Re-checks every tagged child's current image rights (WAL-06).
+      parameters:
+        - $ref: '#/components/parameters/postId'
+      responses:
+        '204': { description: Published }
+        '422':
+          description: memories.consent_blocked — `details.child_ids` names the children whose guardians said no
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+
+  /memories/posts/{postId}/hide:
+    post:
+      summary: Hide a post. Never a deletion.
+      parameters:
+        - $ref: '#/components/parameters/postId'
+      responses:
+        '204': { description: Hidden }
+
+  /notifications:
+    get:
+      summary: The caller's own notification centre, newest first (09-notifications-spec)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Notification' } }
+                  page: { $ref: '#/components/schemas/Page' }
+
+  /notifications/read-all:
+    post:
+      summary: Mark every notification of the caller read
+      responses:
+        '204': { description: Done }
 
   /audit-log:
     get:

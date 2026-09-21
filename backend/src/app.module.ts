@@ -9,7 +9,11 @@ import { HealthController } from './modules/health/health.controller';
 import { AnnouncementsModule } from './modules/announcements/announcements.module';
 import { AttendanceModule } from './modules/attendance/attendance.module';
 import { ChildrenModule } from './modules/children/children.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { GroupsModule } from './modules/groups/groups.module';
 import { IdentityModule } from './modules/identity/identity.module';
+import { MemoriesModule } from './modules/memories/memories.module';
+import { MessagingModule } from './modules/messaging/messaging.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 
 /**
@@ -31,6 +35,10 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     AnnouncementsModule,
     AttendanceModule,
     NotificationsModule,
+    GroupsModule,
+    DashboardModule,
+    MessagingModule,
+    MemoriesModule,
   ],
   controllers: [HealthController],
 })

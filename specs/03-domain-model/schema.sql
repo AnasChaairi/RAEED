@@ -267,6 +267,7 @@ create table attendance_record (
   recorded_at_client timestamptz not null,   -- offline conflict rule uses this, see below
   corrected_from uuid references attendance_record(id), -- self-reference on correction
   superseded_at timestamptz,                  -- set when a later mark corrects this row
+  note text,                                  -- the reason given with a correction (EXEC-M-05)
   created_at timestamptz not null default now()
 );
 create index on attendance_record (session_id);
@@ -340,6 +341,9 @@ create table message_report (
   message_id uuid not null references message(id),
   reported_by uuid not null references app_user(id),
   reason text,
+  resolved_at timestamptz,                    -- closed by hiding the message or dismissing the report
+  resolved_by uuid references app_user(id),
+  resolution text check (resolution in ('hidden','dismissed')),
   created_at timestamptz not null default now()
 );
 
@@ -408,6 +412,25 @@ create index on post_tag (child_id);
 -- Publish-time AND consent-downgrade-time check (WAL-06 + the re-check recommendation
 -- in 01-product-brief.md's source review) both query: current image_rights_level for
 -- every child_id tagged on a post.
+
+-- ============================================================
+-- 10b. Notification centre (NOT) — needs app_user
+-- ============================================================
+-- Every notification lands here regardless of push delivery
+-- (09-notifications-spec.md: the centre is the source of truth, push is the interrupt).
+
+create table notification (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references app_user(id) on delete cascade,
+  kind text not null check (kind in ('critical','request','memories','security','other')),
+  title text not null,
+  body text,
+  destination text check (destination in ('groups','memories','messages','announcements','notifications')),
+  sent_at timestamptz not null default now(),
+  read_at timestamptz,
+  created_at timestamptz not null default now()
+);
+create index on notification (user_id, sent_at desc);
 
 -- ============================================================
 -- 11. Audit (AUD) — insert-only, see GRANTs at the end
