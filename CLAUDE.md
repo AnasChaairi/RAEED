@@ -64,6 +64,7 @@ logo/            Brand assets
 | RAEED-2/3/5 OTP sign-in, token refresh, consent capture | Done |
 | RAEED-12 Parent Home + child profile | Done |
 | RAEED-16/17/21 attendance, offline queue, presence confirmation | Done (mobile); **no server endpoints yet** |
+| EXEC-M-01..07 executive shell — dashboard, announcements + composer, messages, Memories review, groups + attendance review, notifications, More | Done (mobile); only `/dashboard/overview`, `/announcements`, `/groups/{id}/sessions` and `/sessions/{id}/attendance` exist server-side — the rest are **proposed** paths named in the screen specs |
 | Everything else in `specs/13-roadmap-and-tickets.md` | Not started — routes render a `PlaceholderScreen` naming the ticket |
 
 ### Backend progress
