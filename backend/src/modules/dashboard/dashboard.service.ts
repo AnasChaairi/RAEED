@@ -3,6 +3,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
 import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
+import { displayNameOf } from '../../common/sql/display-name';
 import {
   Locale,
   loadLocale,
@@ -409,8 +410,12 @@ export class DashboardService {
       starts_at: Date;
       ends_at: Date;
       attendance_recorded: boolean;
+      educator_name: string | null;
     }> = await this.dataSource.query(
       `select s.id, s.group_id, g.name as group_name, s.title, s.starts_at, s.ends_at,
+              (select string_agg(${displayNameOf('ge.educator_user_id')}, '، ' order by ge.assigned_at)
+                 from group_educator ge
+                where ge.group_id = g.id and ge.unassigned_at is null) as educator_name,
               exists (select 1 from attendance_record ar
                        where ar.session_id = s.id and ar.superseded_at is null)
                 as attendance_recorded
@@ -429,8 +434,7 @@ export class DashboardService {
       group_id: row.group_id,
       group_name: row.group_name,
       title: row.title,
-      // `app_user` has no display-name column yet; see api-error.ts.
-      educator_name: null,
+      educator_name: row.educator_name || null,
       starts_at: row.starts_at.toISOString(),
       ends_at: row.ends_at.toISOString(),
       attendance_recorded: row.attendance_recorded,

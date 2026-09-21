@@ -5,6 +5,8 @@ import {
   SetMetadata,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 
 import { ApiError } from '../http/api-error';
 import { AuthenticatedRequest } from '../auth/current-user.decorator';
@@ -38,9 +40,12 @@ export const CheckAbility = (
 
 @Injectable()
 export class CheckAbilityGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
+  constructor(
+    private readonly reflector: Reflector,
+    @InjectDataSource() private readonly dataSource: DataSource,
+  ) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const rule = this.reflector.getAllAndOverride<AbilityRule | undefined>(
       ABILITY_RULE,
       [context.getHandler(), context.getClass()],
@@ -53,6 +58,25 @@ export class CheckAbilityGuard implements CanActivate {
 
     const ability = defineAbilityFor(user);
     if (!ability.can(rule.action, rule.subject)) {
+      // A refused attempt is itself recorded (`AUD-02`): the admin-only
+      // sections tell the executive who bumps into them that this is normal
+      // and logged, and the log has to back that up. Best-effort — a failing
+      // audit insert must not turn a 403 into a 500.
+      await this.dataSource
+        .query(
+          `insert into audit_log_entry (actor_user_id, action, resource_type, device_meta)
+           values ($1, 'access.denied', $2, $3::jsonb)`,
+          [
+            user.id,
+            rule.subject,
+            JSON.stringify({
+              action: rule.action,
+              path: (request as { url?: string }).url ?? null,
+            }),
+          ],
+        )
+        .catch(() => undefined);
+
       // 403 rather than 404. `specs/11-testing-strategy.md` flags this as a
       // decision to make consistently: RAEED tells an authenticated caller
       // "not yours" rather than "does not exist", so a parent who mistypes a

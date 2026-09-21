@@ -99,21 +99,18 @@ export class IdentityService {
 
   /** The `/auth/me` view, built from live scope. */
   async currentUser(user: AuthenticatedUser): Promise<CurrentUserView> {
-    const rows: Array<{ preferred_locale: string; phone: string | null }> =
+    const rows: Array<{ preferred_locale: string; display_name: string | null }> =
       await this.dataSource.query(
-        'select preferred_locale, phone from app_user where id = $1',
+        'select preferred_locale, display_name from app_user where id = $1',
         [user.id],
       );
     const row = rows[0];
 
     return {
       id: user.id,
-      // `app_user` has no display name column, so the guardian's name comes
-      // from elsewhere in a later ticket. Until then a neutral placeholder,
-      // never the phone number — MSG-06 forbids returning that to a
-      // non-executive role in any payload, and "show the phone as a name" is
-      // exactly how that rule gets broken by accident.
-      display_name: '',
+      // Empty until an executive enters the name — never the phone number,
+      // which MSG-06 forbids returning to a non-executive role in any payload.
+      display_name: row?.display_name ?? '',
       preferred_locale: row?.preferred_locale ?? 'ar',
       roles: [...user.roles],
       branch_id: user.branchId,

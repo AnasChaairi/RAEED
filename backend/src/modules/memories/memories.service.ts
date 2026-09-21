@@ -5,6 +5,7 @@ import { DataSource } from 'typeorm';
 import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
 import { defineAbilityFor, subject } from '../../common/abilities/define-ability';
 import { ApiError } from '../../common/http/api-error';
+import { displayNameOf } from '../../common/sql/display-name';
 
 export type ImageRightsLevel = 'allowed' | 'app_only' | 'not_allowed';
 export type ModerationMode = 'publish_then_moderate' | 'approve_before_publish';
@@ -52,6 +53,7 @@ interface PostRow {
   group_name: string | null;
   branch_id: string | null;
   tags: ReviewPostView['tags'];
+  author_name: string;
 }
 
 /**
@@ -181,7 +183,7 @@ export class MemoriesService {
   private posts(where: string, params: unknown[], orderBy: string): Promise<PostRow[]> {
     return this.dataSource.query(
       `select p.id, p.created_at, p.moderation_status, p.hidden_reason, p.media_kind,
-              p.author_id,
+              p.author_id, ${displayNameOf('p.author_id')} as author_name,
               a.id as album_id, a.title as album_title, a.moderation_mode,
               g.name as group_name, g.branch_id,
               coalesce((
@@ -215,7 +217,7 @@ export class MemoriesService {
         group_name: row.group_name,
         moderation_mode: row.moderation_mode,
       },
-      author_name: '',
+      author_name: row.author_name ?? '',
       author_id: row.author_id,
       created_at: row.created_at.toISOString(),
       media_count: 1,
