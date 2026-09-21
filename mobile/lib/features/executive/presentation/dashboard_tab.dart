@@ -145,7 +145,8 @@ class _DashboardBody extends ConsumerWidget {
               physics: const NeverScrollableScrollPhysics(),
               mainAxisSpacing: RaeedSpacing.sm + 2,
               crossAxisSpacing: RaeedSpacing.sm + 2,
-              childAspectRatio: 2.1,
+              // Tall enough for the number at 130% text scaling.
+              childAspectRatio: 1.7,
               children: [
                 for (final stat in overview.stats) StatTile(stat: stat),
               ],
