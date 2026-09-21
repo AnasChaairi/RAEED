@@ -1,4 +1,14 @@
-import { Controller, Get, Param, ParseUUIDPipe, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 
 import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
 import {
@@ -7,6 +17,7 @@ import {
 } from '../../common/abilities/check-ability.guard';
 import { CurrentUser } from '../../common/auth/current-user.decorator';
 import { JwtAuthGuard } from '../../common/auth/jwt-auth.guard';
+import { AssignChildrenDto, CreateGroupDto } from './dto/group.dto';
 import { GroupSessionView, GroupsService, GroupView } from './groups.service';
 
 @Controller('groups')
@@ -23,6 +34,27 @@ export class GroupsController {
       data: await this.groups.list(user),
       page: { cursor: null, has_more: false },
     };
+  }
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  @CheckAbility('create', 'Group')
+  create(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: CreateGroupDto,
+  ): Promise<GroupView> {
+    return this.groups.create(user, body);
+  }
+
+  @Post(':groupId/children')
+  @HttpCode(HttpStatus.OK)
+  @CheckAbility('update', 'Group')
+  assign(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('groupId', ParseUUIDPipe) groupId: string,
+    @Body() body: AssignChildrenDto,
+  ): Promise<{ enrolled_count: number; capacity: number | null }> {
+    return this.groups.assign(user, groupId, body);
   }
 
   @Get(':groupId')
