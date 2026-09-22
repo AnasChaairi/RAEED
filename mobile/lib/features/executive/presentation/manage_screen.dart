@@ -113,13 +113,13 @@ class _ManageScreenState extends ConsumerState<ManageScreen> {
               ),
               ManageTab.families => _BottomBar(
                 child: FilledButton(
-                  onPressed: () => context.go(AppRoutes.manageNewFamily),
+                  onPressed: () => context.push(AppRoutes.manageNewFamily),
                   child: Text(l10n.newFamilyCta),
                 ),
               ),
               ManageTab.groups => _BottomBar(
                 child: FilledButton(
-                  onPressed: () => context.go(AppRoutes.manageNewGroup),
+                  onPressed: () => context.push(AppRoutes.manageNewGroup),
                   child: Text(l10n.newGroupCta),
                 ),
               ),
@@ -780,7 +780,7 @@ class FamilyCard extends ConsumerWidget {
               ],
               OutlinedButton(
                 style: OutlinedButton.styleFrom(minimumSize: const Size(0, 36)),
-                onPressed: () => context.go(AppRoutes.manageNewFamily),
+                onPressed: () => context.push(AppRoutes.manageNewFamily),
                 child: Text(l10n.familyAddChild),
               ),
             ],
@@ -865,7 +865,7 @@ class GroupCapacityCard extends StatelessWidget {
         : (group.enrolledCount / capacity).clamp(0.0, 1.0);
 
     return ExecutiveCard(
-      onTap: () => context.go(AppRoutes.groupPath(group.id)),
+      onTap: () => context.push(AppRoutes.groupPath(group.id)),
       radius: RaeedRadius.lg + 2,
       padding: const EdgeInsets.symmetric(
         horizontal: RaeedSpacing.md + 2,

@@ -167,6 +167,7 @@ class _Header extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
+                      flex: 10,
                       child: _HeaderTile(
                         value: attendance == null
                             ? '—'
