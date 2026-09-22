@@ -2054,6 +2054,1362 @@ abstract class AppL10n {
   /// In ar, this message translates to:
   /// **'إلغاء'**
   String get dialogCancel;
+
+  /// No description provided for @moreChildren.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأطفال'**
+  String get moreChildren;
+
+  /// No description provided for @moreChildrenHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملفات والموافقات'**
+  String get moreChildrenHint;
+
+  /// No description provided for @moreManage.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأسر والمجموعات'**
+  String get moreManage;
+
+  /// No description provided for @moreManageHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنشاء مجموعة · أسرة جديدة · إسناد'**
+  String get moreManageHint;
+
+  /// No description provided for @moreReports.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقارير والتصدير'**
+  String get moreReports;
+
+  /// No description provided for @moreReportsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'حضور · مؤطرون · تفاعل'**
+  String get moreReportsHint;
+
+  /// No description provided for @moreStructure.
+  ///
+  /// In ar, this message translates to:
+  /// **'الهيكل'**
+  String get moreStructure;
+
+  /// No description provided for @moreStructureHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'المواسم · الفئات · الفروع'**
+  String get moreStructureHint;
+
+  /// No description provided for @moreLogs.
+  ///
+  /// In ar, this message translates to:
+  /// **'السجلات'**
+  String get moreLogs;
+
+  /// No description provided for @moreLogsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'التدقيق · الوصول الصحي'**
+  String get moreLogsHint;
+
+  /// No description provided for @adminTag.
+  ///
+  /// In ar, this message translates to:
+  /// **'إداري'**
+  String get adminTag;
+
+  /// No description provided for @moreAdminHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإداري وحده يفتح «الهيكل» و«السجلات». محاولة غيره تُرفض وتُسجَّل.'**
+  String get moreAdminHint;
+
+  /// No description provided for @moreSignOut.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج'**
+  String get moreSignOut;
+
+  /// No description provided for @childrenCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{لا أطفال} one{طفل واحد} two{طفلان} few{{count} أطفال} many{{count} طفلًا} other{{count} طفل}}'**
+  String childrenCount(int count);
+
+  /// No description provided for @childrenSearchHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث عن طفل'**
+  String get childrenSearchHint;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get filterAll;
+
+  /// No description provided for @childrenEmptyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا أطفال مطابقون'**
+  String get childrenEmptyTitle;
+
+  /// No description provided for @childrenEmptyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'جرّب بحثًا آخر أو فئة أخرى.'**
+  String get childrenEmptyBody;
+
+  /// No description provided for @attendanceShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'حضور {ratio}'**
+  String attendanceShort(String ratio);
+
+  /// No description provided for @imageRightsLegend.
+  ///
+  /// In ar, this message translates to:
+  /// **'حقوق الصورة:'**
+  String get imageRightsLegend;
+
+  /// No description provided for @childSeasonAttendance.
+  ///
+  /// In ar, this message translates to:
+  /// **'حضور الموسم'**
+  String get childSeasonAttendance;
+
+  /// No description provided for @childImageRightsTile.
+  ///
+  /// In ar, this message translates to:
+  /// **'حقوق الصورة'**
+  String get childImageRightsTile;
+
+  /// No description provided for @healthSectionTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المعلومات الصحية'**
+  String get healthSectionTitle;
+
+  /// No description provided for @healthEveryViewLogged.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل عرض يُسجَّل'**
+  String get healthEveryViewLogged;
+
+  /// No description provided for @healthCollapsedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يوجد تنبيه صحي. المحتوى مطويٌّ عمدًا — يظهر عند طلبك ويُقيَّد في سجل الوصول الصحي.'**
+  String get healthCollapsedBody;
+
+  /// No description provided for @healthNoneBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا تنبيه صحي مسجَّل لهذا الطفل.'**
+  String get healthNoneBody;
+
+  /// No description provided for @healthShowButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض المعلومات الصحية'**
+  String get healthShowButton;
+
+  /// No description provided for @healthConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيُسجَّل هذا العرض'**
+  String get healthConfirmTitle;
+
+  /// No description provided for @healthConfirmBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيُقيَّد أن {actor} عرض بيانات {child} الصحية الآن. لا تفتحه بلا سبب.'**
+  String healthConfirmBody(String actor, String child);
+
+  /// No description provided for @healthContinue.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة'**
+  String get healthContinue;
+
+  /// No description provided for @healthBack.
+  ///
+  /// In ar, this message translates to:
+  /// **'تراجع'**
+  String get healthBack;
+
+  /// No description provided for @healthAlertTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التنبيه الصحي'**
+  String get healthAlertTitle;
+
+  /// No description provided for @healthRecordedAt.
+  ///
+  /// In ar, this message translates to:
+  /// **'سُجّل {time}'**
+  String healthRecordedAt(String time);
+
+  /// No description provided for @healthFieldsPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحقول التفصيلية تُقرَّ بعد تصريح CNDP.'**
+  String get healthFieldsPending;
+
+  /// No description provided for @healthCollapse.
+  ///
+  /// In ar, this message translates to:
+  /// **'طيّ'**
+  String get healthCollapse;
+
+  /// No description provided for @healthAllergies.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساسية'**
+  String get healthAllergies;
+
+  /// No description provided for @healthConditions.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالات الصحية'**
+  String get healthConditions;
+
+  /// No description provided for @healthMedications.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأدوية'**
+  String get healthMedications;
+
+  /// No description provided for @healthDietary.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات غذائية'**
+  String get healthDietary;
+
+  /// No description provided for @healthSpecialNeeds.
+  ///
+  /// In ar, this message translates to:
+  /// **'احتياجات خاصة'**
+  String get healthSpecialNeeds;
+
+  /// No description provided for @guardiansTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأولياء'**
+  String get guardiansTitle;
+
+  /// No description provided for @relMother.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأم'**
+  String get relMother;
+
+  /// No description provided for @relFather.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأب'**
+  String get relFather;
+
+  /// No description provided for @relGuardian.
+  ///
+  /// In ar, this message translates to:
+  /// **'ولي الأمر'**
+  String get relGuardian;
+
+  /// No description provided for @guardianAccountActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفعَّل'**
+  String get guardianAccountActive;
+
+  /// No description provided for @guardianAccountPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يدخل بعد'**
+  String get guardianAccountPending;
+
+  /// No description provided for @guardianLastSeen.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر دخول {when}'**
+  String guardianLastSeen(String when);
+
+  /// No description provided for @guardianReveal.
+  ///
+  /// In ar, this message translates to:
+  /// **'إظهار'**
+  String get guardianReveal;
+
+  /// No description provided for @guardianRevealLogged.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل إظهار يُسجَّل باسمك مع الوقت.'**
+  String get guardianRevealLogged;
+
+  /// No description provided for @guardianRevealToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'سُجّل إظهار الرقم باسمك'**
+  String get guardianRevealToast;
+
+  /// No description provided for @consentsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموافقات'**
+  String get consentsTitle;
+
+  /// No description provided for @consentPrivacyLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'سياسة الخصوصية'**
+  String get consentPrivacyLabel;
+
+  /// No description provided for @consentVersionAt.
+  ///
+  /// In ar, this message translates to:
+  /// **'v{version} · {when}'**
+  String consentVersionAt(int version, String when);
+
+  /// No description provided for @consentImageRightsChangeable.
+  ///
+  /// In ar, this message translates to:
+  /// **'يغيّرها الولي متى شاء'**
+  String get consentImageRightsChangeable;
+
+  /// No description provided for @consentApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'موافَق'**
+  String get consentApproved;
+
+  /// No description provided for @consentMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يوافق بعد'**
+  String get consentMissing;
+
+  /// No description provided for @childGroupsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموعات'**
+  String get childGroupsTitle;
+
+  /// No description provided for @groupMainTag.
+  ///
+  /// In ar, this message translates to:
+  /// **'رئيسية'**
+  String get groupMainTag;
+
+  /// No description provided for @openChildThread.
+  ///
+  /// In ar, this message translates to:
+  /// **'فتح محادثة {name} (إشراف · يُسجَّل)'**
+  String openChildThread(String name);
+
+  /// No description provided for @manageTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأسر والمجموعات'**
+  String get manageTitle;
+
+  /// No description provided for @familiesCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{لا أسر} one{أسرة واحدة} two{أسرتان} few{{count} أسر} many{{count} أسرة} other{{count} أسرة}}'**
+  String familiesCount(int count);
+
+  /// No description provided for @manageTabUnassigned.
+  ///
+  /// In ar, this message translates to:
+  /// **'بلا مجموعة'**
+  String get manageTabUnassigned;
+
+  /// No description provided for @manageTabFamilies.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأسر'**
+  String get manageTabFamilies;
+
+  /// No description provided for @manageTabGroups.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموعات'**
+  String get manageTabGroups;
+
+  /// No description provided for @unassignedHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسجَّلون بلا مجموعة رئيسية. اختر أطفالًا ثم اضغط «إسناد».'**
+  String get unassignedHint;
+
+  /// No description provided for @unassignedEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل الأطفال في مجموعات.'**
+  String get unassignedEmpty;
+
+  /// No description provided for @assignCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{إسناد طفل واحد إلى مجموعة…} two{إسناد طفلين إلى مجموعة…} few{إسناد {count} أطفال إلى مجموعة…} many{إسناد {count} طفلًا إلى مجموعة…} other{إسناد {count} طفل إلى مجموعة…}}'**
+  String assignCta(int count);
+
+  /// No description provided for @assignSheetTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{إسناد طفل واحد إلى مجموعة} two{إسناد طفلين إلى مجموعة} few{إسناد {count} أطفال إلى مجموعة} many{إسناد {count} طفلًا إلى مجموعة} other{إسناد {count} طفل إلى مجموعة}}'**
+  String assignSheetTitle(int count);
+
+  /// No description provided for @assignWarn.
+  ///
+  /// In ar, this message translates to:
+  /// **'{group} ستصير {after} من {capacity} — تظهر بعلامة «فوق السعة».'**
+  String assignWarn(int after, int capacity, String group);
+
+  /// No description provided for @assignLogged.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُسجَّل الإسناد باسمك ويُبلَّغ الأولياء.'**
+  String get assignLogged;
+
+  /// No description provided for @assignTo.
+  ///
+  /// In ar, this message translates to:
+  /// **'إسناد إلى {group}'**
+  String assignTo(String group);
+
+  /// No description provided for @assignPick.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر مجموعة'**
+  String get assignPick;
+
+  /// No description provided for @assignOverKind.
+  ///
+  /// In ar, this message translates to:
+  /// **'فوق السعة'**
+  String get assignOverKind;
+
+  /// No description provided for @assignOverTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إسناد إلى {group} فوق السعة؟'**
+  String assignOverTitle(String group);
+
+  /// No description provided for @assignOverLog.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُسجَّل الإسناد والتجاوز باسمك.'**
+  String get assignOverLog;
+
+  /// No description provided for @assignOverCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'نعم، إسناد'**
+  String get assignOverCta;
+
+  /// No description provided for @assignedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُسند {count} إلى {group}'**
+  String assignedToast(int count, String group);
+
+  /// No description provided for @familyStatusActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفعَّلة'**
+  String get familyStatusActive;
+
+  /// No description provided for @familyStatusPartial.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعض الأولياء'**
+  String get familyStatusPartial;
+
+  /// No description provided for @familyStatusPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'دعوة معلقة'**
+  String get familyStatusPending;
+
+  /// No description provided for @familyResend.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة الدعوة'**
+  String get familyResend;
+
+  /// No description provided for @familyResentToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُعيد إرسال الدعوة'**
+  String get familyResentToast;
+
+  /// No description provided for @familyAddChild.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ طفل'**
+  String get familyAddChild;
+
+  /// No description provided for @familyNoGroup.
+  ///
+  /// In ar, this message translates to:
+  /// **'بلا مجموعة'**
+  String get familyNoGroup;
+
+  /// No description provided for @familiesEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا أسر بعد'**
+  String get familiesEmpty;
+
+  /// No description provided for @newFamilyCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ أسرة جديدة'**
+  String get newFamilyCta;
+
+  /// No description provided for @newGroupCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ مجموعة جديدة'**
+  String get newGroupCta;
+
+  /// No description provided for @groupAssignHere.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ إسناد أطفال'**
+  String get groupAssignHere;
+
+  /// No description provided for @newGroupTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مجموعة جديدة'**
+  String get newGroupTitle;
+
+  /// No description provided for @fieldName.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم'**
+  String get fieldName;
+
+  /// No description provided for @groupNameHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'مثال: الأشبال 3'**
+  String get groupNameHint;
+
+  /// No description provided for @fieldCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفئة'**
+  String get fieldCategory;
+
+  /// No description provided for @fieldCapacity.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعة'**
+  String get fieldCapacity;
+
+  /// No description provided for @fieldSchedule.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجدول'**
+  String get fieldSchedule;
+
+  /// No description provided for @fieldEducators.
+  ///
+  /// In ar, this message translates to:
+  /// **'المؤطرون'**
+  String get fieldEducators;
+
+  /// No description provided for @educatorLoad.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{بلا مجموعات} one{مجموعة واحدة} two{مجموعتان} few{{count} مجموعات} many{{count} مجموعة} other{{count} مجموعة}}'**
+  String educatorLoad(int count);
+
+  /// No description provided for @fieldChildrenOptional.
+  ///
+  /// In ar, this message translates to:
+  /// **'أطفال (اختياري) — من «بلا مجموعة»'**
+  String get fieldChildrenOptional;
+
+  /// No description provided for @checklistNameOk.
+  ///
+  /// In ar, this message translates to:
+  /// **'✓ الاسم'**
+  String get checklistNameOk;
+
+  /// No description provided for @checklistNameMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'○ الاسم مطلوب'**
+  String get checklistNameMissing;
+
+  /// No description provided for @checklistCategoryMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'○ الفئة مطلوبة'**
+  String get checklistCategoryMissing;
+
+  /// No description provided for @checklistEducatorOk.
+  ///
+  /// In ar, this message translates to:
+  /// **'✓ مؤطر'**
+  String get checklistEducatorOk;
+
+  /// No description provided for @checklistEducatorMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'○ مؤطر واحد على الأقل'**
+  String get checklistEducatorMissing;
+
+  /// No description provided for @checklistChildren.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{○ بلا أطفال (مقبول)} one{✓ طفل واحد} two{✓ طفلان} few{✓ {count} أطفال} many{✓ {count} طفلًا} other{✓ {count} طفل}}'**
+  String checklistChildren(int count);
+
+  /// No description provided for @checklistLogged.
+  ///
+  /// In ar, this message translates to:
+  /// **'⦿ يُسجَّل باسمك'**
+  String get checklistLogged;
+
+  /// No description provided for @createGroupCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنشاء «{name}»'**
+  String createGroupCta(String name);
+
+  /// No description provided for @groupCreatedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُنشئت «{name}»'**
+  String groupCreatedToast(String name);
+
+  /// No description provided for @theGroup.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموعة'**
+  String get theGroup;
+
+  /// No description provided for @weekdaySun.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأحد'**
+  String get weekdaySun;
+
+  /// No description provided for @weekdayMon.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاثنين'**
+  String get weekdayMon;
+
+  /// No description provided for @weekdayTue.
+  ///
+  /// In ar, this message translates to:
+  /// **'الثلاثاء'**
+  String get weekdayTue;
+
+  /// No description provided for @weekdayWed.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأربعاء'**
+  String get weekdayWed;
+
+  /// No description provided for @weekdayThu.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخميس'**
+  String get weekdayThu;
+
+  /// No description provided for @weekdayFri.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجمعة'**
+  String get weekdayFri;
+
+  /// No description provided for @weekdaySat.
+  ///
+  /// In ar, this message translates to:
+  /// **'السبت'**
+  String get weekdaySat;
+
+  /// No description provided for @newFamilyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أسرة جديدة'**
+  String get newFamilyTitle;
+
+  /// No description provided for @reviewStepTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المراجعة'**
+  String get reviewStepTitle;
+
+  /// No description provided for @stepOfThree.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخطوة {step} من 3'**
+  String stepOfThree(int step);
+
+  /// No description provided for @guardianNameHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم ولي الأمر'**
+  String get guardianNameHint;
+
+  /// No description provided for @guardianPhoneHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'6XX XXX XXX'**
+  String get guardianPhoneHint;
+
+  /// No description provided for @addGuardian.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ ولي آخر'**
+  String get addGuardian;
+
+  /// No description provided for @childN.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطفل {n}'**
+  String childN(int n);
+
+  /// No description provided for @remove.
+  ///
+  /// In ar, this message translates to:
+  /// **'إزالة'**
+  String get remove;
+
+  /// No description provided for @childNameHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم الطفل'**
+  String get childNameHint;
+
+  /// No description provided for @dobLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ الولادة'**
+  String get dobLabel;
+
+  /// No description provided for @dobPick.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر التاريخ'**
+  String get dobPick;
+
+  /// No description provided for @mainGroupLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموعة الرئيسية'**
+  String get mainGroupLabel;
+
+  /// No description provided for @groupLater.
+  ///
+  /// In ar, this message translates to:
+  /// **'لاحقًا'**
+  String get groupLater;
+
+  /// No description provided for @groupFull.
+  ///
+  /// In ar, this message translates to:
+  /// **'ممتلئة'**
+  String get groupFull;
+
+  /// No description provided for @healthNotHere.
+  ///
+  /// In ar, this message translates to:
+  /// **'المعلومات الصحية يُدخلها الولي من حسابه — لا هنا.'**
+  String get healthNotHere;
+
+  /// No description provided for @addChild.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ طفل آخر'**
+  String get addChild;
+
+  /// No description provided for @whatHappens.
+  ///
+  /// In ar, this message translates to:
+  /// **'ماذا سيحدث'**
+  String get whatHappens;
+
+  /// No description provided for @willInvite.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{• دعوة SMS إلى ولي واحد؛ يوافق على الخصوصية وحقوق الصورة قبل رؤية أي شيء.} two{• دعوة SMS إلى وليَّين؛ يوافقان على الخصوصية وحقوق الصورة قبل رؤية أي شيء.} other{• دعوة SMS إلى {count} أولياء؛ يوافقون على الخصوصية وحقوق الصورة قبل رؤية أي شيء.}}'**
+  String willInvite(int count);
+
+  /// No description provided for @willShow.
+  ///
+  /// In ar, this message translates to:
+  /// **'• يظهر الأطفال للولي مع المجموعة والجدول والمؤطر.'**
+  String get willShow;
+
+  /// No description provided for @willLog.
+  ///
+  /// In ar, this message translates to:
+  /// **'• ⦿ يُسجَّل الإنشاء باسمك.'**
+  String get willLog;
+
+  /// No description provided for @unassignedWarn.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{▲ طفل واحد بلا مجموعة — لن يراه أي مؤطر حتى يُسند.} two{▲ طفلان بلا مجموعة — لن يراهما أي مؤطر حتى يُسندا.} other{▲ {count} أطفال بلا مجموعة — لن يراهم أي مؤطر حتى يُسندوا.}}'**
+  String unassignedWarn(int count);
+
+  /// No description provided for @previous.
+  ///
+  /// In ar, this message translates to:
+  /// **'السابق'**
+  String get previous;
+
+  /// No description provided for @next.
+  ///
+  /// In ar, this message translates to:
+  /// **'التالي'**
+  String get next;
+
+  /// No description provided for @createAndInvite.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{إنشاء} one{إنشاء وإرسال دعوة واحدة} two{إنشاء وإرسال دعوتين} few{إنشاء وإرسال {count} دعوات} many{إنشاء وإرسال {count} دعوة} other{إنشاء وإرسال {count} دعوة}}'**
+  String createAndInvite(int count);
+
+  /// No description provided for @familyCreatedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{أُنشئت الأسرة} one{أُنشئت الأسرة · دعوة واحدة} two{أُنشئت الأسرة · دعوتان} few{أُنشئت الأسرة · {count} دعوات} many{أُنشئت الأسرة · {count} دعوة} other{أُنشئت الأسرة · {count} دعوة}}'**
+  String familyCreatedToast(int count);
+
+  /// No description provided for @reportsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقارير'**
+  String get reportsTitle;
+
+  /// No description provided for @repTabAttendance.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحضور'**
+  String get repTabAttendance;
+
+  /// No description provided for @repTabEducators.
+  ///
+  /// In ar, this message translates to:
+  /// **'المؤطرون'**
+  String get repTabEducators;
+
+  /// No description provided for @repTabEngagement.
+  ///
+  /// In ar, this message translates to:
+  /// **'التفاعل'**
+  String get repTabEngagement;
+
+  /// No description provided for @repTabExport.
+  ///
+  /// In ar, this message translates to:
+  /// **'التصدير'**
+  String get repTabExport;
+
+  /// No description provided for @repByEducator.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسبة الحضور حسب المؤطر'**
+  String get repByEducator;
+
+  /// No description provided for @repByCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'حسب الفئة'**
+  String get repByCategory;
+
+  /// No description provided for @repRawNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'النسبة مع العدد الخام'**
+  String get repRawNote;
+
+  /// No description provided for @repPlanned.
+  ///
+  /// In ar, this message translates to:
+  /// **'مخطَّطة/مُنجزة {delivered}/{planned}'**
+  String repPlanned(int delivered, int planned);
+
+  /// No description provided for @repOnTime.
+  ///
+  /// In ar, this message translates to:
+  /// **'في وقته {ontime} من {planned}'**
+  String repOnTime(int ontime, int planned);
+
+  /// No description provided for @repReplyUnknown.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرد —'**
+  String get repReplyUnknown;
+
+  /// No description provided for @repActivated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفعيل حسابات الأولياء'**
+  String get repActivated;
+
+  /// No description provided for @repPresenceAnswers.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرد على تأكيد الحضور'**
+  String get repPresenceAnswers;
+
+  /// No description provided for @repHomework.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنجاز الواجبات'**
+  String get repHomework;
+
+  /// No description provided for @selfReported.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصريح ذاتي'**
+  String get selfReported;
+
+  /// No description provided for @repNotYet.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير متاح بعد'**
+  String get repNotYet;
+
+  /// No description provided for @repNoData.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا بيانات بعد'**
+  String get repNoData;
+
+  /// No description provided for @exportIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصدير قائمة الأطفال. الحقول الصحية معطَّلة افتراضيًا.'**
+  String get exportIntro;
+
+  /// No description provided for @exportName.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم الكامل'**
+  String get exportName;
+
+  /// No description provided for @exportDob.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ الولادة'**
+  String get exportDob;
+
+  /// No description provided for @exportGroup.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفئة والمجموعة'**
+  String get exportGroup;
+
+  /// No description provided for @exportGuardian.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم ولي الأمر'**
+  String get exportGuardian;
+
+  /// No description provided for @exportPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'هاتف ولي الأمر'**
+  String get exportPhone;
+
+  /// No description provided for @exportConsent.
+  ///
+  /// In ar, this message translates to:
+  /// **'حقوق الصورة'**
+  String get exportConsent;
+
+  /// No description provided for @exportAllergies.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساسية'**
+  String get exportAllergies;
+
+  /// No description provided for @exportMedications.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأدوية'**
+  String get exportMedications;
+
+  /// No description provided for @healthTag.
+  ///
+  /// In ar, this message translates to:
+  /// **'صحي'**
+  String get healthTag;
+
+  /// No description provided for @exportLogged.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُسجَّل التصدير باسمك والحقول المختارة.'**
+  String get exportLogged;
+
+  /// No description provided for @exportContainsHealth.
+  ///
+  /// In ar, this message translates to:
+  /// **'يحتوي بيانات صحية — للجهة المعنية فقط.'**
+  String get exportContainsHealth;
+
+  /// No description provided for @exportCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{إنشاء الملف · حقل واحد} two{إنشاء الملف · حقلان} few{إنشاء الملف · {count} حقول} many{إنشاء الملف · {count} حقلًا} other{إنشاء الملف · {count} حقل}}'**
+  String exportCta(int count);
+
+  /// No description provided for @exportBusy.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُجهَّز الملف…'**
+  String get exportBusy;
+
+  /// No description provided for @exportReady.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملف جاهز'**
+  String get exportReady;
+
+  /// No description provided for @exportRows.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{لا صفوف} one{صف واحد} two{صفان} few{{count} صفوف} many{{count} صفًا} other{{count} صف}}'**
+  String exportRows(int count);
+
+  /// No description provided for @exportShare.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشاركة الملف'**
+  String get exportShare;
+
+  /// No description provided for @exportLoggedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'سُجّل التصدير باسمك'**
+  String get exportLoggedToast;
+
+  /// No description provided for @structureTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الهيكل'**
+  String get structureTitle;
+
+  /// No description provided for @strTabSeasons.
+  ///
+  /// In ar, this message translates to:
+  /// **'المواسم'**
+  String get strTabSeasons;
+
+  /// No description provided for @strTabCategories.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفئات'**
+  String get strTabCategories;
+
+  /// No description provided for @strTabBranches.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفروع'**
+  String get strTabBranches;
+
+  /// No description provided for @seasonActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط'**
+  String get seasonActive;
+
+  /// No description provided for @seasonArchived.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤرشف'**
+  String get seasonArchived;
+
+  /// No description provided for @seasonArchive.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرشفة'**
+  String get seasonArchive;
+
+  /// No description provided for @seasonsNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'المواسم تُؤرشف ولا تُحذف.'**
+  String get seasonsNote;
+
+  /// No description provided for @archiveKind.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرشفة — قابلة للتراجع'**
+  String get archiveKind;
+
+  /// No description provided for @archiveTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرشفة موسم {label}؟'**
+  String archiveTitle(String label);
+
+  /// No description provided for @archiveBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تُغلق المجموعات والتسجيلات للقراءة فقط. لا يُحذف شيء.'**
+  String get archiveBody;
+
+  /// No description provided for @archiveLog.
+  ///
+  /// In ar, this message translates to:
+  /// **'تُسجَّل الأرشفة باسمك.'**
+  String get archiveLog;
+
+  /// No description provided for @archiveCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرشفة الموسم'**
+  String get archiveCta;
+
+  /// No description provided for @archivedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُرشف الموسم'**
+  String get archivedToast;
+
+  /// No description provided for @catsOpenDecision.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفئات العمرية والجنس قرار مجلس الإدارة ولم يُتَّخذ بعد. الحقول فارغة عن قصد.'**
+  String get catsOpenDecision;
+
+  /// No description provided for @catAgeGenderUnset.
+  ///
+  /// In ar, this message translates to:
+  /// **'العمر/الجنس: لم يُحدَّد'**
+  String get catAgeGenderUnset;
+
+  /// No description provided for @catAgeRange.
+  ///
+  /// In ar, this message translates to:
+  /// **'{min}–{max} سنة'**
+  String catAgeRange(int min, int max);
+
+  /// No description provided for @genderBoys.
+  ///
+  /// In ar, this message translates to:
+  /// **'ذكور'**
+  String get genderBoys;
+
+  /// No description provided for @genderGirls.
+  ///
+  /// In ar, this message translates to:
+  /// **'إناث'**
+  String get genderGirls;
+
+  /// No description provided for @genderMixed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مختلط'**
+  String get genderMixed;
+
+  /// No description provided for @branchesNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'فرع واحد اليوم. عند إضافة ثانٍ يظهر محدِّد الفرع للمشرفين.'**
+  String get branchesNote;
+
+  /// No description provided for @newBranch.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ فرع جديد'**
+  String get newBranch;
+
+  /// No description provided for @branchNameHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم الفرع'**
+  String get branchNameHint;
+
+  /// No description provided for @branchAddressHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'العنوان'**
+  String get branchAddressHint;
+
+  /// No description provided for @branchCreatedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُنشئ الفرع'**
+  String get branchCreatedToast;
+
+  /// No description provided for @adminOnlyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا القسم للإداريين فقط'**
+  String get adminOnlyTitle;
+
+  /// No description provided for @adminOnlyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'صلاحيتك: {role}. اطلبها من رئيس الجمعية.'**
+  String adminOnlyBody(String role);
+
+  /// No description provided for @adminOnlyLogged.
+  ///
+  /// In ar, this message translates to:
+  /// **'⦿ محاولة الوصول مسجَّلة — هذا طبيعي.'**
+  String get adminOnlyLogged;
+
+  /// No description provided for @logsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'السجلات'**
+  String get logsTitle;
+
+  /// No description provided for @logTabAudit.
+  ///
+  /// In ar, this message translates to:
+  /// **'التدقيق'**
+  String get logTabAudit;
+
+  /// No description provided for @logTabHealth.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوصول الصحي'**
+  String get logTabHealth;
+
+  /// No description provided for @logsAppendOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'⦿ إضافيّ فقط — لا تعديل ولا حذف. مدة الاحتفاظ:'**
+  String get logsAppendOnly;
+
+  /// No description provided for @retentionUnset.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم تُحدَّد بعد'**
+  String get retentionUnset;
+
+  /// No description provided for @healthLogIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'من عرض المعلومات الصحية لأي طفل ومتى — الوعد الذي يُقطَع عند كل «عرض».'**
+  String get healthLogIntro;
+
+  /// No description provided for @logsEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا سجلات بعد'**
+  String get logsEmpty;
+
+  /// No description provided for @actionLogin.
+  ///
+  /// In ar, this message translates to:
+  /// **'دخول'**
+  String get actionLogin;
+
+  /// No description provided for @actionCorrect.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصحيح حضور'**
+  String get actionCorrect;
+
+  /// No description provided for @actionExport.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصدير'**
+  String get actionExport;
+
+  /// No description provided for @actionHideMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء رسالة'**
+  String get actionHideMessage;
+
+  /// No description provided for @actionHealthView.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض بيانات صحية'**
+  String get actionHealthView;
+
+  /// No description provided for @actionPhoneReveal.
+  ///
+  /// In ar, this message translates to:
+  /// **'إظهار هاتف'**
+  String get actionPhoneReveal;
+
+  /// No description provided for @actionAssign.
+  ///
+  /// In ar, this message translates to:
+  /// **'إسناد'**
+  String get actionAssign;
+
+  /// No description provided for @actionCreate.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنشاء'**
+  String get actionCreate;
+
+  /// No description provided for @actionPublish.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشر إعلان'**
+  String get actionPublish;
+
+  /// No description provided for @actionApprovePost.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد منشور'**
+  String get actionApprovePost;
+
+  /// No description provided for @actionHidePost.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء منشور'**
+  String get actionHidePost;
+
+  /// No description provided for @actionOversightRead.
+  ///
+  /// In ar, this message translates to:
+  /// **'قراءة إشرافية'**
+  String get actionOversightRead;
+
+  /// No description provided for @actionDenied.
+  ///
+  /// In ar, this message translates to:
+  /// **'محاولة وصول مرفوضة'**
+  String get actionDenied;
+
+  /// No description provided for @actionArchive.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرشفة'**
+  String get actionArchive;
+
+  /// No description provided for @actionDismissReport.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض بلاغ'**
+  String get actionDismissReport;
+
+  /// No description provided for @actionInvite.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة دعوة'**
+  String get actionInvite;
+
+  /// No description provided for @actionOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجراء'**
+  String get actionOther;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

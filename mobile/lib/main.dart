@@ -10,6 +10,7 @@ import 'app.dart';
 import 'core/config/app_environment.dart';
 import 'core/l10n/western_digits.dart';
 import 'core/network/api_client_provider.dart';
+import 'core/network/provider_retry.dart';
 import 'core/observability/sentry_scrubber.dart';
 import 'core/router/app_router.dart';
 import 'core/session/session_controller.dart';
@@ -30,6 +31,7 @@ Future<void> main() async {
   ]);
 
   final container = ProviderContainer(
+    retry: raeedProviderRetry,
     overrides: [
       appScreensProvider.overrideWithValue(appScreensTable),
       // The two seams `core` declares and the `auth` feature fills: restoring a

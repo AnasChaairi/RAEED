@@ -395,6 +395,198 @@ final class AttendanceReviewRepositoryProvider
 String _$attendanceReviewRepositoryHash() =>
     r'f7b7e30f3e10265e64345eed2d2ebcbac51c602e';
 
+@ProviderFor(executiveChildrenRepository)
+const executiveChildrenRepositoryProvider =
+    ExecutiveChildrenRepositoryProvider._();
+
+final class ExecutiveChildrenRepositoryProvider
+    extends
+        $FunctionalProvider<
+          ExecutiveChildrenRepository,
+          ExecutiveChildrenRepository,
+          ExecutiveChildrenRepository
+        >
+    with $Provider<ExecutiveChildrenRepository> {
+  const ExecutiveChildrenRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'executiveChildrenRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$executiveChildrenRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<ExecutiveChildrenRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ExecutiveChildrenRepository create(Ref ref) {
+    return executiveChildrenRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ExecutiveChildrenRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ExecutiveChildrenRepository>(value),
+    );
+  }
+}
+
+String _$executiveChildrenRepositoryHash() =>
+    r'2202de5c5b7b933937c3fa8037abdf7ed9003c7b';
+
+@ProviderFor(familiesRepository)
+const familiesRepositoryProvider = FamiliesRepositoryProvider._();
+
+final class FamiliesRepositoryProvider
+    extends
+        $FunctionalProvider<
+          FamiliesRepository,
+          FamiliesRepository,
+          FamiliesRepository
+        >
+    with $Provider<FamiliesRepository> {
+  const FamiliesRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'familiesRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$familiesRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<FamiliesRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  FamiliesRepository create(Ref ref) {
+    return familiesRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FamiliesRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<FamiliesRepository>(value),
+    );
+  }
+}
+
+String _$familiesRepositoryHash() =>
+    r'eecb161336f7334e0472e530007bb6352b0162f5';
+
+@ProviderFor(reportsRepository)
+const reportsRepositoryProvider = ReportsRepositoryProvider._();
+
+final class ReportsRepositoryProvider
+    extends
+        $FunctionalProvider<
+          ReportsRepository,
+          ReportsRepository,
+          ReportsRepository
+        >
+    with $Provider<ReportsRepository> {
+  const ReportsRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'reportsRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$reportsRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<ReportsRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ReportsRepository create(Ref ref) {
+    return reportsRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ReportsRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ReportsRepository>(value),
+    );
+  }
+}
+
+String _$reportsRepositoryHash() => r'd1f813080214064b4a18070003438db457951527';
+
+@ProviderFor(structureRepository)
+const structureRepositoryProvider = StructureRepositoryProvider._();
+
+final class StructureRepositoryProvider
+    extends
+        $FunctionalProvider<
+          StructureRepository,
+          StructureRepository,
+          StructureRepository
+        >
+    with $Provider<StructureRepository> {
+  const StructureRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'structureRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$structureRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<StructureRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  StructureRepository create(Ref ref) {
+    return structureRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(StructureRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<StructureRepository>(value),
+    );
+  }
+}
+
+String _$structureRepositoryHash() =>
+    r'e206e42a6af1aa33d58c8ab9c03b06a11650c032';
+
 /// Which tab the shell shows.
 ///
 /// Held outside the shell widget so an alert card, a push, or a deep link
@@ -1430,3 +1622,679 @@ final class ExecutiveTabBadgesProvider
 
 String _$executiveTabBadgesHash() =>
     r'ac842a5959cd74999c4d5a93056bf9cfef3f5256';
+
+/// The executive's children list, filtered server-side.
+
+@ProviderFor(executiveChildren)
+const executiveChildrenProvider = ExecutiveChildrenFamily._();
+
+/// The executive's children list, filtered server-side.
+
+final class ExecutiveChildrenProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<ExecutiveChildSummary>>,
+          List<ExecutiveChildSummary>,
+          FutureOr<List<ExecutiveChildSummary>>
+        >
+    with
+        $FutureModifier<List<ExecutiveChildSummary>>,
+        $FutureProvider<List<ExecutiveChildSummary>> {
+  /// The executive's children list, filtered server-side.
+  const ExecutiveChildrenProvider._({
+    required ExecutiveChildrenFamily super.from,
+    required ({String? query, String? categoryId}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'executiveChildrenProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$executiveChildrenHash();
+
+  @override
+  String toString() {
+    return r'executiveChildrenProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<ExecutiveChildSummary>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<ExecutiveChildSummary>> create(Ref ref) {
+    final argument = this.argument as ({String? query, String? categoryId});
+    return executiveChildren(
+      ref,
+      query: argument.query,
+      categoryId: argument.categoryId,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExecutiveChildrenProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$executiveChildrenHash() => r'903cf143f1864e4b23ed0c277c29d26c1d820f8c';
+
+/// The executive's children list, filtered server-side.
+
+final class ExecutiveChildrenFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<List<ExecutiveChildSummary>>,
+          ({String? query, String? categoryId})
+        > {
+  const ExecutiveChildrenFamily._()
+    : super(
+        retry: null,
+        name: r'executiveChildrenProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// The executive's children list, filtered server-side.
+
+  ExecutiveChildrenProvider call({String? query, String? categoryId}) =>
+      ExecutiveChildrenProvider._(
+        argument: (query: query, categoryId: categoryId),
+        from: this,
+      );
+
+  @override
+  String toString() => r'executiveChildrenProvider';
+}
+
+/// Children with no current main group.
+
+@ProviderFor(unassignedChildren)
+const unassignedChildrenProvider = UnassignedChildrenProvider._();
+
+/// Children with no current main group.
+
+final class UnassignedChildrenProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<ExecutiveChildSummary>>,
+          List<ExecutiveChildSummary>,
+          FutureOr<List<ExecutiveChildSummary>>
+        >
+    with
+        $FutureModifier<List<ExecutiveChildSummary>>,
+        $FutureProvider<List<ExecutiveChildSummary>> {
+  /// Children with no current main group.
+  const UnassignedChildrenProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'unassignedChildrenProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$unassignedChildrenHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<ExecutiveChildSummary>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<ExecutiveChildSummary>> create(Ref ref) {
+    return unassignedChildren(ref);
+  }
+}
+
+String _$unassignedChildrenHash() =>
+    r'f9765f1b0af69598126c2094d7881d8ee8816d0b';
+
+/// The categories, for filter chips and forms.
+
+@ProviderFor(categories)
+const categoriesProvider = CategoriesProvider._();
+
+/// The categories, for filter chips and forms.
+
+final class CategoriesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Category>>,
+          List<Category>,
+          FutureOr<List<Category>>
+        >
+    with $FutureModifier<List<Category>>, $FutureProvider<List<Category>> {
+  /// The categories, for filter chips and forms.
+  const CategoriesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'categoriesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$categoriesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Category>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Category>> create(Ref ref) {
+    return categories(ref);
+  }
+}
+
+String _$categoriesHash() => r'bfc5008c673031093b894b9e2c38959ebb904795';
+
+@ProviderFor(executiveChildProfile)
+const executiveChildProfileProvider = ExecutiveChildProfileFamily._();
+
+final class ExecutiveChildProfileProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<ExecutiveChildProfile>,
+          ExecutiveChildProfile,
+          FutureOr<ExecutiveChildProfile>
+        >
+    with
+        $FutureModifier<ExecutiveChildProfile>,
+        $FutureProvider<ExecutiveChildProfile> {
+  const ExecutiveChildProfileProvider._({
+    required ExecutiveChildProfileFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'executiveChildProfileProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$executiveChildProfileHash();
+
+  @override
+  String toString() {
+    return r'executiveChildProfileProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<ExecutiveChildProfile> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<ExecutiveChildProfile> create(Ref ref) {
+    final argument = this.argument as String;
+    return executiveChildProfile(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExecutiveChildProfileProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$executiveChildProfileHash() =>
+    r'58f153b8ff5b066923ce9c56d3bd61ac2d97111b';
+
+final class ExecutiveChildProfileFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<ExecutiveChildProfile>, String> {
+  const ExecutiveChildProfileFamily._()
+    : super(
+        retry: null,
+        name: r'executiveChildProfileProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  ExecutiveChildProfileProvider call(String childId) =>
+      ExecutiveChildProfileProvider._(argument: childId, from: this);
+
+  @override
+  String toString() => r'executiveChildProfileProvider';
+}
+
+@ProviderFor(families)
+const familiesProvider = FamiliesProvider._();
+
+final class FamiliesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Family>>,
+          List<Family>,
+          FutureOr<List<Family>>
+        >
+    with $FutureModifier<List<Family>>, $FutureProvider<List<Family>> {
+  const FamiliesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'familiesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$familiesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Family>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Family>> create(Ref ref) {
+    return families(ref);
+  }
+}
+
+String _$familiesHash() => r'36145b3673c8b74e77f4eeaf4c68eb6288fc94e1';
+
+@ProviderFor(educators)
+const educatorsProvider = EducatorsProvider._();
+
+final class EducatorsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Educator>>,
+          List<Educator>,
+          FutureOr<List<Educator>>
+        >
+    with $FutureModifier<List<Educator>>, $FutureProvider<List<Educator>> {
+  const EducatorsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'educatorsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$educatorsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Educator>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Educator>> create(Ref ref) {
+    return educators(ref);
+  }
+}
+
+String _$educatorsHash() => r'81337890e4c52433f6455e09d63e89f0be576aca';
+
+/// Which children on the unassigned list are ticked.
+
+@ProviderFor(UnassignedSelection)
+const unassignedSelectionProvider = UnassignedSelectionProvider._();
+
+/// Which children on the unassigned list are ticked.
+final class UnassignedSelectionProvider
+    extends $NotifierProvider<UnassignedSelection, Set<String>> {
+  /// Which children on the unassigned list are ticked.
+  const UnassignedSelectionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'unassignedSelectionProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$unassignedSelectionHash();
+
+  @$internal
+  @override
+  UnassignedSelection create() => UnassignedSelection();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Set<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Set<String>>(value),
+    );
+  }
+}
+
+String _$unassignedSelectionHash() =>
+    r'8321bc701f92d38fb4fd1c9a943d36fd99181203';
+
+/// Which children on the unassigned list are ticked.
+
+abstract class _$UnassignedSelection extends $Notifier<Set<String>> {
+  Set<String> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<Set<String>, Set<String>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Set<String>, Set<String>>,
+              Set<String>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+@ProviderFor(attendanceReport)
+const attendanceReportProvider = AttendanceReportProvider._();
+
+final class AttendanceReportProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<AttendanceReport>,
+          AttendanceReport,
+          FutureOr<AttendanceReport>
+        >
+    with $FutureModifier<AttendanceReport>, $FutureProvider<AttendanceReport> {
+  const AttendanceReportProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'attendanceReportProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$attendanceReportHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<AttendanceReport> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<AttendanceReport> create(Ref ref) {
+    return attendanceReport(ref);
+  }
+}
+
+String _$attendanceReportHash() => r'83427ed2b365e694453ad87d6f986b7e1d3b45d4';
+
+@ProviderFor(educatorActivity)
+const educatorActivityProvider = EducatorActivityProvider._();
+
+final class EducatorActivityProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<EducatorActivity>>,
+          List<EducatorActivity>,
+          FutureOr<List<EducatorActivity>>
+        >
+    with
+        $FutureModifier<List<EducatorActivity>>,
+        $FutureProvider<List<EducatorActivity>> {
+  const EducatorActivityProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'educatorActivityProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$educatorActivityHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<EducatorActivity>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<EducatorActivity>> create(Ref ref) {
+    return educatorActivity(ref);
+  }
+}
+
+String _$educatorActivityHash() => r'018a9ea06045c040da78faf341f84b606a71a959';
+
+@ProviderFor(engagementReport)
+const engagementReportProvider = EngagementReportProvider._();
+
+final class EngagementReportProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<EngagementReport>,
+          EngagementReport,
+          FutureOr<EngagementReport>
+        >
+    with $FutureModifier<EngagementReport>, $FutureProvider<EngagementReport> {
+  const EngagementReportProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'engagementReportProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$engagementReportHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<EngagementReport> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<EngagementReport> create(Ref ref) {
+    return engagementReport(ref);
+  }
+}
+
+String _$engagementReportHash() => r'809216cddce6dbc900eae17089c8328c89a63aca';
+
+@ProviderFor(seasons)
+const seasonsProvider = SeasonsProvider._();
+
+final class SeasonsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Season>>,
+          List<Season>,
+          FutureOr<List<Season>>
+        >
+    with $FutureModifier<List<Season>>, $FutureProvider<List<Season>> {
+  const SeasonsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'seasonsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$seasonsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Season>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Season>> create(Ref ref) {
+    return seasons(ref);
+  }
+}
+
+String _$seasonsHash() => r'a08b35f9f2d86b0627a8d430e45e39b58f1d2523';
+
+@ProviderFor(branches)
+const branchesProvider = BranchesProvider._();
+
+final class BranchesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Branch>>,
+          List<Branch>,
+          FutureOr<List<Branch>>
+        >
+    with $FutureModifier<List<Branch>>, $FutureProvider<List<Branch>> {
+  const BranchesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'branchesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$branchesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Branch>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Branch>> create(Ref ref) {
+    return branches(ref);
+  }
+}
+
+String _$branchesHash() => r'a3588da7d03f4a115cb66e95830c4607ceff037b';
+
+@ProviderFor(auditLog)
+const auditLogProvider = AuditLogFamily._();
+
+final class AuditLogProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<AuditEntry>>,
+          List<AuditEntry>,
+          FutureOr<List<AuditEntry>>
+        >
+    with $FutureModifier<List<AuditEntry>>, $FutureProvider<List<AuditEntry>> {
+  const AuditLogProvider._({
+    required AuditLogFamily super.from,
+    required String? super.argument,
+  }) : super(
+         retry: null,
+         name: r'auditLogProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$auditLogHash();
+
+  @override
+  String toString() {
+    return r'auditLogProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<AuditEntry>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<AuditEntry>> create(Ref ref) {
+    final argument = this.argument as String?;
+    return auditLog(ref, action: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is AuditLogProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$auditLogHash() => r'6a9fbb404e720f41e1f96ff5e802b6debbf68c4e';
+
+final class AuditLogFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<AuditEntry>>, String?> {
+  const AuditLogFamily._()
+    : super(
+        retry: null,
+        name: r'auditLogProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  AuditLogProvider call({String? action}) =>
+      AuditLogProvider._(argument: action, from: this);
+
+  @override
+  String toString() => r'auditLogProvider';
+}

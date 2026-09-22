@@ -110,6 +110,20 @@ String? _abilityRedirect({required AppSession session, required String path}) {
       AbilityAction.create,
       const ResourceRef.type(AbilitySubject.announcement),
     ),
+    // The More sections are oversight surfaces: the children list, families
+    // and groups, reports. Structure and logs are checked *server-side* on
+    // purpose — a non-admin executive opening them sees the "admins only"
+    // card and the attempt is recorded, as the card says.
+    AppRoutes.childrenList ||
+    AppRoutes.manage ||
+    AppRoutes.manageNewGroup ||
+    AppRoutes.manageNewFamily ||
+    AppRoutes.reports ||
+    AppRoutes.structure ||
+    AppRoutes.logs => (
+      AbilityAction.read,
+      const ResourceRef.type(AbilitySubject.dashboard),
+    ),
     _ => null,
   };
 

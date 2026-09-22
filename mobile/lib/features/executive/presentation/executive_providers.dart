@@ -2,17 +2,20 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/error/raeed_exception.dart';
 import '../../../core/network/api_client_provider.dart';
-import '../../children/domain/child.dart';
 import '../../children/presentation/home_providers.dart';
 import '../application/executive_tab_badges.dart';
 import '../application/order_alerts.dart';
 import '../data/attendance_review_repository_api.dart';
 import '../data/dashboard_repository_api.dart';
 import '../data/executive_announcements_repository_api.dart';
+import '../data/executive_children_repository_api.dart';
+import '../data/families_repository_api.dart';
 import '../data/groups_repository_api.dart';
 import '../data/memories_review_repository_api.dart';
 import '../data/messages_repository_api.dart';
 import '../data/notifications_repository_api.dart';
+import '../data/reports_repository_api.dart';
+import '../data/structure_repository_api.dart';
 import '../domain/announcement_draft.dart';
 import '../domain/attendance_review.dart';
 import '../domain/attendance_review_repository.dart';
@@ -20,13 +23,21 @@ import '../domain/conversation.dart';
 import '../domain/dashboard_overview.dart';
 import '../domain/dashboard_repository.dart';
 import '../domain/executive_announcements_repository.dart';
+import '../domain/executive_child.dart';
+import '../domain/executive_children_repository.dart';
 import '../domain/executive_group.dart';
+import '../domain/families_repository.dart';
+import '../domain/family.dart';
 import '../domain/groups_repository.dart';
 import '../domain/memories_review.dart';
 import '../domain/memories_review_repository.dart';
 import '../domain/messages_repository.dart';
 import '../domain/notification_item.dart';
 import '../domain/notifications_repository.dart';
+import '../domain/reports.dart';
+import '../domain/reports_repository.dart';
+import '../domain/structure.dart';
+import '../domain/structure_repository.dart';
 
 part 'executive_providers.g.dart';
 
@@ -63,6 +74,22 @@ NotificationsRepository notificationsRepository(Ref ref) =>
 @Riverpod(keepAlive: true)
 AttendanceReviewRepository attendanceReviewRepository(Ref ref) =>
     ApiAttendanceReviewRepository(ref.watch(apiClientProvider));
+
+@Riverpod(keepAlive: true)
+ExecutiveChildrenRepository executiveChildrenRepository(Ref ref) =>
+    ApiExecutiveChildrenRepository(ref.watch(apiClientProvider));
+
+@Riverpod(keepAlive: true)
+FamiliesRepository familiesRepository(Ref ref) =>
+    ApiFamiliesRepository(ref.watch(apiClientProvider));
+
+@Riverpod(keepAlive: true)
+ReportsRepository reportsRepository(Ref ref) =>
+    ApiReportsRepository(ref.watch(apiClientProvider));
+
+@Riverpod(keepAlive: true)
+StructureRepository structureRepository(Ref ref) =>
+    ApiStructureRepository(ref.watch(apiClientProvider));
 
 // --- The shell --------------------------------------------------------------
 
@@ -394,3 +421,83 @@ ExecutiveTabBadges executiveTabBadges(Ref ref) => ExecutiveTabBadges.from(
   queue: ref.watch(reviewQueueControllerProvider).value,
   conversations: ref.watch(conversationsControllerProvider).value,
 );
+
+// --- Children (EXEC-M-08/09) --------------------------------------------------
+
+/// The executive's children list, filtered server-side.
+@riverpod
+Future<List<ExecutiveChildSummary>> executiveChildren(
+  Ref ref, {
+  String? query,
+  String? categoryId,
+}) => ref
+    .watch(executiveChildrenRepositoryProvider)
+    .fetchChildren(query: query, categoryId: categoryId);
+
+/// Children with no current main group.
+@riverpod
+Future<List<ExecutiveChildSummary>> unassignedChildren(Ref ref) => ref
+    .watch(executiveChildrenRepositoryProvider)
+    .fetchChildren(unassigned: true);
+
+/// The categories, for filter chips and forms.
+@riverpod
+Future<List<Category>> categories(Ref ref) =>
+    ref.watch(structureRepositoryProvider).fetchCategories();
+
+@riverpod
+Future<ExecutiveChildProfile> executiveChildProfile(Ref ref, String childId) =>
+    ref.watch(executiveChildrenRepositoryProvider).fetchProfile(childId);
+
+// --- Families & groups (EXEC-M-10) ------------------------------------------------
+
+@riverpod
+Future<List<Family>> families(Ref ref) =>
+    ref.watch(familiesRepositoryProvider).fetchFamilies();
+
+@riverpod
+Future<List<Educator>> educators(Ref ref) =>
+    ref.watch(familiesRepositoryProvider).fetchEducators();
+
+/// Which children on the unassigned list are ticked.
+@riverpod
+class UnassignedSelection extends _$UnassignedSelection {
+  @override
+  Set<String> build() => const {};
+
+  void toggle(String childId) {
+    final next = Set<String>.of(state);
+    if (!next.remove(childId)) next.add(childId);
+    state = next;
+  }
+
+  void clear() => state = const {};
+}
+
+// --- Reports (EXEC-M-11) -----------------------------------------------------------
+
+@riverpod
+Future<AttendanceReport> attendanceReport(Ref ref) =>
+    ref.watch(reportsRepositoryProvider).fetchAttendance();
+
+@riverpod
+Future<List<EducatorActivity>> educatorActivity(Ref ref) =>
+    ref.watch(reportsRepositoryProvider).fetchEducators();
+
+@riverpod
+Future<EngagementReport> engagementReport(Ref ref) =>
+    ref.watch(reportsRepositoryProvider).fetchEngagement();
+
+// --- Structure & logs (EXEC-M-12/13) ---------------------------------------------------
+
+@riverpod
+Future<List<Season>> seasons(Ref ref) =>
+    ref.watch(structureRepositoryProvider).fetchSeasons();
+
+@riverpod
+Future<List<Branch>> branches(Ref ref) =>
+    ref.watch(structureRepositoryProvider).fetchBranches();
+
+@riverpod
+Future<List<AuditEntry>> auditLog(Ref ref, {String? action}) =>
+    ref.watch(structureRepositoryProvider).fetchAuditLog(action: action);

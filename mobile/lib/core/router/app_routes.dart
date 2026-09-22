@@ -88,6 +88,31 @@ abstract final class AppRoutes {
   static const String more = '/more';
   static const String moreName = 'more';
 
+  /// The executive's children list (EXEC-M-08).
+  static const String childrenList = '/children';
+  static const String childrenListName = 'childrenList';
+
+  /// Families and groups management (EXEC-M-10).
+  static const String manage = '/manage';
+  static const String manageName = 'manage';
+  static const String manageNewGroup = '/manage/groups/new';
+  static const String manageNewGroupName = 'manageNewGroup';
+  static const String manageNewFamily = '/manage/families/new';
+  static const String manageNewFamilyName = 'manageNewFamily';
+  static const String manageTabParam = 'tab';
+
+  /// Reports and export (EXEC-M-11).
+  static const String reports = '/reports';
+  static const String reportsName = 'reports';
+
+  /// Structure — seasons, categories, branches (EXEC-M-12, admin).
+  static const String structure = '/structure';
+  static const String structureName = 'structure';
+
+  /// The audit log (EXEC-M-13, admin).
+  static const String logs = '/logs';
+  static const String logsName = 'logs';
+
   /// The executive's after-the-fact attendance review for one session, with
   /// the correction flow and its visible history (EXEC-M-05).
   static const String attendanceReview =
@@ -118,6 +143,9 @@ abstract final class AppRoutes {
 
   /// Path to the executive shell opened on [tab].
   static String dashboardTabPath(String tab) => '/dashboard?tab=$tab';
+
+  /// Path to the families & groups hub opened on [tab].
+  static String manageTabPath(String tab) => '/manage?tab=$tab';
 
   /// Path to the attendance review for [sessionId] within [groupId].
   static String attendanceReviewPath(String groupId, String sessionId) =>
