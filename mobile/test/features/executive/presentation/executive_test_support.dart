@@ -6,6 +6,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:raeed/core/authorization/raeed_role.dart';
 import 'package:raeed/core/l10n/generated/app_localizations.dart';
 import 'package:raeed/core/network/api_envelope.dart';
+import 'package:raeed/core/network/provider_retry.dart';
 import 'package:raeed/core/session/app_session.dart';
 import 'package:raeed/core/session/session_controller.dart';
 import 'package:raeed/core/session/token_store.dart';
@@ -17,11 +18,17 @@ import 'package:raeed/features/executive/domain/attendance_review_repository.dar
 import 'package:raeed/features/executive/domain/dashboard_overview.dart';
 import 'package:raeed/features/executive/domain/dashboard_repository.dart';
 import 'package:raeed/features/executive/domain/executive_announcements_repository.dart';
+import 'package:raeed/features/executive/domain/executive_children_repository.dart';
+import 'package:raeed/features/executive/domain/families_repository.dart';
+import 'package:raeed/features/executive/domain/family.dart';
 import 'package:raeed/features/executive/domain/groups_repository.dart';
 import 'package:raeed/features/executive/domain/memories_review.dart';
 import 'package:raeed/features/executive/domain/memories_review_repository.dart';
 import 'package:raeed/features/executive/domain/messages_repository.dart';
 import 'package:raeed/features/executive/domain/notifications_repository.dart';
+import 'package:raeed/features/executive/domain/reports.dart';
+import 'package:raeed/features/executive/domain/reports_repository.dart';
+import 'package:raeed/features/executive/domain/structure_repository.dart';
 import 'package:raeed/features/executive/presentation/executive_providers.dart';
 
 class MockDashboardRepository extends Mock implements DashboardRepository {}
@@ -43,6 +50,15 @@ class MockAttendanceReviewRepository extends Mock
     implements AttendanceReviewRepository {}
 
 class MockChildrenRepository extends Mock implements ChildrenRepository {}
+
+class MockExecutiveChildrenRepository extends Mock
+    implements ExecutiveChildrenRepository {}
+
+class MockFamiliesRepository extends Mock implements FamiliesRepository {}
+
+class MockReportsRepository extends Mock implements ReportsRepository {}
+
+class MockStructureRepository extends Mock implements StructureRepository {}
 
 class _NoSessionBootstrapper implements SessionBootstrapper {
   const _NoSessionBootstrapper();
@@ -85,6 +101,27 @@ class ExecutiveMocks {
         groupId: any(named: 'groupId'),
       ),
     ).thenAnswer((_) async => const Paginated.empty());
+    registerFallbackValue(const FamilyDraft());
+    registerFallbackValue(const GroupDraft());
+    registerFallbackValue(<ExportField>{});
+    when(
+      () => executiveChildren.fetchChildren(
+        query: any(named: 'query'),
+        categoryId: any(named: 'categoryId'),
+        unassigned: any(named: 'unassigned'),
+      ),
+    ).thenAnswer((_) async => const []);
+    when(() => families.fetchFamilies()).thenAnswer((_) async => const []);
+    when(() => families.fetchEducators()).thenAnswer((_) async => const []);
+    when(() => reports.fetchAttendance()).thenAnswer(
+      (_) async => const AttendanceReport(byEducator: [], byCategory: []),
+    );
+    when(() => reports.fetchEducators()).thenAnswer((_) async => const []);
+    when(() => structure.fetchCategories()).thenAnswer((_) async => const []);
+    when(() => structure.fetchSeasons()).thenAnswer((_) async => const []);
+    when(() => structure.fetchBranches()).thenAnswer((_) async => const []);
+    when(() => structure.fetchAuditLog(action: any(named: 'action')))
+        .thenAnswer((_) async => const []);
   }
 
   final dashboard = MockDashboardRepository();
@@ -95,9 +132,14 @@ class ExecutiveMocks {
   final notifications = MockNotificationsRepository();
   final attendanceReview = MockAttendanceReviewRepository();
   final children = MockChildrenRepository();
+  final executiveChildren = MockExecutiveChildrenRepository();
+  final families = MockFamiliesRepository();
+  final reports = MockReportsRepository();
+  final structure = MockStructureRepository();
 
   /// A fresh container wired to these mocks.
   ProviderContainer container() => ProviderContainer(
+    retry: raeedProviderRetry,
     overrides: [
       tokenStoreProvider.overrideWithValue(InMemoryTokenStore()),
       sessionBootstrapperProvider.overrideWithValue(
@@ -111,6 +153,10 @@ class ExecutiveMocks {
       notificationsRepositoryProvider.overrideWithValue(notifications),
       attendanceReviewRepositoryProvider.overrideWithValue(attendanceReview),
       childrenRepositoryProvider.overrideWithValue(children),
+      executiveChildrenRepositoryProvider.overrideWithValue(executiveChildren),
+      familiesRepositoryProvider.overrideWithValue(families),
+      reportsRepositoryProvider.overrideWithValue(reports),
+      structureRepositoryProvider.overrideWithValue(structure),
     ],
   );
 }
