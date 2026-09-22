@@ -61,6 +61,7 @@ create table app_user (
   id uuid primary key default gen_random_uuid(),
   phone text unique,                 -- E.164, e.g. +2126XXXXXXXX
   email text unique,
+  display_name text,                 -- shown wherever a person is named; never the phone (MSG-06)
   preferred_locale text not null default 'ar' check (preferred_locale in ('ar','fr','en')),
   is_active boolean not null default true,   -- ACC-07: flips to false on deactivation
   created_at timestamptz not null default now(),

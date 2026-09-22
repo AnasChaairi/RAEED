@@ -15,6 +15,10 @@ export interface ChildListItem {
   group: { id: string; name: string } | null;
   /** Presence-only flag. The health text itself is never in a list payload. */
   health_alert: boolean;
+
+  /** Oversight callers only — see `list`. */
+  image_rights_level?: 'allowed' | 'app_only' | 'not_allowed';
+  attendance?: { present: number; expected: number } | null;
 }
 
 export interface ChildDetailView extends ChildListItem {
@@ -37,7 +41,14 @@ export class ChildrenService {
    */
   async list(
     user: AuthenticatedUser,
-    options: { groupId?: string; limit: number; cursor?: string },
+    options: {
+      groupId?: string;
+      categoryId?: string;
+      query?: string;
+      unassigned?: boolean;
+      limit: number;
+      cursor?: string;
+    },
   ): Promise<{ items: ChildListItem[]; nextCursor: string | null }> {
     const params: unknown[] = [];
     const where: string[] = ['c.deleted_at is null'];
@@ -56,6 +67,19 @@ export class ChildrenService {
     if (options.groupId) {
       params.push(options.groupId);
       where.push(`cg.group_id = $${params.length}`);
+    }
+    if (options.categoryId) {
+      params.push(options.categoryId);
+      where.push(`g.category_id = $${params.length}`);
+    }
+    if (options.query?.trim()) {
+      params.push(`%${options.query.trim()}%`);
+      where.push(`c.full_name ilike $${params.length}`);
+    }
+    if (options.unassigned) {
+      // No current main group — the "بلا مجموعة" list the executive assigns
+      // from. Left-joined below, so this is simply "the join found nothing".
+      where.push('g.id is null');
     }
 
     // Cursor pagination, not offset: offset breaks under concurrent writes on
@@ -76,12 +100,16 @@ export class ChildrenService {
       group_id: string | null;
       group_name: string | null;
       health_alert: boolean;
+      image_rights_level: 'allowed' | 'app_only' | 'not_allowed' | null;
+      present: number | null;
+      expected: number | null;
     }> = await this.dataSource.query(
       `select c.id, c.full_name, c.photo_url, c.dob,
               g.id as group_id, g.name as group_name,
-              (c.health_json is not null and c.health_json <> '{}'::jsonb) as health_alert
+              (c.health_json is not null and c.health_json <> '{}'::jsonb) as health_alert,
+              ${user.hasOversight ? this.oversightColumns() : 'null as image_rights_level, null as present, null as expected'}
          from child c
-         left join child_group cg on cg.child_id = c.id and cg.valid_to is null
+         left join child_group cg on cg.child_id = c.id and cg.valid_to is null and cg.is_main
          left join "group" g on g.id = cg.group_id
         where ${where.join(' and ')}
         order by c.full_name, c.id
@@ -103,6 +131,17 @@ export class ChildrenService {
             ? { id: row.group_id, name: row.group_name }
             : null,
         health_alert: row.health_alert,
+        // Oversight-only columns: a guardian's list never carries another
+        // family's consent level or attendance.
+        ...(user.hasOversight
+          ? {
+              image_rights_level: row.image_rights_level ?? 'not_allowed',
+              attendance:
+                row.expected !== null
+                  ? { present: row.present ?? 0, expected: row.expected }
+                  : null,
+            }
+          : {}),
       })),
       nextCursor:
         hasMore && page.length > 0
@@ -161,9 +200,41 @@ export class ChildrenService {
           ? { id: row.group_id, name: row.group_name }
           : null,
       health_alert: Object.keys(row.health_json ?? {}).length > 0,
-      health_json: row.health_json ?? {},
+      // An executive does not get the health text here. Their read of it is
+      // a deliberate, separately logged act (`AUD-03`): `GET /children/{id}/health`.
+      // A guardian's or educator's read is theirs by relationship.
+      health_json: user.hasOversight ? {} : (row.health_json ?? {}),
       image_rights_level: await this.currentImageRights(childId),
     };
+  }
+
+  /**
+   * The per-child columns only an executive's list shows: the effective
+   * image-rights level (most restrictive current guardian consent) and this
+   * season's attendance against the sessions that already took place.
+   */
+  private oversightColumns(): string {
+    return `coalesce((
+                select case when bool_or(l.level = 'not_allowed') then 'not_allowed'
+                            when bool_or(l.level = 'app_only') then 'app_only'
+                            else 'allowed' end
+                  from (select distinct on (cr.guardian_id) cr.level
+                          from consent_record cr
+                         where cr.child_id = c.id and cr.type = 'image_rights' and cr.level is not null
+                         order by cr.guardian_id, cr.effective_at desc) l), 'not_allowed') as image_rights_level,
+              (select count(*) from attendance_record ar
+                 join session s on s.id = ar.session_id
+                 join child_group cg2 on cg2.group_id = s.group_id and cg2.child_id = c.id
+                where ar.child_id = c.id and ar.superseded_at is null
+                  and ar.status in ('present', 'late')
+                  and s.deleted_at is null
+                  and s.starts_at >= cg2.valid_from
+                  and (cg2.valid_to is null or s.starts_at < cg2.valid_to))::int as present,
+              (select count(*) from session s
+                 join child_group cg2 on cg2.group_id = s.group_id and cg2.child_id = c.id
+                where s.deleted_at is null and s.status <> 'cancelled' and s.ends_at < now()
+                  and s.starts_at >= cg2.valid_from
+                  and (cg2.valid_to is null or s.starts_at < cg2.valid_to))::int as expected`;
   }
 
   /**

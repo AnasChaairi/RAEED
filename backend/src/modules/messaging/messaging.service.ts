@@ -6,6 +6,7 @@ import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
 import { defineAbilityFor, subject } from '../../common/abilities/define-ability';
 import { Locale, loadLocale, pick } from '../../common/i18n/user-locale';
 import { ApiError } from '../../common/http/api-error';
+import { displayNameOf } from '../../common/sql/display-name';
 import { RoleName } from '../identity/entities/role-assignment.entity';
 
 export type ConversationType = 'child' | 'staff' | 'executive';
@@ -25,7 +26,7 @@ export interface ConversationDetailView {
   type: ConversationType;
   title: string;
   is_member: boolean;
-  /** Role words, since `app_user` carries no display name yet — never a phone. */
+  /** "سعاد (الأم)" — a name and a role word, never a phone (`MSG-06`). */
   members: Array<{ id: string; label: string; role: RoleName | null }>;
 }
 
@@ -146,11 +147,14 @@ export class MessagingService {
       type: row.type,
       title: this.titleOf(row, locale),
       is_member: this.isMember(user, row),
-      members: members.map((member) => ({
-        id: member.id,
-        role: member.role,
-        label: this.roleLabel(locale, member.role, member.relationship),
-      })),
+      members: members.map((member) => {
+        const roleWord = this.roleLabel(locale, member.role, member.relationship);
+        return {
+          id: member.id,
+          role: member.role,
+          label: member.display_name ? `${member.display_name} (${roleWord})` : roleWord,
+        };
+      }),
     };
   }
 
@@ -188,9 +192,15 @@ export class MessagingService {
       report_id: string | null;
       reported_by: string | null;
       reason: string | null;
+      sender_name: string;
+      hidden_by_name: string;
+      reporter_name: string;
     }> = await this.dataSource.query(
       `select m.id, m.sender_id, m.kind, m.body, m.hidden_at, m.hidden_by, m.created_at,
               ${this.roleSubquery('m.sender_id')} as sender_role,
+              ${displayNameOf('m.sender_id')} as sender_name,
+              coalesce(${displayNameOf('m.hidden_by')}, '') as hidden_by_name,
+              coalesce(${displayNameOf('r.reported_by')}, '') as reporter_name,
               r.id as report_id, r.reported_by, r.reason
          from message m
          left join lateral (
@@ -208,7 +218,7 @@ export class MessagingService {
 
     return rows.map((message) => ({
       id: message.id,
-      sender: { id: message.sender_id, display_name: '', role: message.sender_role },
+      sender: { id: message.sender_id, display_name: message.sender_name ?? '', role: message.sender_role },
       kind: message.kind,
       // A hidden message's text stays visible to oversight, marked as
       // hidden; members get the stub with no body.
@@ -217,7 +227,7 @@ export class MessagingService {
       created_at: message.created_at.toISOString(),
       hidden: message.hidden_at
         ? {
-            by_name: '',
+            by_name: message.hidden_by_name ?? '',
             by_id: message.hidden_by ?? '',
             at: message.hidden_at.toISOString(),
           }
@@ -226,7 +236,7 @@ export class MessagingService {
         message.report_id && user.hasOversight
           ? {
               id: message.report_id,
-              reporter_name: '',
+              reporter_name: message.reporter_name ?? '',
               reporter_id: message.reported_by ?? '',
               reason: message.reason ?? '',
             }
@@ -240,17 +250,18 @@ export class MessagingService {
     body: string,
   ): Promise<MessageView> {
     const row = await this.loadReadable(user, conversationId);
-    const rows: Array<{ id: string; created_at: Date; role: RoleName | null }> =
+    const rows: Array<{ id: string; created_at: Date; role: RoleName | null; name: string }> =
       await this.dataSource.query(
         `insert into message (conversation_id, sender_id, kind, body)
          values ($1, $2, 'text', $3)
-         returning id, created_at, ${this.roleSubquery('sender_id')} as role`,
+         returning id, created_at, ${this.roleSubquery('sender_id')} as role,
+                   ${displayNameOf('sender_id')} as name`,
         [row.id, user.id, body.trim()],
       );
     const inserted = rows[0];
     return {
       id: inserted.id,
-      sender: { id: user.id, display_name: '', role: inserted.role },
+      sender: { id: user.id, display_name: inserted.name ?? '', role: inserted.role },
       kind: 'text',
       body: body.trim(),
       duration_seconds: null,
@@ -420,30 +431,34 @@ export class MessagingService {
 
   private async members(
     row: ConversationRow,
-  ): Promise<Array<{ id: string; role: RoleName | null; relationship: string | null }>> {
+  ): Promise<
+    Array<{ id: string; display_name: string; role: RoleName | null; relationship: string | null }>
+  > {
+    const name = displayNameOf('u.id');
     switch (row.type) {
       case 'child':
         return this.dataSource.query(
-          `select pc.guardian_user_id as id, 'parent'::text as role, pc.relationship_type as relationship
-             from parent_child pc
+          `select u.id, ${name} as display_name, 'parent'::text as role,
+                  pc.relationship_type as relationship
+             from parent_child pc join app_user u on u.id = pc.guardian_user_id
             where pc.child_id = $1 and pc.unlinked_at is null
            union all
-           select ge.educator_user_id, 'educator', null
-             from group_educator ge
+           select u.id, ${name}, 'educator', null
+             from group_educator ge join app_user u on u.id = ge.educator_user_id
             where ge.group_id = $2 and ge.unassigned_at is null`,
           [row.ref_child_id, row.group_id],
         );
       case 'staff':
         return this.dataSource.query(
-          `select ge.educator_user_id as id, 'educator'::text as role, null::text as relationship
-             from group_educator ge
+          `select u.id, ${name} as display_name, 'educator'::text as role, null::text as relationship
+             from group_educator ge join app_user u on u.id = ge.educator_user_id
             where ge.group_id = $1 and ge.unassigned_at is null`,
           [row.ref_group_id],
         );
       case 'executive':
         return this.dataSource.query(
-          `select distinct ra.user_id as id, ra.role::text as role, null::text as relationship
-             from role_assignment ra
+          `select distinct u.id, ${name} as display_name, ra.role::text as role, null::text as relationship
+             from role_assignment ra join app_user u on u.id = ra.user_id
             where ra.role in ('executive', 'admin')`,
         );
     }
@@ -466,8 +481,10 @@ export class MessagingService {
     if (role === 'parent') {
       switch (relationship) {
         case 'mother':
+        case 'الأم':
           return pick(locale, { ar: 'الأم', fr: 'la mère', en: 'mother' });
         case 'father':
+        case 'الأب':
           return pick(locale, { ar: 'الأب', fr: 'le père', en: 'father' });
         default:
           return pick(locale, { ar: 'ولي الأمر', fr: 'parent', en: 'guardian' });

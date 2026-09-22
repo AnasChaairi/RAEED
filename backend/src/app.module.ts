@@ -8,13 +8,17 @@ import { RedisModule } from './common/redis/redis.module';
 import { HealthController } from './modules/health/health.controller';
 import { AnnouncementsModule } from './modules/announcements/announcements.module';
 import { AttendanceModule } from './modules/attendance/attendance.module';
+import { AuditModule } from './modules/audit/audit.module';
 import { ChildrenModule } from './modules/children/children.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { FamiliesModule } from './modules/families/families.module';
 import { GroupsModule } from './modules/groups/groups.module';
 import { IdentityModule } from './modules/identity/identity.module';
 import { MemoriesModule } from './modules/memories/memories.module';
 import { MessagingModule } from './modules/messaging/messaging.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { ReportsModule } from './modules/reports/reports.module';
+import { StructureModule } from './modules/structure/structure.module';
 
 /**
  * The modular monolith's root (`specs/02-architecture.md`).
@@ -39,6 +43,10 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     DashboardModule,
     MessagingModule,
     MemoriesModule,
+    FamiliesModule,
+    ReportsModule,
+    StructureModule,
+    AuditModule,
   ],
   controllers: [HealthController],
 })

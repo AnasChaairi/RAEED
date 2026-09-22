@@ -6,6 +6,7 @@ import { DataSource, EntityManager } from 'typeorm';
 import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
 import { defineAbilityFor, subject } from '../../common/abilities/define-ability';
 import { ApiError } from '../../common/http/api-error';
+import { displayNameOf } from '../../common/sql/display-name';
 import {
   AbsenceAlertJob,
   CriticalJob,
@@ -41,6 +42,7 @@ export interface AttendanceRecordEntryView {
   id: string;
   status: AttendanceStatus;
   recorded_by: string;
+  recorded_by_name: string;
   recorded_at: string;
   corrected_from: string | null;
   note: string | null;
@@ -176,12 +178,14 @@ export class AttendanceService {
       child_id: string;
       status: AttendanceStatus;
       recorded_by: string;
+      recorded_by_name: string;
       recorded_at: Date;
       corrected_from: string | null;
       note: string | null;
       guardians_notified: boolean;
     }> = await this.dataSource.query(
       `select ar.id, ar.child_id, ar.status, ar.recorded_by, ar.recorded_at,
+              ${displayNameOf('ar.recorded_by')} as recorded_by_name,
               ar.corrected_from, ar.note,
               (ar.status = 'absent' and not exists (
                  select 1
@@ -203,6 +207,7 @@ export class AttendanceService {
         id: row.id,
         status: row.status,
         recorded_by: row.recorded_by,
+        recorded_by_name: row.recorded_by_name ?? '',
         recorded_at: row.recorded_at.toISOString(),
         corrected_from: row.corrected_from,
         note: row.note,
