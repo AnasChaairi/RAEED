@@ -175,6 +175,41 @@ Filter chips (all / critical / requests / memories), one card per notification (
 
 #### EXEC-M-07 · More (`/more`)
 
-Profile card (name, masked phone, branch scope), role switcher when the user holds more than one role (presentation only — abilities stay the union), dark mode, language, the locked critical channel row (absence alerts, urgent announcements and session changes within 24h always arrive), version line. No network call.
+Profile card (name, branch scope), a links card to the sections below (Children · Families & groups with the unassigned count · Reports & export · Structure and Logs, marked admin), role switcher when the user holds more than one role (presentation only — abilities stay the union), dark mode, language, the locked critical channel row, sign out, version line. No network call except the unassigned count.
+
+#### EXEC-M-08 · Children (`/children`)
+
+| | |
+|---|---|
+| Purpose | Find any child, see their group, season attendance and image-rights level at a glance |
+| Components | Search field, category chips, one row per child (name, icon-only health badge, group · attendance, image-rights dot), legend |
+| API | `GET /children?q=&category_id=` (oversight rows carry `image_rights_level` and `attendance`), `GET /categories` |
+| Loading / Empty / Error | Skeleton rows · "no children match" · error view with retry |
+
+#### EXEC-M-09 · Child (executive) (`/children/:id`, oversight role)
+
+| | |
+|---|---|
+| Purpose | The child's whole situation, with the two sensitive reads made deliberate and recorded |
+| Components | Gradient header (name, age, group, school), season attendance and image-rights tiles; **Health** section collapsed → "this view will be recorded" confirm → revealed with the recorded time (`AUD-03`); **Guardians** with account status and a masked phone that reveals on tap, logged (`MSG-06`); **Consents** (privacy policy per guardian, image rights); **Groups** with attendance; "open the child's thread (oversight, logged)" |
+| API | `GET /children/{id}` (no health text for oversight), `GET /children/{id}/health`, `GET /children/{id}/guardians/{gid}/phone` |
+| Loading / Error | Skeleton · error view; `scope.forbidden` renders "not available to you" |
+
+#### EXEC-M-10 · Families & groups (`/manage`, `/manage/groups/new`, `/manage/families/new`)
+
+| | |
+|---|---|
+| Purpose | Put every child in a group, invite every family, create groups |
+| Components | Three tabs — **Unassigned** (multi-select → assign sheet showing each group's capacity after the move, with an over-capacity warning and confirm), **Families** (status chip active / partial / pending, resend invitation, add child), **Groups** (capacity bar, "assign children"); **New group** form (name, category chips, capacity stepper, schedule slot, educators, optional children, checklist, recorded marker); **New family** wizard (guardians → children with main group or "later" → review with what will happen) |
+| API | `GET /children?unassigned=true`, `POST /groups/{id}/children`, `GET /families`, `POST /invitations`, `GET /groups`, `GET /educators`, `GET /categories`, `POST /groups`, `POST /families` |
+| Empty | Unassigned: "every child is in a group" (reassuring) |
+
+#### EXEC-M-11 · Reports & export (`/reports`)
+
+Attendance by educator and by category as percent **with the raw pair**; educators' planned / delivered / marked-on-time; engagement (guardians signed in, presence answers, homework marked "self-reported" and null until it exists); export with field checkboxes, health fields off by default and flagged, the recorded marker naming the fields, then the file offered through the share sheet. `GET /reports/*`, `POST /reports/exports`.
+
+#### EXEC-M-12 · Structure (`/structure`, admin) and EXEC-M-13 · Logs (`/logs`, admin)
+
+Seasons (archive through the reversible confirm; never delete), categories with "age/gender: not set" (open decision #1), branches. Audit log and the health-access view. A non-admin who opens either gets the "admins only" card; the attempt is made and therefore recorded server-side, which the card says.
 
 Remaining screens (calendar, materials library, staff channel, announcement composer, structure/people admin on web) follow the same template; write one before implementing, don't skip it because it "looks simple".
