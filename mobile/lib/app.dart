@@ -17,12 +17,20 @@ import 'features/children/presentation/child_profile_screen.dart';
 import 'features/children/presentation/home_screen.dart';
 import 'features/executive/presentation/announcement_composer_screen.dart';
 import 'features/executive/presentation/attendance_review_screen.dart';
+import 'features/executive/presentation/children_screen.dart';
 import 'features/executive/presentation/conversation_screen.dart';
+import 'features/executive/presentation/executive_child_screen.dart';
 import 'features/executive/presentation/executive_providers.dart';
 import 'features/executive/presentation/executive_shell.dart';
 import 'features/executive/presentation/group_detail_screen.dart';
+import 'features/executive/presentation/logs_screen.dart';
+import 'features/executive/presentation/manage_screen.dart';
 import 'features/executive/presentation/more_screen.dart';
+import 'features/executive/presentation/new_family_screen.dart';
+import 'features/executive/presentation/new_group_screen.dart';
 import 'features/executive/presentation/notifications_screen.dart';
+import 'features/executive/presentation/reports_screen.dart';
+import 'features/executive/presentation/structure_screen.dart';
 import 'shared/widgets/not_found_screen.dart';
 import 'shared/widgets/placeholder_screen.dart';
 import 'shared/widgets/splash_screen.dart';
@@ -122,13 +130,25 @@ final AppScreens appScreensTable = AppScreens(
   otp: (context, state) => const OtpScreen(),
   consent: (context, state) => const ConsentScreen(),
   home: (context, state) => const HomeScreen(),
-  child: (context, state) => ChildProfileScreen(
-    childId: state.pathParameters['childId'] ?? '',
-    // The sub-tab is the last path segment when one is present.
-    initialTab: ChildProfileTab.fromSlug(
-      state.uri.pathSegments.length > 2 ? state.uri.pathSegments.last : null,
-    ),
-  ),
+  child: (context, state) {
+    final childId = state.pathParameters['childId'] ?? '';
+    // Same path, two screens: the oversight view for the executive surface,
+    // the parent's profile otherwise. A presentation choice, like the home
+    // redirect — the server decides what each may read.
+    final oversight = ProviderScope.containerOf(context)
+        .read(sessionControllerProvider)
+        .effectiveRole
+        ?.hasOversight;
+    if (oversight ?? false) return ExecutiveChildScreen(childId: childId);
+    return ChildProfileScreen(
+      childId: childId,
+      // The sub-tab is the last path segment when one is present.
+      initialTab: ChildProfileTab.fromSlug(
+        state.uri.pathSegments.length > 2 ? state.uri.pathSegments.last : null,
+      ),
+    );
+  },
+  childrenList: (context, state) => const ChildrenScreen(),
   group: (context, state) =>
       GroupDetailScreen(groupId: state.pathParameters['groupId'] ?? ''),
   attendance: (context, state) => AttendanceScreen(
@@ -150,6 +170,16 @@ final AppScreens appScreensTable = AppScreens(
   ),
   notifications: (context, state) => const NotificationsScreen(),
   more: (context, state) => const MoreScreen(),
+  manage: (context, state) => ManageScreen(
+    initialTab: ManageTab.fromSlug(
+      state.uri.queryParameters[AppRoutes.manageTabParam],
+    ),
+  ),
+  manageNewGroup: (context, state) => const NewGroupScreen(),
+  manageNewFamily: (context, state) => const NewFamilyScreen(),
+  reports: (context, state) => const ReportsScreen(),
+  structure: (context, state) => const StructureScreen(),
+  logs: (context, state) => const LogsScreen(),
   attendanceReview: (context, state) => AttendanceReviewScreen(
     sessionId: state.pathParameters['sessionId'] ?? '',
     groupId: state.pathParameters['groupId'] ?? '',
