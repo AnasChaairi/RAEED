@@ -164,7 +164,7 @@ class ExecutiveChildRow extends StatelessWidget {
     ].join(' · ');
 
     return ExecutiveCard(
-      onTap: () => context.go(AppRoutes.childPath(child.id)),
+      onTap: () => context.push(AppRoutes.childPath(child.id)),
       radius: RaeedRadius.lg + 2,
       padding: const EdgeInsets.symmetric(
         horizontal: RaeedSpacing.md + 2,

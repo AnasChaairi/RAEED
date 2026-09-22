@@ -204,7 +204,10 @@ class FilterPill extends StatelessWidget {
                 horizontal: RaeedSpacing.md + 1,
                 vertical: RaeedSpacing.sm - 1,
               ),
+              // widthFactor keeps the pill hugging its label under the loose
+              // constraints of a Wrap; in a Row it changes nothing.
               child: Center(
+                widthFactor: 1,
                 child: ExcludeSemantics(
                   child: Text(
                     label,
