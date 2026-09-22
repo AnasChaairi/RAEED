@@ -52,6 +52,11 @@ dependencies:
   # --- Error tracking --------------------------------------------------------
   sentry_flutter: ^9.7.0
 
+  # --- Sharing ---------------------------------------------------------------
+  # The export file leaves the app through the platform share sheet, so the
+  # executive picks where it goes rather than the app choosing for them.
+  share_plus: ^11.0.0
+
   # --- i18n ------------------------------------------------------------------
   intl: ^0.20.2
 

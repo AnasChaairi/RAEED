@@ -10,6 +10,8 @@ import '../../../core/session/session_controller.dart';
 import '../../../core/theme/design_tokens.gen.dart';
 import '../../../core/theme/raeed_theme.dart';
 import '../../../core/theme/theme_mode_controller.dart';
+import 'executive_providers.dart';
+import 'widgets/admin_only_card.dart';
 import 'widgets/executive_card.dart';
 
 /// EXEC-M-07 — settings and the role switcher (`/more`).
@@ -32,6 +34,8 @@ class MoreScreen extends ConsumerWidget {
         themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system && context.isDarkTheme);
     final roles = _ordered(user?.roles ?? const {});
+    final isAdmin = session.effectiveRole == RaeedRole.admin;
+    final unassigned = ref.watch(unassignedChildrenProvider).value?.length ?? 0;
 
     return Scaffold(
       backgroundColor: palette.bg,
@@ -128,6 +132,59 @@ class MoreScreen extends ConsumerWidget {
               padding: EdgeInsets.zero,
               child: Column(
                 children: [
+                  _LinkRow(
+                    icon: Icons.people_outline_rounded,
+                    label: l10n.moreChildren,
+                    onTap: () => context.push(AppRoutes.childrenList),
+                  ),
+                  Divider(height: 1, color: palette.border),
+                  _LinkRow(
+                    icon: Icons.family_restroom_rounded,
+                    label: l10n.moreManage,
+                    badge: unassigned > 0 ? '$unassigned' : null,
+                    onTap: () => context.push(AppRoutes.manage),
+                  ),
+                  Divider(height: 1, color: palette.border),
+                  _LinkRow(
+                    icon: Icons.bar_chart_rounded,
+                    label: l10n.moreReports,
+                    onTap: () => context.push(AppRoutes.reports),
+                  ),
+                  Divider(height: 1, color: palette.border),
+                  _LinkRow(
+                    icon: Icons.account_tree_outlined,
+                    label: l10n.moreStructure,
+                    admin: true,
+                    onTap: () => context.push(AppRoutes.structure),
+                  ),
+                  Divider(height: 1, color: palette.border),
+                  _LinkRow(
+                    icon: Icons.receipt_long_outlined,
+                    label: l10n.moreLogs,
+                    admin: true,
+                    onTap: () => context.push(AppRoutes.logs),
+                  ),
+                ],
+              ),
+            ),
+            if (!isAdmin && roles.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  RaeedSpacing.xs,
+                  RaeedSpacing.xs,
+                  RaeedSpacing.xs,
+                  0,
+                ),
+                child: Text(
+                  l10n.moreAdminHint,
+                  style: context.type.caption.copyWith(color: palette.inkDim),
+                ),
+              ),
+            const SizedBox(height: RaeedSpacing.sm + 2),
+            ExecutiveCard(
+              padding: EdgeInsets.zero,
+              child: Column(
+                children: [
                   _SettingRow(
                     label: l10n.moreDarkMode,
                     trailing: Switch(
@@ -203,6 +260,17 @@ class MoreScreen extends ConsumerWidget {
                     ),
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(height: RaeedSpacing.sm + 2),
+            ExecutiveCard(
+              padding: EdgeInsets.zero,
+              child: _LinkRow(
+                icon: Icons.logout_rounded,
+                label: l10n.moreSignOut,
+                destructive: true,
+                onTap: () =>
+                    ref.read(sessionControllerProvider.notifier).signOut(),
               ),
             ),
             const SizedBox(height: RaeedSpacing.md),
@@ -324,6 +392,93 @@ class RoleChoice extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A row that opens one of the More sections.
+class _LinkRow extends StatelessWidget {
+  const _LinkRow({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.badge,
+    this.admin = false,
+    this.destructive = false,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final String? badge;
+  final bool admin;
+  final bool destructive;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final color = destructive ? palette.danger : palette.ink;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(RaeedRadius.lg),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          minHeight: RaeedTouchTarget.primaryActionsPx,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: RaeedSpacing.lg,
+            vertical: RaeedSpacing.sm,
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: 20, color: destructive ? color : palette.inkDim),
+              const SizedBox(width: RaeedSpacing.md),
+              Expanded(
+                child: Text(
+                  label,
+                  style: context.type.label.copyWith(
+                    color: color,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              if (badge != null)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 7,
+                    vertical: 1,
+                  ),
+                  decoration: BoxDecoration(
+                    color: palette.warningSoft,
+                    borderRadius: BorderRadius.circular(RaeedRadius.pill),
+                  ),
+                  child: Text(
+                    badge!,
+                    style: context.type
+                        .tabular(context.type.caption)
+                        .copyWith(
+                          color: palette.warning,
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                ),
+              if (admin) ...[
+                const SizedBox(width: RaeedSpacing.sm),
+                const AdminTag(),
+              ],
+              if (!destructive) ...[
+                const SizedBox(width: RaeedSpacing.sm),
+                Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 18,
+                  color: palette.inkDim,
+                ),
+              ],
+            ],
           ),
         ),
       ),

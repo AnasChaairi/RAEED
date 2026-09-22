@@ -1294,4 +1294,865 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get dialogCancel => 'إلغاء';
+
+  @override
+  String get moreChildren => 'الأطفال';
+
+  @override
+  String get moreChildrenHint => 'الملفات والموافقات';
+
+  @override
+  String get moreManage => 'الأسر والمجموعات';
+
+  @override
+  String get moreManageHint => 'إنشاء مجموعة · أسرة جديدة · إسناد';
+
+  @override
+  String get moreReports => 'التقارير والتصدير';
+
+  @override
+  String get moreReportsHint => 'حضور · مؤطرون · تفاعل';
+
+  @override
+  String get moreStructure => 'الهيكل';
+
+  @override
+  String get moreStructureHint => 'المواسم · الفئات · الفروع';
+
+  @override
+  String get moreLogs => 'السجلات';
+
+  @override
+  String get moreLogsHint => 'التدقيق · الوصول الصحي';
+
+  @override
+  String get adminTag => 'إداري';
+
+  @override
+  String get moreAdminHint =>
+      'الإداري وحده يفتح «الهيكل» و«السجلات». محاولة غيره تُرفض وتُسجَّل.';
+
+  @override
+  String get moreSignOut => 'تسجيل الخروج';
+
+  @override
+  String childrenCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count طفل',
+      many: '$count طفلًا',
+      few: '$count أطفال',
+      two: 'طفلان',
+      one: 'طفل واحد',
+      zero: 'لا أطفال',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get childrenSearchHint => 'ابحث عن طفل';
+
+  @override
+  String get filterAll => 'الكل';
+
+  @override
+  String get childrenEmptyTitle => 'لا أطفال مطابقون';
+
+  @override
+  String get childrenEmptyBody => 'جرّب بحثًا آخر أو فئة أخرى.';
+
+  @override
+  String attendanceShort(String ratio) {
+    return 'حضور $ratio';
+  }
+
+  @override
+  String get imageRightsLegend => 'حقوق الصورة:';
+
+  @override
+  String get childSeasonAttendance => 'حضور الموسم';
+
+  @override
+  String get childImageRightsTile => 'حقوق الصورة';
+
+  @override
+  String get healthSectionTitle => 'المعلومات الصحية';
+
+  @override
+  String get healthEveryViewLogged => 'كل عرض يُسجَّل';
+
+  @override
+  String get healthCollapsedBody =>
+      'يوجد تنبيه صحي. المحتوى مطويٌّ عمدًا — يظهر عند طلبك ويُقيَّد في سجل الوصول الصحي.';
+
+  @override
+  String get healthNoneBody => 'لا تنبيه صحي مسجَّل لهذا الطفل.';
+
+  @override
+  String get healthShowButton => 'عرض المعلومات الصحية';
+
+  @override
+  String get healthConfirmTitle => 'سيُسجَّل هذا العرض';
+
+  @override
+  String healthConfirmBody(String actor, String child) {
+    return 'سيُقيَّد أن $actor عرض بيانات $child الصحية الآن. لا تفتحه بلا سبب.';
+  }
+
+  @override
+  String get healthContinue => 'متابعة';
+
+  @override
+  String get healthBack => 'تراجع';
+
+  @override
+  String get healthAlertTitle => 'التنبيه الصحي';
+
+  @override
+  String healthRecordedAt(String time) {
+    return 'سُجّل $time';
+  }
+
+  @override
+  String get healthFieldsPending => 'الحقول التفصيلية تُقرَّ بعد تصريح CNDP.';
+
+  @override
+  String get healthCollapse => 'طيّ';
+
+  @override
+  String get healthAllergies => 'الحساسية';
+
+  @override
+  String get healthConditions => 'الحالات الصحية';
+
+  @override
+  String get healthMedications => 'الأدوية';
+
+  @override
+  String get healthDietary => 'ملاحظات غذائية';
+
+  @override
+  String get healthSpecialNeeds => 'احتياجات خاصة';
+
+  @override
+  String get guardiansTitle => 'الأولياء';
+
+  @override
+  String get relMother => 'الأم';
+
+  @override
+  String get relFather => 'الأب';
+
+  @override
+  String get relGuardian => 'ولي الأمر';
+
+  @override
+  String get guardianAccountActive => 'مفعَّل';
+
+  @override
+  String get guardianAccountPending => 'لم يدخل بعد';
+
+  @override
+  String guardianLastSeen(String when) {
+    return 'آخر دخول $when';
+  }
+
+  @override
+  String get guardianReveal => 'إظهار';
+
+  @override
+  String get guardianRevealLogged => 'كل إظهار يُسجَّل باسمك مع الوقت.';
+
+  @override
+  String get guardianRevealToast => 'سُجّل إظهار الرقم باسمك';
+
+  @override
+  String get consentsTitle => 'الموافقات';
+
+  @override
+  String get consentPrivacyLabel => 'سياسة الخصوصية';
+
+  @override
+  String consentVersionAt(int version, String when) {
+    return 'v$version · $when';
+  }
+
+  @override
+  String get consentImageRightsChangeable => 'يغيّرها الولي متى شاء';
+
+  @override
+  String get consentApproved => 'موافَق';
+
+  @override
+  String get consentMissing => 'لم يوافق بعد';
+
+  @override
+  String get childGroupsTitle => 'المجموعات';
+
+  @override
+  String get groupMainTag => 'رئيسية';
+
+  @override
+  String openChildThread(String name) {
+    return 'فتح محادثة $name (إشراف · يُسجَّل)';
+  }
+
+  @override
+  String get manageTitle => 'الأسر والمجموعات';
+
+  @override
+  String familiesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count أسرة',
+      many: '$count أسرة',
+      few: '$count أسر',
+      two: 'أسرتان',
+      one: 'أسرة واحدة',
+      zero: 'لا أسر',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get manageTabUnassigned => 'بلا مجموعة';
+
+  @override
+  String get manageTabFamilies => 'الأسر';
+
+  @override
+  String get manageTabGroups => 'المجموعات';
+
+  @override
+  String get unassignedHint =>
+      'مسجَّلون بلا مجموعة رئيسية. اختر أطفالًا ثم اضغط «إسناد».';
+
+  @override
+  String get unassignedEmpty => 'كل الأطفال في مجموعات.';
+
+  @override
+  String assignCta(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'إسناد $count طفل إلى مجموعة…',
+      many: 'إسناد $count طفلًا إلى مجموعة…',
+      few: 'إسناد $count أطفال إلى مجموعة…',
+      two: 'إسناد طفلين إلى مجموعة…',
+      one: 'إسناد طفل واحد إلى مجموعة…',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String assignSheetTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'إسناد $count طفل إلى مجموعة',
+      many: 'إسناد $count طفلًا إلى مجموعة',
+      few: 'إسناد $count أطفال إلى مجموعة',
+      two: 'إسناد طفلين إلى مجموعة',
+      one: 'إسناد طفل واحد إلى مجموعة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String assignWarn(int after, int capacity, String group) {
+    return '$group ستصير $after من $capacity — تظهر بعلامة «فوق السعة».';
+  }
+
+  @override
+  String get assignLogged => 'يُسجَّل الإسناد باسمك ويُبلَّغ الأولياء.';
+
+  @override
+  String assignTo(String group) {
+    return 'إسناد إلى $group';
+  }
+
+  @override
+  String get assignPick => 'اختر مجموعة';
+
+  @override
+  String get assignOverKind => 'فوق السعة';
+
+  @override
+  String assignOverTitle(String group) {
+    return 'إسناد إلى $group فوق السعة؟';
+  }
+
+  @override
+  String get assignOverLog => 'يُسجَّل الإسناد والتجاوز باسمك.';
+
+  @override
+  String get assignOverCta => 'نعم، إسناد';
+
+  @override
+  String assignedToast(int count, String group) {
+    return 'أُسند $count إلى $group';
+  }
+
+  @override
+  String get familyStatusActive => 'مفعَّلة';
+
+  @override
+  String get familyStatusPartial => 'بعض الأولياء';
+
+  @override
+  String get familyStatusPending => 'دعوة معلقة';
+
+  @override
+  String get familyResend => 'إعادة الدعوة';
+
+  @override
+  String get familyResentToast => 'أُعيد إرسال الدعوة';
+
+  @override
+  String get familyAddChild => '+ طفل';
+
+  @override
+  String get familyNoGroup => 'بلا مجموعة';
+
+  @override
+  String get familiesEmpty => 'لا أسر بعد';
+
+  @override
+  String get newFamilyCta => '+ أسرة جديدة';
+
+  @override
+  String get newGroupCta => '+ مجموعة جديدة';
+
+  @override
+  String get groupAssignHere => '+ إسناد أطفال';
+
+  @override
+  String get newGroupTitle => 'مجموعة جديدة';
+
+  @override
+  String get fieldName => 'الاسم';
+
+  @override
+  String get groupNameHint => 'مثال: الأشبال 3';
+
+  @override
+  String get fieldCategory => 'الفئة';
+
+  @override
+  String get fieldCapacity => 'السعة';
+
+  @override
+  String get fieldSchedule => 'الجدول';
+
+  @override
+  String get fieldEducators => 'المؤطرون';
+
+  @override
+  String educatorLoad(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count مجموعة',
+      many: '$count مجموعة',
+      few: '$count مجموعات',
+      two: 'مجموعتان',
+      one: 'مجموعة واحدة',
+      zero: 'بلا مجموعات',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fieldChildrenOptional => 'أطفال (اختياري) — من «بلا مجموعة»';
+
+  @override
+  String get checklistNameOk => '✓ الاسم';
+
+  @override
+  String get checklistNameMissing => '○ الاسم مطلوب';
+
+  @override
+  String get checklistCategoryMissing => '○ الفئة مطلوبة';
+
+  @override
+  String get checklistEducatorOk => '✓ مؤطر';
+
+  @override
+  String get checklistEducatorMissing => '○ مؤطر واحد على الأقل';
+
+  @override
+  String checklistChildren(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '✓ $count طفل',
+      many: '✓ $count طفلًا',
+      few: '✓ $count أطفال',
+      two: '✓ طفلان',
+      one: '✓ طفل واحد',
+      zero: '○ بلا أطفال (مقبول)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get checklistLogged => '⦿ يُسجَّل باسمك';
+
+  @override
+  String createGroupCta(String name) {
+    return 'إنشاء «$name»';
+  }
+
+  @override
+  String groupCreatedToast(String name) {
+    return 'أُنشئت «$name»';
+  }
+
+  @override
+  String get theGroup => 'المجموعة';
+
+  @override
+  String get weekdaySun => 'الأحد';
+
+  @override
+  String get weekdayMon => 'الاثنين';
+
+  @override
+  String get weekdayTue => 'الثلاثاء';
+
+  @override
+  String get weekdayWed => 'الأربعاء';
+
+  @override
+  String get weekdayThu => 'الخميس';
+
+  @override
+  String get weekdayFri => 'الجمعة';
+
+  @override
+  String get weekdaySat => 'السبت';
+
+  @override
+  String get newFamilyTitle => 'أسرة جديدة';
+
+  @override
+  String get reviewStepTitle => 'المراجعة';
+
+  @override
+  String stepOfThree(int step) {
+    return 'الخطوة $step من 3';
+  }
+
+  @override
+  String get guardianNameHint => 'اسم ولي الأمر';
+
+  @override
+  String get guardianPhoneHint => '6XX XXX XXX';
+
+  @override
+  String get addGuardian => '+ ولي آخر';
+
+  @override
+  String childN(int n) {
+    return 'الطفل $n';
+  }
+
+  @override
+  String get remove => 'إزالة';
+
+  @override
+  String get childNameHint => 'اسم الطفل';
+
+  @override
+  String get dobLabel => 'تاريخ الولادة';
+
+  @override
+  String get dobPick => 'اختر التاريخ';
+
+  @override
+  String get mainGroupLabel => 'المجموعة الرئيسية';
+
+  @override
+  String get groupLater => 'لاحقًا';
+
+  @override
+  String get groupFull => 'ممتلئة';
+
+  @override
+  String get healthNotHere =>
+      'المعلومات الصحية يُدخلها الولي من حسابه — لا هنا.';
+
+  @override
+  String get addChild => '+ طفل آخر';
+
+  @override
+  String get whatHappens => 'ماذا سيحدث';
+
+  @override
+  String willInvite(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '• دعوة SMS إلى $count أولياء؛ يوافقون على الخصوصية وحقوق الصورة قبل رؤية أي شيء.',
+      two: '• دعوة SMS إلى وليَّين؛ يوافقان على الخصوصية وحقوق الصورة قبل رؤية أي شيء.',
+      one: '• دعوة SMS إلى ولي واحد؛ يوافق على الخصوصية وحقوق الصورة قبل رؤية أي شيء.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get willShow => '• يظهر الأطفال للولي مع المجموعة والجدول والمؤطر.';
+
+  @override
+  String get willLog => '• ⦿ يُسجَّل الإنشاء باسمك.';
+
+  @override
+  String unassignedWarn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '▲ $count أطفال بلا مجموعة — لن يراهم أي مؤطر حتى يُسندوا.',
+      two: '▲ طفلان بلا مجموعة — لن يراهما أي مؤطر حتى يُسندا.',
+      one: '▲ طفل واحد بلا مجموعة — لن يراه أي مؤطر حتى يُسند.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get previous => 'السابق';
+
+  @override
+  String get next => 'التالي';
+
+  @override
+  String createAndInvite(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'إنشاء وإرسال $count دعوة',
+      many: 'إنشاء وإرسال $count دعوة',
+      few: 'إنشاء وإرسال $count دعوات',
+      two: 'إنشاء وإرسال دعوتين',
+      one: 'إنشاء وإرسال دعوة واحدة',
+      zero: 'إنشاء',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String familyCreatedToast(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'أُنشئت الأسرة · $count دعوة',
+      many: 'أُنشئت الأسرة · $count دعوة',
+      few: 'أُنشئت الأسرة · $count دعوات',
+      two: 'أُنشئت الأسرة · دعوتان',
+      one: 'أُنشئت الأسرة · دعوة واحدة',
+      zero: 'أُنشئت الأسرة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reportsTitle => 'التقارير';
+
+  @override
+  String get repTabAttendance => 'الحضور';
+
+  @override
+  String get repTabEducators => 'المؤطرون';
+
+  @override
+  String get repTabEngagement => 'التفاعل';
+
+  @override
+  String get repTabExport => 'التصدير';
+
+  @override
+  String get repByEducator => 'نسبة الحضور حسب المؤطر';
+
+  @override
+  String get repByCategory => 'حسب الفئة';
+
+  @override
+  String get repRawNote => 'النسبة مع العدد الخام';
+
+  @override
+  String repPlanned(int delivered, int planned) {
+    return 'مخطَّطة/مُنجزة $delivered/$planned';
+  }
+
+  @override
+  String repOnTime(int ontime, int planned) {
+    return 'في وقته $ontime من $planned';
+  }
+
+  @override
+  String get repReplyUnknown => 'الرد —';
+
+  @override
+  String get repActivated => 'تفعيل حسابات الأولياء';
+
+  @override
+  String get repPresenceAnswers => 'الرد على تأكيد الحضور';
+
+  @override
+  String get repHomework => 'إنجاز الواجبات';
+
+  @override
+  String get selfReported => 'تصريح ذاتي';
+
+  @override
+  String get repNotYet => 'غير متاح بعد';
+
+  @override
+  String get repNoData => 'لا بيانات بعد';
+
+  @override
+  String get exportIntro =>
+      'تصدير قائمة الأطفال. الحقول الصحية معطَّلة افتراضيًا.';
+
+  @override
+  String get exportName => 'الاسم الكامل';
+
+  @override
+  String get exportDob => 'تاريخ الولادة';
+
+  @override
+  String get exportGroup => 'الفئة والمجموعة';
+
+  @override
+  String get exportGuardian => 'اسم ولي الأمر';
+
+  @override
+  String get exportPhone => 'هاتف ولي الأمر';
+
+  @override
+  String get exportConsent => 'حقوق الصورة';
+
+  @override
+  String get exportAllergies => 'الحساسية';
+
+  @override
+  String get exportMedications => 'الأدوية';
+
+  @override
+  String get healthTag => 'صحي';
+
+  @override
+  String get exportLogged => 'يُسجَّل التصدير باسمك والحقول المختارة.';
+
+  @override
+  String get exportContainsHealth => 'يحتوي بيانات صحية — للجهة المعنية فقط.';
+
+  @override
+  String exportCta(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'إنشاء الملف · $count حقل',
+      many: 'إنشاء الملف · $count حقلًا',
+      few: 'إنشاء الملف · $count حقول',
+      two: 'إنشاء الملف · حقلان',
+      one: 'إنشاء الملف · حقل واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get exportBusy => 'يُجهَّز الملف…';
+
+  @override
+  String get exportReady => 'الملف جاهز';
+
+  @override
+  String exportRows(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count صف',
+      many: '$count صفًا',
+      few: '$count صفوف',
+      two: 'صفان',
+      one: 'صف واحد',
+      zero: 'لا صفوف',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get exportShare => 'مشاركة الملف';
+
+  @override
+  String get exportLoggedToast => 'سُجّل التصدير باسمك';
+
+  @override
+  String get structureTitle => 'الهيكل';
+
+  @override
+  String get strTabSeasons => 'المواسم';
+
+  @override
+  String get strTabCategories => 'الفئات';
+
+  @override
+  String get strTabBranches => 'الفروع';
+
+  @override
+  String get seasonActive => 'نشط';
+
+  @override
+  String get seasonArchived => 'مؤرشف';
+
+  @override
+  String get seasonArchive => 'أرشفة';
+
+  @override
+  String get seasonsNote => 'المواسم تُؤرشف ولا تُحذف.';
+
+  @override
+  String get archiveKind => 'أرشفة — قابلة للتراجع';
+
+  @override
+  String archiveTitle(String label) {
+    return 'أرشفة موسم $label؟';
+  }
+
+  @override
+  String get archiveBody =>
+      'تُغلق المجموعات والتسجيلات للقراءة فقط. لا يُحذف شيء.';
+
+  @override
+  String get archiveLog => 'تُسجَّل الأرشفة باسمك.';
+
+  @override
+  String get archiveCta => 'أرشفة الموسم';
+
+  @override
+  String get archivedToast => 'أُرشف الموسم';
+
+  @override
+  String get catsOpenDecision =>
+      'الفئات العمرية والجنس قرار مجلس الإدارة ولم يُتَّخذ بعد. الحقول فارغة عن قصد.';
+
+  @override
+  String get catAgeGenderUnset => 'العمر/الجنس: لم يُحدَّد';
+
+  @override
+  String catAgeRange(int min, int max) {
+    return '$min–$max سنة';
+  }
+
+  @override
+  String get genderBoys => 'ذكور';
+
+  @override
+  String get genderGirls => 'إناث';
+
+  @override
+  String get genderMixed => 'مختلط';
+
+  @override
+  String get branchesNote =>
+      'فرع واحد اليوم. عند إضافة ثانٍ يظهر محدِّد الفرع للمشرفين.';
+
+  @override
+  String get newBranch => '+ فرع جديد';
+
+  @override
+  String get branchNameHint => 'اسم الفرع';
+
+  @override
+  String get branchAddressHint => 'العنوان';
+
+  @override
+  String get branchCreatedToast => 'أُنشئ الفرع';
+
+  @override
+  String get adminOnlyTitle => 'هذا القسم للإداريين فقط';
+
+  @override
+  String adminOnlyBody(String role) {
+    return 'صلاحيتك: $role. اطلبها من رئيس الجمعية.';
+  }
+
+  @override
+  String get adminOnlyLogged => '⦿ محاولة الوصول مسجَّلة — هذا طبيعي.';
+
+  @override
+  String get logsTitle => 'السجلات';
+
+  @override
+  String get logTabAudit => 'التدقيق';
+
+  @override
+  String get logTabHealth => 'الوصول الصحي';
+
+  @override
+  String get logsAppendOnly => '⦿ إضافيّ فقط — لا تعديل ولا حذف. مدة الاحتفاظ:';
+
+  @override
+  String get retentionUnset => 'لم تُحدَّد بعد';
+
+  @override
+  String get healthLogIntro =>
+      'من عرض المعلومات الصحية لأي طفل ومتى — الوعد الذي يُقطَع عند كل «عرض».';
+
+  @override
+  String get logsEmpty => 'لا سجلات بعد';
+
+  @override
+  String get actionLogin => 'دخول';
+
+  @override
+  String get actionCorrect => 'تصحيح حضور';
+
+  @override
+  String get actionExport => 'تصدير';
+
+  @override
+  String get actionHideMessage => 'إخفاء رسالة';
+
+  @override
+  String get actionHealthView => 'عرض بيانات صحية';
+
+  @override
+  String get actionPhoneReveal => 'إظهار هاتف';
+
+  @override
+  String get actionAssign => 'إسناد';
+
+  @override
+  String get actionCreate => 'إنشاء';
+
+  @override
+  String get actionPublish => 'نشر إعلان';
+
+  @override
+  String get actionApprovePost => 'اعتماد منشور';
+
+  @override
+  String get actionHidePost => 'إخفاء منشور';
+
+  @override
+  String get actionOversightRead => 'قراءة إشرافية';
+
+  @override
+  String get actionDenied => 'محاولة وصول مرفوضة';
+
+  @override
+  String get actionArchive => 'أرشفة';
+
+  @override
+  String get actionDismissReport => 'رفض بلاغ';
+
+  @override
+  String get actionInvite => 'إعادة دعوة';
+
+  @override
+  String get actionOther => 'إجراء';
 }

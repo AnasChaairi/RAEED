@@ -1061,5 +1061,680 @@
   "moreTagline": "صالح في نفسه، مصلح لغيره",
   "@moreTagline": {},
   "dialogCancel": "إلغاء",
-  "@dialogCancel": {}
+  "@dialogCancel": {},
+  "moreChildren": "الأطفال",
+  "@moreChildren": {},
+  "moreChildrenHint": "الملفات والموافقات",
+  "@moreChildrenHint": {},
+  "moreManage": "الأسر والمجموعات",
+  "@moreManage": {},
+  "moreManageHint": "إنشاء مجموعة · أسرة جديدة · إسناد",
+  "@moreManageHint": {},
+  "moreReports": "التقارير والتصدير",
+  "@moreReports": {},
+  "moreReportsHint": "حضور · مؤطرون · تفاعل",
+  "@moreReportsHint": {},
+  "moreStructure": "الهيكل",
+  "@moreStructure": {},
+  "moreStructureHint": "المواسم · الفئات · الفروع",
+  "@moreStructureHint": {},
+  "moreLogs": "السجلات",
+  "@moreLogs": {},
+  "moreLogsHint": "التدقيق · الوصول الصحي",
+  "@moreLogsHint": {},
+  "adminTag": "إداري",
+  "@adminTag": {},
+  "moreAdminHint": "الإداري وحده يفتح «الهيكل» و«السجلات». محاولة غيره تُرفض وتُسجَّل.",
+  "moreSignOut": "تسجيل الخروج",
+  "@moreSignOut": {},
+  "childrenCount": "{count, plural, zero{لا أطفال} one{طفل واحد} two{طفلان} few{{count} أطفال} many{{count} طفلًا} other{{count} طفل}}",
+  "@childrenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "246"
+      }
+    }
+  },
+  "childrenSearchHint": "ابحث عن طفل",
+  "@childrenSearchHint": {},
+  "filterAll": "الكل",
+  "@filterAll": {},
+  "childrenEmptyTitle": "لا أطفال مطابقون",
+  "@childrenEmptyTitle": {},
+  "childrenEmptyBody": "جرّب بحثًا آخر أو فئة أخرى.",
+  "@childrenEmptyBody": {},
+  "attendanceShort": "حضور {ratio}",
+  "@attendanceShort": {
+    "placeholders": {
+      "ratio": {
+        "type": "String"
+      }
+    }
+  },
+  "imageRightsLegend": "حقوق الصورة:",
+  "@imageRightsLegend": {},
+  "childSeasonAttendance": "حضور الموسم",
+  "@childSeasonAttendance": {},
+  "childImageRightsTile": "حقوق الصورة",
+  "@childImageRightsTile": {},
+  "healthSectionTitle": "المعلومات الصحية",
+  "@healthSectionTitle": {},
+  "healthEveryViewLogged": "كل عرض يُسجَّل",
+  "@healthEveryViewLogged": {},
+  "healthCollapsedBody": "يوجد تنبيه صحي. المحتوى مطويٌّ عمدًا — يظهر عند طلبك ويُقيَّد في سجل الوصول الصحي.",
+  "@healthCollapsedBody": {},
+  "healthNoneBody": "لا تنبيه صحي مسجَّل لهذا الطفل.",
+  "@healthNoneBody": {},
+  "healthShowButton": "عرض المعلومات الصحية",
+  "@healthShowButton": {},
+  "healthConfirmTitle": "سيُسجَّل هذا العرض",
+  "@healthConfirmTitle": {},
+  "healthConfirmBody": "سيُقيَّد أن {actor} عرض بيانات {child} الصحية الآن. لا تفتحه بلا سبب.",
+  "@healthConfirmBody": {
+    "placeholders": {
+      "actor": {
+        "type": "String"
+      },
+      "child": {
+        "type": "String"
+      }
+    }
+  },
+  "healthContinue": "متابعة",
+  "@healthContinue": {},
+  "healthBack": "تراجع",
+  "@healthBack": {},
+  "healthAlertTitle": "التنبيه الصحي",
+  "@healthAlertTitle": {},
+  "healthRecordedAt": "سُجّل {time}",
+  "@healthRecordedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "healthFieldsPending": "الحقول التفصيلية تُقرَّ بعد تصريح CNDP.",
+  "@healthFieldsPending": {},
+  "healthCollapse": "طيّ",
+  "@healthCollapse": {},
+  "healthAllergies": "الحساسية",
+  "@healthAllergies": {},
+  "healthConditions": "الحالات الصحية",
+  "@healthConditions": {},
+  "healthMedications": "الأدوية",
+  "@healthMedications": {},
+  "healthDietary": "ملاحظات غذائية",
+  "@healthDietary": {},
+  "healthSpecialNeeds": "احتياجات خاصة",
+  "@healthSpecialNeeds": {},
+  "guardiansTitle": "الأولياء",
+  "@guardiansTitle": {},
+  "relMother": "الأم",
+  "@relMother": {},
+  "relFather": "الأب",
+  "@relFather": {},
+  "relGuardian": "ولي الأمر",
+  "@relGuardian": {},
+  "guardianAccountActive": "مفعَّل",
+  "@guardianAccountActive": {},
+  "guardianAccountPending": "لم يدخل بعد",
+  "@guardianAccountPending": {},
+  "guardianLastSeen": "آخر دخول {when}",
+  "@guardianLastSeen": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "guardianReveal": "إظهار",
+  "@guardianReveal": {},
+  "guardianRevealLogged": "كل إظهار يُسجَّل باسمك مع الوقت.",
+  "@guardianRevealLogged": {},
+  "guardianRevealToast": "سُجّل إظهار الرقم باسمك",
+  "@guardianRevealToast": {},
+  "consentsTitle": "الموافقات",
+  "@consentsTitle": {},
+  "consentPrivacyLabel": "سياسة الخصوصية",
+  "@consentPrivacyLabel": {},
+  "consentVersionAt": "v{version} · {when}",
+  "@consentVersionAt": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "consentImageRightsChangeable": "يغيّرها الولي متى شاء",
+  "@consentImageRightsChangeable": {},
+  "consentApproved": "موافَق",
+  "@consentApproved": {},
+  "consentMissing": "لم يوافق بعد",
+  "@consentMissing": {},
+  "childGroupsTitle": "المجموعات",
+  "@childGroupsTitle": {},
+  "groupMainTag": "رئيسية",
+  "@groupMainTag": {},
+  "openChildThread": "فتح محادثة {name} (إشراف · يُسجَّل)",
+  "@openChildThread": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "manageTitle": "الأسر والمجموعات",
+  "@manageTitle": {},
+  "familiesCount": "{count, plural, zero{لا أسر} one{أسرة واحدة} two{أسرتان} few{{count} أسر} many{{count} أسرة} other{{count} أسرة}}",
+  "@familiesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "163"
+      }
+    }
+  },
+  "manageTabUnassigned": "بلا مجموعة",
+  "@manageTabUnassigned": {},
+  "manageTabFamilies": "الأسر",
+  "@manageTabFamilies": {},
+  "manageTabGroups": "المجموعات",
+  "@manageTabGroups": {},
+  "unassignedHint": "مسجَّلون بلا مجموعة رئيسية. اختر أطفالًا ثم اضغط «إسناد».",
+  "@unassignedHint": {},
+  "unassignedEmpty": "كل الأطفال في مجموعات.",
+  "@unassignedEmpty": {},
+  "assignCta": "{count, plural, one{إسناد طفل واحد إلى مجموعة…} two{إسناد طفلين إلى مجموعة…} few{إسناد {count} أطفال إلى مجموعة…} many{إسناد {count} طفلًا إلى مجموعة…} other{إسناد {count} طفل إلى مجموعة…}}",
+  "@assignCta": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "assignSheetTitle": "{count, plural, one{إسناد طفل واحد إلى مجموعة} two{إسناد طفلين إلى مجموعة} few{إسناد {count} أطفال إلى مجموعة} many{إسناد {count} طفلًا إلى مجموعة} other{إسناد {count} طفل إلى مجموعة}}",
+  "@assignSheetTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "assignWarn": "{group} ستصير {after} من {capacity} — تظهر بعلامة «فوق السعة».",
+  "@assignWarn": {
+    "placeholders": {
+      "after": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      },
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "assignLogged": "يُسجَّل الإسناد باسمك ويُبلَّغ الأولياء.",
+  "@assignLogged": {},
+  "assignTo": "إسناد إلى {group}",
+  "@assignTo": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "assignPick": "اختر مجموعة",
+  "@assignPick": {},
+  "assignOverKind": "فوق السعة",
+  "@assignOverKind": {},
+  "assignOverTitle": "إسناد إلى {group} فوق السعة؟",
+  "@assignOverTitle": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "assignOverLog": "يُسجَّل الإسناد والتجاوز باسمك.",
+  "@assignOverLog": {},
+  "assignOverCta": "نعم، إسناد",
+  "@assignOverCta": {},
+  "assignedToast": "أُسند {count} إلى {group}",
+  "@assignedToast": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "familyStatusActive": "مفعَّلة",
+  "@familyStatusActive": {},
+  "familyStatusPartial": "بعض الأولياء",
+  "@familyStatusPartial": {},
+  "familyStatusPending": "دعوة معلقة",
+  "@familyStatusPending": {},
+  "familyResend": "إعادة الدعوة",
+  "@familyResend": {},
+  "familyResentToast": "أُعيد إرسال الدعوة",
+  "@familyResentToast": {},
+  "familyAddChild": "+ طفل",
+  "@familyAddChild": {},
+  "familyNoGroup": "بلا مجموعة",
+  "@familyNoGroup": {},
+  "familiesEmpty": "لا أسر بعد",
+  "@familiesEmpty": {},
+  "newFamilyCta": "+ أسرة جديدة",
+  "@newFamilyCta": {},
+  "newGroupCta": "+ مجموعة جديدة",
+  "@newGroupCta": {},
+  "groupAssignHere": "+ إسناد أطفال",
+  "@groupAssignHere": {},
+  "newGroupTitle": "مجموعة جديدة",
+  "@newGroupTitle": {},
+  "fieldName": "الاسم",
+  "@fieldName": {},
+  "groupNameHint": "مثال: الأشبال 3",
+  "@groupNameHint": {},
+  "fieldCategory": "الفئة",
+  "@fieldCategory": {},
+  "fieldCapacity": "السعة",
+  "@fieldCapacity": {},
+  "fieldSchedule": "الجدول",
+  "@fieldSchedule": {},
+  "fieldEducators": "المؤطرون",
+  "@fieldEducators": {},
+  "educatorLoad": "{count, plural, zero{بلا مجموعات} one{مجموعة واحدة} two{مجموعتان} few{{count} مجموعات} many{{count} مجموعة} other{{count} مجموعة}}",
+  "@educatorLoad": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "fieldChildrenOptional": "أطفال (اختياري) — من «بلا مجموعة»",
+  "@fieldChildrenOptional": {},
+  "checklistNameOk": "✓ الاسم",
+  "@checklistNameOk": {},
+  "checklistNameMissing": "○ الاسم مطلوب",
+  "@checklistNameMissing": {},
+  "checklistCategoryMissing": "○ الفئة مطلوبة",
+  "@checklistCategoryMissing": {},
+  "checklistEducatorOk": "✓ مؤطر",
+  "@checklistEducatorOk": {},
+  "checklistEducatorMissing": "○ مؤطر واحد على الأقل",
+  "@checklistEducatorMissing": {},
+  "checklistChildren": "{count, plural, zero{○ بلا أطفال (مقبول)} one{✓ طفل واحد} two{✓ طفلان} few{✓ {count} أطفال} many{✓ {count} طفلًا} other{✓ {count} طفل}}",
+  "@checklistChildren": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "checklistLogged": "⦿ يُسجَّل باسمك",
+  "@checklistLogged": {},
+  "createGroupCta": "إنشاء «{name}»",
+  "@createGroupCta": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "groupCreatedToast": "أُنشئت «{name}»",
+  "@groupCreatedToast": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "theGroup": "المجموعة",
+  "@theGroup": {},
+  "weekdaySun": "الأحد",
+  "@weekdaySun": {},
+  "weekdayMon": "الاثنين",
+  "@weekdayMon": {},
+  "weekdayTue": "الثلاثاء",
+  "@weekdayTue": {},
+  "weekdayWed": "الأربعاء",
+  "@weekdayWed": {},
+  "weekdayThu": "الخميس",
+  "@weekdayThu": {},
+  "weekdayFri": "الجمعة",
+  "@weekdayFri": {},
+  "weekdaySat": "السبت",
+  "@weekdaySat": {},
+  "newFamilyTitle": "أسرة جديدة",
+  "@newFamilyTitle": {},
+  "reviewStepTitle": "المراجعة",
+  "@reviewStepTitle": {},
+  "stepOfThree": "الخطوة {step} من 3",
+  "@stepOfThree": {
+    "placeholders": {
+      "step": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "guardianNameHint": "اسم ولي الأمر",
+  "@guardianNameHint": {},
+  "guardianPhoneHint": "6XX XXX XXX",
+  "@guardianPhoneHint": {},
+  "addGuardian": "+ ولي آخر",
+  "@addGuardian": {},
+  "childN": "الطفل {n}",
+  "@childN": {
+    "placeholders": {
+      "n": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "remove": "إزالة",
+  "@remove": {},
+  "childNameHint": "اسم الطفل",
+  "@childNameHint": {},
+  "dobLabel": "تاريخ الولادة",
+  "@dobLabel": {},
+  "dobPick": "اختر التاريخ",
+  "@dobPick": {},
+  "mainGroupLabel": "المجموعة الرئيسية",
+  "@mainGroupLabel": {},
+  "groupLater": "لاحقًا",
+  "@groupLater": {},
+  "groupFull": "ممتلئة",
+  "@groupFull": {},
+  "healthNotHere": "المعلومات الصحية يُدخلها الولي من حسابه — لا هنا.",
+  "@healthNotHere": {},
+  "addChild": "+ طفل آخر",
+  "@addChild": {},
+  "whatHappens": "ماذا سيحدث",
+  "@whatHappens": {},
+  "willInvite": "{count, plural, one{• دعوة SMS إلى ولي واحد؛ يوافق على الخصوصية وحقوق الصورة قبل رؤية أي شيء.} two{• دعوة SMS إلى وليَّين؛ يوافقان على الخصوصية وحقوق الصورة قبل رؤية أي شيء.} other{• دعوة SMS إلى {count} أولياء؛ يوافقون على الخصوصية وحقوق الصورة قبل رؤية أي شيء.}}",
+  "@willInvite": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "willShow": "• يظهر الأطفال للولي مع المجموعة والجدول والمؤطر.",
+  "@willShow": {},
+  "willLog": "• ⦿ يُسجَّل الإنشاء باسمك.",
+  "@willLog": {},
+  "unassignedWarn": "{count, plural, one{▲ طفل واحد بلا مجموعة — لن يراه أي مؤطر حتى يُسند.} two{▲ طفلان بلا مجموعة — لن يراهما أي مؤطر حتى يُسندا.} other{▲ {count} أطفال بلا مجموعة — لن يراهم أي مؤطر حتى يُسندوا.}}",
+  "@unassignedWarn": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "previous": "السابق",
+  "@previous": {},
+  "next": "التالي",
+  "@next": {},
+  "createAndInvite": "{count, plural, zero{إنشاء} one{إنشاء وإرسال دعوة واحدة} two{إنشاء وإرسال دعوتين} few{إنشاء وإرسال {count} دعوات} many{إنشاء وإرسال {count} دعوة} other{إنشاء وإرسال {count} دعوة}}",
+  "@createAndInvite": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "familyCreatedToast": "{count, plural, zero{أُنشئت الأسرة} one{أُنشئت الأسرة · دعوة واحدة} two{أُنشئت الأسرة · دعوتان} few{أُنشئت الأسرة · {count} دعوات} many{أُنشئت الأسرة · {count} دعوة} other{أُنشئت الأسرة · {count} دعوة}}",
+  "@familyCreatedToast": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "reportsTitle": "التقارير",
+  "@reportsTitle": {},
+  "repTabAttendance": "الحضور",
+  "@repTabAttendance": {},
+  "repTabEducators": "المؤطرون",
+  "@repTabEducators": {},
+  "repTabEngagement": "التفاعل",
+  "@repTabEngagement": {},
+  "repTabExport": "التصدير",
+  "@repTabExport": {},
+  "repByEducator": "نسبة الحضور حسب المؤطر",
+  "@repByEducator": {},
+  "repByCategory": "حسب الفئة",
+  "@repByCategory": {},
+  "repRawNote": "النسبة مع العدد الخام",
+  "@repRawNote": {},
+  "repPlanned": "مخطَّطة/مُنجزة {delivered}/{planned}",
+  "@repPlanned": {
+    "placeholders": {
+      "delivered": {
+        "type": "int"
+      },
+      "planned": {
+        "type": "int"
+      }
+    }
+  },
+  "repOnTime": "في وقته {ontime} من {planned}",
+  "@repOnTime": {
+    "placeholders": {
+      "ontime": {
+        "type": "int"
+      },
+      "planned": {
+        "type": "int"
+      }
+    }
+  },
+  "repReplyUnknown": "الرد —",
+  "@repReplyUnknown": {},
+  "repActivated": "تفعيل حسابات الأولياء",
+  "@repActivated": {},
+  "repPresenceAnswers": "الرد على تأكيد الحضور",
+  "@repPresenceAnswers": {},
+  "repHomework": "إنجاز الواجبات",
+  "@repHomework": {},
+  "selfReported": "تصريح ذاتي",
+  "@selfReported": {},
+  "repNotYet": "غير متاح بعد",
+  "@repNotYet": {},
+  "repNoData": "لا بيانات بعد",
+  "@repNoData": {},
+  "exportIntro": "تصدير قائمة الأطفال. الحقول الصحية معطَّلة افتراضيًا.",
+  "@exportIntro": {},
+  "exportName": "الاسم الكامل",
+  "@exportName": {},
+  "exportDob": "تاريخ الولادة",
+  "@exportDob": {},
+  "exportGroup": "الفئة والمجموعة",
+  "@exportGroup": {},
+  "exportGuardian": "اسم ولي الأمر",
+  "@exportGuardian": {},
+  "exportPhone": "هاتف ولي الأمر",
+  "@exportPhone": {},
+  "exportConsent": "حقوق الصورة",
+  "@exportConsent": {},
+  "exportAllergies": "الحساسية",
+  "@exportAllergies": {},
+  "exportMedications": "الأدوية",
+  "@exportMedications": {},
+  "healthTag": "صحي",
+  "@healthTag": {},
+  "exportLogged": "يُسجَّل التصدير باسمك والحقول المختارة.",
+  "@exportLogged": {},
+  "exportContainsHealth": "يحتوي بيانات صحية — للجهة المعنية فقط.",
+  "@exportContainsHealth": {},
+  "exportCta": "{count, plural, one{إنشاء الملف · حقل واحد} two{إنشاء الملف · حقلان} few{إنشاء الملف · {count} حقول} many{إنشاء الملف · {count} حقلًا} other{إنشاء الملف · {count} حقل}}",
+  "@exportCta": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "exportBusy": "يُجهَّز الملف…",
+  "@exportBusy": {},
+  "exportReady": "الملف جاهز",
+  "@exportReady": {},
+  "exportRows": "{count, plural, zero{لا صفوف} one{صف واحد} two{صفان} few{{count} صفوف} many{{count} صفًا} other{{count} صف}}",
+  "@exportRows": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "48"
+      }
+    }
+  },
+  "exportShare": "مشاركة الملف",
+  "@exportShare": {},
+  "exportLoggedToast": "سُجّل التصدير باسمك",
+  "@exportLoggedToast": {},
+  "structureTitle": "الهيكل",
+  "@structureTitle": {},
+  "strTabSeasons": "المواسم",
+  "@strTabSeasons": {},
+  "strTabCategories": "الفئات",
+  "@strTabCategories": {},
+  "strTabBranches": "الفروع",
+  "@strTabBranches": {},
+  "seasonActive": "نشط",
+  "@seasonActive": {},
+  "seasonArchived": "مؤرشف",
+  "@seasonArchived": {},
+  "seasonArchive": "أرشفة",
+  "@seasonArchive": {},
+  "seasonsNote": "المواسم تُؤرشف ولا تُحذف.",
+  "@seasonsNote": {},
+  "archiveKind": "أرشفة — قابلة للتراجع",
+  "@archiveKind": {},
+  "archiveTitle": "أرشفة موسم {label}؟",
+  "@archiveTitle": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveBody": "تُغلق المجموعات والتسجيلات للقراءة فقط. لا يُحذف شيء.",
+  "@archiveBody": {},
+  "archiveLog": "تُسجَّل الأرشفة باسمك.",
+  "@archiveLog": {},
+  "archiveCta": "أرشفة الموسم",
+  "@archiveCta": {},
+  "archivedToast": "أُرشف الموسم",
+  "@archivedToast": {},
+  "catsOpenDecision": "الفئات العمرية والجنس قرار مجلس الإدارة ولم يُتَّخذ بعد. الحقول فارغة عن قصد.",
+  "@catsOpenDecision": {},
+  "catAgeGenderUnset": "العمر/الجنس: لم يُحدَّد",
+  "@catAgeGenderUnset": {},
+  "catAgeRange": "{min}–{max} سنة",
+  "@catAgeRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "genderBoys": "ذكور",
+  "@genderBoys": {},
+  "genderGirls": "إناث",
+  "@genderGirls": {},
+  "genderMixed": "مختلط",
+  "@genderMixed": {},
+  "branchesNote": "فرع واحد اليوم. عند إضافة ثانٍ يظهر محدِّد الفرع للمشرفين.",
+  "@branchesNote": {},
+  "newBranch": "+ فرع جديد",
+  "@newBranch": {},
+  "branchNameHint": "اسم الفرع",
+  "@branchNameHint": {},
+  "branchAddressHint": "العنوان",
+  "@branchAddressHint": {},
+  "branchCreatedToast": "أُنشئ الفرع",
+  "@branchCreatedToast": {},
+  "adminOnlyTitle": "هذا القسم للإداريين فقط",
+  "@adminOnlyTitle": {},
+  "adminOnlyBody": "صلاحيتك: {role}. اطلبها من رئيس الجمعية.",
+  "@adminOnlyBody": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "adminOnlyLogged": "⦿ محاولة الوصول مسجَّلة — هذا طبيعي.",
+  "@adminOnlyLogged": {},
+  "logsTitle": "السجلات",
+  "@logsTitle": {},
+  "logTabAudit": "التدقيق",
+  "@logTabAudit": {},
+  "logTabHealth": "الوصول الصحي",
+  "@logTabHealth": {},
+  "logsAppendOnly": "⦿ إضافيّ فقط — لا تعديل ولا حذف. مدة الاحتفاظ:",
+  "@logsAppendOnly": {},
+  "retentionUnset": "لم تُحدَّد بعد",
+  "@retentionUnset": {},
+  "healthLogIntro": "من عرض المعلومات الصحية لأي طفل ومتى — الوعد الذي يُقطَع عند كل «عرض».",
+  "@healthLogIntro": {},
+  "logsEmpty": "لا سجلات بعد",
+  "@logsEmpty": {},
+  "actionLogin": "دخول",
+  "@actionLogin": {},
+  "actionCorrect": "تصحيح حضور",
+  "@actionCorrect": {},
+  "actionExport": "تصدير",
+  "@actionExport": {},
+  "actionHideMessage": "إخفاء رسالة",
+  "@actionHideMessage": {},
+  "actionHealthView": "عرض بيانات صحية",
+  "@actionHealthView": {},
+  "actionPhoneReveal": "إظهار هاتف",
+  "@actionPhoneReveal": {},
+  "actionAssign": "إسناد",
+  "@actionAssign": {},
+  "actionCreate": "إنشاء",
+  "@actionCreate": {},
+  "actionPublish": "نشر إعلان",
+  "@actionPublish": {},
+  "actionApprovePost": "اعتماد منشور",
+  "@actionApprovePost": {},
+  "actionHidePost": "إخفاء منشور",
+  "@actionHidePost": {},
+  "actionOversightRead": "قراءة إشرافية",
+  "@actionOversightRead": {},
+  "actionDenied": "محاولة وصول مرفوضة",
+  "@actionDenied": {},
+  "actionArchive": "أرشفة",
+  "@actionArchive": {},
+  "actionDismissReport": "رفض بلاغ",
+  "@actionDismissReport": {},
+  "actionInvite": "إعادة دعوة",
+  "@actionInvite": {},
+  "actionOther": "إجراء",
+  "@actionOther": {}
 }

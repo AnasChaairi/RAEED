@@ -1238,4 +1238,845 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get dialogCancel => 'Cancel';
+
+  @override
+  String get moreChildren => 'Children';
+
+  @override
+  String get moreChildrenHint => 'Profiles and consents';
+
+  @override
+  String get moreManage => 'Families and groups';
+
+  @override
+  String get moreManageHint => 'New group · new family · assignment';
+
+  @override
+  String get moreReports => 'Reports and export';
+
+  @override
+  String get moreReportsHint => 'Attendance · educators · engagement';
+
+  @override
+  String get moreStructure => 'Structure';
+
+  @override
+  String get moreStructureHint => 'Seasons · categories · branches';
+
+  @override
+  String get moreLogs => 'Logs';
+
+  @override
+  String get moreLogsHint => 'Audit · health access';
+
+  @override
+  String get adminTag => 'Admin';
+
+  @override
+  String get moreAdminHint =>
+      'Only an admin opens “Structure” and “Logs”. Any other attempt is refused and recorded.';
+
+  @override
+  String get moreSignOut => 'Sign out';
+
+  @override
+  String childrenCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count children',
+      one: '1 child',
+      zero: 'no children',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get childrenSearchHint => 'Search for a child';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get childrenEmptyTitle => 'No children match';
+
+  @override
+  String get childrenEmptyBody => 'Try another search or category.';
+
+  @override
+  String attendanceShort(String ratio) {
+    return 'attendance $ratio';
+  }
+
+  @override
+  String get imageRightsLegend => 'Image rights:';
+
+  @override
+  String get childSeasonAttendance => 'Season attendance';
+
+  @override
+  String get childImageRightsTile => 'Image rights';
+
+  @override
+  String get healthSectionTitle => 'Health information';
+
+  @override
+  String get healthEveryViewLogged => 'Every view is recorded';
+
+  @override
+  String get healthCollapsedBody =>
+      'There is a health alert. The content is folded on purpose: it shows on your request and the view is written to the health-access log.';
+
+  @override
+  String get healthNoneBody => 'No health alert recorded for this child.';
+
+  @override
+  String get healthShowButton => 'Show health information';
+
+  @override
+  String get healthConfirmTitle => 'This view will be recorded';
+
+  @override
+  String healthConfirmBody(String actor, String child) {
+    return 'It will be recorded that $actor viewed $child\'s health data now. Do not open it without a reason.';
+  }
+
+  @override
+  String get healthContinue => 'Continue';
+
+  @override
+  String get healthBack => 'Back';
+
+  @override
+  String get healthAlertTitle => 'Health alert';
+
+  @override
+  String healthRecordedAt(String time) {
+    return 'recorded at $time';
+  }
+
+  @override
+  String get healthFieldsPending =>
+      'The detailed fields are settled after the CNDP filing.';
+
+  @override
+  String get healthCollapse => 'Collapse';
+
+  @override
+  String get healthAllergies => 'Allergies';
+
+  @override
+  String get healthConditions => 'Conditions';
+
+  @override
+  String get healthMedications => 'Medications';
+
+  @override
+  String get healthDietary => 'Dietary notes';
+
+  @override
+  String get healthSpecialNeeds => 'Special needs';
+
+  @override
+  String get guardiansTitle => 'Guardians';
+
+  @override
+  String get relMother => 'mother';
+
+  @override
+  String get relFather => 'father';
+
+  @override
+  String get relGuardian => 'guardian';
+
+  @override
+  String get guardianAccountActive => 'Active';
+
+  @override
+  String get guardianAccountPending => 'Not signed in yet';
+
+  @override
+  String guardianLastSeen(String when) {
+    return 'last seen $when';
+  }
+
+  @override
+  String get guardianReveal => 'Reveal';
+
+  @override
+  String get guardianRevealLogged =>
+      'Every reveal is recorded under your name, with the time.';
+
+  @override
+  String get guardianRevealToast => 'Number reveal recorded under your name';
+
+  @override
+  String get consentsTitle => 'Consents';
+
+  @override
+  String get consentPrivacyLabel => 'Privacy policy';
+
+  @override
+  String consentVersionAt(int version, String when) {
+    return 'v$version · $when';
+  }
+
+  @override
+  String get consentImageRightsChangeable =>
+      'The guardian can change it at any time';
+
+  @override
+  String get consentApproved => 'Approved';
+
+  @override
+  String get consentMissing => 'Not yet approved';
+
+  @override
+  String get childGroupsTitle => 'Groups';
+
+  @override
+  String get groupMainTag => 'main';
+
+  @override
+  String openChildThread(String name) {
+    return 'Open $name\'s thread (oversight · recorded)';
+  }
+
+  @override
+  String get manageTitle => 'Families and groups';
+
+  @override
+  String familiesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count families',
+      one: '1 family',
+      zero: 'no families',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get manageTabUnassigned => 'Unassigned';
+
+  @override
+  String get manageTabFamilies => 'Families';
+
+  @override
+  String get manageTabGroups => 'Groups';
+
+  @override
+  String get unassignedHint =>
+      'Enrolled with no main group. Tick children, then tap assign.';
+
+  @override
+  String get unassignedEmpty => 'Every child is in a group.';
+
+  @override
+  String assignCta(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Assign $count children to a group…',
+      one: 'Assign 1 child to a group…',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String assignSheetTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Assign $count children to a group',
+      one: 'Assign 1 child to a group',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String assignWarn(int after, int capacity, String group) {
+    return '$group would be $after of $capacity — shown as over capacity.';
+  }
+
+  @override
+  String get assignLogged =>
+      'The assignment is recorded under your name and guardians are told.';
+
+  @override
+  String assignTo(String group) {
+    return 'Assign to $group';
+  }
+
+  @override
+  String get assignPick => 'Choose a group';
+
+  @override
+  String get assignOverKind => 'Over capacity';
+
+  @override
+  String assignOverTitle(String group) {
+    return 'Assign to $group over capacity?';
+  }
+
+  @override
+  String get assignOverLog =>
+      'The assignment and the overage are recorded under your name.';
+
+  @override
+  String get assignOverCta => 'Yes, assign';
+
+  @override
+  String assignedToast(int count, String group) {
+    return '$count assigned to $group';
+  }
+
+  @override
+  String get familyStatusActive => 'Active';
+
+  @override
+  String get familyStatusPartial => 'Some guardians';
+
+  @override
+  String get familyStatusPending => 'Invitation pending';
+
+  @override
+  String get familyResend => 'Resend invitation';
+
+  @override
+  String get familyResentToast => 'Invitation resent';
+
+  @override
+  String get familyAddChild => '+ child';
+
+  @override
+  String get familyNoGroup => 'no group';
+
+  @override
+  String get familiesEmpty => 'No families yet';
+
+  @override
+  String get newFamilyCta => '+ New family';
+
+  @override
+  String get newGroupCta => '+ New group';
+
+  @override
+  String get groupAssignHere => '+ Assign children';
+
+  @override
+  String get newGroupTitle => 'New group';
+
+  @override
+  String get fieldName => 'Name';
+
+  @override
+  String get groupNameHint => 'e.g. الأشبال 3';
+
+  @override
+  String get fieldCategory => 'Category';
+
+  @override
+  String get fieldCapacity => 'Capacity';
+
+  @override
+  String get fieldSchedule => 'Schedule';
+
+  @override
+  String get fieldEducators => 'Educators';
+
+  @override
+  String educatorLoad(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count groups',
+      one: '1 group',
+      zero: 'no groups',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fieldChildrenOptional =>
+      'Children (optional) — from the unassigned list';
+
+  @override
+  String get checklistNameOk => '✓ Name';
+
+  @override
+  String get checklistNameMissing => '○ Name required';
+
+  @override
+  String get checklistCategoryMissing => '○ Category required';
+
+  @override
+  String get checklistEducatorOk => '✓ Educator';
+
+  @override
+  String get checklistEducatorMissing => '○ At least one educator';
+
+  @override
+  String checklistChildren(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '✓ $count children',
+      one: '✓ 1 child',
+      zero: '○ No children (fine)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get checklistLogged => '⦿ recorded under your name';
+
+  @override
+  String createGroupCta(String name) {
+    return 'Create “$name”';
+  }
+
+  @override
+  String groupCreatedToast(String name) {
+    return '“$name” created';
+  }
+
+  @override
+  String get theGroup => 'the group';
+
+  @override
+  String get weekdaySun => 'Sunday';
+
+  @override
+  String get weekdayMon => 'Monday';
+
+  @override
+  String get weekdayTue => 'Tuesday';
+
+  @override
+  String get weekdayWed => 'Wednesday';
+
+  @override
+  String get weekdayThu => 'Thursday';
+
+  @override
+  String get weekdayFri => 'Friday';
+
+  @override
+  String get weekdaySat => 'Saturday';
+
+  @override
+  String get newFamilyTitle => 'New family';
+
+  @override
+  String get reviewStepTitle => 'Review';
+
+  @override
+  String stepOfThree(int step) {
+    return 'Step $step of 3';
+  }
+
+  @override
+  String get guardianNameHint => 'Guardian\'s name';
+
+  @override
+  String get guardianPhoneHint => '6XX XXX XXX';
+
+  @override
+  String get addGuardian => '+ Another guardian';
+
+  @override
+  String childN(int n) {
+    return 'Child $n';
+  }
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String get childNameHint => 'Child\'s name';
+
+  @override
+  String get dobLabel => 'Date of birth';
+
+  @override
+  String get dobPick => 'Pick a date';
+
+  @override
+  String get mainGroupLabel => 'Main group';
+
+  @override
+  String get groupLater => 'Later';
+
+  @override
+  String get groupFull => 'full';
+
+  @override
+  String get healthNotHere =>
+      'Health information is entered by the guardian from their own account — not here.';
+
+  @override
+  String get addChild => '+ Another child';
+
+  @override
+  String get whatHappens => 'What will happen';
+
+  @override
+  String willInvite(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '• SMS invitation to $count guardians, who accept privacy and image rights before seeing anything.',
+      one: '• SMS invitation to 1 guardian, who accepts privacy and image rights before seeing anything.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get willShow =>
+      '• The children appear to the guardian with group, schedule and educator.';
+
+  @override
+  String get willLog => '• ⦿ The creation is recorded under your name.';
+
+  @override
+  String unassignedWarn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '▲ $count children with no group — no educator sees them until assigned.',
+      one: '▲ 1 child with no group — no educator sees them until assigned.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get previous => 'Previous';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String createAndInvite(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Create and send $count invitations',
+      one: 'Create and send 1 invitation',
+      zero: 'Create',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String familyCreatedToast(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Family created · $count invitations',
+      one: 'Family created · 1 invitation',
+      zero: 'Family created',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reportsTitle => 'Reports';
+
+  @override
+  String get repTabAttendance => 'Attendance';
+
+  @override
+  String get repTabEducators => 'Educators';
+
+  @override
+  String get repTabEngagement => 'Engagement';
+
+  @override
+  String get repTabExport => 'Export';
+
+  @override
+  String get repByEducator => 'Attendance by educator';
+
+  @override
+  String get repByCategory => 'By category';
+
+  @override
+  String get repRawNote => 'Rate with the raw count';
+
+  @override
+  String repPlanned(int delivered, int planned) {
+    return 'planned/delivered $delivered/$planned';
+  }
+
+  @override
+  String repOnTime(int ontime, int planned) {
+    return 'on time $ontime of $planned';
+  }
+
+  @override
+  String get repReplyUnknown => 'reply —';
+
+  @override
+  String get repActivated => 'Guardian accounts activated';
+
+  @override
+  String get repPresenceAnswers => 'Presence confirmations answered';
+
+  @override
+  String get repHomework => 'Homework done';
+
+  @override
+  String get selfReported => 'self-reported';
+
+  @override
+  String get repNotYet => 'Not available yet';
+
+  @override
+  String get repNoData => 'No data yet';
+
+  @override
+  String get exportIntro =>
+      'Export the children list. Health fields are off by default.';
+
+  @override
+  String get exportName => 'Full name';
+
+  @override
+  String get exportDob => 'Date of birth';
+
+  @override
+  String get exportGroup => 'Category and group';
+
+  @override
+  String get exportGuardian => 'Guardian\'s name';
+
+  @override
+  String get exportPhone => 'Guardian\'s phone';
+
+  @override
+  String get exportConsent => 'Image rights';
+
+  @override
+  String get exportAllergies => 'Allergies';
+
+  @override
+  String get exportMedications => 'Medications';
+
+  @override
+  String get healthTag => 'health';
+
+  @override
+  String get exportLogged =>
+      'The export is recorded under your name with the chosen fields.';
+
+  @override
+  String get exportContainsHealth =>
+      'Contains health data — for the intended recipient only.';
+
+  @override
+  String exportCta(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Create file · $count fields',
+      one: 'Create file · 1 field',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get exportBusy => 'Preparing the file…';
+
+  @override
+  String get exportReady => 'File ready';
+
+  @override
+  String exportRows(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rows',
+      one: '1 row',
+      zero: 'no rows',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get exportShare => 'Share file';
+
+  @override
+  String get exportLoggedToast => 'Export recorded under your name';
+
+  @override
+  String get structureTitle => 'Structure';
+
+  @override
+  String get strTabSeasons => 'Seasons';
+
+  @override
+  String get strTabCategories => 'Categories';
+
+  @override
+  String get strTabBranches => 'Branches';
+
+  @override
+  String get seasonActive => 'active';
+
+  @override
+  String get seasonArchived => 'archived';
+
+  @override
+  String get seasonArchive => 'Archive';
+
+  @override
+  String get seasonsNote => 'Seasons are archived, never deleted.';
+
+  @override
+  String get archiveKind => 'Archive — reversible';
+
+  @override
+  String archiveTitle(String label) {
+    return 'Archive season $label?';
+  }
+
+  @override
+  String get archiveBody =>
+      'Groups and enrolments become read-only. Nothing is deleted.';
+
+  @override
+  String get archiveLog => 'The archive is recorded under your name.';
+
+  @override
+  String get archiveCta => 'Archive season';
+
+  @override
+  String get archivedToast => 'Season archived';
+
+  @override
+  String get catsOpenDecision =>
+      'Age ranges and gender are the board\'s decision and not yet taken. The fields are empty on purpose.';
+
+  @override
+  String get catAgeGenderUnset => 'age/gender: not set';
+
+  @override
+  String catAgeRange(int min, int max) {
+    return 'ages $min–$max';
+  }
+
+  @override
+  String get genderBoys => 'boys';
+
+  @override
+  String get genderGirls => 'girls';
+
+  @override
+  String get genderMixed => 'mixed';
+
+  @override
+  String get branchesNote =>
+      'One branch today. When a second is added, the branch picker appears for executives.';
+
+  @override
+  String get newBranch => '+ New branch';
+
+  @override
+  String get branchNameHint => 'Branch name';
+
+  @override
+  String get branchAddressHint => 'Address';
+
+  @override
+  String get branchCreatedToast => 'Branch created';
+
+  @override
+  String get adminOnlyTitle => 'This section is for admins only';
+
+  @override
+  String adminOnlyBody(String role) {
+    return 'Your role: $role. Ask the association\'s president for it.';
+  }
+
+  @override
+  String get adminOnlyLogged =>
+      '⦿ The access attempt is recorded — that is normal.';
+
+  @override
+  String get logsTitle => 'Logs';
+
+  @override
+  String get logTabAudit => 'Audit';
+
+  @override
+  String get logTabHealth => 'Health access';
+
+  @override
+  String get logsAppendOnly =>
+      '⦿ Append-only — no edits, no deletes. Retention:';
+
+  @override
+  String get retentionUnset => 'not set yet';
+
+  @override
+  String get healthLogIntro =>
+      'Who viewed which child\'s health information and when — the promise made at every reveal.';
+
+  @override
+  String get logsEmpty => 'No entries yet';
+
+  @override
+  String get actionLogin => 'sign-in';
+
+  @override
+  String get actionCorrect => 'attendance correction';
+
+  @override
+  String get actionExport => 'export';
+
+  @override
+  String get actionHideMessage => 'message hidden';
+
+  @override
+  String get actionHealthView => 'health data viewed';
+
+  @override
+  String get actionPhoneReveal => 'phone revealed';
+
+  @override
+  String get actionAssign => 'assignment';
+
+  @override
+  String get actionCreate => 'created';
+
+  @override
+  String get actionPublish => 'announcement published';
+
+  @override
+  String get actionApprovePost => 'post approved';
+
+  @override
+  String get actionHidePost => 'post hidden';
+
+  @override
+  String get actionOversightRead => 'oversight read';
+
+  @override
+  String get actionDenied => 'access denied';
+
+  @override
+  String get actionArchive => 'archive';
+
+  @override
+  String get actionDismissReport => 'report dismissed';
+
+  @override
+  String get actionInvite => 'invitation resent';
+
+  @override
+  String get actionOther => 'action';
 }

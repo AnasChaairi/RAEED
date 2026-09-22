@@ -45,6 +45,13 @@ class AppScreens {
     required this.notifications,
     required this.more,
     required this.attendanceReview,
+    required this.childrenList,
+    required this.manage,
+    required this.manageNewGroup,
+    required this.manageNewFamily,
+    required this.reports,
+    required this.structure,
+    required this.logs,
     required this.notFound,
   });
 
@@ -95,6 +102,23 @@ class AppScreens {
 
   /// The executive's attendance review for one session.
   final ScreenBuilder attendanceReview;
+
+  /// The executive's children list.
+  final ScreenBuilder childrenList;
+
+  /// Families and groups management, its new-group form and family wizard.
+  final ScreenBuilder manage;
+  final ScreenBuilder manageNewGroup;
+  final ScreenBuilder manageNewFamily;
+
+  /// Reports and export.
+  final ScreenBuilder reports;
+
+  /// Structure (admin).
+  final ScreenBuilder structure;
+
+  /// The audit log (admin).
+  final ScreenBuilder logs;
 
   /// Fallback for an unknown or stale deep link.
   final ScreenBuilder notFound;
@@ -167,6 +191,11 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.home,
         name: AppRoutes.homeName,
         builder: screens.home,
+      ),
+      GoRoute(
+        path: AppRoutes.childrenList,
+        name: AppRoutes.childrenListName,
+        builder: screens.childrenList,
       ),
       GoRoute(
         path: AppRoutes.child,
@@ -250,6 +279,38 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.more,
         name: AppRoutes.moreName,
         builder: screens.more,
+      ),
+      GoRoute(
+        path: AppRoutes.manage,
+        name: AppRoutes.manageName,
+        builder: screens.manage,
+        routes: [
+          GoRoute(
+            path: 'groups/new',
+            name: AppRoutes.manageNewGroupName,
+            builder: screens.manageNewGroup,
+          ),
+          GoRoute(
+            path: 'families/new',
+            name: AppRoutes.manageNewFamilyName,
+            builder: screens.manageNewFamily,
+          ),
+        ],
+      ),
+      GoRoute(
+        path: AppRoutes.reports,
+        name: AppRoutes.reportsName,
+        builder: screens.reports,
+      ),
+      GoRoute(
+        path: AppRoutes.structure,
+        name: AppRoutes.structureName,
+        builder: screens.structure,
+      ),
+      GoRoute(
+        path: AppRoutes.logs,
+        name: AppRoutes.logsName,
+        builder: screens.logs,
       ),
     ],
   );

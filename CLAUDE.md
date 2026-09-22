@@ -64,7 +64,8 @@ logo/            Brand assets
 | RAEED-2/3/5 OTP sign-in, token refresh, consent capture | Done |
 | RAEED-12 Parent Home + child profile | Done |
 | RAEED-16/17/21 attendance, offline queue, presence confirmation | Done (mobile); **no server endpoints yet** |
-| EXEC-M-01..07 executive shell — dashboard, announcements + composer, messages, Memories review, groups + attendance review, notifications, More | Done (mobile); only `/dashboard/overview`, `/announcements`, `/groups/{id}/sessions` and `/sessions/{id}/attendance` exist server-side — the rest are **proposed** paths named in the screen specs |
+| EXEC-M-01..07 executive shell — dashboard, announcements + composer, messages, Memories review, groups + attendance review, notifications, More | Done, with the server endpoints behind every screen |
+| EXEC-M-08..13 the More sections — children list, executive child profile (logged health + phone reveals), families & groups (assign, new group, new family), reports + export, structure, logs | Done, with the server endpoints behind every screen; structure and logs are admin-only and a refusal is recorded |
 | Everything else in `specs/13-roadmap-and-tickets.md` | Not started — routes render a `PlaceholderScreen` naming the ticket |
 
 ### Backend progress
@@ -75,8 +76,8 @@ logo/            Brand assets
 | RAEED-2/3 OTP, JWT, refresh rotation, devices | Done |
 | RAEED-4 CASL abilities + `@CheckAbility` guard | Done |
 | RAEED-9/10 children, consent, announcements (read) | Done |
-| RAEED-13..21 sessions, attendance, the critical-alert queue | Not started |
-| Messaging, Memories Wall, dashboard, audit interceptor | Not started |
+| RAEED-13..21 sessions, attendance, the critical-alert queue | Sessions list, attendance read + correction chain and the critical queue exist for the executive surface; educator marking endpoints not started |
+| Executive surface — dashboard, messaging oversight, Memories review, notifications, families/groups, reports + export, structure, audit log | Done; every sensitive read (health, phone, export, oversight) writes an audit entry, `access.denied` is recorded by the guard |
 
 ## Mobile: install, run, test, lint
 
