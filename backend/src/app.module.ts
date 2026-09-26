@@ -14,10 +14,12 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { FamiliesModule } from './modules/families/families.module';
 import { GroupsModule } from './modules/groups/groups.module';
 import { IdentityModule } from './modules/identity/identity.module';
+import { MediaModule } from './modules/media/media.module';
 import { MemoriesModule } from './modules/memories/memories.module';
 import { MessagingModule } from './modules/messaging/messaging.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { ReportsModule } from './modules/reports/reports.module';
+import { SessionsModule } from './modules/sessions/sessions.module';
 import { StructureModule } from './modules/structure/structure.module';
 
 /**
@@ -47,6 +49,8 @@ import { StructureModule } from './modules/structure/structure.module';
     ReportsModule,
     StructureModule,
     AuditModule,
+    MediaModule,
+    SessionsModule,
   ],
   controllers: [HealthController],
 })
