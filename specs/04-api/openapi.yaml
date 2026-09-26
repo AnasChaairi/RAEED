@@ -156,6 +156,7 @@ components:
       required: [album_id, media, tagged_child_ids]
       properties:
         album_id: { type: string, format: uuid }
+        caption: { type: string }
         media:
           type: array
           items:
@@ -163,7 +164,7 @@ components:
             required: [storage_key, media_kind]
             properties:
               storage_key: { type: string }
-              media_kind: { type: string, enum: [photo, video, banner] }
+              media_kind: { type: string, enum: [photo, video] }
         tagged_child_ids:
           type: array
           items: { type: string, format: uuid }
@@ -1404,6 +1405,290 @@ paths:
                 address: { type: string }
       responses:
         '201': { description: Created }
+
+  # --- Educator surface (EDU-M-01..10) ---------------------------------------
+
+  /educator/today:
+    get:
+      summary: The educator's Today (EDU-M-01)
+      description: >
+        The next session with the guardians' presence tallies and attendance state,
+        today's sessions, the schedule-generated sessions still without content
+        in the next 7 days, and the pinned announcement with whether the caller
+        confirmed reading it. Generates missing sessions from the weekly schedule
+        for the week ahead first (SES-02).
+      responses:
+        '200': { description: OK }
+
+  /sessions:
+    get:
+      summary: Sessions of the caller's groups in a window, generated from the weekly schedule first (SES-02)
+      parameters:
+        - name: from
+          in: query
+          schema: { type: string, format: date-time }
+        - name: to
+          in: query
+          schema: { type: string, format: date-time }
+        - name: group_id
+          in: query
+          schema: { type: string, format: uuid }
+      responses:
+        '200': { description: OK — each row carries has_content, material_count, homework_count, attendance_recorded, summary_sent, rescheduled_from }
+
+  /sessions/{sessionId}:
+    parameters:
+      - name: sessionId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    get:
+      summary: One session with objectives, materials, homework, attendance and presence counts
+      responses:
+        '200': { description: OK }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    patch:
+      summary: Add or edit content (title, theme, objectives, material visibility); marks the session customised
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                theme: { type: string }
+                objectives: { type: string }
+                materials:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id: { type: string, format: uuid }
+                      visibility: { type: string, enum: [before_session, after_session, staff_only] }
+      responses:
+        '200': { description: The updated session }
+
+  /sessions/{sessionId}/materials:
+    post:
+      summary: Attach an uploaded file or a link to a session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [kind, storage_key]
+              properties:
+                kind: { type: string, enum: [document, image, audio, video, link] }
+                storage_key: { type: string, description: A key from POST /media, or the URL for a link }
+                title: { type: string }
+                visibility: { type: string, enum: [before_session, after_session, staff_only] }
+                size_bytes: { type: integer }
+      responses:
+        '201': { description: Created }
+
+  /materials/{materialId}:
+    delete:
+      summary: Remove a material (soft)
+      parameters:
+        - name: materialId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Removed }
+
+  /sessions/{sessionId}/cancel:
+    post:
+      summary: Cancel or reschedule a session and tell guardians, co-educators and executives
+      description: >
+        Less than 24h out the notice is critical and goes on the critical queue
+        (09-notifications-spec.md); otherwise normal. Recorded as session.cancel /
+        session.reschedule in the caller's name.
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mode, reason]
+              properties:
+                mode: { type: string, enum: [cancel, reschedule] }
+                reason: { type: string }
+                starts_at: { type: string, format: date-time }
+                ends_at: { type: string, format: date-time }
+                place: { type: string }
+      responses:
+        '200': { description: "{ notified_count, guardian_count }" }
+
+  /sessions/{sessionId}/summary:
+    post:
+      summary: Send "what we did today" to the group's guardians, once
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [body]
+              properties:
+                body: { type: string }
+                media_keys: { type: array, items: { type: string } }
+      responses:
+        '200': { description: "{ sent_at, family_count }" }
+        '409': { description: session.summary_already_sent }
+
+  /sessions/{sessionId}/presence:
+    get:
+      summary: Who confirmed, declined (with reason) or never answered (EDU-M-02)
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200': { description: OK }
+
+  /sessions/{sessionId}/presence/remind:
+    post:
+      summary: One reminder to the guardians who have not answered
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200': { description: "{ reminded_count, sent_at }" }
+        '409': { description: presence.reminder_already_sent }
+
+  /sessions/{sessionId}/homework:
+    post:
+      summary: Set homework for the whole group or named children (HWK-01)
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [instructions, due_at]
+              properties:
+                title: { type: string }
+                instructions: { type: string }
+                due_at: { type: string, format: date-time }
+                target_child_ids: { type: array, items: { type: string, format: uuid }, description: Omitted = whole group }
+                attachment_storage_key: { type: string }
+      responses:
+        '201': { description: Created — done counts are self-reported (HWK-03) }
+
+  /groups/{groupId}/homework:
+    get:
+      summary: A group's homework with self-reported done counts
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200': { description: OK }
+
+  /groups/{groupId}/roster:
+    get:
+      summary: The group's children as the educator's roster shows them (health flag, image rights, attendance, care flag)
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200': { description: OK }
+
+  /media:
+    post:
+      summary: Upload a file (image, audio, video ≤ 50 MB, or document) to the local StorageProvider
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file: { type: string, format: binary }
+      responses:
+        '201': { description: "{ storage_key, url, kind, name, size_bytes, content_type }" }
+
+  /media/{key}:
+    get:
+      summary: Serve an uploaded file to a signed-in user
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: The file }
+
+  /memories/posts:
+    get:
+      summary: The caller's own posts (`?mine=true`) with where each stands
+      parameters:
+        - name: mine
+          in: query
+          required: true
+          schema: { type: boolean }
+      responses:
+        '200': { description: OK }
+
+  /announcements/{announcementId}/confirm-read:
+    post:
+      summary: "I have read this" (ANN-06); idempotent
+      parameters:
+        - name: announcementId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200': { description: "{ confirmed_at }" }
+
+  /children/{childId}/emergency-call:
+    post:
+      summary: A recorded emergency call to the child's emergency contact; the number goes to the dialer, never on screen
+      parameters:
+        - name: childId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200': { description: "{ guardian_id, display_name, phone, recorded_at }" }
+
+  /auth/me/availability:
+    patch:
+      summary: The educator's availability window (MSG-07), applied to every group they lead
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [start, end]
+              properties:
+                start: { type: string, example: "09:00" }
+                end: { type: string, example: "20:00" }
+      responses:
+        '200': { description: "{ start, end }" }
 
   /audit-log:
     get:
