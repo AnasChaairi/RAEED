@@ -66,6 +66,7 @@ logo/            Brand assets
 | RAEED-16/17/21 attendance, offline queue, presence confirmation | Done (mobile); **no server endpoints yet** |
 | EXEC-M-01..07 executive shell — dashboard, announcements + composer, messages, Memories review, groups + attendance review, notifications, More | Done, with the server endpoints behind every screen |
 | EXEC-M-08..13 the More sections — children list, executive child profile (logged health + phone reveals), families & groups (assign, new group, new family), reports + export, structure, logs | Done, with the server endpoints behind every screen; structure and logs are admin-only and a refusal is recorded |
+| EDU-M-01..10 the educator surface — Today, presence overview, the restyled attendance sheet, sessions week / content / summary / cancel, homework, groups + roster + team channel, the educator's child view (logged health reveal, recorded emergency call), messages, memories + composer with the consent-blocked tag, group announcement, More with availability hours | Done, with the server endpoints behind every screen; `/home`, `/children/:id`, `/groups/:id`, the composers and `/more` pick the educator's screen by the presented role |
 | Everything else in `specs/13-roadmap-and-tickets.md` | Not started — routes render a `PlaceholderScreen` naming the ticket |
 
 ### Backend progress
@@ -78,6 +79,7 @@ logo/            Brand assets
 | RAEED-9/10 children, consent, announcements (read) | Done |
 | RAEED-13..21 sessions, attendance, the critical-alert queue | Sessions list, attendance read + correction chain and the critical queue exist for the executive surface; educator marking endpoints not started |
 | Executive surface — dashboard, messaging oversight, Memories review, notifications, families/groups, reports + export, structure, audit log | Done; every sensitive read (health, phone, export, oversight) writes an audit entry, `access.denied` is recorded by the guard |
+| Educator surface — sessions generated from the weekly schedule (RAEED-13, on read), content + materials (RAEED-14, local-disk `POST /media`), presence overview + single reminder, summary, cancel/reschedule on the critical lane inside 24h, homework (RAEED-22), roster + group stats, educator child view + recorded emergency call, own posts with the `WAL-06` consent check, read confirmations (`ANN-06`), availability hours (`MSG-07`) | Done; the attendance-not-recorded reminder job, presence-confirmation send job and homework due-date reminder job are still not started |
 
 ## Mobile: install, run, test, lint
 
