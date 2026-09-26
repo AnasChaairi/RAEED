@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 import '../../core/theme/design_tokens.gen.dart';
@@ -83,12 +85,14 @@ enum BrandGradientVariant {
 /// The RAEED wordmark, as the design places it on the sign-in gradient.
 ///
 /// The source file has a black backdrop, which the design hides with
-/// `mix-blend-mode: screen`. Flutter's equivalent is [BlendMode.screen] on the
-/// image itself: on a dark ground the black pixels drop out and only the mark
-/// shows. The style guide allows exactly this — the backdrop is "a presentation
-/// choice, not a mandate" — while forbidding recolouring the mark, which screen
-/// blending does not do.
-class BrandWordmark extends StatelessWidget {
+/// `mix-blend-mode: screen`. `Image.colorBlendMode` cannot do that — it
+/// blends a colour *into* the image, so screening with black changes
+/// nothing and the backdrop stays. The mark is instead painted straight
+/// onto the gradient with [BlendMode.screen], so black pixels drop out and
+/// the mark's own colours stay untouched, which is what the style guide
+/// allows: the backdrop is "a presentation choice, not a mandate", the mark
+/// itself is never recoloured. Only correct on a dark ground.
+class BrandWordmark extends StatefulWidget {
   const BrandWordmark({this.width = 260, super.key});
 
   /// Rendered width. The guide sets a 32px floor, below which the Arabic
@@ -96,18 +100,77 @@ class BrandWordmark extends StatelessWidget {
   final double width;
 
   @override
+  State<BrandWordmark> createState() => _BrandWordmarkState();
+}
+
+class _BrandWordmarkState extends State<BrandWordmark> {
+  static const AssetImage _asset = AssetImage('assets/images/logo.jpeg');
+
+  /// The source file's proportions, so the box holds its place before decode.
+  static const double _aspectRatio = 666 / 375;
+
+  ImageStream? _stream;
+  ImageStreamListener? _listener;
+  ui.Image? _image;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final stream = _asset.resolve(createLocalImageConfiguration(context));
+    if (stream.key == _stream?.key) return;
+    _detach();
+    _stream = stream;
+    _listener = ImageStreamListener((info, _) {
+      if (mounted) setState(() => _image = info.image);
+    });
+    stream.addListener(_listener!);
+  }
+
+  void _detach() {
+    final listener = _listener;
+    if (listener != null) _stream?.removeListener(listener);
+  }
+
+  @override
+  void dispose() {
+    _detach();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => Semantics(
     label: 'أكاديمية الطفل الرائد',
     image: true,
-    child: Image.asset(
-      'assets/images/logo.jpeg',
-      width: width,
-      fit: BoxFit.contain,
-      // Only correct on a dark ground; on a light surface use the mark
-      // unblended against `surface`.
-      colorBlendMode: BlendMode.screen,
-      color: const Color(0xFF000000),
-      excludeFromSemantics: true,
+    child: SizedBox(
+      width: widget.width,
+      height: widget.width / _aspectRatio,
+      child: _image == null
+          ? null
+          : CustomPaint(painter: _ScreenBlendPainter(_image!)),
     ),
   );
+}
+
+class _ScreenBlendPainter extends CustomPainter {
+  const _ScreenBlendPainter(this.image);
+
+  final ui.Image image;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final source = Rect.fromLTWH(
+      0,
+      0,
+      image.width.toDouble(),
+      image.height.toDouble(),
+    );
+    final paint = Paint()
+      ..blendMode = BlendMode.screen
+      ..filterQuality = FilterQuality.medium;
+    canvas.drawImageRect(image, source, Offset.zero & size, paint);
+  }
+
+  @override
+  bool shouldRepaint(_ScreenBlendPainter oldDelegate) =>
+      oldDelegate.image != image;
 }
