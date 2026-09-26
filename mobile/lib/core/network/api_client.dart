@@ -113,6 +113,51 @@ class ApiClient {
     await _send(() => _dio.delete<Object?>(path, cancelToken: cancelToken));
   }
 
+  /// Uploads one file as `multipart/form-data` under [fieldName].
+  Future<Map<String, Object?>> postFile(
+    String path, {
+    required String filePath,
+    String fieldName = 'file',
+    String? contentType,
+    CancelToken? cancelToken,
+  }) async {
+    final form = FormData.fromMap({
+      fieldName: await MultipartFile.fromFile(
+        filePath,
+        contentType: contentType == null
+            ? null
+            : DioMediaType.parse(contentType),
+      ),
+    });
+    final response = await _send(
+      () => _dio.post<Object?>(
+        path,
+        data: form,
+        cancelToken: cancelToken,
+        options: Options(contentType: Headers.multipartFormDataContentType),
+      ),
+    );
+    return asJsonObject(response, context: 'POST $path');
+  }
+
+  /// Fetches raw bytes through the authenticated client — for media that is
+  /// never a public URL.
+  Future<List<int>> getBytes(String path, {CancelToken? cancelToken}) async {
+    final Response<List<int>> response;
+    try {
+      response = await _dio.get<List<int>>(
+        path,
+        cancelToken: cancelToken,
+        options: Options(responseType: ResponseType.bytes),
+      );
+    } on DioException catch (error, stackTrace) {
+      throw _fromDioException(error, stackTrace);
+    }
+    final status = response.statusCode ?? 0;
+    if (status >= 200 && status < 300) return response.data ?? const [];
+    throw NetworkException(message: 'Could not load media ($status).');
+  }
+
   /// Runs a request and normalises every outcome into either a decoded body or
   /// a [RaeedException].
   Future<Object?> _send(Future<Response<Object?>> Function() request) async {

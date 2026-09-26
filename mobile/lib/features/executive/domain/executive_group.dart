@@ -12,6 +12,7 @@ class ExecutiveGroup {
     this.educatorNames = const [],
     this.scheduleLabel,
     this.place,
+    this.stats,
   });
 
   final String id;
@@ -32,6 +33,9 @@ class ExecutiveGroup {
 
   /// The usual room.
   final String? place;
+
+  /// The educator's at-a-glance numbers (EDU-M-06); absent on oversight lists.
+  final GroupStats? stats;
 
   /// Whether more children are enrolled than the group was sized for.
   ///
@@ -81,4 +85,43 @@ class GroupSession {
 
   /// Children expected, when attendance was recorded.
   final int? enrolledCount;
+}
+
+/// A child with three consecutive unexplained absences — a care flag.
+@immutable
+class CareFlag {
+  const CareFlag({
+    required this.childId,
+    required this.fullName,
+    required this.consecutiveAbsences,
+  });
+
+  final String childId;
+  final String fullName;
+  final int consecutiveAbsences;
+}
+
+/// The numbers on the educator's group card.
+@immutable
+class GroupStats {
+  const GroupStats({
+    required this.present,
+    required this.expected,
+    required this.homeworkDone,
+    required this.homeworkTotal,
+    this.nextSessionAt,
+    this.flags = const [],
+  });
+
+  final int present;
+  final int expected;
+  final int homeworkDone;
+  final int homeworkTotal;
+  final DateTime? nextSessionAt;
+  final List<CareFlag> flags;
+
+  int? get attendancePercent =>
+      expected == 0 ? null : (present * 100 / expected).round();
+  int? get homeworkPercent =>
+      homeworkTotal == 0 ? null : (homeworkDone * 100 / homeworkTotal).round();
 }
