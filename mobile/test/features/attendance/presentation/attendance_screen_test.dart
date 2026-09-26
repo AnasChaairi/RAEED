@@ -257,8 +257,7 @@ void main() {
       await pumpScreen(tester);
       await tester.pumpAndSettle();
 
-      final l10n = AppL10n.of(tester.element(find.byType(AttendanceScreen)));
-      await tester.tap(find.text(l10n.attendanceMarkRemainingPresent));
+      await tester.tap(find.byKey(const Key('attendance-mark-remaining')));
       await tester.pumpAndSettle();
 
       final markedChildren = verify(
@@ -294,7 +293,7 @@ void main() {
       expect(find.text(l10n.attendanceOfflineSaved), findsWidgets);
 
       final submit = tester.widget<FilledButton>(
-        find.widgetWithText(FilledButton, l10n.attendanceSubmit),
+        find.byKey(const Key('attendance-submit')),
       );
       expect(
         submit.onPressed,
