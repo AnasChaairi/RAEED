@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/l10n/generated/app_localizations.dart';
+import '../../../../core/l10n/hijri_date.dart';
 import '../../../../core/theme/design_tokens.gen.dart';
 import '../../../../core/theme/raeed_theme.dart';
 import '../../../../shared/widgets/brand_gradient.dart';
@@ -135,10 +136,9 @@ class ExecutiveHeader extends StatelessWidget {
 /// Gregorian on top, the Hijri line beneath in gold, today's session count
 /// at the trailing edge.
 ///
-/// The Hijri line stays empty until the server supplies it, for the reason
-/// `HomeHeader` gives: `intl` has no Hijri calendar and the org-level offset
-/// is a server setting, so an arithmetic approximation would be a day off
-/// for much of the year on a screen where the date is the point.
+/// The Hijri line comes from the tabular calendar (`HijriDate`); the
+/// org-level offset that aligns it to the announced date is still a server
+/// setting to come.
 class _DateStrip extends StatelessWidget {
   const _DateStrip({
     required this.today,
@@ -185,7 +185,7 @@ class _DateStrip extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  '',
+                  HijriDate.fromGregorian(today).format(locale.languageCode),
                   style: caption.copyWith(color: palette.accentDecorative),
                 ),
               ],

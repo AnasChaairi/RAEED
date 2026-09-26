@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/l10n/generated/app_localizations.dart';
+import '../../../../core/l10n/hijri_date.dart';
 import '../../../../core/theme/design_tokens.gen.dart';
 import '../../../../core/theme/raeed_theme.dart';
 import '../../../../shared/widgets/brand_gradient.dart';
@@ -180,15 +181,13 @@ class _DateStrip extends StatelessWidget {
   String _gregorian(Locale locale) =>
       DateFormat('EEEE d MMMM y', _numberLocale(locale)).format(today);
 
-  /// The Hijri date.
+  /// The Hijri date, by the tabular calendar (`HijriDate`).
   ///
-  /// `intl` ships no Hijri calendar, and the org-level `hijri_offset_days`
-  /// setting that lets executives align to the officially announced date is a
-  /// server value this screen does not have yet. Rather than render an
-  /// arithmetic approximation that would be wrong by a day for much of the year
-  /// — on a screen where the date is the point — the line stays empty until the
-  /// backend supplies it.
-  String _hijri(Locale locale) => '';
+  /// The org-level `hijri_offset_days` that aligns it to the officially
+  /// announced date is still a server setting this screen does not have;
+  /// until it arrives the line can be a day off around a month's start.
+  String _hijri(Locale locale) =>
+      HijriDate.fromGregorian(today).format(locale.languageCode);
 
   /// Pinned to `ar_MA`, not generic `ar`: the Mashriq default would render
   /// Eastern Arabic-Indic digits, which Morocco does not use.
