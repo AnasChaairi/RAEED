@@ -43,6 +43,7 @@ class HomeScreen extends ConsumerWidget {
             greetingName: displayName,
             today: DateTime.now(),
             unreadCount: home.value?.announcements.length ?? 0,
+            onMoreTap: () => context.push(AppRoutes.more),
           ),
           Expanded(
             child: home.when(

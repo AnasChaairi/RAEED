@@ -20,6 +20,7 @@ class HomeHeader extends StatelessWidget {
     this.sessionSummary,
     this.unreadCount = 0,
     this.onNotificationsTap,
+    this.onMoreTap,
     super.key,
   });
 
@@ -36,6 +37,9 @@ class HomeHeader extends StatelessWidget {
   final int unreadCount;
 
   final VoidCallback? onNotificationsTap;
+
+  /// Opens More — where a guardian who also holds another role switches.
+  final VoidCallback? onMoreTap;
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +91,25 @@ class HomeHeader extends StatelessWidget {
                     unreadCount: unreadCount,
                     onTap: onNotificationsTap,
                   ),
+                  if (onMoreTap != null) ...[
+                    const SizedBox(width: RaeedSpacing.xs),
+                    Semantics(
+                      button: true,
+                      label: l10n.execMore,
+                      child: InkWell(
+                        onTap: onMoreTap,
+                        borderRadius: BorderRadius.circular(RaeedRadius.lg),
+                        child: SizedBox(
+                          width: RaeedTouchTarget.minPx,
+                          height: RaeedTouchTarget.minPx,
+                          child: Icon(
+                            Icons.more_horiz_rounded,
+                            color: palette.primaryOn,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
               const SizedBox(height: RaeedSpacing.lg),

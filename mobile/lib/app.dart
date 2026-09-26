@@ -198,9 +198,11 @@ final AppScreens appScreensTable = AppScreens(
     ),
   ),
   notifications: (context, state) => const NotificationsScreen(),
-  more: (context, state) => _presentedRole(context) == RaeedRole.educator
-      ? const EducatorMoreScreen()
-      : const MoreScreen(),
+  // Oversight roles get the executive's More; educators and guardians the
+  // lighter one, which is how a two-role user switches surface either way.
+  more: (context, state) => (_presentedRole(context)?.hasOversight ?? false)
+      ? const MoreScreen()
+      : const EducatorMoreScreen(),
   manage: (context, state) => ManageScreen(
     initialTab: ManageTab.fromSlug(
       state.uri.queryParameters[AppRoutes.manageTabParam],
