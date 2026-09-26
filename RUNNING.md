@@ -3,8 +3,8 @@
 Three pieces: Postgres + Redis in containers, the NestJS API, and the Flutter
 app. The API is the only one that needs the containers.
 
-Everything below is local-development only. No cloud infrastructure is
-provisioned (`specs/12-devops-and-environments.md`).
+Everything below is local development. A shared dev copy of the backend also
+runs on an OVH VM — see [DEPLOYING.md](./DEPLOYING.md).
 
 ## Prerequisites
 

@@ -35,11 +35,11 @@ Confirmed in `specs/01-product-brief.md` — build against these, don't re-deriv
 | Web dashboard | React + TypeScript (executive dashboard only) |
 | Backend | NestJS (TypeScript), modular monolith, PostgreSQL, Redis + BullMQ |
 | Push / errors | Firebase Cloud Messaging (delivery only) · Sentry |
-| Hosting | OVHcloud EU — **local dev only for now**, no cloud infra provisioned |
+| Hosting | OVHcloud EU — one dev-server VM ([DEPLOYING.md](./DEPLOYING.md)), still `NODE_ENV=development`; no staging/production |
 
 ## Repository layout
 
-See [RUNNING.md](./RUNNING.md) to start the stack and sign in.
+See [RUNNING.md](./RUNNING.md) to start the stack and sign in, [DEPLOYING.md](./DEPLOYING.md) for the dev server.
 
 ```
 backend/         NestJS API — modular monolith, Postgres + Redis
