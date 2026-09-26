@@ -202,6 +202,7 @@ class _AudienceSheetState extends State<AudienceSheet> {
     AudienceMode.parents => l10n.audParents,
     AudienceMode.educators => l10n.audEducators,
     AudienceMode.categories => l10n.audCategories,
+    AudienceMode.groups => l10n.execTabGroups,
   };
 
   String? _modeCount(AudienceMode mode) {
@@ -212,6 +213,7 @@ class _AudienceSheetState extends State<AudienceSheet> {
       AudienceMode.parents => '${reach.parentsCount}',
       AudienceMode.educators => '${reach.educatorsCount}',
       AudienceMode.categories => '…',
+      AudienceMode.groups => '…',
     };
   }
 }

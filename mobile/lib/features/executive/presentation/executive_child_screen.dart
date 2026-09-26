@@ -70,7 +70,12 @@ class ExecutiveChildScreen extends ConsumerWidget {
                   RaeedSpacing.xl2,
                 ),
                 children: [
-                  HealthSection(profile: data, now: now ?? DateTime.now()),
+                  HealthSection(
+                    childId: data.id,
+                    childName: data.fullName,
+                    hasHealthAlert: data.hasHealthAlert,
+                    now: now ?? DateTime.now(),
+                  ),
                   const SizedBox(height: RaeedSpacing.sm + 2),
                   GuardiansSection(profile: data, now: now ?? DateTime.now()),
                   const SizedBox(height: RaeedSpacing.sm + 2),
@@ -249,9 +254,19 @@ class _HeaderTile extends StatelessWidget {
 
 /// Collapsed → the "this will be recorded" confirm → revealed.
 class HealthSection extends ConsumerStatefulWidget {
-  const HealthSection({required this.profile, required this.now, super.key});
+  const HealthSection({
+    required this.childId,
+    required this.childName,
+    required this.hasHealthAlert,
+    required this.now,
+    super.key,
+  });
 
-  final ExecutiveChildProfile profile;
+  /// Shared by the executive's and the educator's child screens: both read
+  /// the text through the same logged route.
+  final String childId;
+  final String childName;
+  final bool hasHealthAlert;
   final DateTime now;
 
   @override
@@ -272,7 +287,7 @@ class _HealthSectionState extends ConsumerState<HealthSection> {
     try {
       final reveal = await ref
           .read(executiveChildrenRepositoryProvider)
-          .revealHealth(widget.profile.id);
+          .revealHealth(widget.childId);
       if (!mounted) return;
       setState(() {
         _reveal = reveal;
@@ -308,7 +323,7 @@ class _HealthSectionState extends ConsumerState<HealthSection> {
                 width: 26,
                 height: 26,
                 decoration: BoxDecoration(
-                  color: widget.profile.hasHealthAlert
+                  color: widget.hasHealthAlert
                       ? palette.danger
                       : palette.surfaceAlt,
                   borderRadius: BorderRadius.circular(RaeedRadius.sm + 2),
@@ -316,7 +331,7 @@ class _HealthSectionState extends ConsumerState<HealthSection> {
                 child: Icon(
                   Icons.priority_high_rounded,
                   size: 14,
-                  color: widget.profile.hasHealthAlert
+                  color: widget.hasHealthAlert
                       ? palette.surface
                       : palette.inkDim,
                 ),
@@ -338,7 +353,7 @@ class _HealthSectionState extends ConsumerState<HealthSection> {
             ],
           ),
           const SizedBox(height: RaeedSpacing.sm + 2),
-          if (!widget.profile.hasHealthAlert)
+          if (!widget.hasHealthAlert)
             Text(
               l10n.healthNoneBody,
               style: context.type.caption.copyWith(color: palette.inkDim),
@@ -392,7 +407,7 @@ class _HealthSectionState extends ConsumerState<HealthSection> {
                     ),
                     const SizedBox(height: RaeedSpacing.xs),
                     Text(
-                      l10n.healthConfirmBody(actor, widget.profile.fullName),
+                      l10n.healthConfirmBody(actor, widget.childName),
                       style: context.type.caption.copyWith(color: palette.ink),
                     ),
                     const SizedBox(height: RaeedSpacing.sm + 2),

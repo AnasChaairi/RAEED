@@ -11,7 +11,10 @@ enum AudienceMode {
   educators('educators'),
 
   /// The guardians of the children in the chosen categories.
-  categories('categories');
+  categories('categories'),
+
+  /// The educator's audience: their own groups (`ANN-03`).
+  groups('groups');
 
   const AudienceMode(this.wireValue);
 
@@ -21,32 +24,53 @@ enum AudienceMode {
 /// The audience of an announcement.
 @immutable
 class AnnouncementAudience {
-  const AnnouncementAudience({required this.mode, this.categoryIds = const {}});
+  const AnnouncementAudience({
+    required this.mode,
+    this.categoryIds = const {},
+    this.groupIds = const {},
+  });
+
+  const AnnouncementAudience.groups(this.groupIds)
+    : mode = AudienceMode.groups,
+      categoryIds = const {};
 
   /// Everyone in the caller's branch scope.
   const AnnouncementAudience.all()
     : mode = AudienceMode.all,
-      categoryIds = const {};
+      categoryIds = const {},
+      groupIds = const {};
 
   /// Every guardian.
   const AnnouncementAudience.parents()
     : mode = AudienceMode.parents,
-      categoryIds = const {};
+      categoryIds = const {},
+      groupIds = const {};
 
   /// Every educator.
   const AnnouncementAudience.educators()
     : mode = AudienceMode.educators,
-      categoryIds = const {};
+      categoryIds = const {},
+      groupIds = const {};
 
   final AudienceMode mode;
 
   /// Only read when [mode] is [AudienceMode.categories].
   final Set<String> categoryIds;
 
+  /// Only read when [mode] is [AudienceMode.groups].
+  final Set<String> groupIds;
+
+  AnnouncementAudience withGroupToggled(String groupId) {
+    final next = Set<String>.of(groupIds);
+    if (!next.remove(groupId)) next.add(groupId);
+    return AnnouncementAudience.groups(next);
+  }
+
   /// A category audience with nobody in it reaches nobody — the composer
   /// refuses to send it rather than quietly publishing into the void.
   bool get isEmptySelection =>
-      mode == AudienceMode.categories && categoryIds.isEmpty;
+      (mode == AudienceMode.categories && categoryIds.isEmpty) ||
+      (mode == AudienceMode.groups && groupIds.isEmpty);
 
   AnnouncementAudience withCategoryToggled(String categoryId) {
     final next = Set<String>.of(categoryIds);
@@ -63,10 +87,16 @@ class AnnouncementAudience {
       other is AnnouncementAudience &&
           other.mode == mode &&
           other.categoryIds.length == categoryIds.length &&
-          other.categoryIds.containsAll(categoryIds);
+          other.categoryIds.containsAll(categoryIds) &&
+          other.groupIds.length == groupIds.length &&
+          other.groupIds.containsAll(groupIds);
 
   @override
-  int get hashCode => Object.hash(mode, Object.hashAllUnordered(categoryIds));
+  int get hashCode => Object.hash(
+    mode,
+    Object.hashAllUnordered(categoryIds),
+    Object.hashAllUnordered(groupIds),
+  );
 }
 
 /// One فئة as the audience picker offers it, with how many people it reaches.
@@ -96,12 +126,16 @@ class AudienceReach {
     required this.parentsCount,
     required this.educatorsCount,
     required this.categories,
+    this.groups = const [],
   });
 
   final int allCount;
   final int parentsCount;
   final int educatorsCount;
   final List<AudienceCategory> categories;
+
+  /// The caller's groups with their guardian counts (the educator's picker).
+  final List<AudienceCategory> groups;
 }
 
 /// What the composer sends.
@@ -113,7 +147,11 @@ class AnnouncementDraft {
     this.body,
     this.priority = AnnouncementPriority.normal,
     this.expireAt,
+    this.ackRequired = false,
   });
+
+  /// Ask every recipient to confirm they read it (`ANN-06`).
+  final bool ackRequired;
 
   final String title;
   final String? body;

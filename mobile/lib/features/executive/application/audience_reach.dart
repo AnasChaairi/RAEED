@@ -14,6 +14,10 @@ int reachFor(AnnouncementAudience audience, AudienceReach reach) =>
         reach.categories
             .where((category) => audience.categoryIds.contains(category.id))
             .fold(0, (sum, category) => sum + category.guardianCount),
+      AudienceMode.groups =>
+        reach.groups
+            .where((group) => audience.groupIds.contains(group.id))
+            .fold(0, (sum, group) => sum + group.guardianCount),
     };
 
 /// The chosen categories, in the server's order, for the plain-language

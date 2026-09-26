@@ -32,6 +32,7 @@ abstract final class AppRoutes {
   /// Role-scoped home.
   static const String home = '/home';
   static const String homeName = 'home';
+  static const String homeTabParam = 'tab';
 
   /// A child's profile.
   static const String child = '/children/:childId';
@@ -57,6 +58,18 @@ abstract final class AppRoutes {
   static const String attendanceName = 'attendance';
 
   /// A conversation.
+  /// The educator's session pages (EDU-M-02, 04, 05).
+  static const String session = '/sessions/:sessionId';
+  static const String sessionName = 'session';
+  static const String sessionEdit = 'edit';
+  static const String sessionEditName = 'sessionEdit';
+  static const String sessionSummary = 'summary';
+  static const String sessionSummaryName = 'sessionSummary';
+  static const String sessionPresence = 'presence';
+  static const String sessionPresenceName = 'sessionPresence';
+  static const String sessionHomeworkNew = 'homework/new';
+  static const String sessionHomeworkNewName = 'sessionHomeworkNew';
+
   static const String conversation = '/messages/:conversationId';
   static const String conversationName = 'conversation';
 
@@ -125,6 +138,22 @@ abstract final class AppRoutes {
 
   /// Path to [childId]'s profile.
   static String childPath(String childId) => '/children/$childId';
+
+  static String homeTabPath(String tab) => '/home?tab=$tab';
+
+  static String sessionPath(String sessionId) => '/sessions/$sessionId';
+
+  static String sessionEditPath(String sessionId) =>
+      '/sessions/$sessionId/edit';
+
+  static String sessionSummaryPath(String sessionId) =>
+      '/sessions/$sessionId/summary';
+
+  static String sessionPresencePath(String sessionId) =>
+      '/sessions/$sessionId/presence';
+
+  static String sessionHomeworkNewPath(String sessionId) =>
+      '/sessions/$sessionId/homework/new';
 
   /// Path to a sub-tab of [childId]'s profile.
   static String childTabPath(String childId, String tab) =>

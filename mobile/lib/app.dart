@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/authorization/raeed_role.dart';
 import 'core/l10n/generated/app_localizations.dart';
 import 'core/l10n/locale_controller.dart';
 import 'core/router/app_router.dart';
@@ -15,6 +16,18 @@ import 'features/auth/presentation/login_screen.dart';
 import 'features/auth/presentation/otp_screen.dart';
 import 'features/children/presentation/child_profile_screen.dart';
 import 'features/children/presentation/home_screen.dart';
+import 'features/educator/presentation/educator_announcement_screen.dart';
+import 'features/educator/presentation/educator_child_screen.dart';
+import 'features/educator/presentation/educator_group_screen.dart';
+import 'features/educator/presentation/educator_more_screen.dart';
+import 'features/educator/presentation/educator_providers.dart';
+import 'features/educator/presentation/educator_shell.dart';
+import 'features/educator/presentation/homework_new_screen.dart';
+import 'features/educator/presentation/memory_compose_screen.dart';
+import 'features/educator/presentation/presence_overview_screen.dart';
+import 'features/educator/presentation/session_detail_screen.dart';
+import 'features/educator/presentation/session_edit_screen.dart';
+import 'features/educator/presentation/session_summary_screen.dart';
 import 'features/executive/presentation/announcement_composer_screen.dart';
 import 'features/executive/presentation/attendance_review_screen.dart';
 import 'features/executive/presentation/children_screen.dart';
@@ -129,17 +142,27 @@ final AppScreens appScreensTable = AppScreens(
   login: (context, state) => const LoginScreen(),
   otp: (context, state) => const OtpScreen(),
   consent: (context, state) => const ConsentScreen(),
-  home: (context, state) => const HomeScreen(),
+  // `/home` is the surface of the presented role: the educator's shell, or
+  // the parent's home. The executive's is reached by redirect (`/dashboard`).
+  home: (context, state) => _presentedRole(context) == RaeedRole.educator
+      ? EducatorShell(
+          initialTab: EducatorTab.fromSlug(
+            state.uri.queryParameters[AppRoutes.homeTabParam],
+          ),
+        )
+      : const HomeScreen(),
   child: (context, state) {
     final childId = state.pathParameters['childId'] ?? '';
     // Same path, two screens: the oversight view for the executive surface,
     // the parent's profile otherwise. A presentation choice, like the home
     // redirect — the server decides what each may read.
-    final oversight = ProviderScope.containerOf(context)
-        .read(sessionControllerProvider)
-        .effectiveRole
-        ?.hasOversight;
-    if (oversight ?? false) return ExecutiveChildScreen(childId: childId);
+    final role = _presentedRole(context);
+    if (role?.hasOversight ?? false) {
+      return ExecutiveChildScreen(childId: childId);
+    }
+    if (role == RaeedRole.educator) {
+      return EducatorChildScreen(childId: childId);
+    }
     return ChildProfileScreen(
       childId: childId,
       // The sub-tab is the last path segment when one is present.
@@ -149,8 +172,12 @@ final AppScreens appScreensTable = AppScreens(
     );
   },
   childrenList: (context, state) => const ChildrenScreen(),
-  group: (context, state) =>
-      GroupDetailScreen(groupId: state.pathParameters['groupId'] ?? ''),
+  group: (context, state) {
+    final groupId = state.pathParameters['groupId'] ?? '';
+    return _presentedRole(context) == RaeedRole.educator
+        ? EducatorGroupScreen(groupId: groupId)
+        : GroupDetailScreen(groupId: groupId);
+  },
   attendance: (context, state) => AttendanceScreen(
     sessionId: state.pathParameters['sessionId'] ?? '',
     groupId: state.pathParameters['groupId'] ?? '',
@@ -160,16 +187,20 @@ final AppScreens appScreensTable = AppScreens(
   ),
   memories: (context, state) =>
       const PlaceholderScreen(title: 'Memories Wall', ticket: 'Epic F'),
-  memoriesCompose: (context, state) =>
-      const PlaceholderScreen(title: 'New post', ticket: 'Epic F'),
-  announcementCompose: (context, state) => const AnnouncementComposerScreen(),
+  memoriesCompose: (context, state) => const MemoryComposeScreen(),
+  announcementCompose: (context, state) =>
+      _presentedRole(context) == RaeedRole.educator
+      ? const EducatorAnnouncementScreen()
+      : const AnnouncementComposerScreen(),
   dashboard: (context, state) => ExecutiveShell(
     initialTab: ExecutiveTab.fromSlug(
       state.uri.queryParameters[AppRoutes.dashboardTabParam],
     ),
   ),
   notifications: (context, state) => const NotificationsScreen(),
-  more: (context, state) => const MoreScreen(),
+  more: (context, state) => _presentedRole(context) == RaeedRole.educator
+      ? const EducatorMoreScreen()
+      : const MoreScreen(),
   manage: (context, state) => ManageScreen(
     initialTab: ManageTab.fromSlug(
       state.uri.queryParameters[AppRoutes.manageTabParam],
@@ -180,6 +211,17 @@ final AppScreens appScreensTable = AppScreens(
   reports: (context, state) => const ReportsScreen(),
   structure: (context, state) => const StructureScreen(),
   logs: (context, state) => const LogsScreen(),
+  session: (context, state) =>
+      SessionDetailScreen(sessionId: state.pathParameters['sessionId'] ?? ''),
+  sessionEdit: (context, state) =>
+      SessionEditScreen(sessionId: state.pathParameters['sessionId'] ?? ''),
+  sessionSummary: (context, state) =>
+      SessionSummaryScreen(sessionId: state.pathParameters['sessionId'] ?? ''),
+  sessionPresence: (context, state) => PresenceOverviewScreen(
+    sessionId: state.pathParameters['sessionId'] ?? '',
+  ),
+  sessionHomeworkNew: (context, state) =>
+      HomeworkNewScreen(sessionId: state.pathParameters['sessionId'] ?? ''),
   attendanceReview: (context, state) => AttendanceReviewScreen(
     sessionId: state.pathParameters['sessionId'] ?? '',
     groupId: state.pathParameters['groupId'] ?? '',
@@ -189,3 +231,10 @@ final AppScreens appScreensTable = AppScreens(
 
 /// Convenience for tests and previews: the route the app opens on.
 const String initialRoute = AppRoutes.home;
+
+/// The role the shell is presenting — a presentation choice like the home
+/// redirect; the server decides what each may read.
+RaeedRole? _presentedRole(BuildContext context) =>
+    ProviderScope.containerOf(context)
+        .read(sessionControllerProvider)
+        .effectiveRole;
