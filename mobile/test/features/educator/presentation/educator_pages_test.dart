@@ -529,7 +529,9 @@ void main() {
       await pumpExecutive(tester, container, const EducatorMoreScreen());
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('14:00–21:00'));
+      await tester.tap(
+        find.text(const AvailabilityWindow(start: '14:00', end: '21:00').label),
+      );
       await tester.pumpAndSettle();
       verify(
         () => mocks.educator.setAvailability(

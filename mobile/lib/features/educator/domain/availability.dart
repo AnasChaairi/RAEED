@@ -17,7 +17,8 @@ class AvailabilityWindow {
     AvailabilityWindow(start: '17:00', end: '21:00'),
   ];
 
-  String get label => '$start–$end';
+  /// Isolated left-to-right so "14:00–21:00" reads the same way in Arabic.
+  String get label => '\u2066$start–$end\u2069';
 
   @override
   bool operator ==(Object other) =>

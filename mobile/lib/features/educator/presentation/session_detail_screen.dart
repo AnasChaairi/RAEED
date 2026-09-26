@@ -168,7 +168,7 @@ class _Header extends StatelessWidget {
                         '${dayAndMonth(locale, item.startsAt)} · ${HijriDate.fromGregorian(item.startsAt.toLocal()).format(locale.languageCode)}',
                       ),
                       _HeaderPill(
-                        '${clockTime(locale, item.startsAt)}–${clockTime(locale, item.endsAt)}',
+                        '\u2066${clockTime(locale, item.startsAt)}–${clockTime(locale, item.endsAt)}\u2069',
                       ),
                       if (item.place != null) _HeaderPill(item.place!),
                     ],

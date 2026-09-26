@@ -188,13 +188,12 @@ export class ExecutiveChildrenService {
       image_rights_level: await this.children.currentImageRights(childId),
       season_attendance: attendance,
       homework,
-      guardians: guardians.map((guardian, index) => ({
+      guardians: guardians.map((guardian) => ({
         id: guardian.id,
         display_name: guardian.display_name,
         relationship: guardian.relationship,
         account: guardian.account,
-        // The designated emergency contact, else the first guardian linked.
-        is_emergency_contact: guardian.relationship === 'emergency' || (index === 0 && !guardians.some((g) => g.relationship === 'emergency')),
+        is_emergency_contact: guardian.relationship === 'emergency',
       })),
       conversation_id: conversation,
     };

@@ -302,6 +302,11 @@ class _GuardiansCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = context.palette;
     final l10n = AppL10n.of(context);
+    // The designated emergency contact, else the first guardian linked —
+    // someone must be reachable when a child needs their family now.
+    final callTarget =
+        profile.guardians.where((g) => g.isEmergencyContact).firstOrNull ??
+        profile.guardians.firstOrNull;
     return ExecutiveCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -348,7 +353,7 @@ class _GuardiansCard extends ConsumerWidget {
                           ),
                         ),
                         Text(
-                          guardian.isEmergencyContact
+                          guardian == callTarget
                               ? l10n.guardianEmergencyHint
                               : guardian.account == AccountStatus.active
                               ? l10n.guardianAccountActive
@@ -361,7 +366,7 @@ class _GuardiansCard extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: RaeedSpacing.sm),
-                  if (guardian.isEmergencyContact)
+                  if (guardian == callTarget)
                     TextButton(
                       style: TextButton.styleFrom(
                         backgroundColor: palette.dangerSoft,
@@ -371,8 +376,7 @@ class _GuardiansCard extends ConsumerWidget {
                       onPressed: () => _call(context, ref),
                       child: Text(l10n.guardianCall),
                     )
-                  else if (profile.conversationId != null &&
-                      guardian == profile.guardians.first)
+                  else if (profile.conversationId != null)
                     OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size(0, 40),
@@ -386,9 +390,7 @@ class _GuardiansCard extends ConsumerWidget {
                 ],
               ),
             ),
-          if (profile.conversationId != null &&
-              profile.guardians.isNotEmpty &&
-              profile.guardians.first.isEmergencyContact) ...[
+          if (profile.conversationId != null) ...[
             const SizedBox(height: RaeedSpacing.sm),
             OutlinedButton(
               style: OutlinedButton.styleFrom(

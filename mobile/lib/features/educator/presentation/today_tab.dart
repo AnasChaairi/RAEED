@@ -125,7 +125,7 @@ class _TodayHeader extends StatelessWidget {
                           TextSpan(
                             children: [
                               TextSpan(
-                                text: displayName.split(' ').first,
+                                text: displayName,
                                 style: context.type.h2.copyWith(color: on),
                               ),
                               TextSpan(
@@ -250,7 +250,8 @@ class _TodayBody extends ConsumerWidget {
           _AttendanceDoneCard(next: next)
         else
           NextSessionCard(next: next, now: now),
-        for (final session in view.sessionsWithoutContent) ...[
+        // Two nudges at most: the rest wait on the sessions tab.
+        for (final session in view.sessionsWithoutContent.take(2)) ...[
           const SizedBox(height: RaeedSpacing.sm + 2),
           _NoContentNudge(session: session),
         ],
@@ -404,9 +405,16 @@ class NextSessionCard extends StatelessWidget {
     final locale = Localizations.localeOf(context);
     final item = next.item;
     final minutes = item.startsAt.difference(now).inMinutes;
-    final chip = item.startsAt.isAfter(now)
-        ? '${l10n.todayNextSession} · ${l10n.todayInMinutes(minutes.clamp(0, 1 << 30))}'
-        : '${l10n.todayNextSession} · ${l10n.todayLive}';
+    final sameDay =
+        item.startsAt.toLocal().day == now.toLocal().day &&
+        item.startsAt.difference(now).inHours < 24;
+    final chip = !item.startsAt.isAfter(now)
+        ? '${l10n.todayNextSession} · ${l10n.todayLive}'
+        : minutes < 60
+        ? '${l10n.todayNextSession} · ${l10n.todayInMinutes(minutes)}'
+        : sameDay
+        ? '${l10n.todayNextSession} · ${l10n.sessionToday}'
+        : '${l10n.todayNextSession} · ${dayAndMonth(locale, item.startsAt)}';
     final tallies = next.presence ?? PresenceTallies.empty;
 
     return ExecutiveCard(
