@@ -53,6 +53,15 @@ export class RefreshDto {
 }
 
 /** `POST /auth/devices` — registers or updates the FCM token. */
+/** `PATCH /auth/me/availability` — "HH:MM" bounds in the organisation's zone. */
+export class AvailabilityDto {
+  @Matches(/^([01]\d|2[0-3]):[0-5]\d$/)
+  start: string;
+
+  @Matches(/^([01]\d|2[0-3]):[0-5]\d$/)
+  end: string;
+}
+
 export class RegisterDeviceDto {
   // A uuid, because `user_device.id` is one. Validating the shape here turns
   // a malformed id into a 422 the client can act on rather than a 500 from the

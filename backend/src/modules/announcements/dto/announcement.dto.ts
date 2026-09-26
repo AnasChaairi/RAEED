@@ -2,6 +2,7 @@ import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsArray,
+  IsBoolean,
   IsIn,
   IsISO8601,
   IsOptional,
@@ -56,4 +57,9 @@ export class CreateAnnouncementDto {
   @IsOptional()
   @IsISO8601({ strict: true })
   expire_at?: string;
+
+  /** Ask every recipient to confirm they read it (`ANN-06`). */
+  @IsOptional()
+  @IsBoolean()
+  ack_required?: boolean;
 }

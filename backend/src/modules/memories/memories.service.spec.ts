@@ -70,7 +70,12 @@ describe('MemoriesService', () => {
       transaction: async (work: (tx: EntityManager) => Promise<unknown>) => work(manager),
     } as unknown as DataSource;
 
-    return { service: new MemoriesService(dataSource), updates, audits };
+    const notify = {
+      notify: jest.fn().mockResolvedValue([]),
+      guardiansOfChildren: jest.fn().mockResolvedValue([]),
+      oversightUsers: jest.fn().mockResolvedValue([]),
+    };
+    return { service: new MemoriesService(dataSource, notify as never), updates, audits };
   }
 
   it('refuses to approve while a tagged child is not_allowed, naming them', async () => {
@@ -136,5 +141,70 @@ describe('MemoriesService', () => {
     await expect(service.approve(restricted, 'post-1')).rejects.toMatchObject({
       code: ApiErrorCode.SCOPE_FORBIDDEN,
     });
+  });
+});
+
+describe('MemoriesService.create', () => {
+  const educator = new AuthenticatedUser('edu-1', new Set(['educator']), new Set(), new Set(['g1']), null);
+
+  function buildService(children: Array<Record<string, unknown>>, mode = 'approve_before_publish') {
+    const statements: Array<{ sql: string; params: unknown[] }> = [];
+    const runQuery = async (sql: string, params: unknown[] = []): Promise<unknown> => {
+      statements.push({ sql, params });
+      if (sql.includes('from album a') && sql.includes('a.moderation_mode, a.title')) {
+        return [{ id: 'al1', group_id: 'g1', branch_id: 'b1', moderation_mode: mode, title: 'ختم سورة الملك' }];
+      }
+      if (sql.includes('where c.id = any($1::uuid[]) and c.deleted_at is null')) return children;
+      if (sql.includes('insert into post (')) return [{ id: 'post-9' }];
+      if (sql.includes('select preferred_locale')) return [{ preferred_locale: 'ar' }];
+      if (sql.includes('where p.author_id = $1')) {
+        return [{ id: 'post-9', album_id: 'al1', album_title: 'x', group_name: null, caption: null, storage_key: 'k', media_json: [{}], tag_count: 1, created_at: new Date(), moderation_status: mode === 'approve_before_publish' ? 'pending' : 'published' }];
+      }
+      return [];
+    };
+    const manager = { query: runQuery } as unknown as EntityManager;
+    const dataSource = {
+      query: runQuery,
+      transaction: async (work: (tx: EntityManager) => Promise<unknown>) => work(manager),
+    } as unknown as DataSource;
+    const notify = {
+      notify: jest.fn().mockResolvedValue([]),
+      guardiansOfChildren: jest.fn().mockResolvedValue(['p1']),
+      oversightUsers: jest.fn().mockResolvedValue(['exec-1']),
+    };
+    return { service: new MemoriesService(dataSource, notify as never), statements, notify };
+  }
+  const media = [{ storage_key: 'edu/a.jpg', media_kind: 'photo' as const }];
+
+  it('refuses a post tagging a not_allowed child, naming them', async () => {
+    const { service, statements } = buildService([
+      { id: 'c1', full_name: 'عمر', group_id: 'g1', level: 'not_allowed' },
+      { id: 'c2', full_name: 'آدم', group_id: 'g1', level: 'app_only' },
+    ]);
+    await expect(
+      service.create(educator, { album_id: 'al1', media, tagged_child_ids: ['c1', 'c2'] }),
+    ).rejects.toMatchObject({ code: ApiErrorCode.MEMORIES_CONSENT_BLOCKED, details: { child_ids: ['c1'] } });
+    expect(statements.some((s) => s.sql.includes('insert into post'))).toBe(false);
+  });
+
+  it('a child outside the educator’s groups is a scope refusal, not a consent one', async () => {
+    const { service } = buildService([{ id: 'c1', full_name: 'x', group_id: 'g7', level: 'allowed' }]);
+    await expect(
+      service.create(educator, { album_id: 'al1', media, tagged_child_ids: ['c1'] }),
+    ).rejects.toMatchObject({ code: ApiErrorCode.SCOPE_FORBIDDEN });
+  });
+
+  it('waits for approval or publishes, as the album’s moderation mode says', async () => {
+    const child = { id: 'c2', full_name: 'آدم', group_id: 'g1', level: 'app_only' };
+    const pending = buildService([child]);
+    const post = await pending.service.create(educator, { album_id: 'al1', media, tagged_child_ids: ['c2'] });
+    expect(post.state).toBe('pending');
+    expect(pending.statements.find((s) => s.sql.includes('insert into post ('))!.params[4]).toBe('pending');
+    expect(pending.notify.oversightUsers).toHaveBeenCalled();
+
+    const live = buildService([child], 'publish_then_moderate');
+    await live.service.create(educator, { album_id: 'al1', media, tagged_child_ids: ['c2'] });
+    expect(live.statements.find((s) => s.sql.includes('insert into post ('))!.params[4]).toBe('published');
+    expect(live.notify.guardiansOfChildren).toHaveBeenCalledWith(expect.anything(), ['c2']);
   });
 });

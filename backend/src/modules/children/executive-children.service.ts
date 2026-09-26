@@ -51,6 +51,36 @@ export interface ExecutiveChildView {
   conversation_id: string | null;
 }
 
+/** The educator's view of a child in one of their groups (EDU-M-06). */
+export interface EducatorChildView {
+  id: string;
+  full_name: string;
+  photo_url: string | null;
+  dob: string;
+  school_level: string | null;
+  group: { id: string; name: string } | null;
+  health_alert: boolean;
+  image_rights_level: 'allowed' | 'app_only' | 'not_allowed';
+  season_attendance: { present: number; expected: number } | null;
+  homework: { done: number; total: number };
+  guardians: Array<{
+    id: string;
+    display_name: string;
+    relationship: string;
+    account: 'active' | 'pending';
+    is_emergency_contact: boolean;
+  }>;
+  conversation_id: string | null;
+}
+
+export interface EmergencyCallView {
+  guardian_id: string;
+  display_name: string;
+  /** Handed to the dialer, never rendered (`MSG-06`); the reveal is recorded. */
+  phone: string | null;
+  recorded_at: string;
+}
+
 export interface HealthView {
   child_id: string;
   health_json: Record<string, unknown>;
@@ -134,8 +164,83 @@ export class ExecutiveChildrenService {
     };
   }
 
+  /**
+   * The child as their educator sees them: standing, guardians by name and
+   * account state, the thread — no phone, no consent history, and the health
+   * text only through the logged route below, exactly like an executive.
+   */
+  async educatorDetail(user: AuthenticatedUser, childId: string): Promise<EducatorChildView> {
+    const row = await this.loadReadable(user, childId);
+    const [guardians, conversation, attendance, homework] = await Promise.all([
+      this.guardians(childId),
+      this.conversationId(childId),
+      this.seasonAttendance(childId),
+      this.homeworkCounts(childId),
+    ]);
+    return {
+      id: row.id,
+      full_name: row.full_name,
+      photo_url: row.photo_url,
+      dob: row.dob,
+      school_level: row.school_level,
+      group: row.group_id && row.group_name ? { id: row.group_id, name: row.group_name } : null,
+      health_alert: Object.keys(row.health_json ?? {}).length > 0,
+      image_rights_level: await this.children.currentImageRights(childId),
+      season_attendance: attendance,
+      homework,
+      guardians: guardians.map((guardian, index) => ({
+        id: guardian.id,
+        display_name: guardian.display_name,
+        relationship: guardian.relationship,
+        account: guardian.account,
+        // The designated emergency contact, else the first guardian linked.
+        is_emergency_contact: guardian.relationship === 'emergency' || (index === 0 && !guardians.some((g) => g.relationship === 'emergency')),
+      })),
+      conversation_id: conversation,
+    };
+  }
+
+  /**
+   * An emergency call to a guardian from an educator's phone. The number is
+   * handed to the dialer and never shown; the act is recorded like a reveal,
+   * because for the guardian it is one.
+   */
+  async emergencyCall(user: AuthenticatedUser, childId: string): Promise<EmergencyCallView> {
+    await this.loadReadable(user, childId);
+    const rows: Array<{ id: string; display_name: string; phone: string | null; relationship: string }> =
+      await this.dataSource.query(
+        `select u.id, coalesce(u.display_name, '') as display_name, u.phone, pc.relationship_type as relationship
+           from parent_child pc
+           join app_user u on u.id = pc.guardian_user_id and u.is_active
+          where pc.child_id = $1 and pc.unlinked_at is null
+          order by (pc.relationship_type = 'emergency') desc, pc.linked_at
+          limit 1`,
+        [childId],
+      );
+    const contact = rows[0];
+    if (!contact) throw ApiError.scopeForbidden('No reachable guardian.');
+    const recordedAt = await this.audit(user.id, 'guardian.emergency_call', 'app_user', contact.id, {
+      child_id: childId,
+    });
+    return { guardian_id: contact.id, display_name: contact.display_name, phone: contact.phone, recorded_at: recordedAt };
+  }
+
+  private async homeworkCounts(childId: string): Promise<{ done: number; total: number }> {
+    const rows: Array<{ done: number; total: number }> = await this.dataSource.query(
+      `select count(*) filter (where hs.done)::int as done, count(*)::int as total
+         from homework_status hs
+         join homework h on h.id = hs.homework_id and h.deleted_at is null
+        where hs.child_id = $1`,
+      [childId],
+    );
+    return rows[0] ?? { done: 0, total: 0 };
+  }
+
   /** Logs first, then reads: an unlogged view must be impossible. */
   async health(user: AuthenticatedUser, childId: string): Promise<HealthView> {
+    // Staff only: a guardian reads their own child's health on the profile
+    // itself, by relationship, and never through the recorded route.
+    if (!user.hasOversight && !user.hasRole('educator')) throw ApiError.scopeForbidden();
     const row = await this.loadReadable(user, childId, 'ChildHealth');
     const viewedAt = await this.audit(user.id, 'child.health_view', 'child', childId, {
       context: 'child_profile',
@@ -154,6 +259,9 @@ export class ExecutiveChildrenService {
     childId: string,
     guardianId: string,
   ): Promise<GuardianPhoneView> {
+    // A number on screen is the executive's act alone (`MSG-06`); an
+    // educator reaches a guardian through the thread or the emergency call.
+    if (!user.hasOversight) throw ApiError.scopeForbidden();
     await this.loadReadable(user, childId);
     const rows: Array<{ phone: string | null }> = await this.dataSource.query(
       `select u.phone
@@ -195,9 +303,9 @@ export class ExecutiveChildrenService {
       groupId: row.group_id,
       branchId: row.branch_id,
     });
-    if (!user.hasOversight || !ability.can('read', resource)) {
-      throw ApiError.scopeForbidden();
-    }
+    // An educator reads a child in their own group; oversight reads in its
+    // branch. Both come from the ability model, never from the role name.
+    if (!ability.can('read', resource)) throw ApiError.scopeForbidden();
     return row;
   }
 

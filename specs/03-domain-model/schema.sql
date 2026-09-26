@@ -209,11 +209,19 @@ create table session (
   status session_status not null default 'planned',
   is_customized boolean not null default false, -- true once an educator edits it — protects
                                                   -- it from silent regeneration (SES-02)
+  summary text,                              -- "what we did today", sent to guardians (EDU-M-04)
+  summary_sent_at timestamptz,
+  cancel_reason text,                        -- set with status = cancelled, or with a reschedule
+  rescheduled_from timestamptz,              -- the slot the session moved away from
+  changed_by uuid references app_user(id),   -- who cancelled / rescheduled
+  changed_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   deleted_at timestamptz
 );
 create index on session (group_id, starts_at);
+-- Generating sessions from the weekly schedule (SES-02) is idempotent: one live row per slot.
+create unique index session_group_start_uidx on session (group_id, starts_at) where deleted_at is null;
 
 create type material_visibility as enum ('before_session', 'after_session', 'staff_only');
 
@@ -221,6 +229,7 @@ create table material (
   id uuid primary key default gen_random_uuid(),
   session_id uuid not null references session(id) on delete cascade,
   storage_key text not null,                 -- resolved via StorageProvider — see 07-backend-spec.md
+  title text,                                -- what the educator called it
   kind text not null check (kind in ('document','image','audio','video','link')),
   visibility material_visibility not null default 'after_session',
   size_bytes bigint,
@@ -294,6 +303,7 @@ create table homework (
   id uuid primary key default gen_random_uuid(),
   session_id uuid not null references session(id),
   group_id uuid not null references "group"(id),
+  title text,
   instructions text not null,
   attachment_storage_key text,
   due_at timestamptz not null,
@@ -363,6 +373,7 @@ create table announcement (
   publish_at timestamptz not null default now(),
   expire_at timestamptz,
   pinned boolean not null default false,
+  ack_required boolean not null default false, -- ask recipients to confirm they read it (ANN-06)
   created_at timestamptz not null default now(),
   deleted_at timestamptz
 );
@@ -395,8 +406,10 @@ create table post (
   id uuid primary key default gen_random_uuid(),
   album_id uuid not null references album(id) on delete cascade,
   author_id uuid not null references app_user(id),
-  storage_key text not null,
+  storage_key text not null,                 -- the first media item; media_json holds them all
   media_kind text not null check (media_kind in ('photo','video','banner')),
+  caption text,
+  media_json jsonb not null default '[]',    -- [{storage_key, media_kind}]
   moderation_status post_moderation_status not null default 'pending',
   hidden_reason text,
   created_at timestamptz not null default now(),

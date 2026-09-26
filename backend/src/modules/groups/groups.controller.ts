@@ -18,7 +18,7 @@ import {
 import { CurrentUser } from '../../common/auth/current-user.decorator';
 import { JwtAuthGuard } from '../../common/auth/jwt-auth.guard';
 import { AssignChildrenDto, CreateGroupDto } from './dto/group.dto';
-import { GroupSessionView, GroupsService, GroupView } from './groups.service';
+import { GroupSessionView, GroupsService, GroupView, RosterChildView } from './groups.service';
 
 @Controller('groups')
 @UseGuards(JwtAuthGuard, CheckAbilityGuard)
@@ -55,6 +55,18 @@ export class GroupsController {
     @Body() body: AssignChildrenDto,
   ): Promise<{ enrolled_count: number; capacity: number | null }> {
     return this.groups.assign(user, groupId, body);
+  }
+
+  /** The roster as the educator sees it (EDU-M-06): flags, not text. */
+  @Get(':groupId/roster')
+  async roster(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('groupId', ParseUUIDPipe) groupId: string,
+  ): Promise<{ data: RosterChildView[]; page: { cursor: null; has_more: false } }> {
+    return {
+      data: await this.groups.roster(user, groupId),
+      page: { cursor: null, has_more: false },
+    };
   }
 
   @Get(':groupId')

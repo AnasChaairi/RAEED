@@ -28,6 +28,8 @@ export const CriticalJob = {
   ABSENCE_ALERT: 'absence-alert',
   /** An announcement published with `priority: urgent`. */
   URGENT_ANNOUNCEMENT: 'urgent-announcement-dispatch',
+  /** A session cancelled or rescheduled less than 24h out (`09-notifications-spec.md`). */
+  SESSION_CHANGE: 'session-change',
 } as const;
 
 /** The payload an absence alert carries. */

@@ -17,6 +17,8 @@ export const ApiErrorCode = {
   ATTENDANCE_UNKNOWN_CHILD: 'attendance.unknown_child',
   MEMORIES_CONSENT_BLOCKED: 'memories.consent_blocked',
   CHILDREN_LAST_GUARDIAN: 'children.last_guardian',
+  PRESENCE_REMINDER_ALREADY_SENT: 'presence.reminder_already_sent',
+  SESSION_SUMMARY_ALREADY_SENT: 'session.summary_already_sent',
   VALIDATION_FAILED: 'validation.failed',
 } as const;
 
@@ -125,6 +127,24 @@ export class ApiError extends HttpException {
       'A tagged child’s image rights do not allow this post.',
       HttpStatus.UNPROCESSABLE_ENTITY,
       { child_ids: childIds },
+    );
+  }
+
+  /** 409 — the one reminder a presence confirmation allows was already sent. */
+  static presenceReminderAlreadySent(): ApiError {
+    return new ApiError(
+      ApiErrorCode.PRESENCE_REMINDER_ALREADY_SENT,
+      'The reminder for this session was already sent.',
+      HttpStatus.CONFLICT,
+    );
+  }
+
+  /** 409 — the session summary goes out once. */
+  static summaryAlreadySent(): ApiError {
+    return new ApiError(
+      ApiErrorCode.SESSION_SUMMARY_ALREADY_SENT,
+      'The summary for this session was already sent.',
+      HttpStatus.CONFLICT,
     );
   }
 

@@ -154,9 +154,22 @@ async function seed(): Promise<void> {
         [executiveId],
       );
 
+      // A co-educator on the same group, so the team channel has two voices
+      // and the educator's cards say "with …".
+      const [{ id: coEducatorId }] = await tx.query(
+        `insert into app_user (phone, display_name, preferred_locale)
+         values ('+212600000005', 'حمزة الزياني', 'ar') returning id`,
+      );
       await tx.query(
-        `insert into group_educator (group_id, educator_user_id) values ($1, $2)`,
-        [ashbalId, educatorId],
+        `insert into role_assignment (user_id, role) values ($1, 'educator')`,
+        [coEducatorId],
+      );
+      await tx.query(
+        `insert into group_educator (group_id, educator_user_id, availability_hours_json)
+         values ($1, $2, '{"start":"09:00","end":"20:00"}'::jsonb),
+                ($1, $3, null),
+                ($4, $2, '{"start":"09:00","end":"20:00"}'::jsonb)`,
+        [ashbalId, educatorId, coEducatorId, zahratId],
       );
 
       // --- Children -------------------------------------------------------
@@ -249,7 +262,39 @@ async function seed(): Promise<void> {
          returning id`,
         [ashbalId],
       );
+      // The educator added content and materials to the delivered session,
+      // sent its summary, and set homework the guardians report on.
+      await tx.query(
+        `update session
+            set objectives = $2, theme = 'القرآن الكريم', is_customized = true,
+                summary = $3, summary_sent_at = now() - interval '6 days'
+          where id = $1`,
+        [
+          lastWeekSessionId,
+          '• حفظ الآيات 6–10 من سورة الملك\n• فهم معنى «تبارك» و«الملك»\n• تطبيق أحكام المدّ في الآيات',
+          'حفظ الأشبال اليوم الآيات 6 إلى 10 من سورة الملك، وتعلّموا معنى «تبارك». نرجو مراجعة الآيات مع أبنائكم.',
+        ],
+      );
+      await tx.query(
+        `insert into material (session_id, storage_key, title, kind, visibility, size_bytes)
+         values ($1, 'seed/hifz-6-10.pdf', 'ورقة الحفظ — الآيات 6–10', 'document', 'before_session', 245760),
+                ($1, 'https://example.org/tilawa-al-mulk', 'تلاوة الآيات — الشيخ الحصري', 'link', 'after_session', null),
+                ($1, 'seed/prep-notes.txt', 'ملاحظات التحضير', 'document', 'staff_only', 2048)`,
+        [lastWeekSessionId],
+      );
+      const [{ id: homeworkId }] = await tx.query(
+        `insert into homework (session_id, group_id, title, instructions, due_at)
+         values ($1, $2, 'مراجعة الآيات 1–10', 'يقرأ الطفل الآيات على أحد الوالدين مرتين، مع الانتباه لأحكام المدّ.',
+                 date_trunc('day', now()) + interval '5 days' + interval '18 hours')
+         returning id`,
+        [lastWeekSessionId, ashbalId],
+      );
       const [adamId, , yousefId, omarId] = childIds;
+      await tx.query(
+        `insert into homework_status (homework_id, child_id, done, done_at)
+         values ($1, $2, true, now() - interval '2 days'), ($1, $3, true, now() - interval '1 day'), ($1, $4, false, null)`,
+        [homeworkId, adamId, yousefId, omarId],
+      );
       await tx.query(
         `insert into attendance_record
            (session_id, child_id, status, recorded_by, recorded_at, recorded_at_client)
@@ -391,6 +436,15 @@ async function seed(): Promise<void> {
                 '{"all": true}'::jsonb, 'normal', false)`,
         [executiveId],
       );
+      // The pinned notice to educators on the Today screen, asking to be
+      // acknowledged (ANN-06).
+      await tx.query(
+        `insert into announcement (author_id, title, body, audience_json, priority, pinned, ack_required)
+         values ($1, 'يوم مفتوح للأولياء — السبت المقبل',
+                 'نرجو حضور جميع المؤطرين من 09:30 للتحضير.',
+                 '{"type": "educators", "category_ids": [], "group_ids": []}'::jsonb, 'normal', true, true)`,
+        [executiveId],
+      );
 
       // eslint-disable-next-line no-console
       console.log(
@@ -398,7 +452,8 @@ async function seed(): Promise<void> {
           'Seeded RAEED development data.',
           '',
           '  Parent     +212600000001   (2 children: آدم, مريم, عمر)',
-          '  Educator   +212600000002   (leads الأشبال أ, also a parent)',
+          '  Educator   +212600000002   (leads الأشبال أ and الزهرات أ, also a parent)',
+          '  Educator   +212600000005   (co-educator on الأشبال أ)',
           '  Executive  +212600000003',
           '',
           '  Sign in with any of these numbers — the OTP is printed to the',

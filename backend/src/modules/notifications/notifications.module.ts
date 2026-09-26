@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { IdentityModule } from '../identity/identity.module';
 import { AbsenceAlertWorker } from './absence-alert.worker';
 import { NotificationsController } from './notifications.controller';
+import { NotifyService } from './notify.service';
 import { PushDispatcher } from './push.dispatcher';
 
 /**
@@ -17,7 +18,7 @@ import { PushDispatcher } from './push.dispatcher';
 @Module({
   imports: [IdentityModule],
   controllers: [NotificationsController],
-  providers: [PushDispatcher, AbsenceAlertWorker],
-  exports: [PushDispatcher],
+  providers: [PushDispatcher, AbsenceAlertWorker, NotifyService],
+  exports: [PushDispatcher, NotifyService],
 })
 export class NotificationsModule {}

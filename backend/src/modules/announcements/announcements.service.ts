@@ -7,6 +7,7 @@ import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
 import { defineAbilityFor, subject } from '../../common/abilities/define-ability';
 import { ApiError } from '../../common/http/api-error';
 import { CriticalJob, QUEUE_CRITICAL } from '../../common/queue/queues';
+import { NotifyService } from '../notifications/notify.service';
 import { AudienceDto, AudienceType, CreateAnnouncementDto } from './dto/announcement.dto';
 
 /** The read model a guardian or educator receives. */
@@ -17,6 +18,9 @@ export interface AnnouncementView {
   priority: 'normal' | 'urgent';
   pinned: boolean;
   publish_at: string;
+  ack_required: boolean;
+  /** Whether the caller confirmed reading it (`ANN-06`). */
+  confirmed: boolean;
 }
 
 /**
@@ -39,6 +43,8 @@ export interface ReachView {
   parents: number;
   educators: number;
   categories: Array<{ id: string; name: string; guardian_count: number }>;
+  /** The caller's groups with their guardian counts — the educator's audience (`ANN-03`). */
+  groups: Array<{ id: string; name: string; guardian_count: number }>;
 }
 
 interface AnnouncementRow {
@@ -51,6 +57,8 @@ interface AnnouncementRow {
   expire_at: Date | null;
   audience_json: unknown;
   read_count: number;
+  ack_required: boolean;
+  confirmed: boolean;
 }
 
 /** Groups the caller may address, as a `where` fragment on alias `g`. */
@@ -64,6 +72,7 @@ export class AnnouncementsService {
   constructor(
     @InjectDataSource() private readonly dataSource: DataSource,
     @Inject(QUEUE_CRITICAL) private readonly criticalQueue: Queue,
+    private readonly notify: NotifyService,
   ) {}
 
   /**
@@ -86,13 +95,17 @@ export class AnnouncementsService {
 
     const rows: AnnouncementRow[] = await this.dataSource.query(
       `select a.id, a.title, a.body, a.priority, a.pinned, a.publish_at, a.expire_at,
-              a.audience_json,
+              a.audience_json, a.ack_required,
               (select count(*) from announcement_read r
-                where r.announcement_id = a.id)::int as read_count
+                where r.announcement_id = a.id)::int as read_count,
+              exists (select 1 from announcement_read r
+                       where r.announcement_id = a.id and r.user_id = $1 and r.confirmed_at is not null)
+                as confirmed
          from announcement a
         where a.deleted_at is null ${liveOnly}
         order by a.pinned desc, a.publish_at desc
         limit 50`,
+      [user.id],
     );
 
     if (!user.hasOversight) {
@@ -148,13 +161,43 @@ export class AnnouncementsService {
         scope.params,
       );
 
+    const groups: Array<{ id: string; name: string; guardian_count: number }> =
+      await this.dataSource.query(
+        `${this.scopedCtes(scope)}
+         select g.id, g.name, count(distinct pc.guardian_user_id)::int as guardian_count
+           from "group" g
+           join scoped_groups sg on sg.id = g.id
+           left join child_group cg on cg.group_id = g.id and cg.valid_to is null
+           left join child c on c.id = cg.child_id and c.deleted_at is null
+           left join parent_child pc on pc.child_id = c.id and pc.unlinked_at is null
+          group by g.id
+          order by g.name`,
+        scope.params,
+      );
+
     const row = totals[0];
     return {
       all: row?.all_count ?? 0,
       parents: row?.parents ?? 0,
       educators: row?.educators ?? 0,
       categories,
+      groups,
     };
+  }
+
+  /** "I have read this" (`ANN-06`); idempotent. */
+  async confirmRead(user: AuthenticatedUser, announcementId: string): Promise<{ confirmed_at: string }> {
+    const rows: Array<{ confirmed_at: Date }> = await this.dataSource.query(
+      `insert into announcement_read (announcement_id, user_id, read_at, confirmed_at)
+       select a.id, $2, now(), now() from announcement a
+        where a.id = $1 and a.deleted_at is null
+       on conflict (announcement_id, user_id)
+         do update set confirmed_at = coalesce(announcement_read.confirmed_at, now())
+       returning confirmed_at`,
+      [announcementId, user.id],
+    );
+    if (rows.length === 0) throw ApiError.scopeForbidden('No such announcement.');
+    return { confirmed_at: rows[0].confirmed_at.toISOString() };
   }
 
   /**
@@ -181,8 +224,8 @@ export class AnnouncementsService {
 
     const id = await this.dataSource.transaction(async (tx) => {
       const rows: Array<{ id: string }> = await tx.query(
-        `insert into announcement (author_id, title, body, audience_json, priority, expire_at)
-         values ($1, $2, $3, $4::jsonb, $5, $6)
+        `insert into announcement (author_id, title, body, audience_json, priority, expire_at, ack_required)
+         values ($1, $2, $3, $4::jsonb, $5, $6, $7)
          returning id`,
         [
           user.id,
@@ -191,9 +234,32 @@ export class AnnouncementsService {
           JSON.stringify(audienceJson),
           priority,
           input.expire_at ?? null,
+          input.ack_required ?? false,
         ],
       );
       const announcementId = rows[0].id;
+
+      // A group announcement tells the groups' guardians and co-educators
+      // now; wider audiences are the executive's and go through the
+      // announcement feed (urgent ones through the critical lane below).
+      if (audienceJson.type === 'groups') {
+        const recipients: string[] = [];
+        for (const groupId of audienceJson.group_ids) {
+          recipients.push(...(await this.notify.guardiansOfGroup(tx, groupId)));
+          recipients.push(...(await this.notify.educatorsOfGroup(tx, groupId)));
+        }
+        await this.notify.notify(
+          tx,
+          recipients.filter((id) => id !== user.id),
+          {
+            kind: 'other',
+            title: input.title.trim(),
+            body: input.body?.trim() || null,
+            destination: 'announcements',
+            data: { type: 'announcement', announcement_id: announcementId },
+          },
+        );
+      }
 
       // Publishing is recorded with its audience and priority: an urgent send
       // pages every recipient and costs the association SMS, and the brief
@@ -290,6 +356,8 @@ export class AnnouncementsService {
       priority: row.priority,
       pinned: row.pinned,
       publish_at: row.publish_at.toISOString(),
+      ack_required: row.ack_required,
+      confirmed: row.confirmed,
     };
   }
 }
