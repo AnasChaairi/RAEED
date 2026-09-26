@@ -212,4 +212,71 @@ Attendance by educator and by category as percent **with the raw pair**; educato
 
 Seasons (archive through the reversible confirm; never delete), categories with "age/gender: not set" (open decision #1), branches. Audit log and the health-access view. A non-admin who opens either gets the "admins only" card; the attempt is made and therefore recorded server-side, which the card says.
 
+### Educator surface (`EDU-M-*`)
+
+The educator's app is "light": attendance in under a minute, everything else one tap from Today. Five tabs — Today · Sessions · Groups · Messages · Memories — plus Notifications and More reached from the Today header. An educator who is also a parent switches surface from More; abilities stay the union (`05-authorization.md`). The shell lives at `/home` when the presented role is educator, tab in `?tab=`. Every write below is scoped to the educator's own groups server-side; the app only decides what to show.
+
+#### EDU-M-01 · Today (`/home`, educator role)
+
+| | |
+|---|---|
+| Purpose | See the next session, how many guardians confirmed, and get to attendance in one tap |
+| Components | Gradient header (greeting, name · role, notifications + more buttons, Gregorian and Hijri date); **next session card** (chip "next · in N min", time, title, group · room · N children, four presence tallies as a button — confirmed / late / declined / no answer — then "record attendance" at 52px) or the **attendance-done card** (summary counts, "session summary"); "session without content" nudge per auto-generated session in the next 7 days with an "add" button; three shortcuts (homework, memory, announcement); today's sessions with state chips; "from management": the pinned announcement with a "I've read this" acknowledgement that turns success when confirmed |
+| User actions | Open presence overview; record attendance; add content; shortcuts; acknowledge |
+| API | `GET /educator/today`, `POST /announcements/{id}/confirm-read` |
+| Loading / Empty / Error | Header + skeleton cards · no session today → "no session today, next on …" · error view with retry; offline → the cached Today with the offline banner |
+| Success | Acknowledging flips the button in place; attendance saved elsewhere replaces the next-session card |
+
+#### EDU-M-02 · Presence overview (`/sessions/:id/presence`)
+
+| | |
+|---|---|
+| Purpose | Plan the room: how many are coming, who declined and why, who never answered |
+| Components | Expected count "of N" with a four-segment bar and legend; children grouped by answer (no answer · declined · late · confirmed) with the reason; footer "remind those who haven't answered (N)" that sends once and turns success; "the reminder is sent once — deadline HH:MM" |
+| API | `GET /sessions/{id}/presence`, `POST /sessions/{id}/presence/remind` (409 `presence.reminder_already_sent`) |
+| Loading / Empty / Error | Skeleton · "no confirmation was sent for this session" · error view |
+
+#### EDU-M-03 · Attendance (`/groups/:id/sessions/:sessionId/attendance`) — restyled
+
+Same machinery as RAEED-21 (Drift queue, conflict rule, never blocks offline). Presentation follows the design: header with the four status counts and "N unmarked", a dashed "mark the remaining (N) present" button, one row per child with the presence line under the name (confirmed / late / declined + reason / no answer) and **four 40px icon buttons** (present ✓ · late ⏱ · excused ◐ · absent ✕) — any status is one tap from any other; icon-only health badge. Submit label reads "save · alert N guardians" when an unexplained absence is marked. Before saving: unmarked children → warning sheet; unexplained absences → the high-reach confirm naming the children and saying their guardians get an immediate alert (`ATT-07`). Hint "editable for 30 minutes, then through an executive".
+
+#### EDU-M-04 · Sessions (tab) → session (`/sessions/:id`) → content (`/sessions/:id/edit`) → summary (`/sessions/:id/summary`) → cancel sheet
+
+| | |
+|---|---|
+| Purpose | A week of sessions generated from the group schedule; add content, materials, the summary; cancel or reschedule with everyone told |
+| Components | Week header with prev/next, group pills, days (Gregorian · Hijri) with session rows (time, title, group · meta, state chip: ended / upcoming / in N min / no content / cancelled / rescheduled), footer "sessions are created from the group schedule — add content only". **Session**: gradient header (group · theme, title, edit), date · time · room chips, cancellation banner, objectives, materials with visibility chips, homework with the self-reported done bar, "record attendance" / "session summary" pair, "cancel or reschedule". **Content**: title, theme pills, objectives, materials each with a before / after / staff-only segmented control and remove, add file / photo / audio / link, "video ≤ 50 MB · long ones as a link", save. **Summary**: text, photos, the image-rights note naming any `not_allowed` child, reach line, send once. **Cancel sheet**: cancel / reschedule segmented, new slot when rescheduling, reason, "N guardians, co-educators and executives are told · recorded in your name", destructive confirm |
+| API | `GET /sessions?from&to&group_id` (generates missing sessions from `weekly_schedule_json`, `SES-02`), `GET /sessions/{id}`, `PATCH /sessions/{id}`, `POST /sessions/{id}/materials`, `DELETE /materials/{id}`, `POST /media` (upload), `POST /sessions/{id}/summary`, `POST /sessions/{id}/cancel` |
+| Loading / Empty / Error | Skeleton rows · "no sessions this week" · error view; a session outside the educator's groups → "not available to you" |
+| Success | Save returns to the session with a toast; cancel shows the banner and the toast counts who was told |
+
+#### EDU-M-05 · New homework (`/sessions/:id/homework/new`)
+
+Title, instructions, "whole group (N)" / "specific children" with name chips, due-date chips (next three session-free days), "automatic reminder the day before if not marked done", attachment, send "to N children". Specific mode with no child picked is refused in place. `POST /sessions/{id}/homework` (`target_child_ids` null = whole group, `HWK-01`). Done counts everywhere are labelled self-reported (`HWK-03`).
+
+#### EDU-M-06 · Groups (tab) → group (`/groups/:id`, educator) → child (`/children/:id`, educator)
+
+| | |
+|---|---|
+| Purpose | The educator's groups, each child's standing, the team channel |
+| Components | Group cards (name, schedule · room · co-educator, count chip, attendance / homework / next tiles, a care flag when a child has three consecutive absences), footer "adding or moving children is the executive's". **Group**: primary header with roster / homework / team-channel segments; roster rows (icon-only health badge, "attendance n/m" or the care flag, image-rights dot); homework cards with state and the self-reported bar, "no public ranking"; team channel = the group's staff conversation. **Child**: gradient header (age, school), attendance / homework / image-rights tiles; **Health** collapsed → recorded-view confirm → revealed (`AUD-03`); **Guardians** with account status, "message" (opens the child's thread), and an emergency contact whose number is never shown — "call through the app" is a logged server call that opens the dialer; **Notes** staff-only / shared segmented, marked phase 2 |
+| API | `GET /groups` (educator rows carry `stats`), `GET /groups/{id}/roster`, `GET /groups/{id}/homework`, `GET /conversations` (staff thread of the group), `GET /children/{id}` (educator view), `GET /children/{id}/health`, `POST /children/{id}/emergency-call` |
+| Loading / Empty / Error | Skeleton · "no groups assigned to you" · error view / "not available to you" |
+
+#### EDU-M-07 · Messages (tab) → thread (`/messages/:id`)
+
+Threads grouped by group (child conversations) then "team & management" (staff channels, the executives' thread); availability hours in the header ("outside them messages arrive silently", `MSG-07`); footer "there is no private child conversation — every thread holds the guardians and the group's educators". Thread reuses the conversation screen with a quick-reply row for members. `GET /conversations`, `GET/POST /conversations/{id}/messages`. Voice notes and attachments are not in this iteration.
+
+#### EDU-M-08 · Memories (tab) → new post (`/memories/compose`)
+
+My posts with status (awaiting approval / published / edit requested), albums grid for the season, "+ post". **New post**: media grid (pick from the device, uploaded through `POST /media`), album and audience, caption, "tag the children who appear" list with the image-rights level on each row — tapping a `not_allowed` child is refused in place with the banner "cannot tag … — remove any photo they appear in before publishing" (`WAL-06`), "send for approval" (or "publish" when the album's mode says so). `GET /memories/posts?mine=true`, `GET /memories/albums`, `POST /memories/posts` (422 `memories.consent_blocked` re-checked server-side).
+
+#### EDU-M-09 · Announcement to my groups (`/announcements/compose`, educator)
+
+Group pills with the live reach line ("reaches N guardians + co-educators" / "pick at least one group"), title, body, "ask for a read confirmation" toggle, "urgent (SMS) announcements are the executives'" (`ANN-03`), publish. `GET /announcements/reach` (educator rows carry `groups`), `POST /announcements` with `audience.type = groups` and `ack_required`.
+
+#### EDU-M-10 · Notifications and More (`/notifications`, `/more`, educator)
+
+Notifications reuse EXEC-M-06. More: profile (name, role · groups), role switcher, **availability hours** pills (saved through `PATCH /auth/me/availability`, applied to every group the educator leads), dark mode, language, the locked "attendance reminder · after 30 minutes" row, sign out.
+
 Remaining screens (calendar, materials library, staff channel, announcement composer, structure/people admin on web) follow the same template; write one before implementing, don't skip it because it "looks simple".
