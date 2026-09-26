@@ -4,6 +4,8 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
+  ParseUUIDPipe,
   Post,
   Query,
   UseGuards,
@@ -49,6 +51,16 @@ export class AnnouncementsController {
   @CheckAbility('create', 'Announcement')
   reach(@CurrentUser() user: AuthenticatedUser): Promise<ReachView> {
     return this.announcements.reach(user);
+  }
+
+  @Post(':announcementId/confirm-read')
+  @HttpCode(HttpStatus.OK)
+  @CheckAbility('read', 'Announcement')
+  confirmRead(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('announcementId', ParseUUIDPipe) announcementId: string,
+  ): Promise<{ confirmed_at: string }> {
+    return this.announcements.confirmRead(user, announcementId);
   }
 
   @Post()

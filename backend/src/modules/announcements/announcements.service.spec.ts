@@ -44,7 +44,12 @@ describe('AnnouncementsService', () => {
       transaction: async (work: (tx: EntityManager) => Promise<unknown>) => work(manager),
     } as unknown as DataSource;
     const queueAdd = jest.fn().mockResolvedValue(undefined);
-    const service = new AnnouncementsService(dataSource, { add: queueAdd } as never);
+    const notify = {
+      notify: jest.fn().mockResolvedValue([]),
+      guardiansOfGroup: jest.fn().mockResolvedValue([]),
+      educatorsOfGroup: jest.fn().mockResolvedValue([]),
+    };
+    const service = new AnnouncementsService(dataSource, { add: queueAdd } as never, notify as never);
     return { service, queueAdd, inserted };
   }
 
@@ -122,6 +127,7 @@ describe('AnnouncementsService', () => {
         { id: 'a', name: 'الأشبال', guardian_count: 58 },
         { id: 'b', name: 'الزهرات', guardian_count: 49 },
       ],
+      groups: [],
     };
     expect(audienceCount({ type: 'all', category_ids: [], group_ids: [] }, reach)).toBe(264);
     expect(

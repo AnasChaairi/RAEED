@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 
 import { IdentityModule } from '../identity/identity.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 import { AnnouncementsController } from './announcements.controller';
 import { AnnouncementsService } from './announcements.service';
 
 @Module({
-  imports: [IdentityModule],
+  imports: [IdentityModule, NotificationsModule],
   controllers: [AnnouncementsController],
   providers: [AnnouncementsService],
   exports: [AnnouncementsService],
