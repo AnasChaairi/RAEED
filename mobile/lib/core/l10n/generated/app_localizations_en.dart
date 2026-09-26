@@ -2079,4 +2079,1017 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get actionOther => 'action';
+
+  @override
+  String get eduTabToday => 'Today';
+
+  @override
+  String get eduTabSessions => 'Sessions';
+
+  @override
+  String get eduTabGroups => 'Groups';
+
+  @override
+  String get eduTabMessages => 'Messages';
+
+  @override
+  String get eduTabMemories => 'Memories';
+
+  @override
+  String get eduGreetingMorning => 'Good morning';
+
+  @override
+  String get eduGreetingEvening => 'Good evening';
+
+  @override
+  String get todayNextSession => 'Next session';
+
+  @override
+  String todayInMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'in $count min',
+      one: 'in 1 min',
+      zero: 'now',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get todayLive => 'Live now';
+
+  @override
+  String get presTallyYes => 'Coming';
+
+  @override
+  String get presTallyLate => 'Late';
+
+  @override
+  String get presTallyNo => 'Not coming';
+
+  @override
+  String get presTallyNone => 'No answer';
+
+  @override
+  String get todayRecordAttendance => 'Record attendance';
+
+  @override
+  String todayAttendanceDone(String group) {
+    return 'Attendance recorded — $group';
+  }
+
+  @override
+  String todayAttendanceSummary(
+    int present,
+    int late,
+    int excused,
+    int absent,
+  ) {
+    return 'Present $present · late $late · excused $excused · absent $absent';
+  }
+
+  @override
+  String get todaySessionSummaryCta => 'Session summary';
+
+  @override
+  String todayNoContent(String group, String time) {
+    return 'No content yet for the $group · $time session — created from the schedule.';
+  }
+
+  @override
+  String get todayAdd => 'Add';
+
+  @override
+  String get shortcutHomework => 'Homework';
+
+  @override
+  String get shortcutMemory => 'Memory';
+
+  @override
+  String get shortcutAnnouncement => 'Announcement';
+
+  @override
+  String get todayFromManagement => 'From management';
+
+  @override
+  String get todayAckCta => 'I’ve read this';
+
+  @override
+  String get todayAckDone => '✓ Read confirmed';
+
+  @override
+  String get todayNoSession => 'No session today';
+
+  @override
+  String todayNextOn(String date) {
+    return 'Next: $date';
+  }
+
+  @override
+  String get todayNoSessionsAtAll =>
+      'No upcoming sessions — check your groups’ schedule with an executive.';
+
+  @override
+  String get presTitle => 'Presence confirmations';
+
+  @override
+  String presSubtitle(String group, String time, String sent) {
+    return '$group · $time · sent $sent';
+  }
+
+  @override
+  String presSubtitleNotSent(String group, String time) {
+    return '$group · $time · not sent yet';
+  }
+
+  @override
+  String get presPlanning => 'For planning (materials, snack, transport)';
+
+  @override
+  String presExpectedOf(int count) {
+    return 'expected of $count';
+  }
+
+  @override
+  String presRemind(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Remind those who haven’t answered ($count)',
+      zero: 'Everyone answered',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get presRemindDone => '✓ Reminder sent';
+
+  @override
+  String presRemindNote(String time) {
+    return 'The reminder is sent once — deadline $time';
+  }
+
+  @override
+  String presRemindedToast(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Reminder sent to $count guardians',
+      one: 'Reminder sent to 1 guardian',
+      zero: 'No one to remind',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get presNotSent =>
+      'No confirmation request was sent for this session.';
+
+  @override
+  String attTitle(String group) {
+    return 'Attendance — $group';
+  }
+
+  @override
+  String attSubtitle(String time, String title) {
+    return '$time · $title · pre-filled from guardians’ answers';
+  }
+
+  @override
+  String attUnmarked(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count unmarked',
+      zero: 'All marked',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String attMarkRest(int count) {
+    return '✓ Mark the remaining ($count) present';
+  }
+
+  @override
+  String get attPresYes => 'Guardian confirmed';
+
+  @override
+  String get attPresLate => 'Late announced';
+
+  @override
+  String get attPresNo => 'Absence announced';
+
+  @override
+  String get attPresNone => 'Guardian hasn’t answered';
+
+  @override
+  String get attSave => 'Save attendance';
+
+  @override
+  String attSaveAlert(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Save · alert $count guardians',
+      one: 'Save · alert 1 guardian',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get attSaveOffline => 'Save on this phone';
+
+  @override
+  String get attEditHint =>
+      'Editable for 30 minutes, then through an executive';
+
+  @override
+  String get attUnmarkedKind => 'Before saving';
+
+  @override
+  String attUnmarkedTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count children unmarked',
+      one: '1 child unmarked',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get attUnmarkedBody =>
+      'Give every child a status. If they really are not here, choose “absent” — their guardians are alerted at once.';
+
+  @override
+  String get attUnmarkedCta => 'Keep marking';
+
+  @override
+  String get attAlertKind => 'Safety alert to guardians';
+
+  @override
+  String attAlertTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count children’s guardians will be alerted now',
+      one: '1 child’s guardians will be alerted now',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String attAlertBody(String names) {
+    return '$names: absent without notice. Their guardians get an immediate notification (and an SMS if they don’t open the app), because a guardian may believe their child is here.';
+  }
+
+  @override
+  String get attAlertCta => 'Save and send the alert';
+
+  @override
+  String get attAlertCancel => 'Review the list';
+
+  @override
+  String attSavedAlert(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Attendance saved · $count guardians alerted',
+      one: 'Attendance saved · 1 guardian alerted',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get attStatusExcusedShort => 'Excused';
+
+  @override
+  String get sessTitle => 'Sessions';
+
+  @override
+  String sessWeekRange(String from, String to) {
+    return 'Week $from – $to';
+  }
+
+  @override
+  String get sessPrevWeek => 'Previous week';
+
+  @override
+  String get sessNextWeek => 'Next week';
+
+  @override
+  String get sessAllGroups => 'All my groups';
+
+  @override
+  String get sessStateUpcoming => 'Upcoming';
+
+  @override
+  String sessStateSoon(int count) {
+    return 'in $count min';
+  }
+
+  @override
+  String get sessStateLive => 'Live';
+
+  @override
+  String get sessStateNoContent => 'No content';
+
+  @override
+  String get sessStateMoved => 'Rescheduled';
+
+  @override
+  String sessMetaMaterials(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count materials',
+      one: '1 material',
+      zero: 'no materials',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sessMetaHomework => 'homework';
+
+  @override
+  String get sessMetaGenerated => 'created from the schedule';
+
+  @override
+  String sessMetaWith(String name) {
+    return 'with $name';
+  }
+
+  @override
+  String get sessFooter =>
+      'Sessions are created from the group schedule — add content only.';
+
+  @override
+  String get sessEmptyWeek => 'No sessions this week';
+
+  @override
+  String get sessObjectives => 'Objectives';
+
+  @override
+  String get sessMaterials => 'Materials';
+
+  @override
+  String get sessHomework => 'Homework';
+
+  @override
+  String get sessAddHomework => '+ homework';
+
+  @override
+  String sessHomeworkMeta(String target, String due, int done, int total) {
+    return '$target · due $due · $done/$total done (self-reported)';
+  }
+
+  @override
+  String get sessWholeGroup => 'Whole group';
+
+  @override
+  String get sessAttendanceDone => '✓ Attendance';
+
+  @override
+  String get sessSummaryDone => '✓ Summary';
+
+  @override
+  String get sessSummaryCta => 'Session summary';
+
+  @override
+  String get sessCancelCta => 'Cancel or reschedule';
+
+  @override
+  String get sessCancelledBanner =>
+      '✕ This session was cancelled · guardians and team told';
+
+  @override
+  String sessMovedBanner(String when) {
+    return '⏱ Moved to $when · guardians told';
+  }
+
+  @override
+  String get sessNoObjectives => 'No objectives yet — add them through “edit”.';
+
+  @override
+  String get sessNoMaterials => 'No materials yet';
+
+  @override
+  String get sessNoHomework => 'No homework for this session';
+
+  @override
+  String get sessEdit => 'Edit';
+
+  @override
+  String get visBefore => 'Before the session';
+
+  @override
+  String get visAfter => 'After the session';
+
+  @override
+  String get visStaff => 'Staff only';
+
+  @override
+  String get matKindDocument => 'File';
+
+  @override
+  String get matKindImage => 'Photo';
+
+  @override
+  String get matKindAudio => 'Audio';
+
+  @override
+  String get matKindVideo => 'Video';
+
+  @override
+  String get matKindLink => 'Link';
+
+  @override
+  String get sessContentTitle => 'Session content';
+
+  @override
+  String sessContentSubtitle(String group, String time) {
+    return '$group · $time · from the weekly schedule';
+  }
+
+  @override
+  String get sessTitleHint => 'e.g. Quran circle — Surat al-Mulk';
+
+  @override
+  String get sessTheme => 'Theme';
+
+  @override
+  String get themeQuran => 'Quran';
+
+  @override
+  String get themeSira => 'Sira';
+
+  @override
+  String get themeAkhlaq => 'Character';
+
+  @override
+  String get themeHadith => 'Hadith';
+
+  @override
+  String get themeSkills => 'Skills';
+
+  @override
+  String get sessObjectivesHint => 'One objective per line…';
+
+  @override
+  String get sessMaterialsWho => 'Materials and who sees them';
+
+  @override
+  String get sessVideoLimit => 'Video ≤ 50 MB · long ones as a link';
+
+  @override
+  String get addFile => '+ file';
+
+  @override
+  String get addPhoto => '+ photo';
+
+  @override
+  String get addAudio => '+ audio';
+
+  @override
+  String get addLink => '+ link';
+
+  @override
+  String get sessSaveContent => 'Save content';
+
+  @override
+  String get sessContentSaved => 'Session content saved';
+
+  @override
+  String get linkUrlHint => 'https://…';
+
+  @override
+  String get linkTitleHint => 'Link title';
+
+  @override
+  String get linkAdd => 'Add link';
+
+  @override
+  String get uploadFailed => 'The upload failed';
+
+  @override
+  String get sumTitle => 'What did we do today?';
+
+  @override
+  String sumSubtitle(String group) {
+    return 'A summary sent to the guardians of $group';
+  }
+
+  @override
+  String get sumHint =>
+      'What the children learned, and what guardians could review…';
+
+  @override
+  String get sumConsentNote =>
+      'Photos with faces go through image rights, like the wall.';
+
+  @override
+  String sumConsentBlocked(String name) {
+    return '$name: “not allowed” — attach no photo they appear in.';
+  }
+
+  @override
+  String sumReach(int families, int guardians) {
+    return 'Reaches $families families ($guardians guardians) · shown on the session page';
+  }
+
+  @override
+  String get sumSend => 'Send to the group’s guardians';
+
+  @override
+  String get sumSent => '✓ Sent to guardians';
+
+  @override
+  String sumSentToast(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Summary sent to $count families',
+      one: 'Summary sent to 1 family',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cancelSheetTitle => 'Cancel or reschedule the session';
+
+  @override
+  String get cancelModeCancel => 'Cancel';
+
+  @override
+  String get cancelModeMove => 'Reschedule';
+
+  @override
+  String get cancelNewSlot => 'New slot';
+
+  @override
+  String get cancelPickSlot => 'Pick the new slot';
+
+  @override
+  String get cancelReasonHint => 'Reason (guardians see it)…';
+
+  @override
+  String cancelNotice(int guardians) {
+    return '$guardians guardians, co-educators and executives are told. ⦿ Recorded in your name.';
+  }
+
+  @override
+  String get cancelCta => 'Cancel and tell everyone';
+
+  @override
+  String get moveCta => 'Reschedule and tell everyone';
+
+  @override
+  String cancelledToast(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Session cancelled · $count people told',
+      one: 'Session cancelled · 1 person told',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String movedToast(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Session moved · $count people told',
+      one: 'Session moved · 1 person told',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hwNewTitle => 'New homework';
+
+  @override
+  String hwNewSubtitle(String day, String group) {
+    return 'Linked to the $day session · $group';
+  }
+
+  @override
+  String get hwInstructions => 'Instructions';
+
+  @override
+  String get hwInstructionsHint => 'What the child should do';
+
+  @override
+  String get hwTitleHint => 'e.g. review verses 1–10';
+
+  @override
+  String get hwFor => 'For whom?';
+
+  @override
+  String hwWholeGroup(int count) {
+    return 'Whole group ($count)';
+  }
+
+  @override
+  String get hwSpecific => 'Specific children';
+
+  @override
+  String get hwDue => 'Due';
+
+  @override
+  String get hwReminderNote =>
+      'Automatic reminder to guardians the day before if not marked done.';
+
+  @override
+  String get hwAttachment => '+ attachment (sheet, audio…)';
+
+  @override
+  String hwAttachmentAdded(String name) {
+    return '✓ Attached: $name';
+  }
+
+  @override
+  String hwSend(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Send to $count children',
+      one: 'Send to 1 child',
+      zero: 'Pick children',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hwPickOne => 'Pick at least one child';
+
+  @override
+  String get hwSentToast => 'Homework sent to guardians';
+
+  @override
+  String get eduGroupsTitle => 'My groups';
+
+  @override
+  String get eduGroupsSubtitle => 'You see only your groups’ children';
+
+  @override
+  String get eduGroupsEmpty => 'No groups assigned to you';
+
+  @override
+  String get statAttendance => 'Attendance';
+
+  @override
+  String get statHomework => 'Homework';
+
+  @override
+  String get statNext => 'Next';
+
+  @override
+  String groupFlag(String name) {
+    return '$name: 3 absences in a row — a care call';
+  }
+
+  @override
+  String get eduGroupsFooter =>
+      'Adding or moving children is done by an executive.';
+
+  @override
+  String get grpTabHomework => 'Homework';
+
+  @override
+  String get grpTabStaff => 'Team channel';
+
+  @override
+  String rosterAttendance(int present, int expected) {
+    return 'attendance $present/$expected';
+  }
+
+  @override
+  String get rosterNew => 'new';
+
+  @override
+  String get rosterCare => '▲ 3 absences in a row — follow up';
+
+  @override
+  String get hwStateOpen => 'Open';
+
+  @override
+  String get hwStateClosed => 'Closed';
+
+  @override
+  String hwListMeta(String target, String date) {
+    return '$target · due $date';
+  }
+
+  @override
+  String hwListMetaClosed(String target, String date) {
+    return '$target · ended $date';
+  }
+
+  @override
+  String hwTargetChildren(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count children',
+      one: '1 child',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hwFooter =>
+      'Done is self-reported · no public ranking of children';
+
+  @override
+  String get hwEmpty => 'No homework yet';
+
+  @override
+  String get staffChannelNote =>
+      'Educators’ and executives’ channel — guardians never see it.';
+
+  @override
+  String get staffChannelOpen => 'Open the team channel';
+
+  @override
+  String get staffChannelMissing => 'No team channel for this group yet';
+
+  @override
+  String get guardianMessage => 'Message';
+
+  @override
+  String get guardianEmergency => 'emergency';
+
+  @override
+  String get guardianEmergencyHint => 'Number hidden · call through the app';
+
+  @override
+  String get guardianCall => '☏ Call';
+
+  @override
+  String get guardianCallToast =>
+      'Call through the app — number hidden · ⦿ recorded';
+
+  @override
+  String get guardianCallUnavailable => 'No number on file for this guardian';
+
+  @override
+  String get notesTitle => 'Notes';
+
+  @override
+  String get notesPhase2 => 'Phase 2';
+
+  @override
+  String get notesStaff => 'Staff only';
+
+  @override
+  String get notesShared => 'Shared with guardians';
+
+  @override
+  String get notesStaffBody => 'Notes only staff see — coming in phase 2.';
+
+  @override
+  String get notesSharedBody => 'Notes guardians receive — coming in phase 2.';
+
+  @override
+  String get eduChildHomeworkTile => 'Homework';
+
+  @override
+  String msgAvailability(String window) {
+    return 'Available $window · outside it messages arrive silently';
+  }
+
+  @override
+  String get msgAvailabilityUnset =>
+      'No availability hours yet — set them in More';
+
+  @override
+  String msgSectionChildrenOf(String group) {
+    return 'Children · $group';
+  }
+
+  @override
+  String get msgSectionTeam => 'Team and management';
+
+  @override
+  String get msgFooterEdu =>
+      'There is no private child conversation — every thread holds the guardians and the group’s educators.';
+
+  @override
+  String get quickReply1 => 'Hello, thank you very much';
+
+  @override
+  String get quickReply2 => 'Did very well today, well done';
+
+  @override
+  String get quickReply3 => 'See you at the next session, inshallah';
+
+  @override
+  String get msgComposerHintEdu => 'Write a message…';
+
+  @override
+  String get eduMemSubtitle =>
+      'Private to your groups’ guardians · no outside sharing';
+
+  @override
+  String get memNewPost => '+ post';
+
+  @override
+  String get memMyPosts => 'My posts';
+
+  @override
+  String get memAlbumsTitle => 'Albums';
+
+  @override
+  String get memStatePending => 'Awaiting approval';
+
+  @override
+  String get memStatePublished => 'Published';
+
+  @override
+  String get memStateEdit => 'Edit requested';
+
+  @override
+  String memMediaCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count photos',
+      one: '1 photo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String memTaggedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tagged',
+      one: '1 tagged',
+      zero: 'no tags',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get memMyPostsEmpty =>
+      'Nothing posted yet — add your group’s first memory.';
+
+  @override
+  String memPostsInAlbum(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count posts',
+      one: '1 post',
+      zero: 'no posts',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get memComposeTitle => 'New post';
+
+  @override
+  String get memComposeSubtitle => 'Reviewed by an executive before publishing';
+
+  @override
+  String get memComposeSubtitleLive =>
+      'Published at once to the group’s guardians';
+
+  @override
+  String get memAlbumLabel => 'Album';
+
+  @override
+  String get memAudienceLabel => 'Audience';
+
+  @override
+  String memAudienceOf(String group) {
+    return 'Guardians of $group';
+  }
+
+  @override
+  String get memAudienceAll => 'All guardians';
+
+  @override
+  String get memPickAlbum => 'Pick an album';
+
+  @override
+  String get memCaptionHint => 'A short caption…';
+
+  @override
+  String get memTagTitle => 'Tag the children who appear';
+
+  @override
+  String memTagCount(int count) {
+    return '$count tagged';
+  }
+
+  @override
+  String memBlocked(String name) {
+    return '⊘ Cannot tag $name — image rights “not allowed”. If they appear in a photo, remove it before publishing.';
+  }
+
+  @override
+  String get memSubmit => 'Send for approval';
+
+  @override
+  String get memPublish => 'Publish';
+
+  @override
+  String get memSubmittedToast => 'Sent to an executive for approval';
+
+  @override
+  String get memPublishedToast => 'Published to the group’s guardians';
+
+  @override
+  String get memNeedMedia => 'Add at least one photo';
+
+  @override
+  String get memUploading => 'Uploading…';
+
+  @override
+  String get memConsentBlockedToast =>
+      'Remove the not-allowed children before publishing';
+
+  @override
+  String get memRemovePhoto => 'Remove photo';
+
+  @override
+  String get annEduTitle => 'Announcement to my groups';
+
+  @override
+  String get annToGuardians => 'To the guardians of';
+
+  @override
+  String annReachGroups(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Reaches $count guardians + co-educators',
+      one: 'Reaches 1 guardian + co-educators',
+      zero: 'No one',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get annPickGroup => 'Pick at least one group';
+
+  @override
+  String get annAckTitle => 'Ask for “I’ve read this”';
+
+  @override
+  String get annAckBody => 'You see who confirmed and who didn’t';
+
+  @override
+  String get annUrgentExecOnly =>
+      'Urgent (SMS) announcements are the executives’ alone.';
+
+  @override
+  String get annPublishCta => 'Publish';
+
+  @override
+  String annPublishedToast(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Announcement published to $count guardians',
+      one: 'Announcement published to 1 guardian',
+      zero: 'Announcement published',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String moreEduRole(String groups) {
+    return 'Educator · $groups';
+  }
+
+  @override
+  String get availTitle => 'Availability hours';
+
+  @override
+  String get availBody =>
+      'Outside them guardians’ messages arrive silently, and they see the association’s number for emergencies.';
+
+  @override
+  String get availSavedToast => 'Availability saved';
+
+  @override
+  String get attReminderRow => 'Attendance reminder';
+
+  @override
+  String get attReminderLocked => 'after 30 min · locked';
+
+  @override
+  String get offlineAttendanceBanner =>
+      '⦸ Offline — attendance is kept on this phone and synced when the network is back.';
+
+  @override
+  String get notAvailableToYou => 'Not available to you';
 }

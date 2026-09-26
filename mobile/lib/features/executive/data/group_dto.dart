@@ -36,6 +36,28 @@ ExecutiveGroup executiveGroupFromJson(Map<String, Object?> json) {
         : stringList(json['educator_names']),
     scheduleLabel: stringOrNull(json['schedule_label']),
     place: stringOrNull(json['place']),
+    stats: _statsOrNull(objectOrNull(json['stats'])),
+  );
+}
+
+GroupStats? _statsOrNull(Map<String, Object?>? json) {
+  if (json == null) return null;
+  final attendance = objectOrNull(json['attendance']);
+  final homework = objectOrNull(json['homework']);
+  return GroupStats(
+    present: intOrNull(attendance?['present']) ?? 0,
+    expected: intOrNull(attendance?['expected']) ?? 0,
+    homeworkDone: intOrNull(homework?['done']) ?? 0,
+    homeworkTotal: intOrNull(homework?['total']) ?? 0,
+    nextSessionAt: dateOrNull(json['next_session_at']),
+    flags: [
+      for (final flag in objectList(json['flags'], field: 'flags'))
+        CareFlag(
+          childId: stringOrNull(flag['child_id']) ?? '',
+          fullName: stringOrNull(flag['full_name']) ?? '',
+          consecutiveAbsences: intOrNull(flag['consecutive_absences']) ?? 0,
+        ),
+    ],
   );
 }
 

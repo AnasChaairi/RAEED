@@ -43,28 +43,29 @@ class AttendanceStatusSelector extends StatelessWidget {
   /// Whether this mark is queued and has not reached the server.
   final bool isPending;
 
-  /// The statuses that earn a permanent button.
+  /// The four statuses, each one tap from any other (EDU-M-03).
   static const List<AttendanceStatus> fastStatuses = [
     AttendanceStatus.present,
     AttendanceStatus.late,
+    AttendanceStatus.excused,
     AttendanceStatus.absent,
   ];
 
+  /// One button's side. The design draws these at 40px; the project's own
+  /// rule for a control tapped twenty times at speed is the primary-action
+  /// target (`specs/08-design-system`), and the row moves the four buttons to
+  /// their own line when a name cannot keep its floor beside them.
+  static const double segmentPx = RaeedTouchTarget.primaryActionsPx;
+
   /// Roughly what [build] occupies, for callers budgeting a row around it.
-  static double widthFor(AttendanceStatus? status, double scale) {
-    final segments = fastStatuses.contains(status) || status == null ? 3 : 4;
-    return segments * RaeedTouchTarget.primaryActionsPx * scale +
-        (segments - 1) * RaeedSpacing.xs;
-  }
+  static double widthFor(AttendanceStatus? status, double scale) =>
+      fastStatuses.length * segmentPx * scale +
+      (fastStatuses.length - 1) * RaeedSpacing.xs;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppL10n.of(context);
-    final shown = [
-      ...fastStatuses,
-      // Only ever shown once something set it; never offered as a fourth tap.
-      if (status != null && !fastStatuses.contains(status)) status!,
-    ];
+    const shown = fastStatuses;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -76,9 +77,7 @@ class AttendanceStatusSelector extends StatelessWidget {
             label: statusLabel(l10n, candidate),
             isSelected: status == candidate,
             isPending: isPending && status == candidate,
-            onTap: fastStatuses.contains(candidate)
-                ? () => onSelected(candidate)
-                : onPickOther,
+            onTap: () => onSelected(candidate),
             onLongPress: onPickOther,
           ),
         ],
@@ -120,8 +119,8 @@ class _Segment extends StatelessWidget {
         child: Container(
           // Square and full-height: tapped repeatedly, at speed, often
           // one-handed by someone standing up.
-          width: RaeedTouchTarget.primaryActionsPx,
-          height: RaeedTouchTarget.primaryActionsPx,
+          width: AttendanceStatusSelector.segmentPx,
+          height: AttendanceStatusSelector.segmentPx,
           decoration: BoxDecoration(
             color: isSelected ? tone.fill : palette.surfaceAlt,
             borderRadius: BorderRadius.circular(RaeedRadius.md),

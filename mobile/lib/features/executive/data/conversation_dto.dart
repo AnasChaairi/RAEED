@@ -35,6 +35,7 @@ ConversationSummary conversationSummaryFromJson(Map<String, Object?> json) {
     // Defaults to *not* a member: the safe error is showing an oversight
     // notice to a member, never hiding it from an overseer.
     isMember: boolOr(json['is_member'], false),
+    groupName: stringOrNull(json['group_name']),
     lastMessagePreview:
         stringOrNull(last?['preview']) ??
         stringOrNull(last?['body']) ??

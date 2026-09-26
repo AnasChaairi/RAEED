@@ -12,6 +12,7 @@ String audienceLabel(
   AudienceMode.parents => l10n.audParents,
   AudienceMode.educators => l10n.audEducators,
   AudienceMode.categories => l10n.audCategories,
+  AudienceMode.groups => l10n.execTabGroups,
 };
 
 /// The plain-language line under the reach count.
@@ -34,4 +35,11 @@ String audienceSummary(
                     reach,
                   ).map((category) => category.name).join('، '),
           ),
+  AudienceMode.groups =>
+    audience.isEmptySelection
+        ? l10n.audSummaryNone
+        : (reach?.groups ?? const [])
+              .where((group) => audience.groupIds.contains(group.id))
+              .map((group) => group.name)
+              .join('، '),
 };

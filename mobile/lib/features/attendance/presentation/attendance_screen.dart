@@ -11,6 +11,7 @@ import '../../../shared/widgets/skeleton.dart';
 import '../../children/presentation/widgets/health_alert_badge.dart';
 import '../domain/attendance_sheet.dart';
 import '../domain/attendance_status.dart';
+import '../domain/presence_answer.dart';
 import 'attendance_providers.dart';
 import 'widgets/status_selector.dart';
 
@@ -131,6 +132,51 @@ class _SheetBody extends ConsumerWidget {
   ) async {
     final messenger = ScaffoldMessenger.of(context);
     final l10n = AppL10n.of(context);
+    final unmarked = sheet.unmarked.length;
+    final alerts = unexplainedAbsences(sheet);
+
+    // Two stops before the write. Unmarked children are a mistake more often
+    // than a choice; an unexplained absence pages a guardian the moment it
+    // lands (`ATT-07`), so the educator confirms it by name.
+    if (unmarked > 0) {
+      await showDialog<void>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(l10n.attUnmarkedTitle(unmarked)),
+          content: Text(l10n.attUnmarkedBody),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(l10n.attUnmarkedCta),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+    if (alerts.isNotEmpty) {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(l10n.attAlertTitle(alerts.length)),
+          content: Text(
+            l10n.attAlertBody(alerts.map((e) => e.childName).join('، ')),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(l10n.attAlertCancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(l10n.attAlertCta),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true) return;
+    }
+    if (!context.mounted) return;
 
     final outcome = await controller.submit();
     if (!context.mounted) return;
@@ -150,6 +196,8 @@ class _SheetBody extends ConsumerWidget {
           content: Text(
             outcome.wasOffline
                 ? l10n.attendanceOfflineSaved
+                : alerts.isNotEmpty
+                ? l10n.attSavedAlert(alerts.length)
                 : l10n.attendanceSubmitted,
           ),
         ),
@@ -240,8 +288,9 @@ class _MarkingHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppL10n.of(context);
     final palette = context.palette;
-    final style = context.type.tabular(context.type.caption);
-    final marked = sheet.entries.where((entry) => !entry.isUnmarked).length;
+    int count(AttendanceStatus status) =>
+        sheet.entries.where((e) => e.effectiveStatus == status).length;
+    final unmarked = sheet.unmarked.length;
 
     return Container(
       width: double.infinity,
@@ -258,36 +307,55 @@ class _MarkingHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  l10n.attendanceMarkedOf(marked, sheet.entries.length),
-                  style: context.type
-                      .tabular(context.type.label)
-                      .copyWith(color: palette.ink),
-                ),
-              ),
-            ],
+          Text(
+            l10n.attTitle(sheet.groupName ?? ''),
+            style: context.type.h3.copyWith(color: palette.ink),
+          ),
+          Text(
+            '${l10n.attendanceSummaryConfirmed(sheet.confirmedCount)} · '
+            '${l10n.attendanceSummaryAbsent(sheet.declaredAbsentCount)} · '
+            '${l10n.attendanceSummaryNoAnswer(sheet.noAnswerCount)}',
+            style: context.type
+                .tabular(context.type.caption)
+                .copyWith(color: palette.inkDim),
           ),
           const SizedBox(height: RaeedSpacing.sm),
           _ProgressSegments(sheet: sheet),
-          const SizedBox(height: RaeedSpacing.md),
+          const SizedBox(height: RaeedSpacing.sm + 2),
           Wrap(
-            spacing: RaeedSpacing.lg,
-            runSpacing: RaeedSpacing.xs,
+            spacing: 6,
+            runSpacing: 6,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Text(
-                l10n.attendanceSummaryConfirmed(sheet.confirmedCount),
-                style: style.copyWith(color: palette.success),
+              _CountChip(
+                icon: Icons.check_rounded,
+                count: count(AttendanceStatus.present),
+                fill: palette.successSoft,
+                on: palette.success,
+              ),
+              _CountChip(
+                icon: Icons.schedule_rounded,
+                count: count(AttendanceStatus.late),
+                fill: palette.warningSoft,
+                on: palette.warning,
+              ),
+              _CountChip(
+                icon: Icons.verified_outlined,
+                count: count(AttendanceStatus.excused),
+                fill: palette.infoSoft,
+                on: palette.info,
+              ),
+              _CountChip(
+                icon: Icons.close_rounded,
+                count: count(AttendanceStatus.absent),
+                fill: palette.dangerSoft,
+                on: palette.danger,
               ),
               Text(
-                l10n.attendanceSummaryAbsent(sheet.declaredAbsentCount),
-                style: style.copyWith(color: palette.danger),
-              ),
-              Text(
-                l10n.attendanceSummaryNoAnswer(sheet.noAnswerCount),
-                style: style.copyWith(color: palette.inkDim),
+                l10n.attUnmarked(unmarked),
+                style: context.type
+                    .tabular(context.type.caption)
+                    .copyWith(color: palette.inkDim),
               ),
             ],
           ),
@@ -381,8 +449,10 @@ class _AttendanceRow extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(RaeedRadius.xl),
         side: BorderSide(
-          color: entry.hasConflict ? palette.warning : palette.border,
-          width: entry.hasConflict ? 2 : 1,
+          color: entry.hasConflict || entry.isUnmarked
+              ? palette.warning
+              : palette.border,
+          width: entry.hasConflict ? 2 : 1.5,
         ),
       ),
       child: Padding(
@@ -394,23 +464,52 @@ class _AttendanceRow extends StatelessWidget {
                 final scale =
                     MediaQuery.textScalerOf(context).scale(_referenceFontSize) /
                     _referenceFontSize;
+                final (presenceText, presenceColor) = _presenceLine(
+                  l10n,
+                  palette,
+                  entry,
+                );
                 final name = Row(
                   children: [
                     _RowAvatar(entry: entry),
                     const SizedBox(width: RaeedSpacing.sm),
                     Flexible(
-                      child: Text(
-                        entry.childName,
-                        style: context.type.body.copyWith(color: palette.ink),
-                        overflow: TextOverflow.ellipsis,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  entry.childName,
+                                  style: context.type.body.copyWith(
+                                    color: palette.ink,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              if (entry.hasHealthAlert) ...[
+                                const SizedBox(width: RaeedSpacing.xs),
+                                // Icon only here too: an attendance list is
+                                // read in a classroom with parents at the door.
+                                const HealthAlertBadge(size: 16),
+                              ],
+                            ],
+                          ),
+                          // What the guardian said — the answer the mark is
+                          // pre-filled from.
+                          Text(
+                            presenceText,
+                            style: context.type.caption.copyWith(
+                              color: presenceColor,
+                              fontSize: 10.5,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ),
-                    if (entry.hasHealthAlert) ...[
-                      const SizedBox(width: RaeedSpacing.xs),
-                      // Icon only here too: an attendance list is read in a
-                      // classroom with parents at the door.
-                      const HealthAlertBadge(),
-                    ],
                   ],
                 );
 
@@ -469,6 +568,64 @@ class _AttendanceRow extends StatelessWidget {
       ),
     );
   }
+}
+
+(String, Color) _presenceLine(
+  AppL10n l10n,
+  RaeedPalette palette,
+  AttendanceEntry entry,
+) {
+  final reason = switch (entry.presenceReason) {
+    AbsenceReason.illness => l10n.presenceReasonIllness,
+    AbsenceReason.travel => l10n.presenceReasonTravel,
+    AbsenceReason.exam => l10n.presenceReasonExam,
+    AbsenceReason.other => l10n.presenceReasonOther,
+    null => null,
+  };
+  final (text, color) = switch (entry.presenceAnswer) {
+    PresenceAnswerValue.yes => (l10n.attPresYes, palette.success),
+    PresenceAnswerValue.late => (l10n.attPresLate, palette.warning),
+    PresenceAnswerValue.no => (l10n.attPresNo, palette.info),
+    null => (l10n.attPresNone, palette.inkDim),
+  };
+  return (reason == null ? text : '$text · $reason', color);
+}
+
+/// One status count in the header.
+class _CountChip extends StatelessWidget {
+  const _CountChip({
+    required this.icon,
+    required this.count,
+    required this.fill,
+    required this.on,
+  });
+
+  final IconData icon;
+  final int count;
+  final Color fill;
+  final Color on;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+    decoration: BoxDecoration(
+      color: fill,
+      borderRadius: BorderRadius.circular(RaeedRadius.pill),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 13, color: on),
+        const SizedBox(width: 3),
+        Text(
+          '$count',
+          style: context.type
+              .tabular(context.type.caption)
+              .copyWith(color: on, fontWeight: FontWeight.w700),
+        ),
+      ],
+    ),
+  );
 }
 
 /// The child's photo, or their initial when there is none.
@@ -548,7 +705,10 @@ class _ActionBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppL10n.of(context);
     final palette = context.palette;
-    final hasUnmarked = sheet.entries.any((entry) => entry.isUnmarked);
+    final unmarked = sheet.unmarked.length;
+    final hasUnmarked = unmarked > 0;
+    final alerts = unexplainedAbsences(sheet).length;
+    final offline = sheet.isFromCache || pendingCount > 0;
 
     return Container(
       padding: const EdgeInsets.all(RaeedSpacing.lg),
@@ -571,16 +731,39 @@ class _ActionBar extends StatelessWidget {
             ),
           if (hasUnmarked)
             OutlinedButton(
+              key: const Key('attendance-mark-remaining'),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size.fromHeight(RaeedTouchTarget.minPx),
+                foregroundColor: palette.success,
+                backgroundColor: palette.successSoft,
+                side: BorderSide(color: palette.success, width: 1.5),
+              ),
               onPressed: () => onMarkRemaining(),
-              child: Text(l10n.attendanceMarkRemainingPresent),
+              child: Text(l10n.attMarkRest(unmarked)),
             ),
           if (hasUnmarked) const SizedBox(height: RaeedSpacing.sm),
           FilledButton(
+            key: const Key('attendance-submit'),
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(52),
+            ),
             // Never disabled by being offline. The screen spec is explicit
             // that the offline state "never blocks submission" — submitting
             // queues, and queueing is the whole design.
             onPressed: onSubmit,
-            child: Text(l10n.attendanceSubmit),
+            child: Text(
+              offline
+                  ? l10n.attSaveOffline
+                  : alerts > 0
+                  ? l10n.attSaveAlert(alerts)
+                  : l10n.attSave,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            l10n.attEditHint,
+            textAlign: TextAlign.center,
+            style: context.type.caption.copyWith(color: palette.inkDim),
           ),
         ],
       ),
@@ -636,3 +819,13 @@ class _SheetSkeleton extends StatelessWidget {
     ),
   );
 }
+
+/// Children marked absent whose guardian did not declare an absence — the
+/// marks that page a guardian the moment they land (`ATT-07`). The app only
+/// counts them for the confirm; the server decides what actually alerts.
+List<AttendanceEntry> unexplainedAbsences(AttendanceSheet sheet) => [
+  for (final entry in sheet.entries)
+    if (entry.effectiveStatus == AttendanceStatus.absent &&
+        entry.presenceAnswer != PresenceAnswerValue.no)
+      entry,
+];

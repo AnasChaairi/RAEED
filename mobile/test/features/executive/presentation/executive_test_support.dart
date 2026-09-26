@@ -13,6 +13,14 @@ import 'package:raeed/core/session/token_store.dart';
 import 'package:raeed/core/theme/raeed_theme.dart';
 import 'package:raeed/features/children/domain/children_repository.dart';
 import 'package:raeed/features/children/presentation/home_providers.dart';
+import 'package:raeed/features/educator/domain/availability.dart';
+import 'package:raeed/features/educator/domain/educator_children_repository.dart';
+import 'package:raeed/features/educator/domain/educator_memories_repository.dart';
+import 'package:raeed/features/educator/domain/educator_repository.dart';
+import 'package:raeed/features/educator/domain/educator_session.dart';
+import 'package:raeed/features/educator/domain/memory_post.dart';
+import 'package:raeed/features/educator/domain/sessions_repository.dart';
+import 'package:raeed/features/educator/presentation/educator_providers.dart';
 import 'package:raeed/features/executive/domain/announcement_draft.dart';
 import 'package:raeed/features/executive/domain/attendance_review_repository.dart';
 import 'package:raeed/features/executive/domain/dashboard_overview.dart';
@@ -59,6 +67,16 @@ class MockFamiliesRepository extends Mock implements FamiliesRepository {}
 class MockReportsRepository extends Mock implements ReportsRepository {}
 
 class MockStructureRepository extends Mock implements StructureRepository {}
+
+class MockEducatorRepository extends Mock implements EducatorRepository {}
+
+class MockSessionsRepository extends Mock implements SessionsRepository {}
+
+class MockEducatorChildrenRepository extends Mock
+    implements EducatorChildrenRepository {}
+
+class MockEducatorMemoriesRepository extends Mock
+    implements EducatorMemoriesRepository {}
 
 class _NoSessionBootstrapper implements SessionBootstrapper {
   const _NoSessionBootstrapper();
@@ -122,6 +140,26 @@ class ExecutiveMocks {
     when(() => structure.fetchBranches()).thenAnswer((_) async => const []);
     when(() => structure.fetchAuditLog(action: any(named: 'action')))
         .thenAnswer((_) async => const []);
+    registerFallbackValue(const HomeworkDraft());
+    registerFallbackValue(const CancelDraft());
+    registerFallbackValue(const SessionContentDraft());
+    registerFallbackValue(const PostDraft());
+    registerFallbackValue(
+      const AvailabilityWindow(start: '09:00', end: '20:00'),
+    );
+    when(() => educator.fetchAvailability()).thenAnswer((_) async => null);
+    when(
+      () => sessions.fetchSessions(
+        from: any(named: 'from'),
+        to: any(named: 'to'),
+        groupId: any(named: 'groupId'),
+      ),
+    ).thenAnswer((_) async => const []);
+    when(() => sessions.fetchRoster(any())).thenAnswer((_) async => const []);
+    when(() => sessions.fetchGroupHomework(any()))
+        .thenAnswer((_) async => const []);
+    when(() => educatorMemories.fetchMyPosts())
+        .thenAnswer((_) async => const []);
   }
 
   final dashboard = MockDashboardRepository();
@@ -136,6 +174,10 @@ class ExecutiveMocks {
   final families = MockFamiliesRepository();
   final reports = MockReportsRepository();
   final structure = MockStructureRepository();
+  final educator = MockEducatorRepository();
+  final sessions = MockSessionsRepository();
+  final educatorChildren = MockEducatorChildrenRepository();
+  final educatorMemories = MockEducatorMemoriesRepository();
 
   /// A fresh container wired to these mocks.
   ProviderContainer container() => ProviderContainer(
@@ -157,6 +199,10 @@ class ExecutiveMocks {
       familiesRepositoryProvider.overrideWithValue(families),
       reportsRepositoryProvider.overrideWithValue(reports),
       structureRepositoryProvider.overrideWithValue(structure),
+      educatorRepositoryProvider.overrideWithValue(educator),
+      sessionsRepositoryProvider.overrideWithValue(sessions),
+      educatorChildrenRepositoryProvider.overrideWithValue(educatorChildren),
+      educatorMemoriesRepositoryProvider.overrideWithValue(educatorMemories),
     ],
   );
 }

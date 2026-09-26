@@ -338,6 +338,45 @@ class _ThreadState extends ConsumerState<_Thread> {
                   ],
                 ),
         ),
+        // A member's thread offers the three replies most conversations
+        // start with; an overseer's does not, since they rarely write.
+        if (state.detail.isMember)
+          SizedBox(
+            height: 44,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(
+                horizontal: RaeedSpacing.md + 2,
+                vertical: 5,
+              ),
+              children: [
+                for (final reply in [
+                  l10n.quickReply1,
+                  l10n.quickReply2,
+                  l10n.quickReply3,
+                ]) ...[
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(0, 34),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: RaeedSpacing.md,
+                      ),
+                      foregroundColor: palette.ink,
+                      side: BorderSide(color: palette.border),
+                    ),
+                    onPressed: _sending
+                        ? null
+                        : () {
+                            _composer.text = reply;
+                            _send();
+                          },
+                    child: Text(reply, style: context.type.caption),
+                  ),
+                  const SizedBox(width: 6),
+                ],
+              ],
+            ),
+          ),
         Container(
           decoration: BoxDecoration(
             color: palette.surface,
@@ -359,7 +398,9 @@ class _ThreadState extends ConsumerState<_Thread> {
                   textInputAction: TextInputAction.send,
                   onSubmitted: (_) => _send(),
                   decoration: InputDecoration(
-                    hintText: l10n.msgComposerHint,
+                    hintText: state.detail.isMember
+                        ? l10n.msgComposerHintEdu
+                        : l10n.msgComposerHint,
                     filled: true,
                     fillColor: palette.surfaceAlt,
                     border: OutlineInputBorder(

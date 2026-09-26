@@ -52,6 +52,11 @@ class AppScreens {
     required this.reports,
     required this.structure,
     required this.logs,
+    required this.session,
+    required this.sessionEdit,
+    required this.sessionSummary,
+    required this.sessionPresence,
+    required this.sessionHomeworkNew,
     required this.notFound,
   });
 
@@ -119,6 +124,21 @@ class AppScreens {
 
   /// The audit log (admin).
   final ScreenBuilder logs;
+
+  /// The educator's session (EDU-M-04).
+  final ScreenBuilder session;
+
+  /// Session content editor.
+  final ScreenBuilder sessionEdit;
+
+  /// "What we did today".
+  final ScreenBuilder sessionSummary;
+
+  /// Presence overview (EDU-M-02).
+  final ScreenBuilder sessionPresence;
+
+  /// New homework (EDU-M-05).
+  final ScreenBuilder sessionHomeworkNew;
 
   /// Fallback for an unknown or stale deep link.
   final ScreenBuilder notFound;
@@ -247,6 +267,33 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.conversation,
         name: AppRoutes.conversationName,
         builder: screens.conversation,
+      ),
+      GoRoute(
+        path: AppRoutes.session,
+        name: AppRoutes.sessionName,
+        builder: screens.session,
+        routes: [
+          GoRoute(
+            path: AppRoutes.sessionEdit,
+            name: AppRoutes.sessionEditName,
+            builder: screens.sessionEdit,
+          ),
+          GoRoute(
+            path: AppRoutes.sessionSummary,
+            name: AppRoutes.sessionSummaryName,
+            builder: screens.sessionSummary,
+          ),
+          GoRoute(
+            path: AppRoutes.sessionPresence,
+            name: AppRoutes.sessionPresenceName,
+            builder: screens.sessionPresence,
+          ),
+          GoRoute(
+            path: AppRoutes.sessionHomeworkNew,
+            name: AppRoutes.sessionHomeworkNewName,
+            builder: screens.sessionHomeworkNew,
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.memories,

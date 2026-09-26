@@ -2092,4 +2092,1021 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get actionOther => 'action';
+
+  @override
+  String get eduTabToday => 'Aujourd’hui';
+
+  @override
+  String get eduTabSessions => 'Séances';
+
+  @override
+  String get eduTabGroups => 'Groupes';
+
+  @override
+  String get eduTabMessages => 'Messages';
+
+  @override
+  String get eduTabMemories => 'Souvenirs';
+
+  @override
+  String get eduGreetingMorning => 'Bonjour';
+
+  @override
+  String get eduGreetingEvening => 'Bonsoir';
+
+  @override
+  String get todayNextSession => 'Prochaine séance';
+
+  @override
+  String todayInMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'dans $count min',
+      one: 'dans 1 min',
+      zero: 'maintenant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get todayLive => 'En cours';
+
+  @override
+  String get presTallyYes => 'Vient';
+
+  @override
+  String get presTallyLate => 'En retard';
+
+  @override
+  String get presTallyNo => 'Absent';
+
+  @override
+  String get presTallyNone => 'Sans réponse';
+
+  @override
+  String get todayRecordAttendance => 'Faire l’appel';
+
+  @override
+  String todayAttendanceDone(String group) {
+    return 'Appel fait — $group';
+  }
+
+  @override
+  String todayAttendanceSummary(
+    int present,
+    int late,
+    int excused,
+    int absent,
+  ) {
+    return 'Présents $present · retard $late · excusés $excused · absents $absent';
+  }
+
+  @override
+  String get todaySessionSummaryCta => 'Résumé';
+
+  @override
+  String todayNoContent(String group, String time) {
+    return 'Pas encore de contenu pour la séance $group · $time — créée depuis le planning.';
+  }
+
+  @override
+  String get todayAdd => 'Ajouter';
+
+  @override
+  String get shortcutHomework => 'Devoir';
+
+  @override
+  String get shortcutMemory => 'Souvenir';
+
+  @override
+  String get shortcutAnnouncement => 'Annonce';
+
+  @override
+  String get todayFromManagement => 'De la direction';
+
+  @override
+  String get todayAckCta => 'J’ai lu';
+
+  @override
+  String get todayAckDone => '✓ Lecture confirmée';
+
+  @override
+  String get todayNoSession => 'Pas de séance aujourd’hui';
+
+  @override
+  String todayNextOn(String date) {
+    return 'Prochaine : $date';
+  }
+
+  @override
+  String get todayNoSessionsAtAll =>
+      'Aucune séance à venir — vérifiez le planning avec la direction.';
+
+  @override
+  String get presTitle => 'Confirmations';
+
+  @override
+  String presSubtitle(String group, String time, String sent) {
+    return '$group · $time · envoyé $sent';
+  }
+
+  @override
+  String presSubtitleNotSent(String group, String time) {
+    return '$group · $time · pas encore envoyé';
+  }
+
+  @override
+  String get presPlanning => 'Pour préparer (matériel, goûter, transport)';
+
+  @override
+  String presExpectedOf(int count) {
+    return 'attendus sur $count';
+  }
+
+  @override
+  String presRemind(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Rappeler les sans réponse ($count)',
+      zero: 'Tout le monde a répondu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get presRemindDone => '✓ Rappel envoyé';
+
+  @override
+  String presRemindNote(String time) {
+    return 'Le rappel n’est envoyé qu’une fois — délai $time';
+  }
+
+  @override
+  String presRemindedToast(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Rappel envoyé à $count parents',
+      one: 'Rappel envoyé à 1 parent',
+      zero: 'Personne à rappeler',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get presNotSent =>
+      'Aucune demande de confirmation n’a été envoyée pour cette séance.';
+
+  @override
+  String attTitle(String group) {
+    return 'Appel — $group';
+  }
+
+  @override
+  String attSubtitle(String time, String title) {
+    return '$time · $title · prérempli avec les réponses des parents';
+  }
+
+  @override
+  String attUnmarked(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sans statut',
+      zero: 'Tous marqués',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String attMarkRest(int count) {
+    return '✓ Marquer les autres ($count) présents';
+  }
+
+  @override
+  String get attPresYes => 'Le parent a confirmé';
+
+  @override
+  String get attPresLate => 'Retard annoncé';
+
+  @override
+  String get attPresNo => 'Absence annoncée';
+
+  @override
+  String get attPresNone => 'Pas de réponse du parent';
+
+  @override
+  String get attSave => 'Enregistrer l’appel';
+
+  @override
+  String attSaveAlert(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Enregistrer · alerter $count parents',
+      one: 'Enregistrer · alerter 1 parent',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get attSaveOffline => 'Enregistrer sur le téléphone';
+
+  @override
+  String get attEditHint =>
+      'Modifiable pendant 30 minutes, ensuite via un responsable';
+
+  @override
+  String get attUnmarkedKind => 'Avant d’enregistrer';
+
+  @override
+  String attUnmarkedTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count enfants sans statut',
+      one: '1 enfant sans statut',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get attUnmarkedBody =>
+      'Donnez un statut à chaque enfant. S’ils sont vraiment absents, choisissez « absent » — leurs parents seront alertés immédiatement.';
+
+  @override
+  String get attUnmarkedCta => 'Continuer l’appel';
+
+  @override
+  String get attAlertKind => 'Alerte de sécurité aux parents';
+
+  @override
+  String attAlertTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Les parents de $count enfants seront alertés',
+      one: 'Les parents d’1 enfant seront alertés',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String attAlertBody(String names) {
+    return '$names : absence sans préavis. Les parents reçoivent une notification immédiate (et un SMS s’ils n’ouvrent pas l’application), car ils peuvent croire leur enfant ici.';
+  }
+
+  @override
+  String get attAlertCta => 'Enregistrer et alerter';
+
+  @override
+  String get attAlertCancel => 'Revoir la liste';
+
+  @override
+  String attSavedAlert(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Appel enregistré · $count parents alertés',
+      one: 'Appel enregistré · 1 parent alerté',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get attStatusExcusedShort => 'Excusé';
+
+  @override
+  String get sessTitle => 'Séances';
+
+  @override
+  String sessWeekRange(String from, String to) {
+    return 'Semaine du $from au $to';
+  }
+
+  @override
+  String get sessPrevWeek => 'Semaine précédente';
+
+  @override
+  String get sessNextWeek => 'Semaine suivante';
+
+  @override
+  String get sessAllGroups => 'Tous mes groupes';
+
+  @override
+  String get sessStateUpcoming => 'À venir';
+
+  @override
+  String sessStateSoon(int count) {
+    return 'dans $count min';
+  }
+
+  @override
+  String get sessStateLive => 'En cours';
+
+  @override
+  String get sessStateNoContent => 'Sans contenu';
+
+  @override
+  String get sessStateMoved => 'Reportée';
+
+  @override
+  String sessMetaMaterials(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count supports',
+      one: '1 support',
+      zero: 'aucun support',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sessMetaHomework => 'devoir';
+
+  @override
+  String get sessMetaGenerated => 'créée depuis le planning';
+
+  @override
+  String sessMetaWith(String name) {
+    return 'avec $name';
+  }
+
+  @override
+  String get sessFooter =>
+      'Les séances sont créées depuis le planning du groupe — ajoutez seulement le contenu.';
+
+  @override
+  String get sessEmptyWeek => 'Pas de séance cette semaine';
+
+  @override
+  String get sessObjectives => 'Objectifs';
+
+  @override
+  String get sessMaterials => 'Supports';
+
+  @override
+  String get sessHomework => 'Devoir';
+
+  @override
+  String get sessAddHomework => '+ devoir';
+
+  @override
+  String sessHomeworkMeta(String target, String due, int done, int total) {
+    return '$target · pour le $due · $done/$total fait (déclaré par les parents)';
+  }
+
+  @override
+  String get sessWholeGroup => 'Tout le groupe';
+
+  @override
+  String get sessAttendanceDone => '✓ Appel fait';
+
+  @override
+  String get sessSummaryDone => '✓ Résumé';
+
+  @override
+  String get sessSummaryCta => 'Résumé de la séance';
+
+  @override
+  String get sessCancelCta => 'Annuler ou reporter la séance';
+
+  @override
+  String get sessCancelledBanner =>
+      '✕ Séance annulée · parents et équipe prévenus';
+
+  @override
+  String sessMovedBanner(String when) {
+    return '⏱ Reportée au $when · parents prévenus';
+  }
+
+  @override
+  String get sessNoObjectives =>
+      'Pas encore d’objectifs — ajoutez-les via « modifier ».';
+
+  @override
+  String get sessNoMaterials => 'Pas encore de supports';
+
+  @override
+  String get sessNoHomework => 'Aucun devoir lié à cette séance';
+
+  @override
+  String get sessEdit => 'Modifier';
+
+  @override
+  String get visBefore => 'Avant la séance';
+
+  @override
+  String get visAfter => 'Après la séance';
+
+  @override
+  String get visStaff => 'Éducateurs seulement';
+
+  @override
+  String get matKindDocument => 'Fichier';
+
+  @override
+  String get matKindImage => 'Photo';
+
+  @override
+  String get matKindAudio => 'Audio';
+
+  @override
+  String get matKindVideo => 'Vidéo';
+
+  @override
+  String get matKindLink => 'Lien';
+
+  @override
+  String get sessContentTitle => 'Contenu de la séance';
+
+  @override
+  String sessContentSubtitle(String group, String time) {
+    return '$group · $time · depuis le planning';
+  }
+
+  @override
+  String get sessTitleHint => 'ex. : Cercle de Coran — sourate Al-Mulk';
+
+  @override
+  String get sessTheme => 'Thème';
+
+  @override
+  String get themeQuran => 'Coran';
+
+  @override
+  String get themeSira => 'Sîra';
+
+  @override
+  String get themeAkhlaq => 'Éthique';
+
+  @override
+  String get themeHadith => 'Hadith';
+
+  @override
+  String get themeSkills => 'Compétences';
+
+  @override
+  String get sessObjectivesHint => 'Un objectif par ligne…';
+
+  @override
+  String get sessMaterialsWho => 'Supports et visibilité';
+
+  @override
+  String get sessVideoLimit => 'Vidéo ≤ 50 Mo · les longues en lien';
+
+  @override
+  String get addFile => '+ fichier';
+
+  @override
+  String get addPhoto => '+ photo';
+
+  @override
+  String get addAudio => '+ audio';
+
+  @override
+  String get addLink => '+ lien';
+
+  @override
+  String get sessSaveContent => 'Enregistrer le contenu';
+
+  @override
+  String get sessContentSaved => 'Contenu enregistré';
+
+  @override
+  String get linkUrlHint => 'https://…';
+
+  @override
+  String get linkTitleHint => 'Titre du lien';
+
+  @override
+  String get linkAdd => 'Ajouter le lien';
+
+  @override
+  String get uploadFailed => 'Échec de l’envoi du fichier';
+
+  @override
+  String get sumTitle => 'Qu’avons-nous fait aujourd’hui ?';
+
+  @override
+  String sumSubtitle(String group) {
+    return 'Résumé envoyé aux parents de $group';
+  }
+
+  @override
+  String get sumHint =>
+      'Ce que les enfants ont appris, et ce que les parents peuvent réviser…';
+
+  @override
+  String get sumConsentNote =>
+      'Les photos avec des visages passent par le droit à l’image, comme les souvenirs.';
+
+  @override
+  String sumConsentBlocked(String name) {
+    return '$name : « non autorisé » — n’ajoutez aucune photo où il apparaît.';
+  }
+
+  @override
+  String sumReach(int families, int guardians) {
+    return 'Atteint $families familles ($guardians parents) · visible sur la page de la séance';
+  }
+
+  @override
+  String get sumSend => 'Envoyer aux parents du groupe';
+
+  @override
+  String get sumSent => '✓ Envoyé aux parents';
+
+  @override
+  String sumSentToast(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Résumé envoyé à $count familles',
+      one: 'Résumé envoyé à 1 famille',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cancelSheetTitle => 'Annuler ou reporter la séance';
+
+  @override
+  String get cancelModeCancel => 'Annuler';
+
+  @override
+  String get cancelModeMove => 'Reporter';
+
+  @override
+  String get cancelNewSlot => 'Nouveau créneau';
+
+  @override
+  String get cancelPickSlot => 'Choisir le créneau';
+
+  @override
+  String get cancelReasonHint => 'Motif (visible par les parents)…';
+
+  @override
+  String cancelNotice(int guardians) {
+    return '$guardians parents, les co-éducateurs et la direction sont prévenus. ⦿ Enregistré à votre nom.';
+  }
+
+  @override
+  String get cancelCta => 'Annuler et prévenir tout le monde';
+
+  @override
+  String get moveCta => 'Reporter et prévenir tout le monde';
+
+  @override
+  String cancelledToast(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Séance annulée · $count personnes prévenues',
+      one: 'Séance annulée · 1 personne prévenue',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String movedToast(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Séance reportée · $count personnes prévenues',
+      one: 'Séance reportée · 1 personne prévenue',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hwNewTitle => 'Nouveau devoir';
+
+  @override
+  String hwNewSubtitle(String day, String group) {
+    return 'Lié à la séance de $day · $group';
+  }
+
+  @override
+  String get hwInstructions => 'Consignes';
+
+  @override
+  String get hwInstructionsHint => 'Ce que l’enfant doit faire';
+
+  @override
+  String get hwTitleHint => 'ex. : réviser les versets 1–10';
+
+  @override
+  String get hwFor => 'Pour qui ?';
+
+  @override
+  String hwWholeGroup(int count) {
+    return 'Tout le groupe ($count)';
+  }
+
+  @override
+  String get hwSpecific => 'Enfants précis';
+
+  @override
+  String get hwDue => 'Pour le';
+
+  @override
+  String get hwReminderNote =>
+      'Rappel automatique aux parents la veille si « fait » n’est pas coché.';
+
+  @override
+  String get hwAttachment => '+ pièce jointe (feuille, audio…)';
+
+  @override
+  String hwAttachmentAdded(String name) {
+    return '✓ Joint : $name';
+  }
+
+  @override
+  String hwSend(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Envoyer à $count enfants',
+      one: 'Envoyer à 1 enfant',
+      zero: 'Choisir les enfants',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hwPickOne => 'Choisissez au moins un enfant';
+
+  @override
+  String get hwSentToast => 'Devoir envoyé aux parents';
+
+  @override
+  String get eduGroupsTitle => 'Mes groupes';
+
+  @override
+  String get eduGroupsSubtitle =>
+      'Vous voyez seulement les enfants de vos groupes';
+
+  @override
+  String get eduGroupsEmpty => 'Aucun groupe ne vous est attribué';
+
+  @override
+  String get statAttendance => 'Présence';
+
+  @override
+  String get statHomework => 'Devoirs';
+
+  @override
+  String get statNext => 'Prochaine';
+
+  @override
+  String groupFlag(String name) {
+    return '$name : 3 absences de suite — prendre des nouvelles';
+  }
+
+  @override
+  String get eduGroupsFooter =>
+      'Ajouter ou déplacer des enfants se fait via la direction.';
+
+  @override
+  String get grpTabHomework => 'Devoirs';
+
+  @override
+  String get grpTabStaff => 'Canal équipe';
+
+  @override
+  String rosterAttendance(int present, int expected) {
+    return 'présence $present/$expected';
+  }
+
+  @override
+  String get rosterNew => 'nouveau';
+
+  @override
+  String get rosterCare => '▲ 3 absences de suite — à suivre';
+
+  @override
+  String get hwStateOpen => 'En cours';
+
+  @override
+  String get hwStateClosed => 'Terminé';
+
+  @override
+  String hwListMeta(String target, String date) {
+    return '$target · pour le $date';
+  }
+
+  @override
+  String hwListMetaClosed(String target, String date) {
+    return '$target · terminé le $date';
+  }
+
+  @override
+  String hwTargetChildren(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count enfants',
+      one: '1 enfant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hwFooter =>
+      'Fait = déclaré par les parents · aucun classement des enfants';
+
+  @override
+  String get hwEmpty => 'Pas encore de devoirs';
+
+  @override
+  String get staffChannelNote =>
+      'Canal des éducateurs et de la direction — invisible aux parents.';
+
+  @override
+  String get staffChannelOpen => 'Ouvrir le canal équipe';
+
+  @override
+  String get staffChannelMissing => 'Pas encore de canal équipe pour ce groupe';
+
+  @override
+  String get guardianMessage => 'Écrire';
+
+  @override
+  String get guardianEmergency => 'urgence';
+
+  @override
+  String get guardianEmergencyHint => 'Numéro masqué · appel via l’application';
+
+  @override
+  String get guardianCall => '☏ Appeler';
+
+  @override
+  String get guardianCallToast =>
+      'Appel via l’application — numéro masqué · ⦿ enregistré';
+
+  @override
+  String get guardianCallUnavailable => 'Aucun numéro pour ce parent';
+
+  @override
+  String get notesTitle => 'Notes';
+
+  @override
+  String get notesPhase2 => 'Phase 2';
+
+  @override
+  String get notesStaff => 'Équipe seulement';
+
+  @override
+  String get notesShared => 'Aux parents';
+
+  @override
+  String get notesStaffBody =>
+      'Notes visibles par l’équipe seulement — arrivent en phase 2.';
+
+  @override
+  String get notesSharedBody =>
+      'Notes envoyées aux parents — arrivent en phase 2.';
+
+  @override
+  String get eduChildHomeworkTile => 'Devoirs';
+
+  @override
+  String msgAvailability(String window) {
+    return 'Disponible $window · en dehors, les messages arrivent en silence';
+  }
+
+  @override
+  String get msgAvailabilityUnset =>
+      'Heures de disponibilité non définies — via « Plus »';
+
+  @override
+  String msgSectionChildrenOf(String group) {
+    return 'Enfants · $group';
+  }
+
+  @override
+  String get msgSectionTeam => 'Équipe et direction';
+
+  @override
+  String get msgFooterEdu =>
+      'Pas de conversation privée avec un enfant — chaque fil réunit les parents et les éducateurs du groupe.';
+
+  @override
+  String get quickReply1 => 'Bonjour, merci beaucoup';
+
+  @override
+  String get quickReply2 => 'Très bien aujourd’hui, bravo';
+
+  @override
+  String get quickReply3 => 'À la prochaine séance, inchallah';
+
+  @override
+  String get msgComposerHintEdu => 'Écrire un message…';
+
+  @override
+  String get eduMemSubtitle =>
+      'Réservé aux parents de vos groupes · aucun partage externe';
+
+  @override
+  String get memNewPost => '+ publication';
+
+  @override
+  String get memMyPosts => 'Mes publications';
+
+  @override
+  String get memAlbumsTitle => 'Albums';
+
+  @override
+  String get memStatePending => 'En attente d’approbation';
+
+  @override
+  String get memStatePublished => 'Publié';
+
+  @override
+  String get memStateEdit => 'Modification demandée';
+
+  @override
+  String memMediaCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count photos',
+      one: '1 photo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String memTaggedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tagués',
+      one: '1 tagué',
+      zero: 'aucun tag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get memMyPostsEmpty =>
+      'Rien de publié — ajoutez le premier souvenir de votre groupe.';
+
+  @override
+  String memPostsInAlbum(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count publications',
+      one: '1 publication',
+      zero: 'aucune publication',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get memComposeTitle => 'Nouvelle publication';
+
+  @override
+  String get memComposeSubtitle => 'Soumis à la direction avant publication';
+
+  @override
+  String get memComposeSubtitleLive =>
+      'Publié immédiatement aux parents du groupe';
+
+  @override
+  String get memAlbumLabel => 'Album';
+
+  @override
+  String get memAudienceLabel => 'Public';
+
+  @override
+  String memAudienceOf(String group) {
+    return 'Parents de $group';
+  }
+
+  @override
+  String get memAudienceAll => 'Tous les parents';
+
+  @override
+  String get memPickAlbum => 'Choisir un album';
+
+  @override
+  String get memCaptionHint => 'Une courte légende…';
+
+  @override
+  String get memTagTitle => 'Taguer les enfants visibles';
+
+  @override
+  String memTagCount(int count) {
+    return '$count tagué(s)';
+  }
+
+  @override
+  String memBlocked(String name) {
+    return '⊘ Impossible de taguer $name — droit à l’image « non autorisé ». S’il apparaît sur une photo, retirez-la avant de publier.';
+  }
+
+  @override
+  String get memSubmit => 'Envoyer pour approbation';
+
+  @override
+  String get memPublish => 'Publier';
+
+  @override
+  String get memSubmittedToast => 'Envoyé à la direction pour approbation';
+
+  @override
+  String get memPublishedToast => 'Publié aux parents du groupe';
+
+  @override
+  String get memNeedMedia => 'Ajoutez au moins une photo';
+
+  @override
+  String get memUploading => 'Envoi…';
+
+  @override
+  String get memConsentBlockedToast =>
+      'Retirez les enfants non autorisés avant de publier';
+
+  @override
+  String get memRemovePhoto => 'Retirer la photo';
+
+  @override
+  String get annEduTitle => 'Annonce à mes groupes';
+
+  @override
+  String get annToGuardians => 'Aux parents de';
+
+  @override
+  String annReachGroups(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Atteint $count parents + les co-éducateurs',
+      one: 'Atteint 1 parent + les co-éducateurs',
+      zero: 'Personne',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get annPickGroup => 'Choisissez au moins un groupe';
+
+  @override
+  String get annAckTitle => 'Demander « j’ai lu »';
+
+  @override
+  String get annAckBody => 'Vous voyez qui a confirmé et qui non';
+
+  @override
+  String get annUrgentExecOnly =>
+      'Les annonces urgentes (SMS) sont réservées à la direction.';
+
+  @override
+  String get annPublishCta => 'Publier';
+
+  @override
+  String annPublishedToast(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Annonce publiée à $count parents',
+      one: 'Annonce publiée à 1 parent',
+      zero: 'Annonce publiée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String moreEduRole(String groups) {
+    return 'Éducateur · $groups';
+  }
+
+  @override
+  String get availTitle => 'Heures de disponibilité';
+
+  @override
+  String get availBody =>
+      'En dehors, les messages des parents arrivent en silence, avec le numéro de l’association pour les urgences.';
+
+  @override
+  String get availSavedToast => 'Disponibilité enregistrée';
+
+  @override
+  String get attReminderRow => 'Rappel d’appel';
+
+  @override
+  String get attReminderLocked => 'après 30 min · verrouillé';
+
+  @override
+  String get offlineAttendanceBanner =>
+      '⦸ Hors ligne — l’appel est gardé sur le téléphone et synchronisé au retour du réseau.';
+
+  @override
+  String get notAvailableToYou => 'Non disponible pour vous';
 }

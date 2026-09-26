@@ -257,8 +257,7 @@ void main() {
       await pumpScreen(tester);
       await tester.pumpAndSettle();
 
-      final l10n = AppL10n.of(tester.element(find.byType(AttendanceScreen)));
-      await tester.tap(find.text(l10n.attendanceMarkRemainingPresent));
+      await tester.tap(find.byKey(const Key('attendance-mark-remaining')));
       await tester.pumpAndSettle();
 
       final markedChildren = verify(
@@ -279,6 +278,61 @@ void main() {
     });
   });
 
+  group('before saving (EDU-M-03)', () {
+    testWidgets('an unmarked child stops the save with a warning', (
+      tester,
+    ) async {
+      stubSheet(
+        sheetOf([
+          entry('child-1', 'آدم'),
+          entry('child-2', 'مريم', serverStatus: AttendanceStatus.present),
+        ]),
+      );
+      await pumpScreen(tester);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('attendance-submit')));
+      await tester.pumpAndSettle();
+      final l10n = AppL10n.of(tester.element(find.byType(AttendanceScreen)));
+      expect(find.text(l10n.attUnmarkedTitle(1)), findsOneWidget);
+      verifyNever(() => repository.sync(sessionId: any(named: 'sessionId')));
+    });
+
+    testWidgets(
+      'an unexplained absence is confirmed by name before it alerts',
+      (tester) async {
+        stubSheet(
+          sheetOf([
+            entry('child-1', 'آدم', serverStatus: AttendanceStatus.absent),
+            entry(
+              'child-2',
+              'مريم',
+              serverStatus: AttendanceStatus.absent,
+              presenceAnswer: PresenceAnswerValue.no,
+            ),
+            entry('child-3', 'يوسف', serverStatus: AttendanceStatus.present),
+          ]),
+        );
+        await pumpScreen(tester);
+        await tester.pumpAndSettle();
+
+        final l10n = AppL10n.of(tester.element(find.byType(AttendanceScreen)));
+        // Only آدم: مريم's guardian declared the absence.
+        expect(find.text(l10n.attSaveAlert(1)), findsOneWidget);
+        await tester.tap(find.byKey(const Key('attendance-submit')));
+        await tester.pumpAndSettle();
+        expect(find.text(l10n.attAlertTitle(1)), findsOneWidget);
+        expect(find.textContaining('آدم'), findsWidgets);
+        verifyNever(() => repository.sync(sessionId: any(named: 'sessionId')));
+
+        await tester.tap(find.text(l10n.attAlertCta));
+        await tester.pumpAndSettle();
+        verify(() => repository.sync(sessionId: any(named: 'sessionId')))
+            .called(1);
+      },
+    );
+  });
+
   group('offline', () {
     testWidgets('shows reassurance, and submission stays enabled', (
       tester,
@@ -294,7 +348,7 @@ void main() {
       expect(find.text(l10n.attendanceOfflineSaved), findsWidgets);
 
       final submit = tester.widget<FilledButton>(
-        find.widgetWithText(FilledButton, l10n.attendanceSubmit),
+        find.byKey(const Key('attendance-submit')),
       );
       expect(
         submit.onPressed,

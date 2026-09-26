@@ -17,6 +17,7 @@ class ConversationSummary {
     this.lastMessageAt,
     this.unreadCount = 0,
     this.hasOpenReport = false,
+    this.groupName,
   });
 
   final String id;
@@ -35,6 +36,9 @@ class ConversationSummary {
 
   /// Whether a message in this thread was reported and not yet resolved.
   final bool hasOpenReport;
+
+  /// The group a child or staff thread belongs to, for sectioning.
+  final String? groupName;
 }
 
 /// A thread's header.

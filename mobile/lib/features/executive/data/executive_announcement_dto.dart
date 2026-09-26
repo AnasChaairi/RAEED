@@ -44,6 +44,8 @@ Map<String, Object?> audienceToJson(AnnouncementAudience audience) =>
       'type': audience.mode.wireValue,
       if (audience.mode == AudienceMode.categories)
         'category_ids': audience.categoryIds.toList()..sort(),
+      if (audience.mode == AudienceMode.groups)
+        'group_ids': audience.groupIds.toList()..sort(),
     };
 
 ExecutiveAnnouncement executiveAnnouncementFromJson(Map<String, Object?> json) {
@@ -89,6 +91,14 @@ AudienceReach audienceReachFromJson(Map<String, Object?> json) => AudienceReach(
         guardianCount: intOrNull(category['guardian_count']) ?? 0,
       ),
   ],
+  groups: [
+    for (final group in objectList(json['groups'], field: 'groups'))
+      AudienceCategory(
+        id: requireField<String>(group, 'id'),
+        name: stringOrNull(group['name']) ?? '',
+        guardianCount: intOrNull(group['guardian_count']) ?? 0,
+      ),
+  ],
 );
 
 /// The `POST /announcements` body.
@@ -98,6 +108,7 @@ Map<String, Object?> announcementDraftToJson(AnnouncementDraft draft) =>
       if (stringOrNull(draft.body) case final String body) 'body': body,
       'audience': audienceToJson(draft.audience),
       'priority': draft.priority.wireValue,
+      if (draft.ackRequired) 'ack_required': true,
       if (draft.expireAt case final DateTime expireAt)
         'expire_at': expireAt.toUtc().toIso8601String(),
     };

@@ -3410,6 +3410,1518 @@ abstract class AppL10n {
   /// In ar, this message translates to:
   /// **'إجراء'**
   String get actionOther;
+
+  /// No description provided for @eduTabToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'اليوم'**
+  String get eduTabToday;
+
+  /// No description provided for @eduTabSessions.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجلسات'**
+  String get eduTabSessions;
+
+  /// No description provided for @eduTabGroups.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموعات'**
+  String get eduTabGroups;
+
+  /// No description provided for @eduTabMessages.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرسائل'**
+  String get eduTabMessages;
+
+  /// No description provided for @eduTabMemories.
+  ///
+  /// In ar, this message translates to:
+  /// **'الذكريات'**
+  String get eduTabMemories;
+
+  /// No description provided for @eduGreetingMorning.
+  ///
+  /// In ar, this message translates to:
+  /// **'صباح الخير'**
+  String get eduGreetingMorning;
+
+  /// No description provided for @eduGreetingEvening.
+  ///
+  /// In ar, this message translates to:
+  /// **'مساء الخير'**
+  String get eduGreetingEvening;
+
+  /// No description provided for @todayNextSession.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجلسة التالية'**
+  String get todayNextSession;
+
+  /// No description provided for @todayInMinutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{الآن} one{بعد دقيقة} two{بعد دقيقتين} few{بعد {count} دقائق} many{بعد {count} دقيقة} other{بعد {count} دقيقة}}'**
+  String todayInMinutes(int count);
+
+  /// No description provided for @todayLive.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارية الآن'**
+  String get todayLive;
+
+  /// No description provided for @presTallyYes.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيحضر'**
+  String get presTallyYes;
+
+  /// No description provided for @presTallyLate.
+  ///
+  /// In ar, this message translates to:
+  /// **'متأخر'**
+  String get presTallyLate;
+
+  /// No description provided for @presTallyNo.
+  ///
+  /// In ar, this message translates to:
+  /// **'لن يحضر'**
+  String get presTallyNo;
+
+  /// No description provided for @presTallyNone.
+  ///
+  /// In ar, this message translates to:
+  /// **'بلا رد'**
+  String get presTallyNone;
+
+  /// No description provided for @todayRecordAttendance.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الحضور'**
+  String get todayRecordAttendance;
+
+  /// No description provided for @todayAttendanceDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'سُجّل حضور {group}'**
+  String todayAttendanceDone(String group);
+
+  /// No description provided for @todayAttendanceSummary.
+  ///
+  /// In ar, this message translates to:
+  /// **'حاضر {present} · متأخر {late} · معذور {excused} · غائب {absent}'**
+  String todayAttendanceSummary(int present, int late, int excused, int absent);
+
+  /// No description provided for @todaySessionSummaryCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملخص الجلسة'**
+  String get todaySessionSummaryCta;
+
+  /// No description provided for @todayNoContent.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم تُضف محتوى جلسة {group} · {time} بعد — أنشئت تلقائيًا من الجدول.'**
+  String todayNoContent(String group, String time);
+
+  /// No description provided for @todayAdd.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة'**
+  String get todayAdd;
+
+  /// No description provided for @shortcutHomework.
+  ///
+  /// In ar, this message translates to:
+  /// **'واجب'**
+  String get shortcutHomework;
+
+  /// No description provided for @shortcutMemory.
+  ///
+  /// In ar, this message translates to:
+  /// **'ذكرى'**
+  String get shortcutMemory;
+
+  /// No description provided for @shortcutAnnouncement.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان'**
+  String get shortcutAnnouncement;
+
+  /// No description provided for @todayFromManagement.
+  ///
+  /// In ar, this message translates to:
+  /// **'من الإدارة'**
+  String get todayFromManagement;
+
+  /// No description provided for @todayAckCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'قرأتُ'**
+  String get todayAckCta;
+
+  /// No description provided for @todayAckDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'✓ أكّدت القراءة'**
+  String get todayAckDone;
+
+  /// No description provided for @todayNoSession.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا جلسة اليوم'**
+  String get todayNoSession;
+
+  /// No description provided for @todayNextOn.
+  ///
+  /// In ar, this message translates to:
+  /// **'التالية: {date}'**
+  String todayNextOn(String date);
+
+  /// No description provided for @todayNoSessionsAtAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا جلسات قادمة — تأكد من جدول مجموعاتك مع المشرف.'**
+  String get todayNoSessionsAtAll;
+
+  /// No description provided for @presTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الحضور'**
+  String get presTitle;
+
+  /// No description provided for @presSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'{group} · {time} · أُرسل {sent} تلقائيًا'**
+  String presSubtitle(String group, String time, String sent);
+
+  /// No description provided for @presSubtitleNotSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'{group} · {time} · لم يُرسل بعد'**
+  String presSubtitleNotSent(String group, String time);
+
+  /// No description provided for @presPlanning.
+  ///
+  /// In ar, this message translates to:
+  /// **'للتخطيط (الأدوات، الوجبة، النقل)'**
+  String get presPlanning;
+
+  /// No description provided for @presExpectedOf.
+  ///
+  /// In ar, this message translates to:
+  /// **'متوقَّع من {count}'**
+  String presExpectedOf(int count);
+
+  /// No description provided for @presRemind.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{لا أحد بلا رد} one{تذكير من لم يردّ (1)} two{تذكير من لم يردّ (2)} few{تذكير من لم يردّ ({count})} many{تذكير من لم يردّ ({count})} other{تذكير من لم يردّ ({count})}}'**
+  String presRemind(int count);
+
+  /// No description provided for @presRemindDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'✓ أُرسل التذكير'**
+  String get presRemindDone;
+
+  /// No description provided for @presRemindNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'التذكير يُرسل مرة واحدة فقط — الموعد النهائي {time}'**
+  String presRemindNote(String time);
+
+  /// No description provided for @presRemindedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{لا أحد لتذكيره} one{أُرسل تذكير إلى وليّ واحد} two{أُرسل تذكير إلى وليَّين} few{أُرسل تذكير إلى {count} أولياء} many{أُرسل تذكير إلى {count} وليًّا} other{أُرسل تذكير إلى {count} وليّ}}'**
+  String presRemindedToast(int count);
+
+  /// No description provided for @presNotSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يُرسل طلب تأكيد لهذه الجلسة.'**
+  String get presNotSent;
+
+  /// No description provided for @attTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حضور {group}'**
+  String attTitle(String group);
+
+  /// No description provided for @attSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'{time} · {title} · معبّأ من تأكيدات الأولياء'**
+  String attSubtitle(String time, String title);
+
+  /// No description provided for @attUnmarked.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{الكل مسجَّل} one{1 بلا تسجيل} two{2 بلا تسجيل} few{{count} بلا تسجيل} many{{count} بلا تسجيل} other{{count} بلا تسجيل}}'**
+  String attUnmarked(int count);
+
+  /// No description provided for @attMarkRest.
+  ///
+  /// In ar, this message translates to:
+  /// **'✓ تسجيل الباقين ({count}) حاضرين'**
+  String attMarkRest(int count);
+
+  /// No description provided for @attPresYes.
+  ///
+  /// In ar, this message translates to:
+  /// **'أكّد الولي الحضور'**
+  String get attPresYes;
+
+  /// No description provided for @attPresLate.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعلن التأخر'**
+  String get attPresLate;
+
+  /// No description provided for @attPresNo.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعلن الغياب'**
+  String get attPresNo;
+
+  /// No description provided for @attPresNone.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يردّ الولي'**
+  String get attPresNone;
+
+  /// No description provided for @attSave.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ الحضور'**
+  String get attSave;
+
+  /// No description provided for @attSaveAlert.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{حفظ · تنبيه وليّ واحد} two{حفظ · تنبيه وليَّين} few{حفظ · تنبيه {count} أولياء} many{حفظ · تنبيه {count} وليًّا} other{حفظ · تنبيه {count} وليّ}}'**
+  String attSaveAlert(int count);
+
+  /// No description provided for @attSaveOffline.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ على الهاتف'**
+  String get attSaveOffline;
+
+  /// No description provided for @attEditHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكن التعديل خلال 30 دقيقة، بعدها عبر المشرف'**
+  String get attEditHint;
+
+  /// No description provided for @attUnmarkedKind.
+  ///
+  /// In ar, this message translates to:
+  /// **'قبل الحفظ'**
+  String get attUnmarkedKind;
+
+  /// No description provided for @attUnmarkedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{طفل واحد بلا تسجيل} two{طفلان بلا تسجيل} few{{count} أطفال بلا تسجيل} many{{count} طفلًا بلا تسجيل} other{{count} طفل بلا تسجيل}}'**
+  String attUnmarkedTitle(int count);
+
+  /// No description provided for @attUnmarkedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّل حالة كل طفل. إن كانوا غير موجودين فعلًا، اختر «غائب» — سيُبلَّغ أولياؤهم فورًا.'**
+  String get attUnmarkedBody;
+
+  /// No description provided for @attUnmarkedCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة التسجيل'**
+  String get attUnmarkedCta;
+
+  /// No description provided for @attAlertKind.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيه أمان للأولياء'**
+  String get attAlertKind;
+
+  /// No description provided for @attAlertTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{سيُبلَّغ وليّ طفل واحد فورًا} two{سيُبلَّغ أولياء طفلين فورًا} few{سيُبلَّغ أولياء {count} أطفال فورًا} many{سيُبلَّغ أولياء {count} طفلًا فورًا} other{سيُبلَّغ أولياء {count} طفل فورًا}}'**
+  String attAlertTitle(int count);
+
+  /// No description provided for @attAlertBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'{names} غائب دون إشعار مسبق. يصل لأوليائهم إشعار فوري (وSMS إن لم يفتحوا التطبيق)، لأن الولي قد يظنّ أن طفله هنا.'**
+  String attAlertBody(String names);
+
+  /// No description provided for @attAlertCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ وإرسال التنبيه'**
+  String get attAlertCta;
+
+  /// No description provided for @attAlertCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراجعة القائمة'**
+  String get attAlertCancel;
+
+  /// No description provided for @attSavedAlert.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{سُجّل الحضور · أُبلغ وليّ واحد} two{سُجّل الحضور · أُبلغ وليَّان} few{سُجّل الحضور · أُبلغ {count} أولياء} many{سُجّل الحضور · أُبلغ {count} وليًّا} other{سُجّل الحضور · أُبلغ {count} وليّ}}'**
+  String attSavedAlert(int count);
+
+  /// No description provided for @attStatusExcusedShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'معذور'**
+  String get attStatusExcusedShort;
+
+  /// No description provided for @sessTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجلسات'**
+  String get sessTitle;
+
+  /// No description provided for @sessWeekRange.
+  ///
+  /// In ar, this message translates to:
+  /// **'أسبوع {from} – {to}'**
+  String sessWeekRange(String from, String to);
+
+  /// No description provided for @sessPrevWeek.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأسبوع السابق'**
+  String get sessPrevWeek;
+
+  /// No description provided for @sessNextWeek.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأسبوع التالي'**
+  String get sessNextWeek;
+
+  /// No description provided for @sessAllGroups.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل مجموعاتي'**
+  String get sessAllGroups;
+
+  /// No description provided for @sessStateUpcoming.
+  ///
+  /// In ar, this message translates to:
+  /// **'قادمة'**
+  String get sessStateUpcoming;
+
+  /// No description provided for @sessStateSoon.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعد {count} د'**
+  String sessStateSoon(int count);
+
+  /// No description provided for @sessStateLive.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارية'**
+  String get sessStateLive;
+
+  /// No description provided for @sessStateNoContent.
+  ///
+  /// In ar, this message translates to:
+  /// **'بلا محتوى'**
+  String get sessStateNoContent;
+
+  /// No description provided for @sessStateMoved.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤجَّلة'**
+  String get sessStateMoved;
+
+  /// No description provided for @sessMetaMaterials.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{بلا مواد} one{مادة واحدة} two{مادتان} few{{count} مواد} many{{count} مادة} other{{count} مادة}}'**
+  String sessMetaMaterials(int count);
+
+  /// No description provided for @sessMetaHomework.
+  ///
+  /// In ar, this message translates to:
+  /// **'واجب'**
+  String get sessMetaHomework;
+
+  /// No description provided for @sessMetaGenerated.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُنشئت من الجدول'**
+  String get sessMetaGenerated;
+
+  /// No description provided for @sessMetaWith.
+  ///
+  /// In ar, this message translates to:
+  /// **'مع {name}'**
+  String sessMetaWith(String name);
+
+  /// No description provided for @sessFooter.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجلسات تُنشأ تلقائيًا من جدول المجموعة — أضف المحتوى فقط.'**
+  String get sessFooter;
+
+  /// No description provided for @sessEmptyWeek.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا جلسات هذا الأسبوع'**
+  String get sessEmptyWeek;
+
+  /// No description provided for @sessObjectives.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأهداف'**
+  String get sessObjectives;
+
+  /// No description provided for @sessMaterials.
+  ///
+  /// In ar, this message translates to:
+  /// **'المواد'**
+  String get sessMaterials;
+
+  /// No description provided for @sessHomework.
+  ///
+  /// In ar, this message translates to:
+  /// **'الواجب'**
+  String get sessHomework;
+
+  /// No description provided for @sessAddHomework.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ واجب'**
+  String get sessAddHomework;
+
+  /// No description provided for @sessHomeworkMeta.
+  ///
+  /// In ar, this message translates to:
+  /// **'{target} · آخر أجل {due} · {done}/{total} أنجز (تصريح الأولياء)'**
+  String sessHomeworkMeta(String target, String due, int done, int total);
+
+  /// No description provided for @sessWholeGroup.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل المجموعة'**
+  String get sessWholeGroup;
+
+  /// No description provided for @sessAttendanceDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'✓ الحضور'**
+  String get sessAttendanceDone;
+
+  /// No description provided for @sessSummaryDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'✓ الملخّص'**
+  String get sessSummaryDone;
+
+  /// No description provided for @sessSummaryCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملخّص الجلسة'**
+  String get sessSummaryCta;
+
+  /// No description provided for @sessCancelCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء أو تأجيل الجلسة'**
+  String get sessCancelCta;
+
+  /// No description provided for @sessCancelledBanner.
+  ///
+  /// In ar, this message translates to:
+  /// **'✕ ألغيت هذه الجلسة · أُبلغ الأولياء والفريق'**
+  String get sessCancelledBanner;
+
+  /// No description provided for @sessMovedBanner.
+  ///
+  /// In ar, this message translates to:
+  /// **'⏱ أُجّلت إلى {when} · أُبلغ الأولياء'**
+  String sessMovedBanner(String when);
+
+  /// No description provided for @sessNoObjectives.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا أهداف بعد — أضفها من «تعديل».'**
+  String get sessNoObjectives;
+
+  /// No description provided for @sessNoMaterials.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا مواد بعد'**
+  String get sessNoMaterials;
+
+  /// No description provided for @sessNoHomework.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا واجب مرتبط بهذه الجلسة'**
+  String get sessNoHomework;
+
+  /// No description provided for @sessEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل'**
+  String get sessEdit;
+
+  /// No description provided for @visBefore.
+  ///
+  /// In ar, this message translates to:
+  /// **'قبل الجلسة'**
+  String get visBefore;
+
+  /// No description provided for @visAfter.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعد الجلسة'**
+  String get visAfter;
+
+  /// No description provided for @visStaff.
+  ///
+  /// In ar, this message translates to:
+  /// **'للمؤطرين فقط'**
+  String get visStaff;
+
+  /// No description provided for @matKindDocument.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملف'**
+  String get matKindDocument;
+
+  /// No description provided for @matKindImage.
+  ///
+  /// In ar, this message translates to:
+  /// **'صورة'**
+  String get matKindImage;
+
+  /// No description provided for @matKindAudio.
+  ///
+  /// In ar, this message translates to:
+  /// **'صوت'**
+  String get matKindAudio;
+
+  /// No description provided for @matKindVideo.
+  ///
+  /// In ar, this message translates to:
+  /// **'فيديو'**
+  String get matKindVideo;
+
+  /// No description provided for @matKindLink.
+  ///
+  /// In ar, this message translates to:
+  /// **'رابط'**
+  String get matKindLink;
+
+  /// No description provided for @sessContentTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'محتوى الجلسة'**
+  String get sessContentTitle;
+
+  /// No description provided for @sessContentSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'{group} · {time} · من الجدول الأسبوعي'**
+  String sessContentSubtitle(String group, String time);
+
+  /// No description provided for @sessTitleHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'مثال: حلقة القرآن — سورة الملك'**
+  String get sessTitleHint;
+
+  /// No description provided for @sessTheme.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحور'**
+  String get sessTheme;
+
+  /// No description provided for @themeQuran.
+  ///
+  /// In ar, this message translates to:
+  /// **'القرآن الكريم'**
+  String get themeQuran;
+
+  /// No description provided for @themeSira.
+  ///
+  /// In ar, this message translates to:
+  /// **'السيرة'**
+  String get themeSira;
+
+  /// No description provided for @themeAkhlaq.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأخلاق'**
+  String get themeAkhlaq;
+
+  /// No description provided for @themeHadith.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحديث'**
+  String get themeHadith;
+
+  /// No description provided for @themeSkills.
+  ///
+  /// In ar, this message translates to:
+  /// **'المهارات'**
+  String get themeSkills;
+
+  /// No description provided for @sessObjectivesHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'هدف في كل سطر…'**
+  String get sessObjectivesHint;
+
+  /// No description provided for @sessMaterialsWho.
+  ///
+  /// In ar, this message translates to:
+  /// **'المواد ومن يراها'**
+  String get sessMaterialsWho;
+
+  /// No description provided for @sessVideoLimit.
+  ///
+  /// In ar, this message translates to:
+  /// **'فيديو ≤ 50 م.ب · الطويل كرابط'**
+  String get sessVideoLimit;
+
+  /// No description provided for @addFile.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ ملف'**
+  String get addFile;
+
+  /// No description provided for @addPhoto.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ صورة'**
+  String get addPhoto;
+
+  /// No description provided for @addAudio.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ صوت'**
+  String get addAudio;
+
+  /// No description provided for @addLink.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ رابط'**
+  String get addLink;
+
+  /// No description provided for @sessSaveContent.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ المحتوى'**
+  String get sessSaveContent;
+
+  /// No description provided for @sessContentSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'حُفظ محتوى الجلسة'**
+  String get sessContentSaved;
+
+  /// No description provided for @linkUrlHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'https://…'**
+  String get linkUrlHint;
+
+  /// No description provided for @linkTitleHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان الرابط'**
+  String get linkTitleHint;
+
+  /// No description provided for @linkAdd.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة الرابط'**
+  String get linkAdd;
+
+  /// No description provided for @uploadFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر رفع الملف'**
+  String get uploadFailed;
+
+  /// No description provided for @sumTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ماذا فعلنا اليوم؟'**
+  String get sumTitle;
+
+  /// No description provided for @sumSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملخّص يصل لأولياء {group}'**
+  String sumSubtitle(String group);
+
+  /// No description provided for @sumHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب ما حفظه الأطفال وتعلّموه، وما ترجو من الأولياء مراجعته…'**
+  String get sumHint;
+
+  /// No description provided for @sumConsentNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصور التي تظهر فيها وجوه تمرّ عبر وسم حقوق الصورة مثل الذكريات.'**
+  String get sumConsentNote;
+
+  /// No description provided for @sumConsentBlocked.
+  ///
+  /// In ar, this message translates to:
+  /// **'{name} «غير مسموح» — لا تُرفق صورة يظهر فيها.'**
+  String sumConsentBlocked(String name);
+
+  /// No description provided for @sumReach.
+  ///
+  /// In ar, this message translates to:
+  /// **'يصل إلى {families} أسرة ({guardians} وليًّا) · يظهر في صفحة الجلسة لدى الأولياء'**
+  String sumReach(int families, int guardians);
+
+  /// No description provided for @sumSend.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال لأولياء المجموعة'**
+  String get sumSend;
+
+  /// No description provided for @sumSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'✓ أُرسل للأولياء'**
+  String get sumSent;
+
+  /// No description provided for @sumSentToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{أُرسل الملخّص إلى أسرة واحدة} two{أُرسل الملخّص إلى أسرتين} few{أُرسل الملخّص إلى {count} أسر} many{أُرسل الملخّص إلى {count} أسرة} other{أُرسل الملخّص إلى {count} أسرة}}'**
+  String sumSentToast(int count);
+
+  /// No description provided for @cancelSheetTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء أو تأجيل الجلسة'**
+  String get cancelSheetTitle;
+
+  /// No description provided for @cancelModeCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get cancelModeCancel;
+
+  /// No description provided for @cancelModeMove.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأجيل'**
+  String get cancelModeMove;
+
+  /// No description provided for @cancelNewSlot.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموعد الجديد'**
+  String get cancelNewSlot;
+
+  /// No description provided for @cancelPickSlot.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر الموعد الجديد'**
+  String get cancelPickSlot;
+
+  /// No description provided for @cancelReasonHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'السبب (يراه الأولياء)…'**
+  String get cancelReasonHint;
+
+  /// No description provided for @cancelNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُبلَّغ تلقائيًا {guardians} وليًّا، والمؤطرون المشاركون، والمشرفون. ⦿ يُسجَّل باسمك.'**
+  String cancelNotice(int guardians);
+
+  /// No description provided for @cancelCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء وإبلاغ الجميع'**
+  String get cancelCta;
+
+  /// No description provided for @moveCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأجيل وإبلاغ الجميع'**
+  String get moveCta;
+
+  /// No description provided for @cancelledToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{أُلغيت الجلسة · أُبلغ شخص واحد} two{أُلغيت الجلسة · أُبلغ شخصان} few{أُلغيت الجلسة · أُبلغ {count} أشخاص} many{أُلغيت الجلسة · أُبلغ {count} شخصًا} other{أُلغيت الجلسة · أُبلغ {count} شخص}}'**
+  String cancelledToast(int count);
+
+  /// No description provided for @movedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{أُجّلت الجلسة · أُبلغ شخص واحد} two{أُجّلت الجلسة · أُبلغ شخصان} few{أُجّلت الجلسة · أُبلغ {count} أشخاص} many{أُجّلت الجلسة · أُبلغ {count} شخصًا} other{أُجّلت الجلسة · أُبلغ {count} شخص}}'**
+  String movedToast(int count);
+
+  /// No description provided for @hwNewTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'واجب جديد'**
+  String get hwNewTitle;
+
+  /// No description provided for @hwNewSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرتبط بجلسة {day} · {group}'**
+  String hwNewSubtitle(String day, String group);
+
+  /// No description provided for @hwInstructions.
+  ///
+  /// In ar, this message translates to:
+  /// **'التعليمات'**
+  String get hwInstructions;
+
+  /// No description provided for @hwInstructionsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما المطلوب من الطفل؟'**
+  String get hwInstructionsHint;
+
+  /// No description provided for @hwTitleHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'مثال: مراجعة الآيات 1–10'**
+  String get hwTitleHint;
+
+  /// No description provided for @hwFor.
+  ///
+  /// In ar, this message translates to:
+  /// **'لمن؟'**
+  String get hwFor;
+
+  /// No description provided for @hwWholeGroup.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل المجموعة ({count})'**
+  String hwWholeGroup(int count);
+
+  /// No description provided for @hwSpecific.
+  ///
+  /// In ar, this message translates to:
+  /// **'أطفال محددون'**
+  String get hwSpecific;
+
+  /// No description provided for @hwDue.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر أجل'**
+  String get hwDue;
+
+  /// No description provided for @hwReminderNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'تذكير تلقائي للأولياء قبل الأجل بيوم إن لم يُعلَّم «أُنجز».'**
+  String get hwReminderNote;
+
+  /// No description provided for @hwAttachment.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ مرفق (ورقة الحفظ، تسجيل صوتي…)'**
+  String get hwAttachment;
+
+  /// No description provided for @hwAttachmentAdded.
+  ///
+  /// In ar, this message translates to:
+  /// **'✓ مرفق: {name}'**
+  String hwAttachmentAdded(String name);
+
+  /// No description provided for @hwSend.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{اختر الأطفال} one{إرسال لطفل واحد} two{إرسال لطفلين} few{إرسال لـ {count} أطفال} many{إرسال لـ {count} طفلًا} other{إرسال لـ {count} طفل}}'**
+  String hwSend(int count);
+
+  /// No description provided for @hwPickOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر طفلًا واحدًا على الأقل'**
+  String get hwPickOne;
+
+  /// No description provided for @hwSentToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُرسل الواجب للأولياء'**
+  String get hwSentToast;
+
+  /// No description provided for @eduGroupsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مجموعاتي'**
+  String get eduGroupsTitle;
+
+  /// No description provided for @eduGroupsSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ترى أطفال مجموعاتك فقط'**
+  String get eduGroupsSubtitle;
+
+  /// No description provided for @eduGroupsEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا مجموعات مسندة إليك'**
+  String get eduGroupsEmpty;
+
+  /// No description provided for @statAttendance.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحضور'**
+  String get statAttendance;
+
+  /// No description provided for @statHomework.
+  ///
+  /// In ar, this message translates to:
+  /// **'الواجبات'**
+  String get statHomework;
+
+  /// No description provided for @statNext.
+  ///
+  /// In ar, this message translates to:
+  /// **'القادمة'**
+  String get statNext;
+
+  /// No description provided for @groupFlag.
+  ///
+  /// In ar, this message translates to:
+  /// **'{name} غاب 3 مرات متتالية — تواصل رعاية'**
+  String groupFlag(String name);
+
+  /// No description provided for @eduGroupsFooter.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة الأطفال أو نقلهم بين المجموعات يتمّ عبر المشرف.'**
+  String get eduGroupsFooter;
+
+  /// No description provided for @grpTabHomework.
+  ///
+  /// In ar, this message translates to:
+  /// **'الواجبات'**
+  String get grpTabHomework;
+
+  /// No description provided for @grpTabStaff.
+  ///
+  /// In ar, this message translates to:
+  /// **'قناة الفريق'**
+  String get grpTabStaff;
+
+  /// No description provided for @rosterAttendance.
+  ///
+  /// In ar, this message translates to:
+  /// **'حضور {present}/{expected}'**
+  String rosterAttendance(int present, int expected);
+
+  /// No description provided for @rosterNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'جديد'**
+  String get rosterNew;
+
+  /// No description provided for @rosterCare.
+  ///
+  /// In ar, this message translates to:
+  /// **'▲ غاب 3 مرات متتالية — للمتابعة'**
+  String get rosterCare;
+
+  /// No description provided for @hwStateOpen.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ'**
+  String get hwStateOpen;
+
+  /// No description provided for @hwStateClosed.
+  ///
+  /// In ar, this message translates to:
+  /// **'منتهٍ'**
+  String get hwStateClosed;
+
+  /// No description provided for @hwListMeta.
+  ///
+  /// In ar, this message translates to:
+  /// **'{target} · آخر أجل {date}'**
+  String hwListMeta(String target, String date);
+
+  /// No description provided for @hwListMetaClosed.
+  ///
+  /// In ar, this message translates to:
+  /// **'{target} · انتهى {date}'**
+  String hwListMetaClosed(String target, String date);
+
+  /// No description provided for @hwTargetChildren.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{طفل واحد} two{طفلان} few{{count} أطفال} many{{count} طفلًا} other{{count} طفل}}'**
+  String hwTargetChildren(int count);
+
+  /// No description provided for @hwFooter.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإنجاز تصريح من الأولياء · لا ترتيب علني للأطفال'**
+  String get hwFooter;
+
+  /// No description provided for @hwEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا واجبات بعد'**
+  String get hwEmpty;
+
+  /// No description provided for @staffChannelNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'قناة المؤطرين والمشرفين — لا يراها الأولياء.'**
+  String get staffChannelNote;
+
+  /// No description provided for @staffChannelOpen.
+  ///
+  /// In ar, this message translates to:
+  /// **'فتح قناة الفريق'**
+  String get staffChannelOpen;
+
+  /// No description provided for @staffChannelMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا قناة فريق لهذه المجموعة بعد'**
+  String get staffChannelMissing;
+
+  /// No description provided for @guardianMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراسلة'**
+  String get guardianMessage;
+
+  /// No description provided for @guardianEmergency.
+  ///
+  /// In ar, this message translates to:
+  /// **'طوارئ'**
+  String get guardianEmergency;
+
+  /// No description provided for @guardianEmergencyHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرقم لا يظهر · الاتصال عبر التطبيق'**
+  String get guardianEmergencyHint;
+
+  /// No description provided for @guardianCall.
+  ///
+  /// In ar, this message translates to:
+  /// **'☏ اتصال'**
+  String get guardianCall;
+
+  /// No description provided for @guardianCallToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصال عبر التطبيق — الرقم مخفي · ⦿ مُسجَّل'**
+  String get guardianCallToast;
+
+  /// No description provided for @guardianCallUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا رقم مسجَّل لهذا الولي'**
+  String get guardianCallUnavailable;
+
+  /// No description provided for @notesTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات'**
+  String get notesTitle;
+
+  /// No description provided for @notesPhase2.
+  ///
+  /// In ar, this message translates to:
+  /// **'المرحلة الثانية'**
+  String get notesPhase2;
+
+  /// No description provided for @notesStaff.
+  ///
+  /// In ar, this message translates to:
+  /// **'للفريق فقط'**
+  String get notesStaff;
+
+  /// No description provided for @notesShared.
+  ///
+  /// In ar, this message translates to:
+  /// **'للأولياء'**
+  String get notesShared;
+
+  /// No description provided for @notesStaffBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات يراها المؤطرون والمشرفون فقط — تُفعَّل في المرحلة الثانية.'**
+  String get notesStaffBody;
+
+  /// No description provided for @notesSharedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات تصل للأولياء — تُفعَّل في المرحلة الثانية.'**
+  String get notesSharedBody;
+
+  /// No description provided for @eduChildHomeworkTile.
+  ///
+  /// In ar, this message translates to:
+  /// **'الواجبات'**
+  String get eduChildHomeworkTile;
+
+  /// No description provided for @msgAvailability.
+  ///
+  /// In ar, this message translates to:
+  /// **'ساعات تواجدك {window} · خارجها تصل الرسائل بصمت'**
+  String msgAvailability(String window);
+
+  /// No description provided for @msgAvailabilityUnset.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم تحدد ساعات التواجد بعد — من «المزيد»'**
+  String get msgAvailabilityUnset;
+
+  /// No description provided for @msgSectionChildrenOf.
+  ///
+  /// In ar, this message translates to:
+  /// **'محادثات الأطفال · {group}'**
+  String msgSectionChildrenOf(String group);
+
+  /// No description provided for @msgSectionTeam.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفريق والإدارة'**
+  String get msgSectionTeam;
+
+  /// No description provided for @msgFooterEdu.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد محادثة خاصة مع طفل — كل محادثة تضمّ الأولياء ومؤطري المجموعة.'**
+  String get msgFooterEdu;
+
+  /// No description provided for @quickReply1.
+  ///
+  /// In ar, this message translates to:
+  /// **'وعليكم السلام، جزاكم الله خيرًا'**
+  String get quickReply1;
+
+  /// No description provided for @quickReply2.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما شاء الله، أحسن اليوم'**
+  String get quickReply2;
+
+  /// No description provided for @quickReply3.
+  ///
+  /// In ar, this message translates to:
+  /// **'نراكم في الجلسة القادمة إن شاء الله'**
+  String get quickReply3;
+
+  /// No description provided for @msgComposerHintEdu.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب رسالة…'**
+  String get msgComposerHintEdu;
+
+  /// No description provided for @eduMemSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'خاصة بأولياء مجموعاتك · لا مشاركة خارجية'**
+  String get eduMemSubtitle;
+
+  /// No description provided for @memNewPost.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ منشور'**
+  String get memNewPost;
+
+  /// No description provided for @memMyPosts.
+  ///
+  /// In ar, this message translates to:
+  /// **'منشوراتي'**
+  String get memMyPosts;
+
+  /// No description provided for @memAlbumsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الألبومات'**
+  String get memAlbumsTitle;
+
+  /// No description provided for @memStatePending.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار الاعتماد'**
+  String get memStatePending;
+
+  /// No description provided for @memStatePublished.
+  ///
+  /// In ar, this message translates to:
+  /// **'منشور'**
+  String get memStatePublished;
+
+  /// No description provided for @memStateEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'طُلب تعديل'**
+  String get memStateEdit;
+
+  /// No description provided for @memMediaCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, one{صورة واحدة} two{صورتان} few{{count} صور} many{{count} صورة} other{{count} صورة}}'**
+  String memMediaCount(int count);
+
+  /// No description provided for @memTaggedCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{بلا وسم} one{موسوم واحد} two{موسومان} few{{count} موسومين} many{{count} موسومًا} other{{count} موسوم}}'**
+  String memTaggedCount(int count);
+
+  /// No description provided for @memMyPostsEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم تنشر بعد — أضف أول ذكرى لمجموعتك.'**
+  String get memMyPostsEmpty;
+
+  /// No description provided for @memPostsInAlbum.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{لا منشورات} one{منشور واحد} two{منشوران} few{{count} منشورات} many{{count} منشورًا} other{{count} منشور}}'**
+  String memPostsInAlbum(int count);
+
+  /// No description provided for @memComposeTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'منشور جديد'**
+  String get memComposeTitle;
+
+  /// No description provided for @memComposeSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُعرض على المشرف قبل النشر'**
+  String get memComposeSubtitle;
+
+  /// No description provided for @memComposeSubtitleLive.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُنشر فورًا لأولياء المجموعة'**
+  String get memComposeSubtitleLive;
+
+  /// No description provided for @memAlbumLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الألبوم'**
+  String get memAlbumLabel;
+
+  /// No description provided for @memAudienceLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجمهور'**
+  String get memAudienceLabel;
+
+  /// No description provided for @memAudienceOf.
+  ///
+  /// In ar, this message translates to:
+  /// **'أولياء {group}'**
+  String memAudienceOf(String group);
+
+  /// No description provided for @memAudienceAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'أولياء الجمعية'**
+  String get memAudienceAll;
+
+  /// No description provided for @memPickAlbum.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر ألبومًا'**
+  String get memPickAlbum;
+
+  /// No description provided for @memCaptionHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب تعليقًا قصيرًا…'**
+  String get memCaptionHint;
+
+  /// No description provided for @memTagTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'وسم الأطفال الظاهرين'**
+  String get memTagTitle;
+
+  /// No description provided for @memTagCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} موسوم'**
+  String memTagCount(int count);
+
+  /// No description provided for @memBlocked.
+  ///
+  /// In ar, this message translates to:
+  /// **'⊘ لا يمكن وسم {name} — حقوق الصورة «غير مسموح». إن كان ظاهرًا في صورة، احذفها قبل النشر.'**
+  String memBlocked(String name);
+
+  /// No description provided for @memSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال للاعتماد'**
+  String get memSubmit;
+
+  /// No description provided for @memPublish.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشر'**
+  String get memPublish;
+
+  /// No description provided for @memSubmittedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُرسل للمشرف للاعتماد'**
+  String get memSubmittedToast;
+
+  /// No description provided for @memPublishedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'نُشر لأولياء المجموعة'**
+  String get memPublishedToast;
+
+  /// No description provided for @memNeedMedia.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف صورة واحدة على الأقل'**
+  String get memNeedMedia;
+
+  /// No description provided for @memUploading.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ الرفع…'**
+  String get memUploading;
+
+  /// No description provided for @memConsentBlockedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'أزل الأطفال الممنوعين قبل النشر'**
+  String get memConsentBlockedToast;
+
+  /// No description provided for @memRemovePhoto.
+  ///
+  /// In ar, this message translates to:
+  /// **'إزالة الصورة'**
+  String get memRemovePhoto;
+
+  /// No description provided for @annEduTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان لمجموعاتي'**
+  String get annEduTitle;
+
+  /// No description provided for @annToGuardians.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلى أولياء'**
+  String get annToGuardians;
+
+  /// No description provided for @annReachGroups.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{لا أحد} one{يصل إلى وليّ واحد + المؤطرين المشاركين} two{يصل إلى وليَّين + المؤطرين المشاركين} few{يصل إلى {count} أولياء + المؤطرين المشاركين} many{يصل إلى {count} وليًّا + المؤطرين المشاركين} other{يصل إلى {count} وليّ + المؤطرين المشاركين}}'**
+  String annReachGroups(int count);
+
+  /// No description provided for @annPickGroup.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر مجموعة واحدة على الأقل'**
+  String get annPickGroup;
+
+  /// No description provided for @annAckTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب تأكيد «قرأتُ»'**
+  String get annAckTitle;
+
+  /// No description provided for @annAckBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ترى من أكّد القراءة ومن لم يؤكد'**
+  String get annAckBody;
+
+  /// No description provided for @annUrgentExecOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعلانات العاجلة (SMS) من صلاحية المشرفين فقط.'**
+  String get annUrgentExecOnly;
+
+  /// No description provided for @annPublishCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشر'**
+  String get annPublishCta;
+
+  /// No description provided for @annPublishedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, zero{نُشر الإعلان} one{نُشر الإعلان إلى وليّ واحد} two{نُشر الإعلان إلى وليَّين} few{نُشر الإعلان إلى {count} أولياء} many{نُشر الإعلان إلى {count} وليًّا} other{نُشر الإعلان إلى {count} وليّ}}'**
+  String annPublishedToast(int count);
+
+  /// No description provided for @moreEduRole.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤطر · {groups}'**
+  String moreEduRole(String groups);
+
+  /// No description provided for @availTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ساعات التواجد'**
+  String get availTitle;
+
+  /// No description provided for @availBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'خارجها تصل رسائل الأولياء بصمت، ويرون ملاحظة برقم الجمعية للأمور العاجلة.'**
+  String get availBody;
+
+  /// No description provided for @availSavedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'حُفظت ساعات التواجد'**
+  String get availSavedToast;
+
+  /// No description provided for @attReminderRow.
+  ///
+  /// In ar, this message translates to:
+  /// **'تذكير تسجيل الحضور'**
+  String get attReminderRow;
+
+  /// No description provided for @attReminderLocked.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعد 30 دقيقة · مقفل'**
+  String get attReminderLocked;
+
+  /// No description provided for @offlineAttendanceBanner.
+  ///
+  /// In ar, this message translates to:
+  /// **'⦸ بلا اتصال — الحضور يُحفظ على الهاتف ويُزامَن عند عودة الشبكة.'**
+  String get offlineAttendanceBanner;
+
+  /// No description provided for @notAvailableToYou.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير متاح لك'**
+  String get notAvailableToYou;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

@@ -16,6 +16,8 @@ export interface ConversationSummaryView {
   type: ConversationType;
   title: string;
   is_member: boolean;
+  /** The group a child or staff thread belongs to — how the educator's list is sectioned. */
+  group_name: string | null;
   last_message: { preview: string | null; sent_at: string } | null;
   unread_count: number;
   has_open_report: boolean;
@@ -42,6 +44,7 @@ export interface MessageView {
 }
 
 interface ConversationRow {
+  group_name: string | null;
   id: string;
   type: ConversationType;
   ref_child_id: string | null;
@@ -121,6 +124,7 @@ export class MessagingService {
       type: row.type,
       title: this.titleOf(row, locale),
       is_member: this.isMember(user, row),
+      group_name: row.group_name,
       last_message: row.last_at
         ? {
             preview:
@@ -332,6 +336,7 @@ export class MessagingService {
     return `with conv as (
               select cv.id, cv.type, cv.ref_child_id, cv.ref_group_id,
                      coalesce(gs.id, gc.id) as group_id,
+                     coalesce(gs.name, gc.name) as group_name,
                      coalesce(gs.branch_id, gc.branch_id) as branch_id,
                      coalesce(c.full_name, gs.name) as title
                 from conversation cv
