@@ -88,7 +88,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     fcmServiceAccountJson: env.FCM_SERVICE_ACCOUNT_JSON ?? '',
     storage: {
       driver: (env.STORAGE_DRIVER ?? 'local') as 'local' | 'ovh',
-      localRoot: env.STORAGE_LOCAL_ROOT ?? '/var/lib/raeed/media',
+      // Local development writes next to the checkout; a deployed environment
+      // sets the mounted path explicitly.
+      localRoot: env.STORAGE_LOCAL_ROOT ?? (isDevelopment ? 'storage' : '/var/lib/raeed/media'),
     },
     sentryDsn: env.SENTRY_DSN ?? '',
     hijriOffsetDays: Number(env.HIJRI_OFFSET_DAYS ?? 0),

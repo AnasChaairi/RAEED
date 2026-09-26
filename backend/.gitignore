@@ -5,3 +5,5 @@ coverage/
 .env
 .env.*
 !.env.example
+# Uploaded media in local development (STORAGE_LOCAL_ROOT)
+storage/
