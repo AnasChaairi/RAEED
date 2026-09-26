@@ -19,6 +19,11 @@ import '../domain/availability.dart';
 import 'educator_providers.dart';
 
 /// EDU-M-10 — the educator's More: role switch, availability hours, theme,
+/// language, the locked reminder row, sign out. Presented to a guardian too
+/// (without the educator-only cards), so a user holding both roles can
+/// switch back from the parent surface.
+///
+/// Was: the educator's More: role switch, availability hours, theme,
 /// language, the locked reminder row, sign out.
 class EducatorMoreScreen extends ConsumerWidget {
   const EducatorMoreScreen({super.key});
@@ -35,7 +40,10 @@ class EducatorMoreScreen extends ConsumerWidget {
         themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system && context.isDarkTheme);
     final groups = ref.watch(executiveGroupsProvider).value ?? const [];
-    final availability = ref.watch(availabilityControllerProvider).value;
+    final isEducator = session.effectiveRole == RaeedRole.educator;
+    final availability = isEducator
+        ? ref.watch(availabilityControllerProvider).value
+        : null;
     final roles = [
       for (final role in const [
         RaeedRole.admin,
@@ -108,9 +116,11 @@ class EducatorMoreScreen extends ConsumerWidget {
                           style: context.type.h3.copyWith(color: palette.ink),
                         ),
                         Text(
-                          l10n.moreEduRole(
-                            groups.map((g) => g.name).join(' · '),
-                          ),
+                          isEducator
+                              ? l10n.moreEduRole(
+                                  groups.map((g) => g.name).join(' · '),
+                                )
+                              : l10n.roleParent,
                           style: context.type.caption.copyWith(
                             color: palette.inkDim,
                           ),
@@ -157,53 +167,56 @@ class EducatorMoreScreen extends ConsumerWidget {
               ),
             ],
             const SizedBox(height: RaeedSpacing.sm + 2),
-            ExecutiveCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          l10n.availTitle,
-                          style: context.type.label.copyWith(
-                            color: palette.ink,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        availability?.label ?? '—',
-                        style: context.type
-                            .tabular(context.type.label)
-                            .copyWith(
-                              color: palette.primary,
+            if (isEducator)
+              ExecutiveCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            l10n.availTitle,
+                            style: context.type.label.copyWith(
+                              color: palette.ink,
                               fontWeight: FontWeight.w700,
                             ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: RaeedSpacing.xs),
-                  Text(
-                    l10n.availBody,
-                    style: context.type.caption.copyWith(color: palette.inkDim),
-                  ),
-                  const SizedBox(height: RaeedSpacing.sm + 2),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: [
-                      for (final preset in AvailabilityWindow.presets)
-                        FilterPill(
-                          label: preset.label,
-                          selected: availability == preset,
-                          onTap: () => setAvailability(preset),
+                          ),
                         ),
-                    ],
-                  ),
-                ],
+                        Text(
+                          availability?.label ?? '—',
+                          style: context.type
+                              .tabular(context.type.label)
+                              .copyWith(
+                                color: palette.primary,
+                                fontWeight: FontWeight.w700,
+                              ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: RaeedSpacing.xs),
+                    Text(
+                      l10n.availBody,
+                      style: context.type.caption.copyWith(
+                        color: palette.inkDim,
+                      ),
+                    ),
+                    const SizedBox(height: RaeedSpacing.sm + 2),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: [
+                        for (final preset in AvailabilityWindow.presets)
+                          FilterPill(
+                            label: preset.label,
+                            selected: availability == preset,
+                            onTap: () => setAvailability(preset),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
             const SizedBox(height: RaeedSpacing.sm + 2),
             ExecutiveCard(
               padding: EdgeInsets.zero,
@@ -251,16 +264,18 @@ class EducatorMoreScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  Divider(height: 1, color: palette.border),
-                  _Row(
-                    label: l10n.attReminderRow,
-                    trailing: Text(
-                      l10n.attReminderLocked,
-                      style: context.type
-                          .tabular(context.type.caption)
-                          .copyWith(color: palette.inkDim),
+                  if (isEducator) ...[
+                    Divider(height: 1, color: palette.border),
+                    _Row(
+                      label: l10n.attReminderRow,
+                      trailing: Text(
+                        l10n.attReminderLocked,
+                        style: context.type
+                            .tabular(context.type.caption)
+                            .copyWith(color: palette.inkDim),
+                      ),
                     ),
-                  ),
+                  ],
                   Divider(height: 1, color: palette.border),
                   InkWell(
                     onTap: () =>
