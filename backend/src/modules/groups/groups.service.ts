@@ -18,6 +18,27 @@ export interface GroupView {
   educators: Array<{ id: string; display_name: string }>;
   schedule_label: string | null;
   place: string | null;
+  /** The educator's at-a-glance numbers (EDU-M-06); absent for oversight lists. */
+  stats?: GroupStats;
+}
+
+export interface GroupStats {
+  attendance: { present: number; expected: number };
+  homework: { done: number; total: number };
+  next_session_at: string | null;
+  /** Children with three or more consecutive unexplained absences — a care flag, not a ranking. */
+  flags: Array<{ child_id: string; full_name: string; consecutive_absences: number }>;
+}
+
+export interface RosterChildView {
+  id: string;
+  full_name: string;
+  photo_url: string | null;
+  health_alert: boolean;
+  image_rights_level: 'allowed' | 'app_only' | 'not_allowed';
+  attendance: { present: number; expected: number };
+  consecutive_absences: number;
+  is_new: boolean;
 }
 
 export interface GroupSessionView {
@@ -76,7 +97,137 @@ export class GroupsService {
 
     const rows = await this.query(where, params, 'order by g.name, g.id');
     const locale = await loadLocale(this.dataSource, user.id);
-    return rows.map((row) => this.toView(row, locale));
+    const views = rows.map((row) => this.toView(row, locale));
+    if (user.hasOversight) return views;
+
+    // The educator's cards carry their numbers; an executive's list has
+    // its own dashboard for that and stays lean.
+    const stats = await this.stats(rows.map((row) => row.id));
+    return views.map((view) => ({ ...view, stats: stats.get(view.id) }));
+  }
+
+  /** The children currently in a group, as the educator's roster shows them. */
+  async roster(user: AuthenticatedUser, groupId: string): Promise<RosterChildView[]> {
+    const group = await this.loadReadable(user, groupId);
+    const rows: Array<{
+      id: string;
+      full_name: string;
+      photo_url: string | null;
+      health_alert: boolean;
+      image_rights_level: RosterChildView['image_rights_level'] | null;
+      present: number;
+      expected: number;
+      consecutive_absences: number;
+      is_new: boolean;
+    }> = await this.dataSource.query(
+      `select c.id, c.full_name, c.photo_url,
+              (c.health_json is not null and c.health_json <> '{}'::jsonb) as health_alert,
+              (select case when bool_or(l.level = 'not_allowed') then 'not_allowed'
+                           when bool_or(l.level = 'app_only') then 'app_only'
+                           when count(*) > 0 then 'allowed' end
+                 from (select distinct on (cr.guardian_id) cr.level
+                         from consent_record cr
+                        where cr.child_id = c.id and cr.type = 'image_rights' and cr.level is not null
+                        order by cr.guardian_id, cr.effective_at desc) l) as image_rights_level,
+              (select count(*) from attendance_record ar
+                 join session s on s.id = ar.session_id
+                where ar.child_id = c.id and s.group_id = $1 and ar.superseded_at is null
+                  and ar.status in ('present', 'late') and s.deleted_at is null
+                  and s.starts_at >= cg.valid_from)::int as present,
+              (select count(*) from session s
+                where s.group_id = $1 and s.deleted_at is null and s.status <> 'cancelled'
+                  and s.ends_at < now() and s.starts_at >= cg.valid_from)::int as expected,
+              (select count(*) from (
+                 select ar.status
+                   from session s
+                   left join attendance_record ar on ar.session_id = s.id and ar.child_id = c.id
+                                                 and ar.superseded_at is null
+                  where s.group_id = $1 and s.deleted_at is null and s.status <> 'cancelled'
+                    and s.ends_at < now() and s.starts_at >= cg.valid_from
+                  order by s.starts_at desc
+                  limit 3) last3
+                where last3.status = 'absent')::int as consecutive_absences,
+              (cg.valid_from > now() - interval '14 days') as is_new
+         from child_group cg
+         join child c on c.id = cg.child_id and c.deleted_at is null
+        where cg.group_id = $1 and cg.valid_to is null
+        order by c.full_name, c.id`,
+      [group.id],
+    );
+    return rows.map((row) => ({
+      id: row.id,
+      full_name: row.full_name,
+      photo_url: row.photo_url,
+      health_alert: row.health_alert,
+      image_rights_level: row.image_rights_level ?? 'not_allowed',
+      attendance: { present: row.present, expected: row.expected },
+      // Three of the last three: a streak, not a count.
+      consecutive_absences: row.consecutive_absences >= 3 ? 3 : 0,
+      is_new: row.is_new,
+    }));
+  }
+
+  private async stats(groupIds: string[]): Promise<Map<string, GroupStats>> {
+    const result = new Map<string, GroupStats>();
+    if (groupIds.length === 0) return result;
+    const rows: Array<{
+      group_id: string;
+      present: number;
+      expected: number;
+      hw_done: number;
+      hw_total: number;
+      next_session_at: Date | null;
+      flags: GroupStats['flags'];
+    }> = await this.dataSource.query(
+      `select g.id as group_id,
+              (select count(*) from attendance_record ar
+                 join session s on s.id = ar.session_id
+                where s.group_id = g.id and s.deleted_at is null and ar.superseded_at is null
+                  and ar.status in ('present', 'late'))::int as present,
+              (select count(*) from session s
+                 join child_group cg on cg.group_id = s.group_id
+                                    and s.starts_at >= cg.valid_from
+                                    and (cg.valid_to is null or s.starts_at < cg.valid_to)
+                where s.group_id = g.id and s.deleted_at is null and s.status <> 'cancelled'
+                  and s.ends_at < now())::int as expected,
+              (select count(*) from homework_status hs join homework h on h.id = hs.homework_id
+                where h.group_id = g.id and h.deleted_at is null and hs.done)::int as hw_done,
+              (select count(*) from homework_status hs join homework h on h.id = hs.homework_id
+                where h.group_id = g.id and h.deleted_at is null)::int as hw_total,
+              (select min(s.starts_at) from session s
+                where s.group_id = g.id and s.deleted_at is null and s.status <> 'cancelled'
+                  and s.ends_at > now()) as next_session_at,
+              coalesce((select json_agg(json_build_object('child_id', f.id, 'full_name', f.full_name,
+                                                          'consecutive_absences', 3))
+                          from (select c.id, c.full_name
+                                  from child_group cg
+                                  join child c on c.id = cg.child_id and c.deleted_at is null
+                                 where cg.group_id = g.id and cg.valid_to is null
+                                   and 3 = (select count(*) from (
+                                              select ar.status
+                                                from session s
+                                                left join attendance_record ar
+                                                       on ar.session_id = s.id and ar.child_id = c.id
+                                                      and ar.superseded_at is null
+                                               where s.group_id = g.id and s.deleted_at is null
+                                                 and s.status <> 'cancelled' and s.ends_at < now()
+                                                 and s.starts_at >= cg.valid_from
+                                               order by s.starts_at desc limit 3) last3
+                                             where last3.status = 'absent')) f),
+                       '[]'::json) as flags
+         from "group" g
+        where g.id = any($1::uuid[])`,
+      [groupIds],
+    );
+    for (const row of rows) {
+      result.set(row.group_id, {
+        attendance: { present: row.present, expected: row.expected },
+        homework: { done: row.hw_done, total: row.hw_total },
+        next_session_at: row.next_session_at ? row.next_session_at.toISOString() : null,
+        flags: row.flags,
+      });
+    }
+    return result;
   }
 
   async detail(user: AuthenticatedUser, groupId: string): Promise<GroupView> {

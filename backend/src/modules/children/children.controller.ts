@@ -23,6 +23,8 @@ import {
   ExecutiveChildView,
   GuardianPhoneView,
   HealthView,
+  EducatorChildView,
+  EmergencyCallView,
 } from './executive-children.service';
 
 @Controller()
@@ -64,13 +66,30 @@ export class ChildrenController {
   async detail(
     @CurrentUser() user: AuthenticatedUser,
     @Param('childId', ParseUUIDPipe) childId: string,
-  ): Promise<ChildDetailView | ExecutiveChildView> {
+  ): Promise<ChildDetailView | ExecutiveChildView | EducatorChildView> {
     // An executive gets the oversight profile — guardians, consents, groups —
     // with the health text withheld; they read that through the logged
     // route below (`AUD-03`). A guardian or educator gets the profile as
     // before, health included, by relationship.
     if (user.hasOversight) return this.executive.detail(user, childId);
+    if (user.hasRole('educator') && !(await this.children.isGuardianOf(user.id, childId))) {
+      // Not this user's own child: the educator's view of a child in their
+      // group, health withheld for the logged route (EDU-M-06). Reach alone
+      // cannot tell the two apart — an educator reaches every child in
+      // their groups — so the guardian link itself is asked.
+      return this.executive.educatorDetail(user, childId);
+    }
     return this.children.detail(user, childId);
+  }
+
+  /** A recorded emergency call to a guardian; the number goes to the dialer only. */
+  @Post('children/:childId/emergency-call')
+  @HttpCode(HttpStatus.OK)
+  emergencyCall(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('childId', ParseUUIDPipe) childId: string,
+  ): Promise<EmergencyCallView> {
+    return this.executive.emergencyCall(user, childId);
   }
 
   /** A deliberate, recorded read of a child's health information (`AUD-03`). */

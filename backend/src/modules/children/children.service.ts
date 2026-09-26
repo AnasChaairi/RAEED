@@ -150,6 +150,16 @@ export class ChildrenService {
     };
   }
 
+  /** Whether [userId] is currently linked to [childId] as a guardian. */
+  async isGuardianOf(userId: string, childId: string): Promise<boolean> {
+    const rows: Array<{ ok: boolean }> = await this.dataSource.query(
+      `select exists (select 1 from parent_child pc
+                       where pc.guardian_user_id = $1 and pc.child_id = $2 and pc.unlinked_at is null) as ok`,
+      [userId, childId],
+    );
+    return rows[0]?.ok ?? false;
+  }
+
   /**
    * One child's full profile, including health information.
    *

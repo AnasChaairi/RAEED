@@ -83,7 +83,8 @@ export class MessagingService {
       params.push([...user.reachableChildIds], [...user.reachableGroupIds]);
       where.push(
         `((cv.type = 'child' and (cv.ref_child_id = any($1::uuid[]) or cv.group_id = any($2::uuid[])))
-          or (cv.type = 'staff' and cv.ref_group_id = any($2::uuid[])))`,
+          or (cv.type = 'staff' and cv.ref_group_id = any($2::uuid[]))
+          ${user.hasRole('educator') ? "or cv.type = 'executive'" : ''})`,
       );
     }
 
@@ -423,9 +424,11 @@ export class MessagingService {
           (row.group_id !== null && user.leads(row.group_id))
         );
       case 'staff':
-        return row.ref_group_id !== null && user.leads(row.ref_group_id);
+        // The group's educators and the executives who oversee them.
+        return (row.ref_group_id !== null && user.leads(row.ref_group_id)) || user.hasOversight;
       case 'executive':
-        return user.hasOversight;
+        // Management ↔ staff: every educator and every executive.
+        return user.hasOversight || user.hasRole('educator');
     }
   }
 
@@ -452,14 +455,18 @@ export class MessagingService {
         return this.dataSource.query(
           `select u.id, ${name} as display_name, 'educator'::text as role, null::text as relationship
              from group_educator ge join app_user u on u.id = ge.educator_user_id
-            where ge.group_id = $1 and ge.unassigned_at is null`,
+            where ge.group_id = $1 and ge.unassigned_at is null
+           union
+           select distinct u.id, ${name}, ra.role::text, null::text
+             from role_assignment ra join app_user u on u.id = ra.user_id
+            where ra.role in ('executive', 'admin')`,
           [row.ref_group_id],
         );
       case 'executive':
         return this.dataSource.query(
           `select distinct u.id, ${name} as display_name, ra.role::text as role, null::text as relationship
              from role_assignment ra join app_user u on u.id = ra.user_id
-            where ra.role in ('executive', 'admin')`,
+            where ra.role in ('executive', 'admin', 'educator')`,
         );
     }
   }

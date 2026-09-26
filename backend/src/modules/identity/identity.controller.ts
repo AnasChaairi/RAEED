@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Ip,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -16,6 +17,7 @@ import { CurrentUser } from '../../common/auth/current-user.decorator';
 import { JwtAuthGuard, Public } from '../../common/auth/jwt-auth.guard';
 import { ApiError } from '../../common/http/api-error';
 import {
+  AvailabilityDto,
   RefreshDto,
   RegisterDeviceDto,
   RequestOtpDto,
@@ -84,6 +86,14 @@ export class IdentityController {
   @Get('me')
   async me(@CurrentUser() user: AuthenticatedUser): Promise<CurrentUserView> {
     return this.identity.currentUser(user);
+  }
+
+  @Patch('me/availability')
+  setAvailability(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: AvailabilityDto,
+  ): Promise<{ start: string; end: string }> {
+    return this.identity.setAvailability(user, body);
   }
 
   @Post('devices')

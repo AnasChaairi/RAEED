@@ -16,6 +16,8 @@ export interface CurrentUserView {
   branch_id: string | null;
   reachable_child_ids: string[];
   reachable_group_ids: string[];
+  /** The educator's availability window (`MSG-07`), null when none is set. */
+  availability_hours: { start: string; end: string } | null;
 }
 
 /**
@@ -105,6 +107,7 @@ export class IdentityService {
         [user.id],
       );
     const row = rows[0];
+    const availability = await this.availabilityOf(user.id);
 
     return {
       id: user.id,
@@ -116,7 +119,39 @@ export class IdentityService {
       branch_id: user.branchId,
       reachable_child_ids: [...user.reachableChildIds],
       reachable_group_ids: [...user.reachableGroupIds],
+      availability_hours: availability,
     };
+  }
+
+  /**
+   * Sets the window in which a guardian's message reaches this educator
+   * with a sound (`MSG-07`), on every group they currently lead.
+   */
+  async setAvailability(
+    user: AuthenticatedUser,
+    window: { start: string; end: string },
+  ): Promise<{ start: string; end: string }> {
+    await this.dataSource.query(
+      `update group_educator set availability_hours_json = $2::jsonb
+        where educator_user_id = $1 and unassigned_at is null`,
+      [user.id, JSON.stringify(window)],
+    );
+    return window;
+  }
+
+  private async availabilityOf(userId: string): Promise<{ start: string; end: string } | null> {
+    const rows: Array<{ availability_hours_json: { start?: unknown; end?: unknown } | null }> =
+      await this.dataSource.query(
+        `select availability_hours_json from group_educator
+          where educator_user_id = $1 and unassigned_at is null
+            and availability_hours_json is not null
+          order by assigned_at desc limit 1`,
+        [userId],
+      );
+    const json = rows[0]?.availability_hours_json;
+    return json && typeof json.start === 'string' && typeof json.end === 'string'
+      ? { start: json.start, end: json.end }
+      : null;
   }
 
   /** Records the device so a refresh token has something to be scoped to. */
