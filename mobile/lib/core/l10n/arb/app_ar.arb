@@ -162,7 +162,7 @@
   "@roleParent": {},
   "roleEducator": "مؤطِّر",
   "@roleEducator": {},
-  "roleExecutive": "مشرف",
+  "roleExecutive": "إداري",
   "@roleExecutive": {},
   "roleAdmin": "مدير النظام",
   "@roleAdmin": {},
@@ -713,7 +713,7 @@
   "@msgSectionChildren": {},
   "msgSectionStaff": "قنوات المؤطرين",
   "@msgSectionStaff": {},
-  "msgSectionExecutives": "المشرفون",
+  "msgSectionExecutives": "الإداريون",
   "@msgSectionExecutives": {},
   "msgEmptyTitle": "لا محادثات بعد",
   "@msgEmptyTitle": {},
@@ -736,7 +736,7 @@
   "@msgHide": {},
   "msgDismissReport": "رفض البلاغ",
   "@msgDismissReport": {},
-  "msgHiddenStub": "مخفية · أخفاها {name} {time} · يراها المشرفون فقط",
+  "msgHiddenStub": "مخفية · أخفاها {name} {time} · يراها الإداريون فقط",
   "@msgHiddenStub": {
     "placeholders": {
       "name": {
@@ -747,7 +747,7 @@
       }
     }
   },
-  "msgComposerHint": "اكتب كمشرف…",
+  "msgComposerHint": "اكتب كإداري…",
   "@msgComposerHint": {},
   "msgSend": "إرسال",
   "@msgSend": {},
@@ -763,7 +763,7 @@
       }
     }
   },
-  "msgHideConfirmBody": "تختفي عن الأعضاء وتبقى للمشرفين بعلامة «مخفية». لا حذف نهائي. سيُبلَّغ المرسل بالسبب.",
+  "msgHideConfirmBody": "تختفي عن الأعضاء وتبقى للإداريين بعلامة «مخفية». لا حذف نهائي. سيُبلَّغ المرسل بالسبب.",
   "@msgHideConfirmBody": {},
   "msgHideConfirmLog": "يُسجَّل الإخفاء باسمك ويُقفل البلاغ.",
   "@msgHideConfirmLog": {},
@@ -837,7 +837,7 @@
   "@memKeep": {},
   "memReapprove": "إعادة الاعتماد",
   "@memReapprove": {},
-  "memHideHint": "الإخفاء ليس حذفًا — يبقى المنشور للمشرفين.",
+  "memHideHint": "الإخفاء ليس حذفًا — يبقى المنشور للإداريين.",
   "@memHideHint": {},
   "memAllReviewedTitle": "راجعت كل شيء",
   "@memAllReviewedTitle": {},
@@ -1030,7 +1030,7 @@
   },
   "roleHintExecutive": "لوحة المتابعة والإشراف على المجموعات كلها",
   "@roleHintExecutive": {},
-  "roleHintAdmin": "كل صلاحيات المشرف مع إدارة الهيكل والمستخدمين",
+  "roleHintAdmin": "كل صلاحيات الإداري مع إدارة الهيكل والمستخدمين",
   "@roleHintAdmin": {},
   "roleHintEducator": "تسجيل الحضور والواجبات لمجموعاتك",
   "@roleHintEducator": {},
@@ -1082,9 +1082,9 @@
   "@moreLogs": {},
   "moreLogsHint": "التدقيق · الوصول الصحي",
   "@moreLogsHint": {},
-  "adminTag": "إداري",
+  "adminTag": "مدير النظام",
   "@adminTag": {},
-  "moreAdminHint": "الإداري وحده يفتح «الهيكل» و«السجلات». محاولة غيره تُرفض وتُسجَّل.",
+  "moreAdminHint": "مدير النظام وحده يفتح «الهيكل» و«السجلات». محاولة غيره تُرفض وتُسجَّل.",
   "moreSignOut": "تسجيل الخروج",
   "@moreSignOut": {},
   "childrenCount": "{count, plural, zero{لا أطفال} one{طفل واحد} two{طفلان} few{{count} أطفال} many{{count} طفلًا} other{{count} طفل}}",
@@ -1667,7 +1667,7 @@
   "@genderGirls": {},
   "genderMixed": "مختلط",
   "@genderMixed": {},
-  "branchesNote": "فرع واحد اليوم. عند إضافة ثانٍ يظهر محدِّد الفرع للمشرفين.",
+  "branchesNote": "فرع واحد اليوم. عند إضافة ثانٍ يظهر محدِّد الفرع للإداريين.",
   "@branchesNote": {},
   "newBranch": "+ فرع جديد",
   "@newBranch": {},
@@ -1677,7 +1677,7 @@
   "@branchAddressHint": {},
   "branchCreatedToast": "أُنشئ الفرع",
   "@branchCreatedToast": {},
-  "adminOnlyTitle": "هذا القسم للإداريين فقط",
+  "adminOnlyTitle": "هذا القسم لمدير النظام فقط",
   "@adminOnlyTitle": {},
   "adminOnlyBody": "صلاحيتك: {role}. اطلبها من رئيس الجمعية.",
   "@adminOnlyBody": {
@@ -1835,7 +1835,7 @@
       }
     }
   },
-  "todayNoSessionsAtAll": "لا جلسات قادمة — تأكد من جدول مجموعاتك مع المشرف.",
+  "todayNoSessionsAtAll": "لا جلسات قادمة — تأكد من جدول مجموعاتك مع الإداري.",
   "@todayNoSessionsAtAll": {},
   "presTitle": "تأكيد الحضور",
   "@presTitle": {},
@@ -1957,7 +1957,7 @@
   },
   "attSaveOffline": "حفظ على الهاتف",
   "@attSaveOffline": {},
-  "attEditHint": "يمكن التعديل خلال 30 دقيقة، بعدها عبر المشرف",
+  "attEditHint": "يمكن التعديل خلال 30 دقيقة، بعدها عبر الإداري",
   "@attEditHint": {},
   "attUnmarkedKind": "قبل الحفظ",
   "@attUnmarkedKind": {},
@@ -2243,7 +2243,7 @@
   "@cancelPickSlot": {},
   "cancelReasonHint": "السبب (يراه الأولياء)…",
   "@cancelReasonHint": {},
-  "cancelNotice": "يُبلَّغ تلقائيًا {guardians} وليًّا، والمؤطرون المشاركون، والمشرفون. ⦿ يُسجَّل باسمك.",
+  "cancelNotice": "يُبلَّغ تلقائيًا {guardians} وليًّا، والمؤطرون المشاركون، والإداريون. ⦿ يُسجَّل باسمك.",
   "@cancelNotice": {
     "placeholders": {
       "guardians": {
@@ -2348,7 +2348,7 @@
       }
     }
   },
-  "eduGroupsFooter": "إضافة الأطفال أو نقلهم بين المجموعات يتمّ عبر المشرف.",
+  "eduGroupsFooter": "إضافة الأطفال أو نقلهم بين المجموعات يتمّ عبر الإداري.",
   "@eduGroupsFooter": {},
   "grpTabHomework": "الواجبات",
   "@grpTabHomework": {},
@@ -2407,7 +2407,7 @@
   "@hwFooter": {},
   "hwEmpty": "لا واجبات بعد",
   "@hwEmpty": {},
-  "staffChannelNote": "قناة المؤطرين والمشرفين — لا يراها الأولياء.",
+  "staffChannelNote": "قناة المؤطرين والإداريين — لا يراها الأولياء.",
   "@staffChannelNote": {},
   "staffChannelOpen": "فتح قناة الفريق",
   "@staffChannelOpen": {},
@@ -2433,7 +2433,7 @@
   "@notesStaff": {},
   "notesShared": "للأولياء",
   "@notesShared": {},
-  "notesStaffBody": "ملاحظات يراها المؤطرون والمشرفون فقط — تُفعَّل في المرحلة الثانية.",
+  "notesStaffBody": "ملاحظات يراها المؤطرون والإداريون فقط — تُفعَّل في المرحلة الثانية.",
   "@notesStaffBody": {},
   "notesSharedBody": "ملاحظات تصل للأولياء — تُفعَّل في المرحلة الثانية.",
   "@notesSharedBody": {},
@@ -2511,7 +2511,7 @@
   },
   "memComposeTitle": "منشور جديد",
   "@memComposeTitle": {},
-  "memComposeSubtitle": "يُعرض على المشرف قبل النشر",
+  "memComposeSubtitle": "يُعرض على الإداري قبل النشر",
   "@memComposeSubtitle": {},
   "memComposeSubtitleLive": "يُنشر فورًا لأولياء المجموعة",
   "@memComposeSubtitleLive": {},
@@ -2555,7 +2555,7 @@
   "@memSubmit": {},
   "memPublish": "نشر",
   "@memPublish": {},
-  "memSubmittedToast": "أُرسل للمشرف للاعتماد",
+  "memSubmittedToast": "أُرسل للإداري للاعتماد",
   "@memSubmittedToast": {},
   "memPublishedToast": "نُشر لأولياء المجموعة",
   "@memPublishedToast": {},
@@ -2585,7 +2585,7 @@
   "@annAckTitle": {},
   "annAckBody": "ترى من أكّد القراءة ومن لم يؤكد",
   "@annAckBody": {},
-  "annUrgentExecOnly": "الإعلانات العاجلة (SMS) من صلاحية المشرفين فقط.",
+  "annUrgentExecOnly": "الإعلانات العاجلة (SMS) من صلاحية الإداريين فقط.",
   "@annUrgentExecOnly": {},
   "annPublishCta": "نشر",
   "@annPublishCta": {},

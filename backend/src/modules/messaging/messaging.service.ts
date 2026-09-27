@@ -506,7 +506,7 @@ export class MessagingService {
       case 'educator':
         return pick(locale, { ar: 'مؤطر', fr: 'éducateur', en: 'educator' });
       case 'executive':
-        return pick(locale, { ar: 'مشرف', fr: 'responsable', en: 'executive' });
+        return pick(locale, { ar: 'إداري', fr: 'responsable', en: 'executive' });
       case 'admin':
         return pick(locale, { ar: 'مدير النظام', fr: 'administrateur', en: 'admin' });
       default:

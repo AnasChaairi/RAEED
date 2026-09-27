@@ -107,7 +107,7 @@ void main() {
       expect(find.text('الأطفال'), findsOneWidget);
       expect(find.text('الأسر والمجموعات'), findsOneWidget);
       expect(find.text('1'), findsOneWidget); // the unassigned badge
-      expect(find.text('إداري'), findsNWidgets(2));
+      expect(find.text('مدير النظام'), findsNWidgets(2));
 
       await tester.tap(find.text('تسجيل الخروج'));
       await tester.pumpAndSettle();
@@ -537,13 +537,13 @@ void main() {
 
       await pumpExecutive(tester, container, const StructureScreen());
       await tester.pumpAndSettle();
-      expect(find.text('هذا القسم للإداريين فقط'), findsOneWidget);
-      expect(find.textContaining('مشرف'), findsOneWidget);
+      expect(find.text('هذا القسم لمدير النظام فقط'), findsOneWidget);
+      expect(find.textContaining('إداري'), findsOneWidget);
       verify(() => mocks.structure.fetchSeasons()).called(1);
 
       await pumpExecutive(tester, container, LogsScreen(now: now));
       await tester.pumpAndSettle();
-      expect(find.text('هذا القسم للإداريين فقط'), findsOneWidget);
+      expect(find.text('هذا القسم لمدير النظام فقط'), findsOneWidget);
     });
 
     testWidgets('an admin archives a season after a confirm', (tester) async {
