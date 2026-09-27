@@ -4,7 +4,7 @@ RAEED is a private mobile and web platform that connects the three roles around 
 
 - **Parents**
 - **Educators** (مؤطرين / *mo'atirin*)
-- **Executives** (مشرفين / *moshrifin*)
+- **Executives** (إداريين / *idariyin*)
 
 The goal is to give the association a single, safeguarded place to run its activities and keep parents informed.
 
@@ -14,7 +14,7 @@ The goal is to give the association a single, safeguarded place to run its activ
 |---|---|---|
 | Parent | Guardian of an enrolled child | Follows their child's attendance, homework, materials, and messages |
 | Educator (mo'atirin) | Runs sessions for a group | Confirms presence, records attendance, assigns homework, shares materials, posts to the Memories Wall |
-| Executive (moshrifin) | Oversees the association | Manages categories/groups, views dashboards and audit logs, sends announcements |
+| Executive (idariyin) | Oversees the association | Manages categories/groups, views dashboards and audit logs, sends announcements |
 
 ## Release plan
 

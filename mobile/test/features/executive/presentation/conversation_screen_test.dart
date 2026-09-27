@@ -109,7 +109,7 @@ void main() {
 
     verify(() => mocks.messages.hideMessage('m1')).called(1);
     expect(find.textContaining('مخفية · أخفاها أنس'), findsOneWidget);
-    expect(find.textContaining('يراها المشرفون فقط'), findsOneWidget);
+    expect(find.textContaining('يراها الإداريون فقط'), findsOneWidget);
     // The report actions are gone with the message.
     expect(find.text('رفض البلاغ'), findsNothing);
   });

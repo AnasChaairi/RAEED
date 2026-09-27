@@ -98,7 +98,7 @@ void main() {
       await pumpExecutive(tester, container, const MoreScreen());
       await tester.pumpAndSettle();
 
-      expect(find.text('مشرف'), findsOneWidget);
+      expect(find.text('إداري'), findsOneWidget);
       expect(tester.widget<RoleChoice>(find.byType(RoleChoice)).onTap, isNull);
     });
 

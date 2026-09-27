@@ -4,7 +4,7 @@ Condensed from `../RAEED_Product_Scope.md` v0.2 and the architecture review that
 
 ## What RAEED is
 
-A private mobile + web platform connecting three roles around each enrolled child at RAEED Academy: **parents**, **educators (مؤطرين)**, and **executives (مشرفين)**. It replaces WhatsApp groups, paper attendance sheets, and shared photo albums with one system that scopes information to exactly who needs it, tracks attendance with instant absence alerts, and gives the board reliable data — all under safeguarding-first defaults, because every record in the system is about a child who is not themselves a user.
+A private mobile + web platform connecting three roles around each enrolled child at RAEED Academy: **parents**, **educators (مؤطرين)**, and **executives (إداريين)**. It replaces WhatsApp groups, paper attendance sheets, and shared photo albums with one system that scopes information to exactly who needs it, tracks attendance with instant absence alerts, and gives the board reliable data — all under safeguarding-first defaults, because every record in the system is about a child who is not themselves a user.
 
 ## Roles
 
@@ -12,7 +12,7 @@ A private mobile + web platform connecting three roles around each enrolled chil
 |---|---|---|
 | Parent (ولي الأمر) | Mobile | Own children only |
 | Educator (مؤطر) | Mobile | Own group(s) only |
-| Executive (مشرف) | Mobile + Web dashboard | Everything, branch-scoped if restricted; every action logged |
+| Executive (إداري) | Mobile + Web dashboard | Everything, branch-scoped if restricted; every action logged |
 | Admin | Web dashboard | Everything + structure/user management + audit log access |
 
 ## MVP scope (what these specs cover)

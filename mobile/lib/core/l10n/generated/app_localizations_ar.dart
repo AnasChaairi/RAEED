@@ -210,7 +210,7 @@ class AppL10nAr extends AppL10n {
   String get roleEducator => 'مؤطِّر';
 
   @override
-  String get roleExecutive => 'مشرف';
+  String get roleExecutive => 'إداري';
 
   @override
   String get roleAdmin => 'مدير النظام';
@@ -885,7 +885,7 @@ class AppL10nAr extends AppL10n {
   String get msgSectionStaff => 'قنوات المؤطرين';
 
   @override
-  String get msgSectionExecutives => 'المشرفون';
+  String get msgSectionExecutives => 'الإداريون';
 
   @override
   String get msgEmptyTitle => 'لا محادثات بعد';
@@ -910,11 +910,11 @@ class AppL10nAr extends AppL10n {
 
   @override
   String msgHiddenStub(String name, String time) {
-    return 'مخفية · أخفاها $name $time · يراها المشرفون فقط';
+    return 'مخفية · أخفاها $name $time · يراها الإداريون فقط';
   }
 
   @override
-  String get msgComposerHint => 'اكتب كمشرف…';
+  String get msgComposerHint => 'اكتب كإداري…';
 
   @override
   String get msgSend => 'إرسال';
@@ -932,7 +932,7 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get msgHideConfirmBody =>
-      'تختفي عن الأعضاء وتبقى للمشرفين بعلامة «مخفية». لا حذف نهائي. سيُبلَّغ المرسل بالسبب.';
+      'تختفي عن الأعضاء وتبقى للإداريين بعلامة «مخفية». لا حذف نهائي. سيُبلَّغ المرسل بالسبب.';
 
   @override
   String get msgHideConfirmLog => 'يُسجَّل الإخفاء باسمك ويُقفل البلاغ.';
@@ -1019,7 +1019,7 @@ class AppL10nAr extends AppL10n {
   String get memReapprove => 'إعادة الاعتماد';
 
   @override
-  String get memHideHint => 'الإخفاء ليس حذفًا — يبقى المنشور للمشرفين.';
+  String get memHideHint => 'الإخفاء ليس حذفًا — يبقى المنشور للإداريين.';
 
   @override
   String get memAllReviewedTitle => 'راجعت كل شيء';
@@ -1254,7 +1254,7 @@ class AppL10nAr extends AppL10n {
   String get roleHintExecutive => 'لوحة المتابعة والإشراف على المجموعات كلها';
 
   @override
-  String get roleHintAdmin => 'كل صلاحيات المشرف مع إدارة الهيكل والمستخدمين';
+  String get roleHintAdmin => 'كل صلاحيات الإداري مع إدارة الهيكل والمستخدمين';
 
   @override
   String get roleHintEducator => 'تسجيل الحضور والواجبات لمجموعاتك';
@@ -1326,11 +1326,11 @@ class AppL10nAr extends AppL10n {
   String get moreLogsHint => 'التدقيق · الوصول الصحي';
 
   @override
-  String get adminTag => 'إداري';
+  String get adminTag => 'مدير النظام';
 
   @override
   String get moreAdminHint =>
-      'الإداري وحده يفتح «الهيكل» و«السجلات». محاولة غيره تُرفض وتُسجَّل.';
+      'مدير النظام وحده يفتح «الهيكل» و«السجلات». محاولة غيره تُرفض وتُسجَّل.';
 
   @override
   String get moreSignOut => 'تسجيل الخروج';
@@ -2058,7 +2058,7 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get branchesNote =>
-      'فرع واحد اليوم. عند إضافة ثانٍ يظهر محدِّد الفرع للمشرفين.';
+      'فرع واحد اليوم. عند إضافة ثانٍ يظهر محدِّد الفرع للإداريين.';
 
   @override
   String get newBranch => '+ فرع جديد';
@@ -2073,7 +2073,7 @@ class AppL10nAr extends AppL10n {
   String get branchCreatedToast => 'أُنشئ الفرع';
 
   @override
-  String get adminOnlyTitle => 'هذا القسم للإداريين فقط';
+  String get adminOnlyTitle => 'هذا القسم لمدير النظام فقط';
 
   @override
   String adminOnlyBody(String role) {
@@ -2267,7 +2267,7 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get todayNoSessionsAtAll =>
-      'لا جلسات قادمة — تأكد من جدول مجموعاتك مع المشرف.';
+      'لا جلسات قادمة — تأكد من جدول مجموعاتك مع الإداري.';
 
   @override
   String get presTitle => 'تأكيد الحضور';
@@ -2394,7 +2394,7 @@ class AppL10nAr extends AppL10n {
   String get attSaveOffline => 'حفظ على الهاتف';
 
   @override
-  String get attEditHint => 'يمكن التعديل خلال 30 دقيقة، بعدها عبر المشرف';
+  String get attEditHint => 'يمكن التعديل خلال 30 دقيقة، بعدها عبر الإداري';
 
   @override
   String get attUnmarkedKind => 'قبل الحفظ';
@@ -2743,7 +2743,7 @@ class AppL10nAr extends AppL10n {
 
   @override
   String cancelNotice(int guardians) {
-    return 'يُبلَّغ تلقائيًا $guardians وليًّا، والمؤطرون المشاركون، والمشرفون. ⦿ يُسجَّل باسمك.';
+    return 'يُبلَّغ تلقائيًا $guardians وليًّا، والمؤطرون المشاركون، والإداريون. ⦿ يُسجَّل باسمك.';
   }
 
   @override
@@ -2869,7 +2869,7 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get eduGroupsFooter =>
-      'إضافة الأطفال أو نقلهم بين المجموعات يتمّ عبر المشرف.';
+      'إضافة الأطفال أو نقلهم بين المجموعات يتمّ عبر الإداري.';
 
   @override
   String get grpTabHomework => 'الواجبات';
@@ -2925,7 +2925,8 @@ class AppL10nAr extends AppL10n {
   String get hwEmpty => 'لا واجبات بعد';
 
   @override
-  String get staffChannelNote => 'قناة المؤطرين والمشرفين — لا يراها الأولياء.';
+  String get staffChannelNote =>
+      'قناة المؤطرين والإداريين — لا يراها الأولياء.';
 
   @override
   String get staffChannelOpen => 'فتح قناة الفريق';
@@ -2965,7 +2966,7 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get notesStaffBody =>
-      'ملاحظات يراها المؤطرون والمشرفون فقط — تُفعَّل في المرحلة الثانية.';
+      'ملاحظات يراها المؤطرون والإداريون فقط — تُفعَّل في المرحلة الثانية.';
 
   @override
   String get notesSharedBody =>
@@ -3078,7 +3079,7 @@ class AppL10nAr extends AppL10n {
   String get memComposeTitle => 'منشور جديد';
 
   @override
-  String get memComposeSubtitle => 'يُعرض على المشرف قبل النشر';
+  String get memComposeSubtitle => 'يُعرض على الإداري قبل النشر';
 
   @override
   String get memComposeSubtitleLive => 'يُنشر فورًا لأولياء المجموعة';
@@ -3123,7 +3124,7 @@ class AppL10nAr extends AppL10n {
   String get memPublish => 'نشر';
 
   @override
-  String get memSubmittedToast => 'أُرسل للمشرف للاعتماد';
+  String get memSubmittedToast => 'أُرسل للإداري للاعتماد';
 
   @override
   String get memPublishedToast => 'نُشر لأولياء المجموعة';
@@ -3172,7 +3173,7 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get annUrgentExecOnly =>
-      'الإعلانات العاجلة (SMS) من صلاحية المشرفين فقط.';
+      'الإعلانات العاجلة (SMS) من صلاحية الإداريين فقط.';
 
   @override
   String get annPublishCta => 'نشر';

@@ -450,7 +450,7 @@ abstract class AppL10n {
   /// No description provided for @roleExecutive.
   ///
   /// In ar, this message translates to:
-  /// **'مشرف'**
+  /// **'إداري'**
   String get roleExecutive;
 
   /// No description provided for @roleAdmin.
@@ -1464,7 +1464,7 @@ abstract class AppL10n {
   /// No description provided for @msgSectionExecutives.
   ///
   /// In ar, this message translates to:
-  /// **'المشرفون'**
+  /// **'الإداريون'**
   String get msgSectionExecutives;
 
   /// No description provided for @msgEmptyTitle.
@@ -1506,13 +1506,13 @@ abstract class AppL10n {
   /// No description provided for @msgHiddenStub.
   ///
   /// In ar, this message translates to:
-  /// **'مخفية · أخفاها {name} {time} · يراها المشرفون فقط'**
+  /// **'مخفية · أخفاها {name} {time} · يراها الإداريون فقط'**
   String msgHiddenStub(String name, String time);
 
   /// No description provided for @msgComposerHint.
   ///
   /// In ar, this message translates to:
-  /// **'اكتب كمشرف…'**
+  /// **'اكتب كإداري…'**
   String get msgComposerHint;
 
   /// No description provided for @msgSend.
@@ -1542,7 +1542,7 @@ abstract class AppL10n {
   /// No description provided for @msgHideConfirmBody.
   ///
   /// In ar, this message translates to:
-  /// **'تختفي عن الأعضاء وتبقى للمشرفين بعلامة «مخفية». لا حذف نهائي. سيُبلَّغ المرسل بالسبب.'**
+  /// **'تختفي عن الأعضاء وتبقى للإداريين بعلامة «مخفية». لا حذف نهائي. سيُبلَّغ المرسل بالسبب.'**
   String get msgHideConfirmBody;
 
   /// No description provided for @msgHideConfirmLog.
@@ -1680,7 +1680,7 @@ abstract class AppL10n {
   /// No description provided for @memHideHint.
   ///
   /// In ar, this message translates to:
-  /// **'الإخفاء ليس حذفًا — يبقى المنشور للمشرفين.'**
+  /// **'الإخفاء ليس حذفًا — يبقى المنشور للإداريين.'**
   String get memHideHint;
 
   /// No description provided for @memAllReviewedTitle.
@@ -1980,7 +1980,7 @@ abstract class AppL10n {
   /// No description provided for @roleHintAdmin.
   ///
   /// In ar, this message translates to:
-  /// **'كل صلاحيات المشرف مع إدارة الهيكل والمستخدمين'**
+  /// **'كل صلاحيات الإداري مع إدارة الهيكل والمستخدمين'**
   String get roleHintAdmin;
 
   /// No description provided for @roleHintEducator.
@@ -2118,13 +2118,13 @@ abstract class AppL10n {
   /// No description provided for @adminTag.
   ///
   /// In ar, this message translates to:
-  /// **'إداري'**
+  /// **'مدير النظام'**
   String get adminTag;
 
   /// No description provided for @moreAdminHint.
   ///
   /// In ar, this message translates to:
-  /// **'الإداري وحده يفتح «الهيكل» و«السجلات». محاولة غيره تُرفض وتُسجَّل.'**
+  /// **'مدير النظام وحده يفتح «الهيكل» و«السجلات». محاولة غيره تُرفض وتُسجَّل.'**
   String get moreAdminHint;
 
   /// No description provided for @moreSignOut.
@@ -3222,7 +3222,7 @@ abstract class AppL10n {
   /// No description provided for @branchesNote.
   ///
   /// In ar, this message translates to:
-  /// **'فرع واحد اليوم. عند إضافة ثانٍ يظهر محدِّد الفرع للمشرفين.'**
+  /// **'فرع واحد اليوم. عند إضافة ثانٍ يظهر محدِّد الفرع للإداريين.'**
   String get branchesNote;
 
   /// No description provided for @newBranch.
@@ -3252,7 +3252,7 @@ abstract class AppL10n {
   /// No description provided for @adminOnlyTitle.
   ///
   /// In ar, this message translates to:
-  /// **'هذا القسم للإداريين فقط'**
+  /// **'هذا القسم لمدير النظام فقط'**
   String get adminOnlyTitle;
 
   /// No description provided for @adminOnlyBody.
@@ -3582,7 +3582,7 @@ abstract class AppL10n {
   /// No description provided for @todayNoSessionsAtAll.
   ///
   /// In ar, this message translates to:
-  /// **'لا جلسات قادمة — تأكد من جدول مجموعاتك مع المشرف.'**
+  /// **'لا جلسات قادمة — تأكد من جدول مجموعاتك مع الإداري.'**
   String get todayNoSessionsAtAll;
 
   /// No description provided for @presTitle.
@@ -3714,7 +3714,7 @@ abstract class AppL10n {
   /// No description provided for @attEditHint.
   ///
   /// In ar, this message translates to:
-  /// **'يمكن التعديل خلال 30 دقيقة، بعدها عبر المشرف'**
+  /// **'يمكن التعديل خلال 30 دقيقة، بعدها عبر الإداري'**
   String get attEditHint;
 
   /// No description provided for @attUnmarkedKind.
@@ -4248,7 +4248,7 @@ abstract class AppL10n {
   /// No description provided for @cancelNotice.
   ///
   /// In ar, this message translates to:
-  /// **'يُبلَّغ تلقائيًا {guardians} وليًّا، والمؤطرون المشاركون، والمشرفون. ⦿ يُسجَّل باسمك.'**
+  /// **'يُبلَّغ تلقائيًا {guardians} وليًّا، والمؤطرون المشاركون، والإداريون. ⦿ يُسجَّل باسمك.'**
   String cancelNotice(int guardians);
 
   /// No description provided for @cancelCta.
@@ -4410,7 +4410,7 @@ abstract class AppL10n {
   /// No description provided for @eduGroupsFooter.
   ///
   /// In ar, this message translates to:
-  /// **'إضافة الأطفال أو نقلهم بين المجموعات يتمّ عبر المشرف.'**
+  /// **'إضافة الأطفال أو نقلهم بين المجموعات يتمّ عبر الإداري.'**
   String get eduGroupsFooter;
 
   /// No description provided for @grpTabHomework.
@@ -4488,7 +4488,7 @@ abstract class AppL10n {
   /// No description provided for @staffChannelNote.
   ///
   /// In ar, this message translates to:
-  /// **'قناة المؤطرين والمشرفين — لا يراها الأولياء.'**
+  /// **'قناة المؤطرين والإداريين — لا يراها الأولياء.'**
   String get staffChannelNote;
 
   /// No description provided for @staffChannelOpen.
@@ -4566,7 +4566,7 @@ abstract class AppL10n {
   /// No description provided for @notesStaffBody.
   ///
   /// In ar, this message translates to:
-  /// **'ملاحظات يراها المؤطرون والمشرفون فقط — تُفعَّل في المرحلة الثانية.'**
+  /// **'ملاحظات يراها المؤطرون والإداريون فقط — تُفعَّل في المرحلة الثانية.'**
   String get notesStaffBody;
 
   /// No description provided for @notesSharedBody.
@@ -4710,7 +4710,7 @@ abstract class AppL10n {
   /// No description provided for @memComposeSubtitle.
   ///
   /// In ar, this message translates to:
-  /// **'يُعرض على المشرف قبل النشر'**
+  /// **'يُعرض على الإداري قبل النشر'**
   String get memComposeSubtitle;
 
   /// No description provided for @memComposeSubtitleLive.
@@ -4788,7 +4788,7 @@ abstract class AppL10n {
   /// No description provided for @memSubmittedToast.
   ///
   /// In ar, this message translates to:
-  /// **'أُرسل للمشرف للاعتماد'**
+  /// **'أُرسل للإداري للاعتماد'**
   String get memSubmittedToast;
 
   /// No description provided for @memPublishedToast.
@@ -4860,7 +4860,7 @@ abstract class AppL10n {
   /// No description provided for @annUrgentExecOnly.
   ///
   /// In ar, this message translates to:
-  /// **'الإعلانات العاجلة (SMS) من صلاحية المشرفين فقط.'**
+  /// **'الإعلانات العاجلة (SMS) من صلاحية الإداريين فقط.'**
   String get annUrgentExecOnly;
 
   /// No description provided for @annPublishCta.
