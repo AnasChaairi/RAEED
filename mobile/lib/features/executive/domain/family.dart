@@ -164,11 +164,35 @@ class FamilyCreated {
     required this.guardianIds,
     required this.childIds,
     required this.invitations,
+    this.guardians = const [],
   });
 
   final List<String> guardianIds;
   final List<String> childIds;
+
+  /// How many accounts were created (the rest already existed).
   final int invitations;
+
+  /// Each guardian with the first password of a new account, shown once.
+  final List<GuardianCredential> guardians;
+}
+
+/// A guardian's first password, handed over in person by the executive.
+///
+/// [password] is null when the phone already had an account — that one keeps
+/// its password. Held in memory only for the dialog that shows it; never
+/// persisted, never logged.
+@immutable
+class GuardianCredential {
+  const GuardianCredential({
+    required this.id,
+    required this.displayName,
+    required this.password,
+  });
+
+  final String id;
+  final String displayName;
+  final String? password;
 }
 
 /// One weekly slot of a group's schedule.

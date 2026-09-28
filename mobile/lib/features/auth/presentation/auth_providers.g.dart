@@ -230,97 +230,96 @@ final class AuthSessionBootstrapperProvider
 String _$authSessionBootstrapperHash() =>
     r'597fc5aade50c530d37db945c01d7d9da44f7fa7';
 
-/// Sends a one-time code.
+/// Exchanges a phone number and password for a session.
 
-@ProviderFor(requestOtp)
-const requestOtpProvider = RequestOtpProvider._();
+@ProviderFor(signIn)
+const signInProvider = SignInProvider._();
 
-/// Sends a one-time code.
+/// Exchanges a phone number and password for a session.
 
-final class RequestOtpProvider
-    extends $FunctionalProvider<RequestOtp, RequestOtp, RequestOtp>
-    with $Provider<RequestOtp> {
-  /// Sends a one-time code.
-  const RequestOtpProvider._()
+final class SignInProvider extends $FunctionalProvider<SignIn, SignIn, SignIn>
+    with $Provider<SignIn> {
+  /// Exchanges a phone number and password for a session.
+  const SignInProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'requestOtpProvider',
+        name: r'signInProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$requestOtpHash();
+  String debugGetCreateSourceHash() => _$signInHash();
 
   @$internal
   @override
-  $ProviderElement<RequestOtp> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<SignIn> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  RequestOtp create(Ref ref) {
-    return requestOtp(ref);
+  SignIn create(Ref ref) {
+    return signIn(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(RequestOtp value) {
+  Override overrideWithValue(SignIn value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<RequestOtp>(value),
+      providerOverride: $SyncValueProvider<SignIn>(value),
     );
   }
 }
 
-String _$requestOtpHash() => r'6a6084720df1c15f54621be221c644b2a2001236';
+String _$signInHash() => r'dd636b6a3f41bd2db2b7142c3e0315b78631d6e9';
 
-/// Exchanges a code for a session.
+/// Replaces the signed-in user's password.
 
-@ProviderFor(verifyOtp)
-const verifyOtpProvider = VerifyOtpProvider._();
+@ProviderFor(changePassword)
+const changePasswordProvider = ChangePasswordProvider._();
 
-/// Exchanges a code for a session.
+/// Replaces the signed-in user's password.
 
-final class VerifyOtpProvider
-    extends $FunctionalProvider<VerifyOtp, VerifyOtp, VerifyOtp>
-    with $Provider<VerifyOtp> {
-  /// Exchanges a code for a session.
-  const VerifyOtpProvider._()
+final class ChangePasswordProvider
+    extends $FunctionalProvider<ChangePassword, ChangePassword, ChangePassword>
+    with $Provider<ChangePassword> {
+  /// Replaces the signed-in user's password.
+  const ChangePasswordProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'verifyOtpProvider',
+        name: r'changePasswordProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$verifyOtpHash();
+  String debugGetCreateSourceHash() => _$changePasswordHash();
 
   @$internal
   @override
-  $ProviderElement<VerifyOtp> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<ChangePassword> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  VerifyOtp create(Ref ref) {
-    return verifyOtp(ref);
+  ChangePassword create(Ref ref) {
+    return changePassword(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(VerifyOtp value) {
+  Override overrideWithValue(ChangePassword value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<VerifyOtp>(value),
+      providerOverride: $SyncValueProvider<ChangePassword>(value),
     );
   }
 }
 
-String _$verifyOtpHash() => r'd12aff38ab861113642122bc2ac0c6fed35a9fa1';
+String _$changePasswordHash() => r'2301cc896d84655eaba31b8019ebfc84cd41ca8f';
 
 /// Rotates the stored token pair.
 
@@ -515,98 +514,3 @@ final class ConsentRequirementProvider
 
 String _$consentRequirementHash() =>
     r'f470b1ae1131dc4f4dcc0496d8bb6f344ae8bbf3';
-
-/// The receipt for the OTP currently awaiting verification.
-///
-/// Carries the phone number from the login screen to the OTP screen, and the
-/// request count across resends so the hourly budget is tracked. Null when no
-/// code is outstanding.
-///
-/// Held in memory only, never persisted: an unverified phone number sitting in
-/// storage would outlive the sixty seconds it is useful for, and
-/// `specs/10-security-and-privacy.md` keeps raw numbers out of everything but
-/// the request body.
-
-@ProviderFor(PendingOtp)
-const pendingOtpProvider = PendingOtpProvider._();
-
-/// The receipt for the OTP currently awaiting verification.
-///
-/// Carries the phone number from the login screen to the OTP screen, and the
-/// request count across resends so the hourly budget is tracked. Null when no
-/// code is outstanding.
-///
-/// Held in memory only, never persisted: an unverified phone number sitting in
-/// storage would outlive the sixty seconds it is useful for, and
-/// `specs/10-security-and-privacy.md` keeps raw numbers out of everything but
-/// the request body.
-final class PendingOtpProvider
-    extends $NotifierProvider<PendingOtp, OtpRequestReceipt?> {
-  /// The receipt for the OTP currently awaiting verification.
-  ///
-  /// Carries the phone number from the login screen to the OTP screen, and the
-  /// request count across resends so the hourly budget is tracked. Null when no
-  /// code is outstanding.
-  ///
-  /// Held in memory only, never persisted: an unverified phone number sitting in
-  /// storage would outlive the sixty seconds it is useful for, and
-  /// `specs/10-security-and-privacy.md` keeps raw numbers out of everything but
-  /// the request body.
-  const PendingOtpProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'pendingOtpProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$pendingOtpHash();
-
-  @$internal
-  @override
-  PendingOtp create() => PendingOtp();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(OtpRequestReceipt? value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<OtpRequestReceipt?>(value),
-    );
-  }
-}
-
-String _$pendingOtpHash() => r'b794c510643b331895c4b062d59a6d95722389fb';
-
-/// The receipt for the OTP currently awaiting verification.
-///
-/// Carries the phone number from the login screen to the OTP screen, and the
-/// request count across resends so the hourly budget is tracked. Null when no
-/// code is outstanding.
-///
-/// Held in memory only, never persisted: an unverified phone number sitting in
-/// storage would outlive the sixty seconds it is useful for, and
-/// `specs/10-security-and-privacy.md` keeps raw numbers out of everything but
-/// the request body.
-
-abstract class _$PendingOtp extends $Notifier<OtpRequestReceipt?> {
-  OtpRequestReceipt? build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final created = build();
-    final ref = this.ref as $Ref<OtpRequestReceipt?, OtpRequestReceipt?>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<OtpRequestReceipt?, OtpRequestReceipt?>,
-              OtpRequestReceipt?,
-              Object?,
-              Object?
-            >;
-    element.handleValue(ref, created);
-  }
-}

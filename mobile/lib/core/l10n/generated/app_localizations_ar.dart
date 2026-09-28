@@ -77,9 +77,6 @@ class AppL10nAr extends AppL10n {
   String get loginTitle => 'مرحبًا بك في الرائد';
 
   @override
-  String get loginSubtitle => 'أدخل رقم هاتفك لتلقّي رمز الدخول.';
-
-  @override
   String get loginPhoneLabel => 'رقم الهاتف';
 
   @override
@@ -89,49 +86,80 @@ class AppL10nAr extends AppL10n {
   String get loginPhoneInvalid => 'أدخل رقم هاتف صحيحًا.';
 
   @override
-  String get loginRequestCode => 'إرسال رمز الدخول';
-
-  @override
   String get loginNoAccountNotice =>
       'الحسابات تُنشأ من طرف إدارة الأكاديمية فقط. إن لم يكن لديك حساب، تواصل مع الإدارة.';
 
   @override
-  String get otpTitle => 'رمز الدخول';
+  String get loginSubtitle => 'أدخل رقم هاتفك وكلمة المرور.';
 
   @override
-  String otpSentTo(String phone) {
-    return 'أرسلنا رمزًا من ستة أرقام إلى $phone.';
-  }
+  String get loginPasswordLabel => 'كلمة المرور';
 
   @override
-  String get otpCodeLabel => 'الرمز';
+  String get loginPasswordRule => '6 أحرف أو أرقام';
 
   @override
-  String get otpVerify => 'تأكيد';
+  String get loginPasswordInvalid => 'كلمة المرور من 6 أحرف أو أرقام بالضبط.';
 
   @override
-  String get otpInvalid => 'الرمز غير صحيح أو انتهت صلاحيته.';
+  String get loginPasswordShow => 'إظهار كلمة المرور';
 
   @override
-  String get otpRateLimited => 'لقد طلبت رموزًا كثيرة. حاول مجددًا بعد ساعة.';
+  String get loginPasswordHide => 'إخفاء كلمة المرور';
 
   @override
-  String get otpResend => 'إعادة إرسال الرمز';
+  String get loginSubmit => 'دخول';
 
   @override
-  String otpResendIn(int seconds) {
-    String _temp0 = intl.Intl.pluralLogic(
-      seconds,
-      locale: localeName,
-      other: 'إعادة الإرسال بعد $seconds ثانية',
-      many: 'إعادة الإرسال بعد $seconds ثانية',
-      few: 'إعادة الإرسال بعد $seconds ثوانٍ',
-      two: 'إعادة الإرسال بعد ثانيتين',
-      one: 'إعادة الإرسال بعد ثانية واحدة',
-      zero: 'يمكنك إعادة الإرسال الآن',
-    );
-    return '$_temp0';
-  }
+  String get loginInvalidCredentials => 'رقم الهاتف أو كلمة المرور غير صحيحة.';
+
+  @override
+  String get loginRateLimited =>
+      'محاولات كثيرة خاطئة. حاول مجددًا بعد 15 دقيقة.';
+
+  @override
+  String get morePassword => 'تغيير كلمة المرور';
+
+  @override
+  String get pwdTitle => 'تغيير كلمة المرور';
+
+  @override
+  String get pwdIntro =>
+      'كلمة المرور من 6 أحرف أو أرقام. أدخل الحالية ثم الجديدة مرتين.';
+
+  @override
+  String get pwdCurrent => 'كلمة المرور الحالية';
+
+  @override
+  String get pwdNew => 'كلمة المرور الجديدة';
+
+  @override
+  String get pwdConfirm => 'تأكيد كلمة المرور الجديدة';
+
+  @override
+  String get pwdMismatch => 'كلمتا المرور غير متطابقتين.';
+
+  @override
+  String get pwdWrongCurrent => 'كلمة المرور الحالية غير صحيحة.';
+
+  @override
+  String get pwdSave => 'حفظ';
+
+  @override
+  String get pwdSavedToast => 'تم تغيير كلمة المرور';
+
+  @override
+  String get handoverTitle => 'كلمات المرور المؤقتة';
+
+  @override
+  String get handoverIntro =>
+      'سلّمها للولي شخصيًا. تُعرض مرة واحدة فقط ولا تُرسل برسالة.';
+
+  @override
+  String get handoverExisting => 'لديه حساب من قبل — كلمة مروره لم تتغير.';
+
+  @override
+  String get handoverDone => 'سلّمتها';
 
   @override
   String get consentTitle => 'الخصوصية وحقوق الصورة';
@@ -513,9 +541,6 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get brandTagline => 'صالح في نفسه، مصلح لغيره';
-
-  @override
-  String get otpEnterCode => 'أدخل الرمز';
 
   @override
   String consentStepOf(int current, int total) {

@@ -65,7 +65,7 @@ String _$appEnvironmentHash() => r'e68326545f2c52b5e24a1040210d7658eb2e8fe0';
 
 /// A client with **no** auth interceptor.
 ///
-/// `/auth/otp/request`, `/auth/otp/verify` and `/auth/refresh` are
+/// `/auth/login` and `/auth/refresh` are
 /// `security: []` in `specs/04-api/openapi.yaml`. Refreshing through the
 /// interceptor whose whole job is to trigger refreshes would recurse, so the
 /// refresh call in particular must go out on a client that cannot intercept
@@ -76,7 +76,7 @@ const anonymousApiClientProvider = AnonymousApiClientProvider._();
 
 /// A client with **no** auth interceptor.
 ///
-/// `/auth/otp/request`, `/auth/otp/verify` and `/auth/refresh` are
+/// `/auth/login` and `/auth/refresh` are
 /// `security: []` in `specs/04-api/openapi.yaml`. Refreshing through the
 /// interceptor whose whole job is to trigger refreshes would recurse, so the
 /// refresh call in particular must go out on a client that cannot intercept
@@ -87,7 +87,7 @@ final class AnonymousApiClientProvider
     with $Provider<ApiClient> {
   /// A client with **no** auth interceptor.
   ///
-  /// `/auth/otp/request`, `/auth/otp/verify` and `/auth/refresh` are
+  /// `/auth/login` and `/auth/refresh` are
   /// `security: []` in `specs/04-api/openapi.yaml`. Refreshing through the
   /// interceptor whose whole job is to trigger refreshes would recurse, so the
   /// refresh call in particular must go out on a client that cannot intercept

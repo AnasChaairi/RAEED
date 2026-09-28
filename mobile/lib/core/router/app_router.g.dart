@@ -54,77 +54,6 @@ final class AppScreensProvider
 
 String _$appScreensHash() => r'93702015f6dbc4ab91320f6683112dfe8f67ab64';
 
-/// True while an OTP has been requested and not yet verified.
-///
-/// Guards `/login/otp`, which without a pending request has no phone number to
-/// verify and would be a dead end. Owned by the auth feature, read here.
-
-@ProviderFor(PendingOtpRequest)
-const pendingOtpRequestProvider = PendingOtpRequestProvider._();
-
-/// True while an OTP has been requested and not yet verified.
-///
-/// Guards `/login/otp`, which without a pending request has no phone number to
-/// verify and would be a dead end. Owned by the auth feature, read here.
-final class PendingOtpRequestProvider
-    extends $NotifierProvider<PendingOtpRequest, bool> {
-  /// True while an OTP has been requested and not yet verified.
-  ///
-  /// Guards `/login/otp`, which without a pending request has no phone number to
-  /// verify and would be a dead end. Owned by the auth feature, read here.
-  const PendingOtpRequestProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'pendingOtpRequestProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$pendingOtpRequestHash();
-
-  @$internal
-  @override
-  PendingOtpRequest create() => PendingOtpRequest();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(bool value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<bool>(value),
-    );
-  }
-}
-
-String _$pendingOtpRequestHash() => r'e7a3f02d6b5b34bef13db6bde9096f4a6cd40b46';
-
-/// True while an OTP has been requested and not yet verified.
-///
-/// Guards `/login/otp`, which without a pending request has no phone number to
-/// verify and would be a dead end. Owned by the auth feature, read here.
-
-abstract class _$PendingOtpRequest extends $Notifier<bool> {
-  bool build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final created = build();
-    final ref = this.ref as $Ref<bool, bool>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<bool, bool>,
-              bool,
-              Object?,
-              Object?
-            >;
-    element.handleValue(ref, created);
-  }
-}
-
 /// The app's [GoRouter].
 ///
 /// `keepAlive` because a router rebuilt mid-navigation loses the navigation
@@ -184,4 +113,4 @@ final class AppRouterProvider
   }
 }
 
-String _$appRouterHash() => r'88e7f7f5af70b7910a44248f123b3d2d099819d8';
+String _$appRouterHash() => r'52c0daa5f389f08156382acf138782cb6c23814d';

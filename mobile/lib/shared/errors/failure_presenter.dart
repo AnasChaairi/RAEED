@@ -8,7 +8,12 @@ class PresentedFailure {
     required this.title,
     required this.body,
     required this.isRetryable,
+    this.isWrongCredentials = false,
   });
+
+  /// True for `auth.invalid_credentials`: the sign-in and change-password
+  /// forms show it under the field instead of as a generic failure.
+  final bool isWrongCredentials;
 
   /// A short headline.
   final String title;
@@ -58,14 +63,15 @@ PresentedFailure presentFailure(Object error, AppL10n l10n) => switch (error) {
     body: l10n.errorForbiddenBody,
     isRetryable: false,
   ),
-  ApiException(code: ApiErrorCode.authOtpInvalid) => PresentedFailure(
+  ApiException(code: ApiErrorCode.authInvalidCredentials) => PresentedFailure(
     title: l10n.errorGenericTitle,
-    body: l10n.otpInvalid,
+    body: l10n.loginInvalidCredentials,
     isRetryable: true,
+    isWrongCredentials: true,
   ),
-  ApiException(code: ApiErrorCode.authOtpRateLimited) => PresentedFailure(
+  ApiException(code: ApiErrorCode.authRateLimited) => PresentedFailure(
     title: l10n.errorGenericTitle,
-    body: l10n.otpRateLimited,
+    body: l10n.loginRateLimited,
     isRetryable: false,
   ),
   _ => PresentedFailure(

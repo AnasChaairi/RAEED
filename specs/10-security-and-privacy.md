@@ -7,10 +7,10 @@ Children's data is the reason security is a first-class spec here, not a checkli
 | | |
 |---|---|
 | Registration | Executive/Admin-only (`ACC-02`) — never a public endpoint |
-| Login | Phone + OTP (6-digit, 5-minute expiry, 5 requests/hour/number), email OTP as an alternative |
+| Login | Phone + password (exactly 6 letters or digits, scrypt-hashed). Short enough to hand over in person, which is how accounts are provisioned; the throttle below is what makes it hold |
 | Sessions | 15-minute JWT access token + rotating refresh token per device, individually revocable (`ACC-07`) via `/auth/sessions/{deviceId}` |
-| Recovery | No password exists — recovery is another OTP to the same verified phone, or an Executive re-invite if the number changed |
-| Brute force | Per-IP and per-phone-number rate limits on OTP request/verify; exponential backoff on repeated failures |
+| Recovery | An Executive issues a fresh password (`POST /invitations`, recorded); there is no self-service reset, since there is no SMS channel to prove the phone |
+| Brute force | Five failed sign-ins per number lock it for 15 minutes; a much larger per-address budget so a shared connection cannot lock a family out; a successful sign-in clears the number's count |
 
 ## Authorization
 
@@ -28,7 +28,7 @@ Ability-based, server-side, on every request — see `05-authorization.md`. Neve
 
 ## What must never be logged (application logs / Sentry, as opposed to `audit_log_entry`)
 
-Health information text, message bodies, OTP codes, raw phone numbers — only opaque IDs. `audit_log_entry` is the one place "who accessed what" is recorded, precisely so ordinary logs don't have to carry that weight.
+Health information text, message bodies, passwords, raw phone numbers — only opaque IDs. `audit_log_entry` is the one place "who accessed what" is recorded, precisely so ordinary logs don't have to carry that weight.
 
 ## CNDP / data residency
 

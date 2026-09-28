@@ -136,7 +136,7 @@ export class AbsenceAlertWorker implements OnModuleInit, OnApplicationShutdown {
         const state = await this.redis.get(key);
         if (state !== 'pending') return;
 
-        if (this.config.otp.smsFallbackApiKey === '') {
+        if (this.config.sms.fallbackApiKey === '') {
           // No provider locally. Logged rather than silently skipped, so the
           // fallback path is observable in development instead of looking
           // like it works.

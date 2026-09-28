@@ -9,7 +9,7 @@ Estimates are relative (S/M/L), not days — size them against your own team's v
 | ID | Ticket | Acceptance criteria | Est. | Depends on |
 |---|---|---|---|---|
 | RAEED-1 | Provision local dev environment | `docker-compose up` gives a working API + Postgres + Redis; `schema.sql` applies cleanly via the migration tool | S | — |
-| RAEED-2 | `app_user` + OTP request/verify | `POST /auth/otp/request` + `/verify` per `04-api/openapi.yaml`; rate-limited per `10-security-and-privacy.md` | M | RAEED-1 |
+| RAEED-2 | `app_user` + password sign-in | `POST /auth/login` (phone + 6-character password, scrypt, throttled) per `04-api/openapi.yaml`; `PATCH /auth/me/password`; executives hand new accounts a generated password | M | RAEED-1 |
 | RAEED-3 | JWT issuance + refresh rotation | Access token 15min, refresh token rotates and is device-scoped; `DELETE /auth/sessions/{deviceId}` revokes one device | M | RAEED-2 |
 | RAEED-4 | `role_assignment` + ability model skeleton | CASL `defineAbilityFor` per `05-authorization.md`; `@CheckAbility` guard enforced on a placeholder route; allow+deny test for parent/educator/executive/admin | M | RAEED-3 |
 | RAEED-5 | Consent capture flow | `consent_record` write on first login; app blocks past `/consent` until privacy policy + per-child image-rights level are set (`ACC-06`) | M | RAEED-4 |

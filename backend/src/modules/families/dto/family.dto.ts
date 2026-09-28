@@ -59,7 +59,7 @@ export class CreateFamilyDto {
   children: NewChildDto[];
 }
 
-/** `POST /invitations` — re-send the sign-in invitation to a guardian. */
+/** `POST /invitations` — hand a guardian a fresh password. */
 export class InvitationDto {
   @IsUUID()
   user_id: string;

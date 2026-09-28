@@ -108,12 +108,26 @@ class ApiFamiliesRepository implements FamiliesRepository {
       guardianIds: stringList(json['guardian_ids']),
       childIds: stringList(json['child_ids']),
       invitations: intOrNull(json['invitations']) ?? 0,
+      guardians: [
+        for (final raw in json['guardians'] as List? ?? const [])
+          if (raw is Map<String, Object?>)
+            GuardianCredential(
+              id: raw['id'] as String? ?? '',
+              displayName: raw['display_name'] as String? ?? '',
+              password: raw['password'] as String?,
+            ),
+      ],
     );
   }
 
   @override
-  Future<void> resendInvitation(String guardianId) =>
-      _client.post('/invitations', body: {'user_id': guardianId});
+  Future<String> resendInvitation(String guardianId) async {
+    final json = await _client.post(
+      '/invitations',
+      body: {'user_id': guardianId},
+    );
+    return json['password'] as String? ?? '';
+  }
 
   @override
   Future<List<Educator>> fetchEducators() async =>

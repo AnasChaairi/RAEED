@@ -2,6 +2,8 @@ import { DataSource, EntityManager } from 'typeorm';
 
 import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
 import { ApiErrorCode } from '../../common/http/api-error';
+import { IdentityService } from '../identity/identity.service';
+import { PasswordService } from '../identity/password.service';
 import { FamiliesService } from './families.service';
 
 describe('FamiliesService', () => {
@@ -11,6 +13,7 @@ describe('FamiliesService', () => {
   function buildService(links: Array<Record<string, unknown>>): {
     service: FamiliesService;
     statements: Array<{ sql: string; params: unknown[] }>;
+    identity: { setPassword: jest.Mock };
   } {
     const statements: Array<{ sql: string; params: unknown[] }> = [];
     const runQuery = async (sql: string, params: unknown[] = []): Promise<unknown> => {
@@ -29,7 +32,13 @@ describe('FamiliesService', () => {
       manager,
       transaction: async (work: (tx: EntityManager) => Promise<unknown>) => work(manager),
     } as unknown as DataSource;
-    return { service: new FamiliesService(dataSource), statements };
+    const identity = { setPassword: jest.fn().mockResolvedValue(undefined) };
+    const passwords = new PasswordService();
+    return {
+      service: new FamiliesService(dataSource, identity as unknown as IdentityService, passwords),
+      statements,
+      identity,
+    };
   }
 
   const link = (child: string, name: string, guardian: string, gname: string, account: string, group: string | null) => ({
@@ -64,7 +73,7 @@ describe('FamiliesService', () => {
   });
 
   it('creating a family links guardians, children and a thread in one act', async () => {
-    const { service, statements } = buildService([]);
+    const { service, statements, identity } = buildService([]);
 
     const result = await service.create(executive, {
       guardians: [
@@ -80,6 +89,13 @@ describe('FamiliesService', () => {
     expect(result.guardian_ids).toHaveLength(2);
     expect(result.child_ids).toHaveLength(2);
     expect(result.invitations).toBe(2);
+    // Each new account is handed a first password, returned once and never
+    // stored in clear (ACC-02).
+    expect(identity.setPassword).toHaveBeenCalledTimes(2);
+    expect(result.guardians.map((g) => g.password)).toEqual([
+      expect.stringMatching(/^[a-z0-9]{6}$/),
+      expect.stringMatching(/^[a-z0-9]{6}$/),
+    ]);
     const sql = statements.map((s) => s.sql);
     expect(sql.filter((s) => s.includes('insert into parent_child'))).toHaveLength(4);
     expect(sql.filter((s) => s.includes('insert into child_group'))).toHaveLength(1);

@@ -16,7 +16,7 @@ enum SessionStatus {
   /// a returning user gets bounced to `/login` on every cold start.
   unknown,
 
-  /// No valid session. Only `/login` and `/login/otp` are reachable.
+  /// No valid session. Only `/login` is reachable.
   signedOut,
 
   /// Signed in, but the privacy policy and per-child image-rights levels are

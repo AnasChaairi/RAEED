@@ -77,12 +77,9 @@ curl localhost:3000/api/v1/health
 
 ### Signing in
 
-There is no SMS provider locally, so **the OTP is printed to the API's own
-log** — with the phone number masked, because
-`specs/10-security-and-privacy.md` forbids raw numbers in application logs even
-as a development convenience. The config refuses to start outside development
-without a real provider key, so this cannot silently become production
-behaviour.
+Sign-in is a phone number and a six-character password. Every seeded account
+uses the password **`raeed1`**. Accounts created from the app get a generated
+password that the executive sees once and hands over in person.
 
 Seeded accounts:
 
@@ -90,19 +87,19 @@ Seeded accounts:
 |---|---|
 | `+212600000001` | Parent — three children across two groups |
 | `+212600000002` | Educator of الأشبال أ, **and** a parent |
-| `+212600000003` | Executive |
+| `+212600000003` | Executive, also admin |
 
 ```bash
-curl -X POST localhost:3000/api/v1/auth/otp/request \
-  -H 'Content-Type: application/json' -d '{"phone":"+212600000001"}'
-# then read the six-digit code from the API log
+curl -X POST localhost:3000/api/v1/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"phone":"+212600000001","password":"raeed1","device_id":"<any uuid>"}'
 ```
 
-Note the rate limit is real: five OTP requests per hour per number
-(`specs/10-security-and-privacy.md`). If you hit it while testing, clear it:
+Note the throttle is real: five failed attempts lock a number for fifteen
+minutes (`specs/10-security-and-privacy.md`). If you hit it while testing:
 
 ```bash
-docker exec raeed-redis-1 redis-cli --scan --pattern 'otp:rate:*' \
+docker exec raeed-redis-1 redis-cli --scan --pattern 'login:failures:*' \
   | xargs -r -n50 docker exec raeed-redis-1 redis-cli DEL
 ```
 
@@ -148,7 +145,7 @@ different drift version will refuse to open the database.
 
 Verified against the running stack:
 
-- OTP sign-in, token issuance, refresh rotation (a replayed refresh token is
+- Password sign-in, token issuance, refresh rotation (a replayed refresh token is
   refused), `/auth/me` returning scope derived live from the database
 - `GET /children` scoped correctly — the parent and the educator see genuinely
   different sets, and a parent asking for another family's child by exact id

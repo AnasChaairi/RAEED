@@ -27,14 +27,14 @@ Cursor-based pagination everywhere — offset pagination breaks under concurrent
 
 ## Auth
 
-Every request except `/auth/otp/*` and `/auth/refresh` requires `Authorization: Bearer <access_token>` (15-minute JWT). Every mutating endpoint resolves an ability check (`05-authorization.md`) against the resource named in the path — never trusted from the request body or the client's claimed role.
+Every request except `/auth/login` and `/auth/refresh` requires `Authorization: Bearer <access_token>` (15-minute JWT). Every mutating endpoint resolves an ability check (`05-authorization.md`) against the resource named in the path — never trusted from the request body or the client's claimed role.
 
 ## Error code catalog (extend as modules ship)
 
 | Code | HTTP | Meaning |
 |---|---|---|
-| `auth.otp_invalid` | 401 | Wrong or expired OTP |
-| `auth.otp_rate_limited` | 429 | Too many OTP requests for this number |
+| `auth.invalid_credentials` | 401 | Phone number and password do not match an active account (also: wrong current password on change) |
+| `auth.rate_limited` | 429 | Too many failed sign-in attempts for this number or address; `details.retry_after_seconds` |
 | `scope.forbidden` | 403 | Authenticated, but the resource is outside the caller's ability scope |
 | `attendance.conflict` | 409 | Incoming `recorded_at_client` predates the server's current record — see the conflict rule in `03-domain-model/entities.md` |
 | `attendance.unknown_child` | 422 | `child_id` isn't enrolled in this session's group |

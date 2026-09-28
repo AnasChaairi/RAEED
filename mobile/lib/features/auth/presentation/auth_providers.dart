@@ -2,20 +2,18 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/network/api_client_provider.dart';
 import '../../../core/network/auth_interceptor.dart';
-import '../../../core/router/app_router.dart';
 import '../../../core/session/session_controller.dart';
 import '../application/capture_consent.dart';
+import '../application/change_password.dart';
 import '../application/refresh_tokens.dart';
-import '../application/request_otp.dart';
+import '../application/sign_in.dart';
 import '../application/sign_out.dart';
-import '../application/verify_otp.dart';
 import '../data/auth_repository_impl.dart';
 import '../data/auth_session_bootstrapper.dart';
 import '../data/consent_repository_impl.dart';
 import '../domain/auth_repository.dart';
 import '../domain/consent.dart';
 import '../domain/consent_repository.dart';
-import '../domain/otp_policy.dart';
 
 part 'auth_providers.g.dart';
 
@@ -56,16 +54,17 @@ AuthSessionBootstrapper authSessionBootstrapper(Ref ref) =>
 
 // --- Use cases -------------------------------------------------------------
 
-/// Sends a one-time code.
+/// Exchanges a phone number and password for a session.
 @riverpod
-RequestOtp requestOtp(Ref ref) => RequestOtp(ref.watch(authRepositoryProvider));
-
-/// Exchanges a code for a session.
-@riverpod
-VerifyOtp verifyOtp(Ref ref) => VerifyOtp(
+SignIn signIn(Ref ref) => SignIn(
   repository: ref.watch(authRepositoryProvider),
   session: ref.read(sessionControllerProvider.notifier),
 );
+
+/// Replaces the signed-in user's password.
+@riverpod
+ChangePassword changePassword(Ref ref) =>
+    ChangePassword(ref.watch(authRepositoryProvider));
 
 /// Rotates the stored token pair.
 @Riverpod(keepAlive: true)
@@ -93,32 +92,3 @@ SignOut signOut(Ref ref) => SignOut(
 @riverpod
 Future<ConsentRequirement> consentRequirement(Ref ref) =>
     ref.watch(consentRepositoryProvider).loadRequirement();
-
-/// The receipt for the OTP currently awaiting verification.
-///
-/// Carries the phone number from the login screen to the OTP screen, and the
-/// request count across resends so the hourly budget is tracked. Null when no
-/// code is outstanding.
-///
-/// Held in memory only, never persisted: an unverified phone number sitting in
-/// storage would outlive the sixty seconds it is useful for, and
-/// `specs/10-security-and-privacy.md` keeps raw numbers out of everything but
-/// the request body.
-@Riverpod(keepAlive: true)
-class PendingOtp extends _$PendingOtp {
-  @override
-  OtpRequestReceipt? build() => null;
-
-  /// Records a freshly requested code and unlocks `/login/otp`.
-  void begin(OtpRequestReceipt receipt) {
-    state = receipt;
-    ref.read(pendingOtpRequestProvider.notifier).begin();
-  }
-
-  /// Clears the outstanding code — on success, or on going back to change the
-  /// number.
-  void clear() {
-    state = null;
-    ref.read(pendingOtpRequestProvider.notifier).clear();
-  }
-}

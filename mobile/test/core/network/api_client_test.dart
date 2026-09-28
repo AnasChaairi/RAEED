@@ -162,19 +162,22 @@ void main() {
       );
     });
 
-    test('401 auth.otp_invalid does NOT end the session', () async {
+    test('401 auth.invalid_credentials does NOT end the session', () async {
       // A wrong OTP is an expected outcome of the login form. Treating it as a
       // session expiry would bounce the user off the screen they are using.
       adapter.respondJson(401, {
-        'error': {'code': 'auth.otp_invalid', 'message': 'Wrong code.'},
+        'error': {'code': 'auth.invalid_credentials', 'message': 'Wrong.'},
       });
 
       final error = await _captureError(
-        () => client.post('/auth/otp/verify', body: {'code': '000000'}),
+        () => client.post('/auth/login', body: {'password': 'abc123'}),
       );
 
       expect(error, isA<ApiException>());
-      expect((error! as ApiException).code, ApiErrorCode.authOtpInvalid);
+      expect(
+        (error! as ApiException).code,
+        ApiErrorCode.authInvalidCredentials,
+      );
     });
 
     test('an unknown code degrades instead of crashing an older build', () async {

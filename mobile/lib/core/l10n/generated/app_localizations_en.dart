@@ -78,10 +78,6 @@ class AppL10nEn extends AppL10n {
   String get loginTitle => 'Welcome to RAEED';
 
   @override
-  String get loginSubtitle =>
-      'Enter your phone number to receive a sign-in code.';
-
-  @override
   String get loginPhoneLabel => 'Phone number';
 
   @override
@@ -91,46 +87,83 @@ class AppL10nEn extends AppL10n {
   String get loginPhoneInvalid => 'Enter a valid phone number.';
 
   @override
-  String get loginRequestCode => 'Send sign-in code';
-
-  @override
   String get loginNoAccountNotice =>
       'Accounts are created by the academy\'s administration only. If you don\'t have one, get in touch with them.';
 
   @override
-  String get otpTitle => 'Sign-in code';
+  String get loginSubtitle => 'Enter your phone number and password.';
 
   @override
-  String otpSentTo(String phone) {
-    return 'We sent a six-digit code to $phone.';
-  }
+  String get loginPasswordLabel => 'Password';
 
   @override
-  String get otpCodeLabel => 'Code';
+  String get loginPasswordRule => '6 letters or digits';
 
   @override
-  String get otpVerify => 'Verify';
+  String get loginPasswordInvalid =>
+      'The password is exactly 6 letters or digits.';
 
   @override
-  String get otpInvalid => 'That code is wrong or has expired.';
+  String get loginPasswordShow => 'Show password';
 
   @override
-  String get otpRateLimited =>
-      'You\'ve requested too many codes. Try again in an hour.';
+  String get loginPasswordHide => 'Hide password';
 
   @override
-  String get otpResend => 'Resend code';
+  String get loginSubmit => 'Sign in';
 
   @override
-  String otpResendIn(int seconds) {
-    String _temp0 = intl.Intl.pluralLogic(
-      seconds,
-      locale: localeName,
-      other: 'Resend in $seconds seconds',
-      one: 'Resend in $seconds second',
-    );
-    return '$_temp0';
-  }
+  String get loginInvalidCredentials =>
+      'Phone number or password is not correct.';
+
+  @override
+  String get loginRateLimited =>
+      'Too many failed attempts. Try again in 15 minutes.';
+
+  @override
+  String get morePassword => 'Change password';
+
+  @override
+  String get pwdTitle => 'Change password';
+
+  @override
+  String get pwdIntro =>
+      'A password is 6 letters or digits. Enter the current one, then the new one twice.';
+
+  @override
+  String get pwdCurrent => 'Current password';
+
+  @override
+  String get pwdNew => 'New password';
+
+  @override
+  String get pwdConfirm => 'Confirm new password';
+
+  @override
+  String get pwdMismatch => 'The two passwords do not match.';
+
+  @override
+  String get pwdWrongCurrent => 'The current password is not correct.';
+
+  @override
+  String get pwdSave => 'Save';
+
+  @override
+  String get pwdSavedToast => 'Password changed';
+
+  @override
+  String get handoverTitle => 'Temporary passwords';
+
+  @override
+  String get handoverIntro =>
+      'Hand them to the guardian in person. They are shown once and never sent.';
+
+  @override
+  String get handoverExisting =>
+      'Already had an account — their password is unchanged.';
+
+  @override
+  String get handoverDone => 'Handed over';
 
   @override
   String get consentTitle => 'Privacy and image rights';
@@ -491,9 +524,6 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get brandTagline => 'Upright in himself, a force for good in others';
-
-  @override
-  String get otpEnterCode => 'Enter the code';
 
   @override
   String consentStepOf(int current, int total) {

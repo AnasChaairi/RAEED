@@ -278,6 +278,19 @@ class EducatorMoreScreen extends ConsumerWidget {
                   ],
                   Divider(height: 1, color: palette.border),
                   InkWell(
+                    key: const Key('more-password'),
+                    onTap: () => context.push(AppRoutes.changePassword),
+                    child: _Row(
+                      label: l10n.morePassword,
+                      trailing: Icon(
+                        Icons.chevron_left_rounded,
+                        size: 20,
+                        color: palette.inkDim,
+                      ),
+                    ),
+                  ),
+                  Divider(height: 1, color: palette.border),
+                  InkWell(
                     onTap: () =>
                         ref.read(sessionControllerProvider.notifier).signOut(),
                     child: ConstrainedBox(

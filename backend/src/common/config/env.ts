@@ -22,10 +22,9 @@ export interface AppConfig {
     readonly accessTtl: string;
     readonly refreshTtl: string;
   };
-  readonly otp: {
-    /** Empty in local development — codes go to the API's stdout instead. */
-    readonly providerApiKey: string;
-    readonly smsFallbackApiKey: string;
+  readonly sms: {
+    /** Empty until a provider is wired up; critical alerts then have no SMS fallback. */
+    readonly fallbackApiKey: string;
   };
   readonly fcmServiceAccountJson: string;
   readonly storage: {
@@ -81,9 +80,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
       accessTtl: env.JWT_ACCESS_TTL ?? '15m',
       refreshTtl: env.JWT_REFRESH_TTL ?? '30d',
     },
-    otp: {
-      providerApiKey: env.OTP_PROVIDER_API_KEY ?? '',
-      smsFallbackApiKey: env.SMS_FALLBACK_PROVIDER_API_KEY ?? '',
+    sms: {
+      fallbackApiKey: env.SMS_FALLBACK_PROVIDER_API_KEY ?? '',
     },
     fcmServiceAccountJson: env.FCM_SERVICE_ACCOUNT_JSON ?? '',
     storage: {
@@ -95,15 +93,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     sentryDsn: env.SENTRY_DSN ?? '',
     hijriOffsetDays: Number(env.HIJRI_OFFSET_DAYS ?? 0),
   };
-
-  // Console OTP delivery is a development affordance. Outside development it
-  // would mean codes are printed to a log nobody guards while the user waits
-  // for an SMS that never arrives.
-  if (!isDevelopment && config.otp.providerApiKey === '') {
-    throw new Error(
-      'Refusing to start: OTP_PROVIDER_API_KEY is required outside development.',
-    );
-  }
 
   return config;
 }
@@ -117,9 +106,4 @@ function required(env: NodeJS.ProcessEnv, key: string): string {
     );
   }
   return value;
-}
-
-/** Whether OTP codes are delivered to stdout rather than by SMS. */
-export function isConsoleOtpDelivery(config: AppConfig): boolean {
-  return config.otp.providerApiKey === '';
 }

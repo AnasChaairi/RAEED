@@ -5,7 +5,7 @@ import { CheckAbility, CheckAbilityGuard } from '../../common/abilities/check-ab
 import { CurrentUser } from '../../common/auth/current-user.decorator';
 import { JwtAuthGuard } from '../../common/auth/jwt-auth.guard';
 import { CreateFamilyDto, InvitationDto } from './dto/family.dto';
-import { EducatorView, FamiliesService, FamilyView } from './families.service';
+import { EducatorView, FamiliesService, FamilyCreatedView, FamilyView } from './families.service';
 
 @Controller()
 @UseGuards(JwtAuthGuard, CheckAbilityGuard)
@@ -26,14 +26,17 @@ export class FamiliesController {
   create(
     @CurrentUser() user: AuthenticatedUser,
     @Body() body: CreateFamilyDto,
-  ): Promise<{ guardian_ids: string[]; child_ids: string[]; invitations: number }> {
+  ): Promise<FamilyCreatedView> {
     return this.families.create(user, body);
   }
 
   @Post('invitations')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   @CheckAbility('manage', 'Child')
-  resend(@CurrentUser() user: AuthenticatedUser, @Body() body: InvitationDto): Promise<void> {
+  resend(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: InvitationDto,
+  ): Promise<{ user_id: string; password: string }> {
     return this.families.resendInvitation(user, body.user_id);
   }
 

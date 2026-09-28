@@ -58,26 +58,6 @@ void main() {
       );
     });
 
-    test('allows the OTP screen when a request is pending', () {
-      expect(
-        resolveRedirect(
-          session: session,
-          location: AppRoutes.otp,
-          hasPendingOtpRequest: true,
-        ),
-        isNull,
-      );
-    });
-
-    test('sends the OTP screen back to login with no pending request', () {
-      // Without a pending request there is no phone number to verify against,
-      // so the screen would be a dead end.
-      expect(
-        resolveRedirect(session: session, location: AppRoutes.otp),
-        AppRoutes.login,
-      );
-    });
-
     test('redirects every authenticated route to login', () {
       for (final location in [
         AppRoutes.home,
@@ -159,14 +139,6 @@ void main() {
       final session = sessionWith(status: SessionStatus.active);
       expect(
         resolveRedirect(session: session, location: AppRoutes.login),
-        AppRoutes.home,
-      );
-      expect(
-        resolveRedirect(
-          session: session,
-          location: AppRoutes.otp,
-          hasPendingOtpRequest: true,
-        ),
         AppRoutes.home,
       );
     });

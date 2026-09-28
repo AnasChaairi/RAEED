@@ -11,9 +11,9 @@ import 'core/session/session_controller.dart';
 import 'core/theme/raeed_theme.dart';
 import 'core/theme/theme_mode_controller.dart';
 import 'features/attendance/presentation/attendance_screen.dart';
+import 'features/auth/presentation/change_password_screen.dart';
 import 'features/auth/presentation/consent_screen.dart';
 import 'features/auth/presentation/login_screen.dart';
-import 'features/auth/presentation/otp_screen.dart';
 import 'features/children/presentation/child_profile_screen.dart';
 import 'features/children/presentation/home_screen.dart';
 import 'features/educator/presentation/educator_announcement_screen.dart';
@@ -140,7 +140,7 @@ Widget applyTextScaleCeiling(BuildContext context, Widget? child) {
 final AppScreens appScreensTable = AppScreens(
   splash: (context, state) => const SplashScreen(),
   login: (context, state) => const LoginScreen(),
-  otp: (context, state) => const OtpScreen(),
+  changePassword: (context, state) => const ChangePasswordScreen(),
   consent: (context, state) => const ConsentScreen(),
   // `/home` is the surface of the presented role: the educator's shell, or
   // the parent's home. The executive's is reached by redirect (`/dashboard`).

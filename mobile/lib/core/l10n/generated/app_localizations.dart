@@ -225,12 +225,6 @@ abstract class AppL10n {
   /// **'مرحبًا بك في الرائد'**
   String get loginTitle;
 
-  /// No description provided for @loginSubtitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'أدخل رقم هاتفك لتلقّي رمز الدخول.'**
-  String get loginSubtitle;
-
   /// No description provided for @loginPhoneLabel.
   ///
   /// In ar, this message translates to:
@@ -249,65 +243,149 @@ abstract class AppL10n {
   /// **'أدخل رقم هاتف صحيحًا.'**
   String get loginPhoneInvalid;
 
-  /// No description provided for @loginRequestCode.
-  ///
-  /// In ar, this message translates to:
-  /// **'إرسال رمز الدخول'**
-  String get loginRequestCode;
-
   /// Registration is Executive/Admin-only (ACC-02) — there is no public sign-up.
   ///
   /// In ar, this message translates to:
   /// **'الحسابات تُنشأ من طرف إدارة الأكاديمية فقط. إن لم يكن لديك حساب، تواصل مع الإدارة.'**
   String get loginNoAccountNotice;
 
-  /// No description provided for @otpTitle.
+  /// No description provided for @loginSubtitle.
   ///
   /// In ar, this message translates to:
-  /// **'رمز الدخول'**
-  String get otpTitle;
+  /// **'أدخل رقم هاتفك وكلمة المرور.'**
+  String get loginSubtitle;
 
-  /// Confirms where the OTP was sent. The phone number is masked before it reaches this string.
+  /// No description provided for @loginPasswordLabel.
   ///
   /// In ar, this message translates to:
-  /// **'أرسلنا رمزًا من ستة أرقام إلى {phone}.'**
-  String otpSentTo(String phone);
+  /// **'كلمة المرور'**
+  String get loginPasswordLabel;
 
-  /// No description provided for @otpCodeLabel.
+  /// No description provided for @loginPasswordRule.
   ///
   /// In ar, this message translates to:
-  /// **'الرمز'**
-  String get otpCodeLabel;
+  /// **'6 أحرف أو أرقام'**
+  String get loginPasswordRule;
 
-  /// No description provided for @otpVerify.
+  /// No description provided for @loginPasswordInvalid.
   ///
   /// In ar, this message translates to:
-  /// **'تأكيد'**
-  String get otpVerify;
+  /// **'كلمة المرور من 6 أحرف أو أرقام بالضبط.'**
+  String get loginPasswordInvalid;
 
-  /// No description provided for @otpInvalid.
+  /// No description provided for @loginPasswordShow.
   ///
   /// In ar, this message translates to:
-  /// **'الرمز غير صحيح أو انتهت صلاحيته.'**
-  String get otpInvalid;
+  /// **'إظهار كلمة المرور'**
+  String get loginPasswordShow;
 
-  /// No description provided for @otpRateLimited.
+  /// No description provided for @loginPasswordHide.
   ///
   /// In ar, this message translates to:
-  /// **'لقد طلبت رموزًا كثيرة. حاول مجددًا بعد ساعة.'**
-  String get otpRateLimited;
+  /// **'إخفاء كلمة المرور'**
+  String get loginPasswordHide;
 
-  /// No description provided for @otpResend.
+  /// No description provided for @loginSubmit.
   ///
   /// In ar, this message translates to:
-  /// **'إعادة إرسال الرمز'**
-  String get otpResend;
+  /// **'دخول'**
+  String get loginSubmit;
 
-  /// Countdown before the resend button re-enables. All six Arabic plural categories are authored, not defaulted.
+  /// No description provided for @loginInvalidCredentials.
   ///
   /// In ar, this message translates to:
-  /// **'{seconds, plural, zero{يمكنك إعادة الإرسال الآن} one{إعادة الإرسال بعد ثانية واحدة} two{إعادة الإرسال بعد ثانيتين} few{إعادة الإرسال بعد {seconds} ثوانٍ} many{إعادة الإرسال بعد {seconds} ثانية} other{إعادة الإرسال بعد {seconds} ثانية}}'**
-  String otpResendIn(int seconds);
+  /// **'رقم الهاتف أو كلمة المرور غير صحيحة.'**
+  String get loginInvalidCredentials;
+
+  /// No description provided for @loginRateLimited.
+  ///
+  /// In ar, this message translates to:
+  /// **'محاولات كثيرة خاطئة. حاول مجددًا بعد 15 دقيقة.'**
+  String get loginRateLimited;
+
+  /// No description provided for @morePassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير كلمة المرور'**
+  String get morePassword;
+
+  /// No description provided for @pwdTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير كلمة المرور'**
+  String get pwdTitle;
+
+  /// No description provided for @pwdIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور من 6 أحرف أو أرقام. أدخل الحالية ثم الجديدة مرتين.'**
+  String get pwdIntro;
+
+  /// No description provided for @pwdCurrent.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الحالية'**
+  String get pwdCurrent;
+
+  /// No description provided for @pwdNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الجديدة'**
+  String get pwdNew;
+
+  /// No description provided for @pwdConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد كلمة المرور الجديدة'**
+  String get pwdConfirm;
+
+  /// No description provided for @pwdMismatch.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمتا المرور غير متطابقتين.'**
+  String get pwdMismatch;
+
+  /// No description provided for @pwdWrongCurrent.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الحالية غير صحيحة.'**
+  String get pwdWrongCurrent;
+
+  /// No description provided for @pwdSave.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ'**
+  String get pwdSave;
+
+  /// No description provided for @pwdSavedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تغيير كلمة المرور'**
+  String get pwdSavedToast;
+
+  /// No description provided for @handoverTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمات المرور المؤقتة'**
+  String get handoverTitle;
+
+  /// No description provided for @handoverIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'سلّمها للولي شخصيًا. تُعرض مرة واحدة فقط ولا تُرسل برسالة.'**
+  String get handoverIntro;
+
+  /// No description provided for @handoverExisting.
+  ///
+  /// In ar, this message translates to:
+  /// **'لديه حساب من قبل — كلمة مروره لم تتغير.'**
+  String get handoverExisting;
+
+  /// No description provided for @handoverDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'سلّمتها'**
+  String get handoverDone;
 
   /// No description provided for @consentTitle.
   ///
@@ -914,12 +992,6 @@ abstract class AppL10n {
   /// In ar, this message translates to:
   /// **'صالح في نفسه، مصلح لغيره'**
   String get brandTagline;
-
-  /// No description provided for @otpEnterCode.
-  ///
-  /// In ar, this message translates to:
-  /// **'أدخل الرمز'**
-  String get otpEnterCode;
 
   /// No description provided for @consentStepOf.
   ///

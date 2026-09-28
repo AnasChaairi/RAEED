@@ -340,7 +340,7 @@ void main() {
         ],
       );
       when(() => mocks.families.resendInvitation('u-p'))
-          .thenAnswer((_) async {});
+          .thenAnswer((_) async => 'k7m2x9');
       final container = await executiveContainer(mocks);
 
       await pumpExecutive(
@@ -354,6 +354,11 @@ void main() {
       await tester.tap(find.text('إعادة الدعوة'));
       await tester.pumpAndSettle();
       verify(() => mocks.families.resendInvitation('u-p')).called(1);
+      // The fresh password is shown once, for the executive to hand over.
+      expect(find.text('k7m2x9'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('handover-done')));
+      await tester.pumpAndSettle();
+      expect(find.text('k7m2x9'), findsNothing);
     });
   });
 

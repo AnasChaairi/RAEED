@@ -18,17 +18,17 @@ import { JwtAuthGuard, Public } from '../../common/auth/jwt-auth.guard';
 import { ApiError } from '../../common/http/api-error';
 import {
   AvailabilityDto,
+  ChangePasswordDto,
+  LoginDto,
   RefreshDto,
   RegisterDeviceDto,
-  RequestOtpDto,
-  VerifyOtpDto,
 } from './dto/auth.dto';
 import { CurrentUserView, IdentityService } from './identity.service';
 
 /**
  * Auth routes (`specs/04-api/openapi.yaml`).
  *
- * The three OTP/refresh routes are `security: []` in the contract and carry
+ * `login` and `refresh` are `security: []` in the contract and carry
  * `@Public()`. Everything else on this controller is guarded — the guard is
  * applied at class level so a new route is protected by omission rather than
  * by remembering.
@@ -38,30 +38,21 @@ import { CurrentUserView, IdentityService } from './identity.service';
 export class IdentityController {
   constructor(private readonly identity: IdentityService) {}
 
-  @Post('otp/request')
-  @Public()
-  @HttpCode(HttpStatus.ACCEPTED)
-  async requestOtp(
-    @Body() body: RequestOtpDto,
-    @Ip() clientIp: string,
-  ): Promise<void> {
-    // 202 with no body regardless of whether the number has an account —
-    // ACC-02 keeps account existence out of reach of an unauthenticated
-    // caller.
-    await this.identity.requestOtp(body.phone, clientIp);
-  }
-
-  @Post('otp/verify')
+  @Post('login')
   @Public()
   @HttpCode(HttpStatus.OK)
-  async verifyOtp(@Body() body: VerifyOtpDto): Promise<{
+  async login(
+    @Body() body: LoginDto,
+    @Ip() clientIp: string,
+  ): Promise<{
     access_token: string;
     refresh_token: string;
   }> {
-    const pair = await this.identity.verifyOtp(
+    const pair = await this.identity.login(
       body.phone,
-      body.code,
+      body.password,
       body.device_id,
+      clientIp,
     );
     return {
       access_token: pair.accessToken,
@@ -86,6 +77,15 @@ export class IdentityController {
   @Get('me')
   async me(@CurrentUser() user: AuthenticatedUser): Promise<CurrentUserView> {
     return this.identity.currentUser(user);
+  }
+
+  @Patch('me/password')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async changePassword(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: ChangePasswordDto,
+  ): Promise<void> {
+    await this.identity.changePassword(user, body.current_password, body.new_password);
   }
 
   @Patch('me/availability')

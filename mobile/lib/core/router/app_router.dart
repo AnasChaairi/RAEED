@@ -31,7 +31,7 @@ class AppScreens {
   const AppScreens({
     required this.splash,
     required this.login,
-    required this.otp,
+    required this.changePassword,
     required this.consent,
     required this.home,
     required this.child,
@@ -66,8 +66,8 @@ class AppScreens {
   /// Phone entry.
   final ScreenBuilder login;
 
-  /// OTP verification.
-  final ScreenBuilder otp;
+  /// Change password (`/more/password`).
+  final ScreenBuilder changePassword;
 
   /// Privacy + image-rights consent.
   final ScreenBuilder consent;
@@ -151,22 +151,6 @@ AppScreens appScreens(Ref ref) => throw UnimplementedError(
   'See lib/app.dart.',
 );
 
-/// True while an OTP has been requested and not yet verified.
-///
-/// Guards `/login/otp`, which without a pending request has no phone number to
-/// verify and would be a dead end. Owned by the auth feature, read here.
-@Riverpod(keepAlive: true)
-class PendingOtpRequest extends _$PendingOtpRequest {
-  @override
-  bool build() => false;
-
-  /// Marks an OTP as requested, unlocking `/login/otp`.
-  void begin() => state = true;
-
-  /// Clears the pending request — on successful verification, or on going back.
-  void clear() => state = false;
-}
-
 /// The app's [GoRouter].
 ///
 /// `keepAlive` because a router rebuilt mid-navigation loses the navigation
@@ -185,7 +169,6 @@ GoRouter appRouter(Ref ref) {
     redirect: (context, state) => resolveRedirect(
       session: ref.read(sessionControllerProvider),
       location: state.matchedLocation,
-      hasPendingOtpRequest: ref.read(pendingOtpRequestProvider),
     ),
     errorBuilder: screens.notFound,
     routes: [
@@ -193,14 +176,6 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.login,
         name: AppRoutes.loginName,
         builder: screens.login,
-        routes: [
-          GoRoute(
-            // Nested under /login, so the path is relative here.
-            path: 'otp',
-            name: AppRoutes.otpName,
-            builder: screens.otp,
-          ),
-        ],
       ),
       GoRoute(
         path: AppRoutes.consent,
@@ -326,6 +301,14 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.more,
         name: AppRoutes.moreName,
         builder: screens.more,
+        routes: [
+          GoRoute(
+            // Nested under /more, so the path is relative here.
+            path: 'password',
+            name: AppRoutes.changePasswordName,
+            builder: screens.changePassword,
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.manage,
@@ -380,21 +363,13 @@ class _SessionRefreshListenable extends ChangeNotifier {
         notifyListeners();
       }
     });
-    _otpSubscription = ref.listen<bool>(pendingOtpRequestProvider, (
-      previous,
-      next,
-    ) {
-      if (previous != next) notifyListeners();
-    });
   }
 
   late final ProviderSubscription<AppSession> _subscription;
-  late final ProviderSubscription<bool> _otpSubscription;
 
   @override
   void dispose() {
     _subscription.close();
-    _otpSubscription.close();
     super.dispose();
   }
 }
