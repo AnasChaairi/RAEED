@@ -8,7 +8,7 @@ Modular monolith, one deployable, one PostgreSQL database. Module boundaries are
 backend/
   src/
     modules/
-      identity/          // OTP, JWT issuance, role_assignment, user_device
+      identity/          // passwords, JWT issuance, role_assignment, user_device
       org-structure/     // branch, season, category, group, group_educator, Excel import
       children/          // child, parent_child, child_group, consent_record, profile_change_request
       sessions/          // session, material, weekly-schedule auto-generation
@@ -56,8 +56,7 @@ backend/
 | `DATABASE_URL` | PostgreSQL connection string |
 | `REDIS_URL` | Redis connection string (queues + cache) |
 | `JWT_ACCESS_SECRET` / `JWT_REFRESH_SECRET` | Token signing |
-| `OTP_PROVIDER_API_KEY` | SMS/WhatsApp OTP provider |
-| `SMS_FALLBACK_PROVIDER_API_KEY` | Critical-alert SMS fallback (may be the same provider as OTP) |
+| `SMS_FALLBACK_PROVIDER_API_KEY` | Critical-alert SMS fallback |
 | `FCM_SERVICE_ACCOUNT_JSON` | Firebase Cloud Messaging credentials |
 | `STORAGE_DRIVER` | `local` (MVP) \| `ovh` (post-MVP) |
 | `STORAGE_LOCAL_ROOT` | Filesystem path for `LocalDiskStorageProvider` |

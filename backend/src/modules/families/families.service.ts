@@ -1,10 +1,12 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource, EntityManager } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
 import { defineAbilityFor, subject } from '../../common/abilities/define-ability';
 import { ApiError } from '../../common/http/api-error';
+import { IdentityService } from '../identity/identity.service';
+import { PasswordService } from '../identity/password.service';
 import { CreateFamilyDto } from './dto/family.dto';
 
 export type AccountStatus = 'active' | 'pending';
@@ -17,6 +19,21 @@ export interface FamilyView {
   children: Array<{ id: string; full_name: string; group: { id: string; name: string } | null }>;
   /** active: every guardian signed in · partial: some · pending: none yet. */
   status: 'active' | 'partial' | 'pending';
+}
+
+/** One guardian's first password, returned once to the executive who created the account. */
+export interface GuardianCredentialView {
+  id: string;
+  display_name: string;
+  /** Null when the phone already had an account: its password is unchanged. */
+  password: string | null;
+}
+
+export interface FamilyCreatedView {
+  guardian_ids: string[];
+  child_ids: string[];
+  invitations: number;
+  guardians: GuardianCredentialView[];
 }
 
 export interface EducatorView {
@@ -47,9 +64,12 @@ interface LinkRow {
  */
 @Injectable()
 export class FamiliesService {
-  private readonly logger = new Logger('families');
 
-  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
+  constructor(
+    @InjectDataSource() private readonly dataSource: DataSource,
+    private readonly identity: IdentityService,
+    private readonly passwords: PasswordService,
+  ) {}
 
   async list(user: AuthenticatedUser): Promise<FamilyView[]> {
     this.assertOversight(user);
@@ -127,7 +147,7 @@ export class FamiliesService {
   async create(
     user: AuthenticatedUser,
     input: CreateFamilyDto,
-  ): Promise<{ guardian_ids: string[]; child_ids: string[]; invitations: number }> {
+  ): Promise<FamilyCreatedView> {
     this.assertOversight(user);
     for (const child of input.children) {
       if (child.group_id) await this.assertMayAssign(user, child.group_id);
@@ -135,6 +155,7 @@ export class FamiliesService {
 
     return this.dataSource.transaction(async (tx) => {
       const guardianIds: string[] = [];
+      const credentials: GuardianCredentialView[] = [];
       let invitations = 0;
       for (const guardian of input.guardians) {
         const existing: Array<{ id: string }> = await tx.query(
@@ -150,7 +171,14 @@ export class FamiliesService {
           );
           id = rows[0].id;
           invitations += 1;
+          // A new account is handed its first password by the executive who
+          // created it (ACC-02). It is returned once, here, and never stored
+          // in clear.
+          const password = this.passwords.generate();
+          await this.identity.setPassword(tx, id, password);
+          credentials.push({ id, display_name: guardian.display_name.trim(), password });
         } else {
+          credentials.push({ id, display_name: guardian.display_name.trim(), password: null });
           await tx.query(
             `update app_user set display_name = coalesce(display_name, $2) where id = $1`,
             [id, guardian.display_name.trim()],
@@ -204,13 +232,19 @@ export class FamiliesService {
         ],
       );
 
-      for (const guardianId of guardianIds) await this.sendInvitation(tx, guardianId);
-      return { guardian_ids: guardianIds, child_ids: childIds, invitations };
+      return { guardian_ids: guardianIds, child_ids: childIds, invitations, guardians: credentials };
     });
   }
 
-  /** Re-sends the sign-in invitation; recorded, and delivered when SMS exists. */
-  async resendInvitation(user: AuthenticatedUser, guardianId: string): Promise<void> {
+  /**
+   * Issues a guardian a fresh password — the "invitation" when there is no
+   * SMS: the executive hands it over in person. Recorded, and the old
+   * password stops working at once.
+   */
+  async resendInvitation(
+    user: AuthenticatedUser,
+    guardianId: string,
+  ): Promise<{ user_id: string; password: string }> {
     this.assertOversight(user);
     const rows: Array<{ id: string }> = await this.dataSource.query(
       `select u.id from app_user u
@@ -219,12 +253,16 @@ export class FamiliesService {
       [guardianId],
     );
     if (rows.length === 0) throw ApiError.scopeForbidden('No such guardian.');
-    await this.dataSource.query(
-      `insert into audit_log_entry (actor_user_id, action, resource_type, resource_id)
-       values ($1, 'invitation.resend', 'app_user', $2)`,
-      [user.id, guardianId],
-    );
-    await this.sendInvitation(this.dataSource.manager, guardianId);
+    const password = this.passwords.generate();
+    await this.dataSource.transaction(async (tx) => {
+      await this.identity.setPassword(tx, guardianId, password);
+      await tx.query(
+        `insert into audit_log_entry (actor_user_id, action, resource_type, resource_id)
+         values ($1, 'invitation.resend', 'app_user', $2)`,
+        [user.id, guardianId],
+      );
+    });
+    return { user_id: guardianId, password };
   }
 
   /** Educators, for the new-group form. */
@@ -240,17 +278,6 @@ export class FamiliesService {
         where u.is_active
         order by u.display_name nulls last, u.id`,
     );
-  }
-
-  private async sendInvitation(tx: EntityManager | DataSource, guardianId: string): Promise<void> {
-    // No SMS provider locally (see OtpService); the invitation is the sign-in
-    // OTP flow itself, so there is nothing to persist. Logged so it is visible.
-    const rows: Array<{ phone: string | null }> = await tx.query(
-      'select phone from app_user where id = $1',
-      [guardianId],
-    );
-    const phone = rows[0]?.phone ?? '';
-    this.logger.log(`[dev] invitation for ${phone.slice(0, 4)}••••${phone.slice(-2)} (no SMS provider)`);
   }
 
   private assertOversight(user: AuthenticatedUser): void {

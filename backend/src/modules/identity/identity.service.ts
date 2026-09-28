@@ -1,10 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 
 import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
 import { ApiError } from '../../common/http/api-error';
-import { OtpService } from './otp.service';
+import { LoginThrottle } from './login-throttle.service';
+import { PasswordService } from './password.service';
 import { TokenPair, TokenService } from './token.service';
 
 /** The `/auth/me` payload. */
@@ -24,48 +25,91 @@ export interface CurrentUserView {
  * Sign-in, session lifecycle, and the current-user view.
  *
  * Registration is deliberately absent. `ACC-02` makes account creation an
- * Executive/Admin action; there is no public endpoint, and `requestOtp`
- * behaves identically for a number with no account so that an unauthenticated
- * caller cannot use it to discover who is enrolled.
+ * Executive/Admin action; there is no public endpoint, and `login` behaves
+ * identically for a number with no account, a deactivated account and a
+ * wrong password, so that an unauthenticated caller cannot use it to discover
+ * who is enrolled.
  */
 @Injectable()
 export class IdentityService {
   constructor(
     @InjectDataSource() private readonly dataSource: DataSource,
-    private readonly otp: OtpService,
+    private readonly passwords: PasswordService,
+    private readonly throttle: LoginThrottle,
     private readonly tokens: TokenService,
   ) {}
 
-  /** Sends a code, whether or not the number has an account. */
-  async requestOtp(phone: string, clientIp: string): Promise<void> {
-    await this.otp.request(phone, clientIp);
-  }
-
   /**
-   * Exchanges a verified code for a token pair.
+   * Exchanges a phone number and password for a token pair.
    *
-   * The account lookup happens *after* code verification, so a wrong code and
-   * an unknown number are indistinguishable from outside — both are
-   * `auth.otp_invalid`.
+   * Every failure is `auth.invalid_credentials`: an unknown number, an
+   * account with no password yet, a deactivated account and a wrong password
+   * are indistinguishable from outside, and each one costs an attempt
+   * against the throttle.
    */
-  async verifyOtp(
+  async login(
     phone: string,
-    code: string,
+    password: string,
     deviceId: string,
+    clientIp: string,
   ): Promise<TokenPair> {
-    const ok = await this.otp.verify(phone, code);
-    if (!ok) throw ApiError.otpInvalid();
+    await this.throttle.assertAllowed(phone, clientIp);
 
-    const rows: Array<{ id: string; is_active: boolean }> =
+    const rows: Array<{ id: string; is_active: boolean; password_hash: string | null }> =
       await this.dataSource.query(
-        'select id, is_active from app_user where phone = $1',
+        'select id, is_active, password_hash from app_user where phone = $1',
         [phone],
       );
     const user = rows[0];
-    if (!user || !user.is_active) throw ApiError.otpInvalid();
+    // The hash runs whether or not the row exists, so the response time is
+    // the same for a number with no account.
+    const ok = await this.passwords.verify(password, user?.password_hash ?? null);
+    if (!user || !user.is_active || !ok) {
+      await this.throttle.recordFailure(phone, clientIp);
+      throw ApiError.invalidCredentials();
+    }
 
+    await this.throttle.reset(phone);
     await this.registerDevice(user.id, deviceId);
     return this.tokens.issue(user.id, deviceId);
+  }
+
+  /**
+   * Replaces the caller's own password after checking the current one.
+   *
+   * The current password is required even though the caller holds a valid
+   * token: a phone left unlocked must not be enough to lock its owner out.
+   */
+  async changePassword(
+    user: AuthenticatedUser,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<void> {
+    const rows: Array<{ password_hash: string | null }> = await this.dataSource.query(
+      'select password_hash from app_user where id = $1',
+      [user.id],
+    );
+    const ok = await this.passwords.verify(currentPassword, rows[0]?.password_hash ?? null);
+    if (!ok) throw ApiError.invalidCredentials();
+    await this.setPassword(this.dataSource.manager, user.id, newPassword);
+  }
+
+  /**
+   * Stores a new password for [userId] — the provisioning path executives
+   * use (`ACC-02`), and the change-password path above. Returns nothing: the
+   * caller already holds the clear-text value it chose or generated.
+   */
+  async setPassword(
+    tx: EntityManager | DataSource,
+    userId: string,
+    password: string,
+  ): Promise<void> {
+    const hash = await this.passwords.hash(password);
+    await tx.query(
+      `update app_user set password_hash = $2, password_set_at = now(), updated_at = now()
+        where id = $1`,
+      [userId, hash],
+    );
   }
 
   /** Rotates a refresh token, ending the session if it is not current. */

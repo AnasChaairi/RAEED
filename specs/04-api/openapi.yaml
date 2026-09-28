@@ -360,9 +360,14 @@ components:
       content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
 
 paths:
-  /auth/otp/request:
+  /auth/login:
     post:
-      summary: Request a one-time login code
+      summary: Sign in with a phone number and password
+      description: >
+        Every failure is `auth.invalid_credentials` — an unknown number, an
+        account with no password yet, a deactivated account and a wrong
+        password are indistinguishable from outside (ACC-02). Five failed
+        attempts lock the number for fifteen minutes (`auth.rate_limited`).
       security: []
       requestBody:
         required: true
@@ -370,27 +375,13 @@ paths:
           application/json:
             schema:
               type: object
-              required: [phone]
+              required: [phone, password, device_id]
               properties:
                 phone: { type: string, example: "+2126XXXXXXXX" }
-      responses:
-        '202': { description: OTP sent (SMS, WhatsApp fallback per ACC-03) }
-        '429': { description: Rate limited — 5 requests/hour/number }
-
-  /auth/otp/verify:
-    post:
-      summary: Exchange a verified OTP for tokens
-      security: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [phone, code, device_id]
-              properties:
-                phone: { type: string }
-                code: { type: string }
+                password:
+                  type: string
+                  pattern: '^[A-Za-z0-9]{6}$'
+                  description: Exactly six letters or digits.
                 device_id:
                   type: string
                   format: uuid
@@ -410,10 +401,28 @@ paths:
                 properties:
                   access_token: { type: string }
                   refresh_token: { type: string }
-                  roles:
-                    type: array
-                    items: { type: string, enum: [parent, educator, executive, admin] }
-        '401': { description: Invalid or expired code }
+        '401': { description: Phone number and password do not match an active account }
+        '429': { description: Too many failed attempts — `retry_after_seconds` in details }
+
+  /auth/me/password:
+    patch:
+      summary: Change the caller's own password
+      description: >
+        The current password is required even though the caller holds a valid
+        token — a phone left unlocked must not be enough to lock its owner out.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [current_password, new_password]
+              properties:
+                current_password: { type: string, pattern: '^[A-Za-z0-9]{6}$' }
+                new_password: { type: string, pattern: '^[A-Za-z0-9]{6}$' }
+      responses:
+        '204': { description: Changed }
+        '401': { description: The current password is wrong (`auth.invalid_credentials`) }
 
   /auth/refresh:
     post:
@@ -456,7 +465,7 @@ paths:
       summary: The signed-in user, with the scope their abilities are built from
       description: >
         Called on cold start to turn a stored access token back into a session,
-        and immediately after `/auth/otp/verify`. Returns the reachable child
+        and immediately after `/auth/login`. Returns the reachable child
         and group ids resolved server-side from live `parent_child` /
         `group_educator` rows — scope is derived, never stored redundantly and
         never computed on the client (05-authorization.md).
@@ -1248,11 +1257,13 @@ paths:
                   page: { $ref: '#/components/schemas/Page' }
         '403': { $ref: '#/components/responses/Forbidden' }
     post:
-      summary: Create a household — guardians (invited to sign in), their children and links, in one recorded act (ACC-02)
+      summary: Create a household — guardians, their children and links, in one recorded act (ACC-02)
       description: >
         A guardian whose phone already has an account is linked, not
-        duplicated. Children carry no health information here: the guardian
-        enters it from their own account (CHD-04).
+        duplicated. Each new account is handed a generated first password,
+        returned once in the response for the executive to pass on in person;
+        it is never stored in clear. Children carry no health information
+        here: the guardian enters it from their own account (CHD-04).
       requestBody:
         required: true
         content:
@@ -1289,11 +1300,22 @@ paths:
                 properties:
                   guardian_ids: { type: array, items: { type: string, format: uuid } }
                   child_ids: { type: array, items: { type: string, format: uuid } }
-                  invitations: { type: integer }
+                  invitations: { type: integer, description: How many accounts were created }
+                  guardians:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: string, format: uuid }
+                        display_name: { type: string }
+                        password:
+                          type: string
+                          nullable: true
+                          description: The first password of a new account; null when the phone already had one.
 
   /invitations:
     post:
-      summary: Re-send a guardian's sign-in invitation (recorded)
+      summary: Hand a guardian a fresh password (recorded, replaces the old one at once)
       requestBody:
         required: true
         content:
@@ -1304,7 +1326,15 @@ paths:
               properties:
                 user_id: { type: string, format: uuid }
       responses:
-        '204': { description: Sent }
+        '200':
+          description: The new password, returned once
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id: { type: string, format: uuid }
+                  password: { type: string }
 
   /educators:
     get:

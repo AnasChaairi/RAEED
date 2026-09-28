@@ -1,30 +1,26 @@
 import { IsIn, IsOptional, IsString, IsUUID, Length, Matches } from 'class-validator';
 
+/** The one shape a password may have: six letters or digits. */
+const PASSWORD_PATTERN = /^[A-Za-z0-9]{6}$/;
+const PASSWORD_MESSAGE = 'password must be exactly 6 letters or digits';
+
 /**
- * `POST /auth/otp/request`.
+ * `POST /auth/login`.
  *
  * The phone is validated to E.164 shape here so a malformed number never
- * reaches the rate limiter — otherwise a caller could spend someone else's
+ * reaches the throttle — otherwise a caller could spend someone else's
  * budget by varying the formatting of their number.
  */
-export class RequestOtpDto {
+export class LoginDto {
   @IsString()
   @Matches(/^\+[1-9]\d{7,14}$/, {
     message: 'phone must be in E.164 format, e.g. +2126XXXXXXXX',
   })
   phone: string;
-}
-
-/** `POST /auth/otp/verify`. */
-export class VerifyOtpDto {
-  @IsString()
-  @Matches(/^\+[1-9]\d{7,14}$/)
-  phone: string;
 
   @IsString()
-  @Length(6, 6)
-  @Matches(/^\d{6}$/)
-  code: string;
+  @Matches(PASSWORD_PATTERN, { message: PASSWORD_MESSAGE })
+  password: string;
 
   /**
    * Per-install identifier the refresh token is scoped to (`ACC-07`).
@@ -37,6 +33,17 @@ export class VerifyOtpDto {
   // database driver.
   @IsUUID()
   device_id: string;
+}
+
+/** `PATCH /auth/me/password`. */
+export class ChangePasswordDto {
+  @IsString()
+  @Matches(PASSWORD_PATTERN, { message: PASSWORD_MESSAGE })
+  current_password: string;
+
+  @IsString()
+  @Matches(PASSWORD_PATTERN, { message: PASSWORD_MESSAGE })
+  new_password: string;
 }
 
 /** `POST /auth/refresh`. */
@@ -52,7 +59,6 @@ export class RefreshDto {
   device_id: string;
 }
 
-/** `POST /auth/devices` — registers or updates the FCM token. */
 /** `PATCH /auth/me/availability` — "HH:MM" bounds in the organisation's zone. */
 export class AvailabilityDto {
   @Matches(/^([01]\d|2[0-3]):[0-5]\d$/)
@@ -62,6 +68,7 @@ export class AvailabilityDto {
   end: string;
 }
 
+/** `POST /auth/devices` — registers or updates the FCM token. */
 export class RegisterDeviceDto {
   // A uuid, because `user_device.id` is one. Validating the shape here turns
   // a malformed id into a 422 the client can act on rather than a 500 from the

@@ -61,7 +61,7 @@ logo/            Brand assets
 | Ticket | State |
 |---|---|
 | RAEED-6 app shell — theme, i18n, router + guards, ability model | Done |
-| RAEED-2/3/5 OTP sign-in, token refresh, consent capture | Done |
+| RAEED-2/3/5 password sign-in, change password, token refresh, consent capture | Done |
 | RAEED-12 Parent Home + child profile | Done |
 | RAEED-16/17/21 attendance, offline queue, presence confirmation | Done (mobile); **no server endpoints yet** |
 | EXEC-M-01..07 executive shell — dashboard, announcements + composer, messages, Memories review, groups + attendance review, notifications, More | Done, with the server endpoints behind every screen |
@@ -74,7 +74,7 @@ logo/            Brand assets
 | Ticket | State |
 |---|---|
 | RAEED-1 local stack, schema migration, audit-log grants | Done |
-| RAEED-2/3 OTP, JWT, refresh rotation, devices | Done |
+| RAEED-2/3 password sign-in (scrypt, throttled), JWT, refresh rotation, devices | Done |
 | RAEED-4 CASL abilities + `@CheckAbility` guard | Done |
 | RAEED-9/10 children, consent, announcements (read) | Done |
 | RAEED-13..21 sessions, attendance, the critical-alert queue | Sessions list, attendance read + correction chain and the critical queue exist for the executive surface; educator marking endpoints not started |

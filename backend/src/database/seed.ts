@@ -1,7 +1,11 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 
+import { PasswordService } from '../modules/identity/password.service';
 import { buildDataSourceOptions } from './data-source';
+
+/** Every seeded account signs in with this — development data only. */
+const SEED_PASSWORD = 'raeed1';
 
 /**
  * Local development seed.
@@ -448,6 +452,13 @@ async function seed(): Promise<void> {
         [executiveId],
       );
 
+      // One password for every seeded account. Hashed the same way the API
+      // does it, so the seed exercises the real sign-in path.
+      await tx.query(
+        `update app_user set password_hash = $1, password_set_at = now()`,
+        [await new PasswordService().hash(SEED_PASSWORD)],
+      );
+
       // eslint-disable-next-line no-console
       console.log(
         [
@@ -458,8 +469,7 @@ async function seed(): Promise<void> {
           '  Educator   +212600000005   (co-educator on الأشبال أ)',
           '  Executive  +212600000003   (also admin)',
           '',
-          '  Sign in with any of these numbers — the OTP is printed to the',
-          '  API log, because no SMS provider is configured locally.',
+          `  Sign in with any of these numbers and the password ${SEED_PASSWORD}.`,
         ].join('\n'),
       );
     });

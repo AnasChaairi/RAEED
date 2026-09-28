@@ -10,8 +10,8 @@ import { HttpException, HttpStatus } from '@nestjs/common';
  * two can ship out of step.
  */
 export const ApiErrorCode = {
-  AUTH_OTP_INVALID: 'auth.otp_invalid',
-  AUTH_OTP_RATE_LIMITED: 'auth.otp_rate_limited',
+  AUTH_INVALID_CREDENTIALS: 'auth.invalid_credentials',
+  AUTH_RATE_LIMITED: 'auth.rate_limited',
   SCOPE_FORBIDDEN: 'scope.forbidden',
   ATTENDANCE_CONFLICT: 'attendance.conflict',
   ATTENDANCE_UNKNOWN_CHILD: 'attendance.unknown_child',
@@ -53,20 +53,25 @@ export class ApiError extends HttpException {
     );
   }
 
-  /** 401 — wrong or expired one-time code. */
-  static otpInvalid(): ApiError {
+  /**
+   * 401 — the phone number and password do not match an active account.
+   *
+   * One message for every cause (`ACC-02`): whether the number exists is not
+   * something an unauthenticated caller gets to learn from the wording.
+   */
+  static invalidCredentials(): ApiError {
     return new ApiError(
-      ApiErrorCode.AUTH_OTP_INVALID,
-      'That code is wrong or has expired.',
+      ApiErrorCode.AUTH_INVALID_CREDENTIALS,
+      'The phone number or password is not correct.',
       HttpStatus.UNAUTHORIZED,
     );
   }
 
-  /** 429 — too many OTP requests for this number. */
-  static otpRateLimited(retryAfterSeconds: number): ApiError {
+  /** 429 — too many failed sign-in attempts for this number or address. */
+  static rateLimited(retryAfterSeconds: number): ApiError {
     return new ApiError(
-      ApiErrorCode.AUTH_OTP_RATE_LIMITED,
-      'Too many codes requested for this number.',
+      ApiErrorCode.AUTH_RATE_LIMITED,
+      'Too many failed sign-in attempts. Try again later.',
       HttpStatus.TOO_MANY_REQUESTS,
       { retry_after_seconds: retryAfterSeconds },
     );

@@ -12,7 +12,7 @@ lib/
   features/
     auth/
       presentation/  // screens, widgets, riverpod providers holding UI state
-      application/   // use-cases: RequestOtp, VerifyOtp, SwitchRole...
+      application/   // use-cases: SignIn, ChangePassword, SwitchRole...
       domain/        // entities + repository interfaces, pure Dart, no deps
       data/          // repository impl, DTOs, Drift tables, API mapping
     children/
@@ -48,8 +48,8 @@ test/
 
 | Path | Screen | Guard |
 |---|---|---|
-| `/login` | Phone entry | none |
-| `/login/otp` | OTP verify | phone pending |
+| `/login` | Phone + password | none |
+| `/more/password` | Change password | authenticated |
 | `/consent` | Privacy + image-rights consent | authenticated, consent not yet given |
 | `/home` | Role-scoped home | authenticated + consented |
 | `/children/:id` | Child profile | parent (own child) or educator (own group) |
