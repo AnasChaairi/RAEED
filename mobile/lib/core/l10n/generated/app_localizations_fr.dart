@@ -78,10 +78,6 @@ class AppL10nFr extends AppL10n {
   String get loginTitle => 'Bienvenue sur RAEED';
 
   @override
-  String get loginSubtitle =>
-      'Saisissez votre numéro de téléphone pour recevoir un code de connexion.';
-
-  @override
   String get loginPhoneLabel => 'Numéro de téléphone';
 
   @override
@@ -91,46 +87,84 @@ class AppL10nFr extends AppL10n {
   String get loginPhoneInvalid => 'Saisissez un numéro de téléphone valide.';
 
   @override
-  String get loginRequestCode => 'Envoyer le code';
-
-  @override
   String get loginNoAccountNotice =>
       'Les comptes sont créés uniquement par l\'administration de l\'académie. Si vous n\'avez pas de compte, contactez-la.';
 
   @override
-  String get otpTitle => 'Code de connexion';
+  String get loginSubtitle =>
+      'Saisissez votre numéro de téléphone et votre mot de passe.';
 
   @override
-  String otpSentTo(String phone) {
-    return 'Nous avons envoyé un code à six chiffres au $phone.';
-  }
+  String get loginPasswordLabel => 'Mot de passe';
 
   @override
-  String get otpCodeLabel => 'Code';
+  String get loginPasswordRule => '6 lettres ou chiffres';
 
   @override
-  String get otpVerify => 'Valider';
+  String get loginPasswordInvalid =>
+      'Le mot de passe fait exactement 6 lettres ou chiffres.';
 
   @override
-  String get otpInvalid => 'Code incorrect ou expiré.';
+  String get loginPasswordShow => 'Afficher le mot de passe';
 
   @override
-  String get otpRateLimited =>
-      'Vous avez demandé trop de codes. Réessayez dans une heure.';
+  String get loginPasswordHide => 'Masquer le mot de passe';
 
   @override
-  String get otpResend => 'Renvoyer le code';
+  String get loginSubmit => 'Se connecter';
 
   @override
-  String otpResendIn(int seconds) {
-    String _temp0 = intl.Intl.pluralLogic(
-      seconds,
-      locale: localeName,
-      other: 'Renvoi possible dans $seconds secondes',
-      one: 'Renvoi possible dans $seconds seconde',
-    );
-    return '$_temp0';
-  }
+  String get loginInvalidCredentials =>
+      'Numéro de téléphone ou mot de passe incorrect.';
+
+  @override
+  String get loginRateLimited =>
+      'Trop de tentatives. Réessayez dans 15 minutes.';
+
+  @override
+  String get morePassword => 'Changer le mot de passe';
+
+  @override
+  String get pwdTitle => 'Changer le mot de passe';
+
+  @override
+  String get pwdIntro =>
+      'Le mot de passe fait 6 lettres ou chiffres. Saisissez l\'actuel puis le nouveau deux fois.';
+
+  @override
+  String get pwdCurrent => 'Mot de passe actuel';
+
+  @override
+  String get pwdNew => 'Nouveau mot de passe';
+
+  @override
+  String get pwdConfirm => 'Confirmer le nouveau mot de passe';
+
+  @override
+  String get pwdMismatch => 'Les deux mots de passe ne correspondent pas.';
+
+  @override
+  String get pwdWrongCurrent => 'Le mot de passe actuel est incorrect.';
+
+  @override
+  String get pwdSave => 'Enregistrer';
+
+  @override
+  String get pwdSavedToast => 'Mot de passe modifié';
+
+  @override
+  String get handoverTitle => 'Mots de passe provisoires';
+
+  @override
+  String get handoverIntro =>
+      'Remettez-les au parent en personne. Ils ne s\'affichent qu\'une fois et ne sont pas envoyés.';
+
+  @override
+  String get handoverExisting =>
+      'Compte déjà existant — son mot de passe n\'a pas changé.';
+
+  @override
+  String get handoverDone => 'Remis';
 
   @override
   String get consentTitle => 'Confidentialité et droit à l\'image';
@@ -495,9 +529,6 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get brandTagline => 'Vertueux pour lui-même, bienfaisant pour autrui';
-
-  @override
-  String get otpEnterCode => 'Saisissez le code';
 
   @override
   String consentStepOf(int current, int total) {

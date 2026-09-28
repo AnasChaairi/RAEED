@@ -16,11 +16,10 @@ import 'package:raeed/features/auth/domain/auth_repository.dart';
 import 'package:raeed/features/auth/domain/consent.dart';
 import 'package:raeed/features/auth/domain/consent_repository.dart';
 import 'package:raeed/features/auth/domain/moroccan_phone_number.dart';
-import 'package:raeed/features/auth/domain/otp_policy.dart';
 import 'package:raeed/features/auth/presentation/auth_providers.dart';
+import 'package:raeed/features/auth/presentation/change_password_screen.dart';
 import 'package:raeed/features/auth/presentation/consent_screen.dart';
 import 'package:raeed/features/auth/presentation/login_screen.dart';
-import 'package:raeed/features/auth/presentation/otp_screen.dart';
 
 class _MockAuthRepository extends Mock implements AuthRepository {}
 
@@ -97,62 +96,139 @@ void main() {
   }
 
   group('LoginScreen', () {
+    Future<void> fill(
+      WidgetTester tester,
+      String phone,
+      String password,
+    ) async {
+      await tester.enterText(find.byKey(const Key('login-phone')), phone);
+      await tester.enterText(find.byKey(const Key('login-password')), password);
+    }
+
     testWidgets('rejects an invalid number without calling the server', (
       tester,
     ) async {
       final container = buildContainer();
       await pumpScreen(tester, container, const LoginScreen());
 
-      await tester.enterText(find.byType(TextField), '0512345678');
-      await tester.tap(find.byType(FilledButton));
+      await fill(tester, '0512345678', 'raeed1');
+      await tester.tap(find.byKey(const Key('login-submit')));
       await tester.pump();
 
       final l10n = AppL10n.of(tester.element(find.byType(LoginScreen)));
       expect(find.text(l10n.loginPhoneInvalid), findsOneWidget);
-      verifyNever(() => auth.requestOtp(any()));
+      verifyNever(
+        () => auth.signIn(
+          phone: any(named: 'phone'),
+          password: any(named: 'password'),
+        ),
+      );
     });
 
-    testWidgets('accepts a valid number and requests a code', (tester) async {
+    testWidgets('rejects an ill-shaped password without calling the server', (
+      tester,
+    ) async {
       final container = buildContainer();
-      when(() => auth.requestOtp(any())).thenAnswer(
-        (invocation) async => OtpRequestReceipt(
-          phone: invocation.positionalArguments.first as MoroccanPhoneNumber,
-          requestedAt: DateTime.now(),
-          requestsMade: 1,
+      await pumpScreen(tester, container, const LoginScreen());
+
+      await fill(tester, '0612345678', 'abc');
+      await tester.tap(find.byKey(const Key('login-submit')));
+      await tester.pump();
+
+      final l10n = AppL10n.of(tester.element(find.byType(LoginScreen)));
+      expect(find.text(l10n.loginPasswordInvalid), findsOneWidget);
+      verifyNever(
+        () => auth.signIn(
+          phone: any(named: 'phone'),
+          password: any(named: 'password'),
+        ),
+      );
+    });
+
+    testWidgets('signs in with the E.164 number and the password', (
+      tester,
+    ) async {
+      final container = buildContainer();
+      when(
+        () => auth.signIn(
+          phone: any(named: 'phone'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer(
+        (_) async => const SessionUser(
+          id: 'u1',
+          roles: {RaeedRole.parent},
+          displayName: 'سعاد',
         ),
       );
 
       await pumpScreen(tester, container, const LoginScreen());
-      await tester.enterText(find.byType(TextField), '0612345678');
-      await tester.tap(find.byType(FilledButton));
+      await fill(tester, '0612345678', 'raeed1');
+      await tester.tap(find.byKey(const Key('login-submit')));
       await tester.pump();
       await tester.pumpAndSettle();
 
-      final captured =
-          verify(() => auth.requestOtp(captureAny())).captured.single
-              as MoroccanPhoneNumber;
-      expect(captured.e164, '+212612345678');
-      expect(container.read(pendingOtpProvider), isNotNull);
+      final captured = verify(
+        () => auth.signIn(
+          phone: captureAny(named: 'phone'),
+          password: captureAny(named: 'password'),
+        ),
+      ).captured;
+      expect((captured[0] as MoroccanPhoneNumber).e164, '+212612345678');
+      expect(captured[1], 'raeed1');
+      expect(container.read(sessionControllerProvider).isAuthenticated, isTrue);
     });
 
-    testWidgets('surfaces a rate limit without leaving the screen', (
+    testWidgets('a wrong password stays on the screen with the message', (
       tester,
     ) async {
       final container = buildContainer();
-      when(() => auth.requestOtp(any())).thenThrow(
+      when(
+        () => auth.signIn(
+          phone: any(named: 'phone'),
+          password: any(named: 'password'),
+        ),
+      ).thenThrow(
         const ApiException(
-          code: ApiErrorCode.authOtpRateLimited,
+          code: ApiErrorCode.authInvalidCredentials,
+          message: 'Wrong.',
+        ),
+      );
+
+      await pumpScreen(tester, container, const LoginScreen());
+      await fill(tester, '0612345678', 'raeed2');
+      await tester.tap(find.byKey(const Key('login-submit')));
+      await tester.pumpAndSettle();
+
+      final l10n = AppL10n.of(tester.element(find.byType(LoginScreen)));
+      expect(find.text(l10n.loginInvalidCredentials), findsOneWidget);
+      expect(find.byType(LoginScreen), findsOneWidget);
+      expect(container.read(sessionControllerProvider).user, isNull);
+    });
+
+    testWidgets('surfaces a lock-out without leaving the screen', (
+      tester,
+    ) async {
+      final container = buildContainer();
+      when(
+        () => auth.signIn(
+          phone: any(named: 'phone'),
+          password: any(named: 'password'),
+        ),
+      ).thenThrow(
+        const ApiException(
+          code: ApiErrorCode.authRateLimited,
           message: 'Too many.',
         ),
       );
 
       await pumpScreen(tester, container, const LoginScreen());
-      await tester.enterText(find.byType(TextField), '0612345678');
-      await tester.tap(find.byType(FilledButton));
+      await fill(tester, '0612345678', 'raeed1');
+      await tester.tap(find.byKey(const Key('login-submit')));
       await tester.pumpAndSettle();
 
       final l10n = AppL10n.of(tester.element(find.byType(LoginScreen)));
-      expect(find.text(l10n.otpRateLimited), findsOneWidget);
+      expect(find.text(l10n.loginRateLimited), findsOneWidget);
       expect(find.byType(LoginScreen), findsOneWidget);
     });
 
@@ -169,123 +245,88 @@ void main() {
     });
   });
 
-  group('OtpScreen', () {
-    /// Seeds a pending request so the screen has something to verify against.
-    void seedPending(ProviderContainer container) {
-      container
-          .read(pendingOtpProvider.notifier)
-          .begin(
-            OtpRequestReceipt(
-              phone: MoroccanPhoneNumber.tryParse('0612345678')!,
-              requestedAt: DateTime.now(),
-              requestsMade: 1,
-            ),
-          );
+  group('ChangePasswordScreen', () {
+    Future<void> fill(
+      WidgetTester tester, {
+      required String current,
+      required String next,
+      required String confirm,
+    }) async {
+      await tester.enterText(find.byKey(const Key('pwd-current')), current);
+      await tester.enterText(find.byKey(const Key('pwd-new')), next);
+      await tester.enterText(find.byKey(const Key('pwd-confirm')), confirm);
     }
 
-    testWidgets('shows the number masked, never in full', (tester) async {
-      final container = buildContainer();
-      seedPending(container);
-      await pumpScreen(tester, container, const OtpScreen());
-
-      expect(find.textContaining('•'), findsWidgets);
-      expect(
-        find.textContaining('612345678'),
-        findsNothing,
-        reason: 'the full number must never be rendered',
-      );
-    });
-
-    testWidgets('verifies automatically once the last digit lands', (
+    testWidgets('refuses a mismatch without calling the server', (
       tester,
     ) async {
       final container = buildContainer();
-      seedPending(container);
-      when(
-        () => auth.verifyOtp(
-          phone: any(named: 'phone'),
-          code: any(named: 'code'),
-        ),
-      ).thenAnswer(
-        (_) async => const SessionUser(
-          id: 'user-1',
-          roles: {RaeedRole.parent},
-          displayName: 'Test',
-        ),
-      );
+      await pumpScreen(tester, container, const ChangePasswordScreen());
 
-      await pumpScreen(tester, container, const OtpScreen());
-      await tester.enterText(find.byType(TextField), '123456');
-      await tester.pumpAndSettle();
-
-      verify(
-        () => auth.verifyOtp(
-          phone: any(named: 'phone'),
-          code: '123456',
-        ),
-      ).called(1);
-    });
-
-    testWidgets('does not submit a partial code', (tester) async {
-      final container = buildContainer();
-      seedPending(container);
-
-      await pumpScreen(tester, container, const OtpScreen());
-      await tester.enterText(find.byType(TextField), '12345');
+      await fill(tester, current: 'raeed1', next: 'new123', confirm: 'new124');
+      await tester.tap(find.byKey(const Key('pwd-submit')));
       await tester.pump();
 
+      final l10n = AppL10n.of(
+        tester.element(find.byType(ChangePasswordScreen)),
+      );
+      expect(find.text(l10n.pwdMismatch), findsOneWidget);
       verifyNever(
-        () => auth.verifyOtp(
-          phone: any(named: 'phone'),
-          code: any(named: 'code'),
+        () => auth.changePassword(
+          currentPassword: any(named: 'currentPassword'),
+          newPassword: any(named: 'newPassword'),
         ),
       );
     });
 
-    testWidgets('clears the field and shows an error on a wrong code', (
+    testWidgets('a wrong current password is shown under that field', (
       tester,
     ) async {
       final container = buildContainer();
-      seedPending(container);
       when(
-        () => auth.verifyOtp(
-          phone: any(named: 'phone'),
-          code: any(named: 'code'),
+        () => auth.changePassword(
+          currentPassword: any(named: 'currentPassword'),
+          newPassword: any(named: 'newPassword'),
         ),
       ).thenThrow(
         const ApiException(
-          code: ApiErrorCode.authOtpInvalid,
+          code: ApiErrorCode.authInvalidCredentials,
           message: 'Wrong.',
         ),
       );
+      await pumpScreen(tester, container, const ChangePasswordScreen());
 
-      await pumpScreen(tester, container, const OtpScreen());
-      await tester.enterText(find.byType(TextField), '000000');
+      await fill(tester, current: 'wrong1', next: 'new123', confirm: 'new123');
+      await tester.tap(find.byKey(const Key('pwd-submit')));
       await tester.pumpAndSettle();
 
-      final l10n = AppL10n.of(tester.element(find.byType(OtpScreen)));
-      expect(find.text(l10n.otpInvalid), findsOneWidget);
-      expect(
-        tester.widget<TextField>(find.byType(TextField)).controller!.text,
-        isEmpty,
-        reason: 'the field clears so the next attempt starts fresh',
+      final l10n = AppL10n.of(
+        tester.element(find.byType(ChangePasswordScreen)),
       );
+      expect(find.text(l10n.pwdWrongCurrent), findsOneWidget);
+      expect(find.byType(ChangePasswordScreen), findsOneWidget);
     });
 
-    testWidgets('disables resend during the cooldown', (tester) async {
+    testWidgets('sends the current and the new password', (tester) async {
       final container = buildContainer();
-      seedPending(container);
-      await pumpScreen(tester, container, const OtpScreen());
-      await tester.pump(const Duration(milliseconds: 100));
+      when(
+        () => auth.changePassword(
+          currentPassword: any(named: 'currentPassword'),
+          newPassword: any(named: 'newPassword'),
+        ),
+      ).thenAnswer((_) async {});
+      await pumpScreen(tester, container, const ChangePasswordScreen());
 
-      final resend = tester.widget<TextButton>(find.byType(TextButton));
-      expect(
-        resend.onPressed,
-        isNull,
-        reason:
-            'with only ${OtpPolicy.maxRequestsPerHour} requests an hour, a '
-            'double tap should not spend two of them',
-      );
+      await fill(tester, current: 'raeed1', next: 'new123', confirm: 'new123');
+      await tester.tap(find.byKey(const Key('pwd-submit')));
+      await tester.pump();
+
+      verify(
+        () => auth.changePassword(
+          currentPassword: 'raeed1',
+          newPassword: 'new123',
+        ),
+      ).called(1);
     });
   });
 

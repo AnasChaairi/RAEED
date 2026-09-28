@@ -16,7 +16,7 @@ AppEnvironment appEnvironment(Ref ref) => AppEnvironment.fromDartDefines();
 
 /// A client with **no** auth interceptor.
 ///
-/// `/auth/otp/request`, `/auth/otp/verify` and `/auth/refresh` are
+/// `/auth/login` and `/auth/refresh` are
 /// `security: []` in `specs/04-api/openapi.yaml`. Refreshing through the
 /// interceptor whose whole job is to trigger refreshes would recurse, so the
 /// refresh call in particular must go out on a client that cannot intercept

@@ -15,9 +15,9 @@ abstract final class AppRoutes {
   static const String login = '/login';
   static const String loginName = 'login';
 
-  /// OTP verification. Reachable only with a phone request pending.
-  static const String otp = '/login/otp';
-  static const String otpName = 'otp';
+  /// Change the signed-in user's password. Nested under `/more`.
+  static const String changePassword = '/more/password';
+  static const String changePasswordName = 'changePassword';
 
   // --- Consent gate --------------------------------------------------------
 

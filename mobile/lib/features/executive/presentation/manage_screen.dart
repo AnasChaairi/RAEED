@@ -17,6 +17,7 @@ import 'widgets/executive_card.dart';
 import 'widgets/executive_confirm_sheet.dart';
 import 'widgets/executive_empty_state.dart';
 import 'widgets/executive_skeletons.dart';
+import 'widgets/password_handover_dialog.dart';
 import 'widgets/section_header.dart';
 import 'widgets/tone_chip.dart';
 
@@ -797,14 +798,25 @@ class FamilyCard extends ConsumerWidget {
       (g) => g.account == AccountStatus.pending,
     );
     try {
+      final credentials = <GuardianCredential>[];
       for (final guardian in pending) {
-        await ref
+        final password = await ref
             .read(familiesRepositoryProvider)
             .resendInvitation(guardian.id);
+        credentials.add(
+          GuardianCredential(
+            id: guardian.id,
+            displayName: guardian.displayName,
+            password: password,
+          ),
+        );
       }
       messenger.showSnackBar(
         SnackBar(content: Text('${l10n.familyResentToast} · ⦿')),
       );
+      if (context.mounted && credentials.isNotEmpty) {
+        await showPasswordHandover(context, guardians: credentials);
+      }
     } catch (error) {
       messenger.showSnackBar(
         SnackBar(content: Text(presentFailure(error, l10n).body)),

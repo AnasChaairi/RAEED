@@ -9,7 +9,8 @@ abstract interface class FamiliesRepository {
   Future<FamilyCreated> createFamily(FamilyDraft draft);
 
   /// Re-sends the sign-in invitation; recorded.
-  Future<void> resendInvitation(String guardianId);
+  /// Issues [guardianId] a fresh password and returns it, once.
+  Future<String> resendInvitation(String guardianId);
 
   Future<List<Educator>> fetchEducators();
 

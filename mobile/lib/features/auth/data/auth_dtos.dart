@@ -47,7 +47,7 @@ SessionUser sessionUserFromJson(Map<String, Object?> json) {
   );
 }
 
-/// Decodes the token pair returned by `/auth/otp/verify` and `/auth/refresh`.
+/// Decodes the token pair returned by `/auth/login` and `/auth/refresh`.
 AuthTokens authTokensFromJson(Map<String, Object?> json) => AuthTokens(
   accessToken: requireField<String>(json, 'access_token'),
   refreshToken: requireField<String>(json, 'refresh_token'),

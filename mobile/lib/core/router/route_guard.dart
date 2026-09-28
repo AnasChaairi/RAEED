@@ -17,7 +17,7 @@ import '../session/app_session.dart';
 import 'app_routes.dart';
 
 /// Routes reachable while signed out.
-const Set<String> _publicRoutes = {AppRoutes.login, AppRoutes.otp};
+const Set<String> _publicRoutes = {AppRoutes.login};
 
 /// Decides where a navigation to [location] should actually land.
 ///
@@ -34,7 +34,6 @@ const Set<String> _publicRoutes = {AppRoutes.login, AppRoutes.otp};
 String? resolveRedirect({
   required AppSession session,
   required String location,
-  bool hasPendingOtpRequest = false,
 }) {
   final path = _normalise(location);
 
@@ -44,9 +43,6 @@ String? resolveRedirect({
   // 2. Authentication.
   if (!session.isAuthenticated) {
     if (!_publicRoutes.contains(path)) return AppRoutes.login;
-    // The OTP screen without a pending request has no phone number to verify
-    // against, so it would be a dead end.
-    if (path == AppRoutes.otp && !hasPendingOtpRequest) return AppRoutes.login;
     return null;
   }
 

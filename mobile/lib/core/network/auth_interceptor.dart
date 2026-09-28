@@ -61,11 +61,7 @@ class AuthInterceptor extends Interceptor {
 
   /// Endpoints that must never carry a bearer token, per
   /// `specs/04-api/conventions.md`.
-  static const Set<String> _anonymousPaths = {
-    '/auth/otp/request',
-    '/auth/otp/verify',
-    '/auth/refresh',
-  };
+  static const Set<String> _anonymousPaths = {'/auth/login', '/auth/refresh'};
 
   @override
   Future<void> onRequest(

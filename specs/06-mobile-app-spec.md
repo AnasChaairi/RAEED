@@ -66,6 +66,31 @@ test/
 
 Full loading/empty/error/success breakdown for the five screens with the most business logic — use this template for every new screen as it's built; don't skip straight to code.
 
+### Sign in (`/login`) — RAEED-2
+
+| | |
+|---|---|
+| Purpose | Get a guardian, educator or executive into their surface with what the association handed them: a phone number and a six-character password |
+| Entry points | Cold start with no session; sign-out; a refresh token that no longer rotates |
+| Components | Phone field with the fixed `+212` prefix; password field (6 letters or digits, show/hide toggle); one "دخول" button; the "accounts are created by the association" notice. No sign-up link, no "forgot password" link — both are deliberate (`ACC-02`) |
+| User actions | Type, submit. A number or password that cannot be right is refused on the device without a request, so a server attempt is never spent on a typo |
+| API | `POST /auth/login`, then `GET /auth/me` |
+| Loading | Spinner inside the button; fields disabled |
+| Error | `auth.invalid_credentials` → one line above the form, the form stays, both fields keep their values; `auth.rate_limited` → the lock-out message; offline → the network message. The wording never says whether the number exists |
+| Success | The session controller announces the user and the router moves on to `/consent` or the role's home; the screen itself navigates nowhere |
+
+### Change password (`/more/password`) — RAEED-2
+
+| | |
+|---|---|
+| Purpose | Let anyone replace the password the association handed them with one of their own |
+| Entry points | More → "تغيير كلمة المرور", on every role's More screen |
+| Components | Current password, new password, confirmation; one show/hide toggle for all three; the six-character rule as helper text |
+| User actions | Fill, save. Mismatched confirmation and ill-shaped values are refused on the device |
+| API | `PATCH /auth/me/password` |
+| Error | A wrong current password shows under that field, the form stays; anything else is a snackbar |
+| Success | Toast, back to More. The session is untouched — other devices stay signed in until revoked (`ACC-07`) |
+
 ### Parent Home (`/home`, parent role)
 
 | | |

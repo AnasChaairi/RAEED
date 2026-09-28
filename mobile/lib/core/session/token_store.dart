@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 
 import '../error/raeed_exception.dart';
 
-/// A token pair as issued by `POST /auth/otp/verify` and rotated by
+/// A token pair as issued by `POST /auth/login` and rotated by
 /// `POST /auth/refresh`.
 @immutable
 class AuthTokens {

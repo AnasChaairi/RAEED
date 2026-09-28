@@ -14,6 +14,7 @@ import 'executive_providers.dart';
 import 'manage_screen.dart' show ManageTab;
 import 'relative_time.dart';
 import 'widgets/executive_card.dart';
+import 'widgets/password_handover_dialog.dart';
 import 'widgets/section_header.dart';
 import 'widgets/tone_chip.dart';
 
@@ -63,6 +64,11 @@ class _NewFamilyScreenState extends ConsumerState<NewFamilyScreen> {
           content: Text('${l10n.familyCreatedToast(created.invitations)} · ⦿'),
         ),
       );
+      // The first passwords are shown once, here, before the wizard is
+      // gone — there is no other way for the guardian to get them.
+      if (mounted && created.guardians.any((g) => g.password != null)) {
+        await showPasswordHandover(context, guardians: created.guardians);
+      }
       router.go(AppRoutes.manageTabPath(ManageTab.families.slug));
     } catch (error) {
       if (mounted) {

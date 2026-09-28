@@ -210,8 +210,9 @@ class ApiClient {
   /// Parses the uniform error envelope every failure carries.
   ///
   /// A `401` becomes [UnauthenticatedException] so the session layer can end
-  /// the session, except for `auth.otp_invalid`, which is a normal, expected
-  /// outcome of the login form and must stay on the OTP screen.
+  /// the session, except for `auth.invalid_credentials`, which is a normal,
+  /// expected outcome of the login and change-password forms and must stay
+  /// on the screen that produced it.
   RaeedException _fromErrorEnvelope(Response<Object?> response) {
     final status = response.statusCode ?? 0;
     final body = response.data;
@@ -230,7 +231,7 @@ class ApiClient {
       }
     }
 
-    if (status == 401 && code != ApiErrorCode.authOtpInvalid) {
+    if (status == 401 && code != ApiErrorCode.authInvalidCredentials) {
       return UnauthenticatedException(message: message);
     }
 

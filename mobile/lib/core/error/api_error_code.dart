@@ -13,11 +13,13 @@ library;
 
 /// A code from the API's error catalog.
 enum ApiErrorCode {
-  /// `auth.otp_invalid` — wrong or expired one-time code (401).
-  authOtpInvalid('auth.otp_invalid'),
+  /// `auth.invalid_credentials` — the phone number and password do not match
+  /// an active account, or the current password on a change is wrong (401).
+  authInvalidCredentials('auth.invalid_credentials'),
 
-  /// `auth.otp_rate_limited` — too many OTP requests for this number (429).
-  authOtpRateLimited('auth.otp_rate_limited'),
+  /// `auth.rate_limited` — too many failed sign-in attempts for this number
+  /// or address (429); `details.retry_after_seconds`.
+  authRateLimited('auth.rate_limited'),
 
   /// `scope.forbidden` — authenticated, but the resource is outside the
   /// caller's ability scope (403).

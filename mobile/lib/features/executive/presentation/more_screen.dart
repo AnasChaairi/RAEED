@@ -266,6 +266,15 @@ class MoreScreen extends ConsumerWidget {
             ExecutiveCard(
               padding: EdgeInsets.zero,
               child: _LinkRow(
+                icon: Icons.password_rounded,
+                label: l10n.morePassword,
+                onTap: () => context.push(AppRoutes.changePassword),
+              ),
+            ),
+            const SizedBox(height: RaeedSpacing.sm + 2),
+            ExecutiveCard(
+              padding: EdgeInsets.zero,
+              child: _LinkRow(
                 icon: Icons.logout_rounded,
                 label: l10n.moreSignOut,
                 destructive: true,

@@ -5,14 +5,13 @@ import '../../../core/session/app_session.dart';
 import '../../../core/session/token_store.dart';
 import '../domain/auth_repository.dart';
 import '../domain/moroccan_phone_number.dart';
-import '../domain/otp_policy.dart';
 import 'auth_dtos.dart';
 
 /// The [AuthRepository] against the contract in `specs/04-api/openapi.yaml`.
 ///
 /// Takes **two** clients, and the split is the point:
 ///
-/// * [_anonymous] has no [AuthInterceptor]. `/auth/otp/*` and `/auth/refresh`
+/// * [_anonymous] has no [AuthInterceptor]. `/auth/login` and `/auth/refresh`
 ///   are `security: []` in the contract, and refreshing through an
 ///   interceptor whose job is to trigger refreshes would recurse.
 /// * [_authenticated] carries the interceptor and is used for `/auth/me` and
@@ -24,12 +23,10 @@ class ApiAuthRepository implements AuthRepository {
     required ApiClient authenticated,
     required TokenStore tokenStore,
     required AuthTokenRefresher refresher,
-    DateTime Function() clock = DateTime.now,
   }) : _anonymous = anonymous,
        _authenticated = authenticated,
        _tokenStore = tokenStore,
-       _refresher = refresher,
-       _clock = clock;
+       _refresher = refresher;
 
   final ApiClient _anonymous;
   final ApiClient _authenticated;
@@ -38,30 +35,19 @@ class ApiAuthRepository implements AuthRepository {
   /// The same rotation the interceptor uses, so an explicit refresh and an
   /// automatic one cannot drift apart.
   final AuthTokenRefresher _refresher;
-  final DateTime Function() _clock;
 
   @override
-  Future<OtpRequestReceipt> requestOtp(MoroccanPhoneNumber phone) async {
-    // The E.164 number is in the body and nowhere else — not a query string,
-    // not a path segment, both of which end up in server access logs.
-    await _anonymous.post('/auth/otp/request', body: {'phone': phone.e164});
-
-    return OtpRequestReceipt(
-      phone: phone,
-      requestedAt: _clock(),
-      requestsMade: 1,
-    );
-  }
-
-  @override
-  Future<SessionUser> verifyOtp({
+  Future<SessionUser> signIn({
     required MoroccanPhoneNumber phone,
-    required String code,
+    required String password,
   }) async {
     final deviceId = await _tokenStore.deviceId();
+    // The number and the password are in the body and nowhere else — not a
+    // query string, not a path segment, both of which end up in server
+    // access logs.
     final response = await _anonymous.post(
-      '/auth/otp/verify',
-      body: {'phone': phone.e164, 'code': code, 'device_id': deviceId},
+      '/auth/login',
+      body: {'phone': phone.e164, 'password': password, 'device_id': deviceId},
     );
 
     // Persist before anything else can observe the session: the very next call
@@ -81,6 +67,15 @@ class ApiAuthRepository implements AuthRepository {
     }
     return user;
   }
+
+  @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) => _authenticated.patch(
+    '/auth/me/password',
+    body: {'current_password': currentPassword, 'new_password': newPassword},
+  );
 
   @override
   Future<bool> refreshSession() async {

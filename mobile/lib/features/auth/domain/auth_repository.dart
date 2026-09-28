@@ -1,6 +1,5 @@
 import '../../../core/session/app_session.dart';
 import 'moroccan_phone_number.dart';
-import 'otp_policy.dart';
 
 /// Everything the auth feature needs from the outside world.
 ///
@@ -13,26 +12,33 @@ import 'otp_policy.dart';
 ///
 /// Every method throws a `RaeedException` subtype and nothing else:
 /// `NetworkException` when the device cannot reach the server,
-/// `ApiException(code: auth.otp_invalid | auth.otp_rate_limited)` for the two
-/// outcomes the login flow treats as normal, `UnauthenticatedException` when a
-/// session has ended.
+/// `ApiException(code: auth.invalid_credentials | auth.rate_limited)` for the
+/// two outcomes the login flow treats as normal, `UnauthenticatedException`
+/// when a session has ended.
 abstract interface class AuthRepository {
-  /// Asks the server to send a one-time code to [phone].
-  ///
-  /// Throws `ApiException(code: auth.otp_rate_limited)` when the number has
-  /// spent its hourly budget (`specs/10-security-and-privacy.md`).
-  Future<OtpRequestReceipt> requestOtp(MoroccanPhoneNumber phone);
-
-  /// Exchanges a code for a session, persisting the issued tokens.
+  /// Exchanges a phone number and password for a session, persisting the
+  /// issued tokens.
   ///
   /// Returns the signed-in user, ready to hand to
   /// `SessionController.onSignedIn`. Throws
-  /// `ApiException(code: auth.otp_invalid)` for a wrong or expired code —
-  /// which is an expected outcome, not an error state: the OTP screen stays
-  /// put and shows it inline.
-  Future<SessionUser> verifyOtp({
+  /// `ApiException(code: auth.invalid_credentials)` when the pair does not
+  /// match an active account — an expected outcome, not an error state: the
+  /// login screen stays put and shows it inline — and
+  /// `ApiException(code: auth.rate_limited)` when the number is locked after
+  /// too many failures (`specs/10-security-and-privacy.md`).
+  Future<SessionUser> signIn({
     required MoroccanPhoneNumber phone,
-    required String code,
+    required String password,
+  });
+
+  /// Replaces the signed-in user's password, after the server has checked
+  /// [currentPassword].
+  ///
+  /// Throws `ApiException(code: auth.invalid_credentials)` when the current
+  /// password is wrong — shown inline, the session is untouched.
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
   });
 
   /// Rotates the stored refresh token and persists the new pair.

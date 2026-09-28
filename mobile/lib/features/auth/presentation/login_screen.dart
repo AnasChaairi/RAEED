@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/generated/app_localizations.dart';
-import '../../../core/router/app_routes.dart';
 import '../../../core/theme/design_tokens.gen.dart';
 import '../../../core/theme/raeed_theme.dart';
 import '../domain/moroccan_phone_number.dart';
+import '../domain/password_policy.dart';
 import 'auth_providers.dart';
 import 'auth_scaffold.dart';
 
-/// Phone entry — the entire sign-in form (`RAEED-2`).
+/// Phone number and password — the entire sign-in form (`RAEED-2`).
 ///
-/// There is no password field and no "create account" link, and both absences
-/// are deliberate. RAEED has no passwords at all
-/// (`specs/10-security-and-privacy.md`), and registration is Executive/Admin
-/// only (`ACC-02`) — there is no public sign-up endpoint to link to. A family
-/// who cannot sign in needs the association, not a form, so the screen says so
-/// plainly instead of leaving them hunting for a button that does not exist.
+/// There is no "create account" link and no "forgot password" link, and both
+/// absences are deliberate. Registration is Executive/Admin only (`ACC-02`),
+/// and a password is handed over by the association in person — so a family
+/// who cannot sign in needs the association, not a form, and the screen says
+/// so plainly instead of leaving them hunting for a button that does not
+/// exist.
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
@@ -28,32 +27,40 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final FocusNode _phoneFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
 
-  /// Set once the user has tried to submit, so the field does not turn red
+  /// Set once the user has tried to submit, so the fields do not turn red
   /// while they are still typing the first three digits.
   bool _showValidation = false;
   bool _isSubmitting = false;
+  bool _revealPassword = false;
   Object? _error;
 
   @override
   void initState() {
     super.initState();
-    _phoneController.addListener(_onPhoneChanged);
+    _phoneController.addListener(_onEdited);
+    _passwordController.addListener(_onEdited);
   }
 
   @override
   void dispose() {
     _phoneController
-      ..removeListener(_onPhoneChanged)
+      ..removeListener(_onEdited)
+      ..dispose();
+    _passwordController
+      ..removeListener(_onEdited)
       ..dispose();
     _phoneFocus.dispose();
+    _passwordFocus.dispose();
     super.dispose();
   }
 
-  void _onPhoneChanged() {
-    // Clearing the error as soon as they edit keeps a stale "invalid number"
-    // from sitting under a number they have since corrected.
+  void _onEdited() {
+    // Clearing the error as soon as they edit keeps a stale "not correct"
+    // from sitting under a value they have since corrected.
     if (_error != null || _showValidation) {
       setState(() {
         _error = null;
@@ -62,18 +69,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  String? get _validationError {
+  String? get _phoneValidationError {
     if (!_showValidation) return null;
     return MoroccanPhoneNumber.isValid(_phoneController.text)
         ? null
         : AppL10n.of(context).loginPhoneInvalid;
   }
 
+  String? get _passwordValidationError {
+    if (!_showValidation) return null;
+    return PasswordPolicy.isWellFormed(_passwordController.text)
+        ? null
+        : AppL10n.of(context).loginPasswordInvalid;
+  }
+
   Future<void> _submit() async {
     final phone = MoroccanPhoneNumber.tryParse(_phoneController.text);
-    if (phone == null) {
+    final password = _passwordController.text;
+    if (phone == null || !PasswordPolicy.isWellFormed(password)) {
       setState(() => _showValidation = true);
-      _phoneFocus.requestFocus();
+      (phone == null ? _phoneFocus : _passwordFocus).requestFocus();
       return;
     }
 
@@ -83,10 +98,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     try {
-      final receipt = await ref.read(requestOtpProvider)(phone);
-      if (!mounted) return;
-      ref.read(pendingOtpProvider.notifier).begin(receipt);
-      context.go(AppRoutes.otp);
+      await ref.read(signInProvider)(phone: phone, password: password);
+      // The router moves on by itself once the session controller announces
+      // the signed-in user; nothing to navigate to here.
     } on Object catch (error) {
       if (!mounted) return;
       setState(() => _error = error);
@@ -107,12 +121,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       error: _error,
       children: [
         TextField(
+          key: const Key('login-phone'),
           controller: _phoneController,
           focusNode: _phoneFocus,
           autofocus: true,
           keyboardType: TextInputType.phone,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) => _isSubmitting ? null : _submit(),
+          textInputAction: TextInputAction.next,
+          onSubmitted: (_) => _passwordFocus.requestFocus(),
           enabled: !_isSubmitting,
           // A phone number reads left-to-right even inside an Arabic layout:
           // the country code belongs at the start of the number, not at the
@@ -128,17 +143,57 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             labelText: l10n.loginPhoneLabel,
             hintText: l10n.loginPhoneHint,
             hintTextDirection: TextDirection.ltr,
-            errorText: _validationError,
+            errorText: _phoneValidationError,
             prefixIcon: const _CountryCodePrefix(),
             prefixIconConstraints: const BoxConstraints(),
           ),
         ),
+        const SizedBox(height: RaeedSpacing.lg),
+        TextField(
+          key: const Key('login-password'),
+          controller: _passwordController,
+          focusNode: _passwordFocus,
+          obscureText: !_revealPassword,
+          keyboardType: TextInputType.visiblePassword,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) => _isSubmitting ? null : _submit(),
+          enabled: !_isSubmitting,
+          // Six letters or digits read left-to-right like the number does.
+          textDirection: TextDirection.ltr,
+          textAlign: context.isRtl ? TextAlign.end : TextAlign.start,
+          autofillHints: const [AutofillHints.password],
+          autocorrect: false,
+          enableSuggestions: false,
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(PasswordPolicy.length),
+          ],
+          style: context.type.body.copyWith(color: palette.ink),
+          decoration: InputDecoration(
+            labelText: l10n.loginPasswordLabel,
+            helperText: l10n.loginPasswordRule,
+            errorText: _passwordValidationError,
+            suffixIcon: IconButton(
+              tooltip: _revealPassword
+                  ? l10n.loginPasswordHide
+                  : l10n.loginPasswordShow,
+              onPressed: () =>
+                  setState(() => _revealPassword = !_revealPassword),
+              icon: Icon(
+                _revealPassword
+                    ? Icons.visibility_off_outlined
+                    : Icons.visibility_outlined,
+                color: palette.inkDim,
+              ),
+            ),
+          ),
+        ),
         const SizedBox(height: RaeedSpacing.xl2),
         FilledButton(
+          key: const Key('login-submit'),
           onPressed: _isSubmitting ? null : _submit,
           child: _isSubmitting
               ? const _ButtonSpinner()
-              : Text(l10n.loginRequestCode),
+              : Text(l10n.loginSubmit),
         ),
         const SizedBox(height: RaeedSpacing.xl2),
         _AccountNotice(message: l10n.loginNoAccountNotice),
@@ -231,7 +286,8 @@ class _ButtonSpinner extends StatelessWidget {
   );
 }
 
-/// Exposed for the OTP screen, which shares the same in-button spinner.
+/// Exposed for the change-password screen, which shares the same in-button
+/// spinner.
 class AuthButtonSpinner extends StatelessWidget {
   const AuthButtonSpinner({super.key});
 
