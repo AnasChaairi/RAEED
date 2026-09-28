@@ -149,8 +149,10 @@ async function seed(): Promise<void> {
         `insert into role_assignment (user_id, role) values ($1, 'educator'), ($1, 'parent')`,
         [educatorId],
       );
+      // The executive is the admin as well: one إداري runs the association,
+      // so the account holds both levels and the admin-only sections open.
       await tx.query(
-        `insert into role_assignment (user_id, role) values ($1, 'executive')`,
+        `insert into role_assignment (user_id, role) values ($1, 'executive'), ($1, 'admin')`,
         [executiveId],
       );
 
@@ -454,7 +456,7 @@ async function seed(): Promise<void> {
           '  Parent     +212600000001   (2 children: آدم, مريم, عمر)',
           '  Educator   +212600000002   (leads الأشبال أ and الزهرات أ, also a parent)',
           '  Educator   +212600000005   (co-educator on الأشبال أ)',
-          '  Executive  +212600000003',
+          '  Executive  +212600000003   (also admin)',
           '',
           '  Sign in with any of these numbers — the OTP is printed to the',
           '  API log, because no SMS provider is configured locally.',
