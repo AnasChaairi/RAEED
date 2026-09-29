@@ -54,6 +54,17 @@ class AppL10nAr extends AppL10n {
       'لا تملك صلاحية الاطلاع على هذا المحتوى. تواصل مع إدارة الأكاديمية إن كنت ترى أن هذا خطأ.';
 
   @override
+  String get errorLastGuardian =>
+      'لا يمكن فصل هذا الولي: سيبقى أحد الأطفال بلا وليّ. أضف وليًا آخر أولًا.';
+
+  @override
+  String get errorPhoneTaken => 'هذا الرقم مستعمل في حساب آخر.';
+
+  @override
+  String get errorGuardianAlreadyLinked =>
+      'هذا الحساب وليٌّ لهؤلاء الأطفال بالفعل.';
+
+  @override
   String get errorSessionExpiredTitle => 'انتهت الجلسة';
 
   @override

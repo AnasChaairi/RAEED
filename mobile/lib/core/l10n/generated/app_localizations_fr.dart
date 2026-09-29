@@ -55,6 +55,18 @@ class AppL10nFr extends AppL10n {
       'Vous n\'avez pas l\'autorisation de consulter ce contenu. Contactez l\'administration de l\'académie si vous pensez qu\'il s\'agit d\'une erreur.';
 
   @override
+  String get errorLastGuardian =>
+      'Impossible de retirer ce tuteur : un enfant n\'en aurait plus aucun. Ajoutez d\'abord un autre tuteur.';
+
+  @override
+  String get errorPhoneTaken =>
+      'Ce numéro est déjà utilisé par un autre compte.';
+
+  @override
+  String get errorGuardianAlreadyLinked =>
+      'Ce compte est déjà tuteur de ces enfants.';
+
+  @override
   String get errorSessionExpiredTitle => 'Session expirée';
 
   @override

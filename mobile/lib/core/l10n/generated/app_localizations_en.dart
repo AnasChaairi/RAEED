@@ -55,6 +55,18 @@ class AppL10nEn extends AppL10n {
       'You don\'t have permission to view this. Contact the academy\'s administration if you think this is a mistake.';
 
   @override
+  String get errorLastGuardian =>
+      'This guardian can\'t be unlinked: a child would be left without one. Add another guardian first.';
+
+  @override
+  String get errorPhoneTaken =>
+      'Another account already uses this phone number.';
+
+  @override
+  String get errorGuardianAlreadyLinked =>
+      'This account is already a guardian of these children.';
+
+  @override
   String get errorSessionExpiredTitle => 'Session expired';
 
   @override

@@ -74,6 +74,23 @@ PresentedFailure presentFailure(Object error, AppL10n l10n) => switch (error) {
     body: l10n.loginRateLimited,
     isRetryable: false,
   ),
+  // Family editing (EXEC-M-10b): each names what stands in the way, and a
+  // retry would only hit the same wall.
+  ApiException(code: ApiErrorCode.childrenLastGuardian) => PresentedFailure(
+    title: l10n.errorGenericTitle,
+    body: l10n.errorLastGuardian,
+    isRetryable: false,
+  ),
+  ApiException(code: ApiErrorCode.guardiansPhoneTaken) => PresentedFailure(
+    title: l10n.errorGenericTitle,
+    body: l10n.errorPhoneTaken,
+    isRetryable: false,
+  ),
+  ApiException(code: ApiErrorCode.guardiansAlreadyLinked) => PresentedFailure(
+    title: l10n.errorGenericTitle,
+    body: l10n.errorGuardianAlreadyLinked,
+    isRetryable: false,
+  ),
   _ => PresentedFailure(
     title: l10n.errorGenericTitle,
     body: l10n.errorGenericBody,

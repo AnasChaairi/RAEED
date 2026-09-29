@@ -183,6 +183,24 @@ abstract class AppL10n {
   /// **'لا تملك صلاحية الاطلاع على هذا المحتوى. تواصل مع إدارة الأكاديمية إن كنت ترى أن هذا خطأ.'**
   String get errorForbiddenBody;
 
+  /// No description provided for @errorLastGuardian.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يمكن فصل هذا الولي: سيبقى أحد الأطفال بلا وليّ. أضف وليًا آخر أولًا.'**
+  String get errorLastGuardian;
+
+  /// No description provided for @errorPhoneTaken.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الرقم مستعمل في حساب آخر.'**
+  String get errorPhoneTaken;
+
+  /// No description provided for @errorGuardianAlreadyLinked.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الحساب وليٌّ لهؤلاء الأطفال بالفعل.'**
+  String get errorGuardianAlreadyLinked;
+
   /// No description provided for @errorSessionExpiredTitle.
   ///
   /// In ar, this message translates to:

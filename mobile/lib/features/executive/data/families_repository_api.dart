@@ -24,6 +24,8 @@ Family familyFromJson(Map<String, Object?> json) {
         FamilyGuardian(
           id: requireField<String>(g, 'id'),
           displayName: stringOrNull(g['display_name']) ?? '',
+          relationship: stringOrNull(g['relationship']) ?? 'parent',
+          phoneHint: stringOrNull(g['phone_hint']),
           account: stringOrNull(g['account']) == 'active'
               ? AccountStatus.active
               : AccountStatus.pending,
@@ -34,6 +36,10 @@ Family familyFromJson(Map<String, Object?> json) {
         FamilyChild(
           id: requireField<String>(c, 'id'),
           fullName: stringOrNull(c['full_name']) ?? '',
+          dob: switch (stringOrNull(c['dob'])) {
+            null => null,
+            final raw => DateTime.tryParse(raw),
+          },
           group: switch (objectOrNull(c['group'])) {
             null => null,
             final group => ChildGroupRef(
@@ -52,25 +58,47 @@ Educator educatorFromJson(Map<String, Object?> json) => Educator(
   groupCount: intOrNull(json['group_count']) ?? 0,
 );
 
+final _wireDate = DateFormat('yyyy-MM-dd');
+
+/// One guardian, as `POST /families` and `POST /families/{id}/guardians` want it.
+Map<String, Object?> guardianDraftToJson(GuardianDraft g) => {
+  'display_name': g.displayName.trim(),
+  'phone': g.e164,
+  'relationship': g.relationship,
+};
+
+/// One child, as `POST /families` and `POST /families/{id}/children` want it.
+Map<String, Object?> childDraftToJson(ChildDraft c) => {
+  'full_name': c.fullName.trim(),
+  'dob': _wireDate.format(c.dateOfBirth!),
+  if (c.groupId != null) 'group_id': c.groupId,
+};
+
 /// The `POST /families` body.
 Map<String, Object?> familyDraftToJson(FamilyDraft draft) => {
-  'guardians': [
-    for (final g in draft.guardians)
-      {
-        'display_name': g.displayName.trim(),
-        'phone': g.e164,
-        'relationship': g.relationship,
-      },
-  ],
-  'children': [
-    for (final c in draft.children)
-      {
-        'full_name': c.fullName.trim(),
-        'dob': DateFormat('yyyy-MM-dd').format(c.dateOfBirth!),
-        if (c.groupId != null) 'group_id': c.groupId,
-      },
-  ],
+  'guardians': [for (final g in draft.guardians) guardianDraftToJson(g)],
+  'children': [for (final c in draft.children) childDraftToJson(c)],
 };
+
+/// The `PATCH /families/{id}/guardians/{gid}` body — set fields only.
+Map<String, Object?> guardianPatchToJson(GuardianPatch patch) => {
+  if (patch.displayName != null) 'display_name': patch.displayName!.trim(),
+  if (patch.e164 != null) 'phone': patch.e164,
+  if (patch.relationship != null) 'relationship': patch.relationship,
+};
+
+/// The `PATCH /families/{id}/children/{cid}` body — set fields only.
+Map<String, Object?> childPatchToJson(ChildPatch patch) => {
+  if (patch.fullName != null) 'full_name': patch.fullName!.trim(),
+  if (patch.dateOfBirth != null) 'dob': _wireDate.format(patch.dateOfBirth!),
+};
+
+GuardianCredential _credentialFromJson(Map<String, Object?> raw) =>
+    GuardianCredential(
+      id: stringOrNull(raw['id']) ?? '',
+      displayName: stringOrNull(raw['display_name']) ?? '',
+      password: stringOrNull(raw['password']),
+    );
 
 /// The `POST /groups` body.
 Map<String, Object?> groupDraftToJson(GroupDraft draft) => {
@@ -110,15 +138,82 @@ class ApiFamiliesRepository implements FamiliesRepository {
       invitations: intOrNull(json['invitations']) ?? 0,
       guardians: [
         for (final raw in json['guardians'] as List? ?? const [])
-          if (raw is Map<String, Object?>)
-            GuardianCredential(
-              id: raw['id'] as String? ?? '',
-              displayName: raw['display_name'] as String? ?? '',
-              password: raw['password'] as String?,
-            ),
+          if (raw is Map<String, Object?>) _credentialFromJson(raw),
       ],
     );
   }
+
+  @override
+  Future<Family> fetchFamily(String familyId) async =>
+      familyFromJson(await _client.getObject('/families/$familyId'));
+
+  @override
+  Future<Family> updateGuardian({
+    required String familyId,
+    required String guardianId,
+    required GuardianPatch patch,
+  }) async => familyFromJson(
+    await _client.patch(
+      '/families/$familyId/guardians/$guardianId',
+      body: guardianPatchToJson(patch),
+    ),
+  );
+
+  @override
+  Future<GuardianAdded> addGuardian({
+    required String familyId,
+    required GuardianDraft guardian,
+  }) async {
+    final json = await _client.post(
+      '/families/$familyId/guardians',
+      body: guardianDraftToJson(guardian),
+    );
+    return GuardianAdded(
+      family: familyFromJson(
+        requireField<Map<String, Object?>>(json, 'family'),
+      ),
+      credential: _credentialFromJson(
+        requireField<Map<String, Object?>>(json, 'credential'),
+      ),
+    );
+  }
+
+  @override
+  Future<Family> unlinkGuardian({
+    required String familyId,
+    required String guardianId,
+  }) async => familyFromJson(
+    await _client.deleteObject('/families/$familyId/guardians/$guardianId'),
+  );
+
+  @override
+  Future<ChildAdded> addChild({
+    required String familyId,
+    required ChildDraft child,
+  }) async {
+    final json = await _client.post(
+      '/families/$familyId/children',
+      body: childDraftToJson(child),
+    );
+    return ChildAdded(
+      family: familyFromJson(
+        requireField<Map<String, Object?>>(json, 'family'),
+      ),
+      childId: requireField<String>(json, 'child_id'),
+    );
+  }
+
+  @override
+  Future<Family> updateChild({
+    required String familyId,
+    required String childId,
+    required ChildPatch patch,
+  }) async => familyFromJson(
+    await _client.patch(
+      '/families/$familyId/children/$childId',
+      body: childPatchToJson(patch),
+    ),
+  );
 
   @override
   Future<String> resendInvitation(String guardianId) async {
