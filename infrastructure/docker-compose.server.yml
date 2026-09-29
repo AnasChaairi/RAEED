@@ -1,0 +1,83 @@
+# Shared dev server on the OVH VM — see DEPLOYING.md.
+#
+# Still a development environment: there is no SMS provider yet, and the API
+# refuses to start outside NODE_ENV=development without one, so OTP codes are
+# read from the API log and the data is the seed. What differs from the laptop
+# stack is exposure: the secrets are generated, Postgres and Redis publish no
+# port (Docker's published ports bypass ufw), and only Caddy faces the internet.
+#
+#     docker compose --env-file .env.server -f docker-compose.server.yml up -d --build
+name: raeed
+
+services:
+  postgres:
+    image: docker.io/library/postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: raeed
+      POSTGRES_USER: raeed
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env.server}
+      POSTGRES_INITDB_ARGS: "--locale=C --encoding=UTF8"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U raeed -d raeed"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: docker.io/library/redis:7
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      target: runtime
+    restart: unless-stopped
+    env_file:
+      - ./.env.server
+    environment:
+      STORAGE_LOCAL_ROOT: /var/lib/raeed/media
+    # Loopback only, for curl on the VM itself. The public path is Caddy.
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - media:/var/lib/raeed/media
+
+  caddy:
+    image: docker.io/library/caddy:2
+    restart: unless-stopped
+    environment:
+      RAEED_API_HOST: ${RAEED_API_HOST:?set in .env.server}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
+  redisdata:
+  media:
+  caddy_data:
+  caddy_config:

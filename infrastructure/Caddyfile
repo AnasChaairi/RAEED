@@ -1,0 +1,6 @@
+# TLS in front of the API on the dev server. Caddy obtains and renews the
+# Let's Encrypt certificate for RAEED_API_HOST on its own.
+{$RAEED_API_HOST} {
+	encode gzip
+	reverse_proxy api:3000
+}
