@@ -14,7 +14,7 @@ import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
 import { CheckAbility, CheckAbilityGuard } from '../../common/abilities/check-ability.guard';
 import { CurrentUser } from '../../common/auth/current-user.decorator';
 import { JwtAuthGuard } from '../../common/auth/jwt-auth.guard';
-import { CreateBranchDto } from './dto/structure.dto';
+import { CreateBranchDto, CreateCategoryDto, CreateSeasonDto } from './dto/structure.dto';
 import { BranchView, CategoryView, SeasonView, StructureService } from './structure.service';
 
 /**
@@ -33,6 +33,16 @@ export class StructureController {
     return { data: await this.structure.seasons() };
   }
 
+  @Post('seasons')
+  @HttpCode(HttpStatus.CREATED)
+  @CheckAbility('manage', 'Season')
+  createSeason(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: CreateSeasonDto,
+  ): Promise<SeasonView> {
+    return this.structure.createSeason(user, body);
+  }
+
   @Post('seasons/:seasonId/archive')
   @HttpCode(HttpStatus.NO_CONTENT)
   @CheckAbility('manage', 'Season')
@@ -46,6 +56,16 @@ export class StructureController {
   @Get('categories')
   async categories(): Promise<{ data: CategoryView[] }> {
     return { data: await this.structure.categories() };
+  }
+
+  @Post('categories')
+  @HttpCode(HttpStatus.CREATED)
+  @CheckAbility('manage', 'Category')
+  createCategory(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: CreateCategoryDto,
+  ): Promise<CategoryView> {
+    return this.structure.createCategory(user, body);
   }
 
   @Get('branches')

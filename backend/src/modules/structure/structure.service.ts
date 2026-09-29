@@ -4,7 +4,7 @@ import { DataSource } from 'typeorm';
 
 import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
 import { ApiError } from '../../common/http/api-error';
-import { CreateBranchDto } from './dto/structure.dto';
+import { CreateBranchDto, CreateCategoryDto, CreateSeasonDto } from './dto/structure.dto';
 
 export interface SeasonView {
   id: string;
@@ -82,6 +82,32 @@ export class StructureService {
     });
   }
 
+  /**
+   * Opens a season. It starts active; an earlier active season is left as
+   * it is — the admin archives it from the list, which is the reversible
+   * step, rather than this call closing it by surprise.
+   */
+  async createSeason(user: AuthenticatedUser, input: CreateSeasonDto): Promise<SeasonView> {
+    if (input.end_date <= input.start_date) {
+      throw ApiError.validationFailed({ end_date: ['must be after start_date'] });
+    }
+    const id = await this.dataSource.transaction(async (tx) => {
+      const rows: Array<{ id: string }> = await tx.query(
+        `insert into season (label, start_date, end_date, status)
+         values ($1, $2, $3, 'active') returning id`,
+        [input.label.trim(), input.start_date, input.end_date],
+      );
+      await tx.query(
+        `insert into audit_log_entry (actor_user_id, action, resource_type, resource_id)
+         values ($1, 'season.create', 'season', $2)`,
+        [user.id, rows[0].id],
+      );
+      return rows[0].id;
+    });
+    const seasons = await this.seasons();
+    return seasons.find((season) => season.id === id)!;
+  }
+
   categories(): Promise<CategoryView[]> {
     return this.dataSource.query(
       `select cat.id, cat.name_ar as name, cat.min_age, cat.max_age, cat.gender,
@@ -98,6 +124,28 @@ export class StructureService {
         where cat.deleted_at is null
         order by cat.created_at`,
     );
+  }
+
+  /**
+   * Adds a category (فئة) by name. Age range and gender are not taken here:
+   * they are open decision #1, and a form that asked would invite a guess
+   * into the schema.
+   */
+  async createCategory(user: AuthenticatedUser, input: CreateCategoryDto): Promise<CategoryView> {
+    const id = await this.dataSource.transaction(async (tx) => {
+      const rows: Array<{ id: string }> = await tx.query(
+        'insert into category (name_ar) values ($1) returning id',
+        [input.name.trim()],
+      );
+      await tx.query(
+        `insert into audit_log_entry (actor_user_id, action, resource_type, resource_id)
+         values ($1, 'category.create', 'category', $2)`,
+        [user.id, rows[0].id],
+      );
+      return rows[0].id;
+    });
+    const categories = await this.categories();
+    return categories.find((category) => category.id === id)!;
   }
 
   branches(): Promise<BranchView[]> {

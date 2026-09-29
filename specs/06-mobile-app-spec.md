@@ -250,7 +250,7 @@ Attendance by educator and by category as percent **with the raw pair**; educato
 
 #### EXEC-M-12 · Structure (`/structure`, admin) and EXEC-M-13 · Logs (`/logs`, admin)
 
-Seasons (archive through the reversible confirm; never delete), categories with "age/gender: not set" (open decision #1), branches. Audit log and the health-access view. A non-admin who opens either gets the "admins only" card; the attempt is made and therefore recorded server-side, which the card says.
+Seasons (open a new one with a label and dates; archive through the reversible confirm; never delete), categories with "age/gender: not set" (open decision #1) and an add-by-name form that deliberately asks nothing else, branches. A fresh installation needs one of each before the first group can be created. Audit log and the health-access view. A non-admin who opens either gets the "admins only" card; the attempt is made and therefore recorded server-side, which the card says.
 
 ### Educator surface (`EDU-M-*`)
 
