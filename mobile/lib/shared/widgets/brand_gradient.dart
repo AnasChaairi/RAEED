@@ -1,5 +1,3 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 
 import '../../core/theme/design_tokens.gen.dart';
@@ -59,6 +57,16 @@ class BrandGradient extends StatelessWidget {
         stops: const [0, 0.46, 1],
       ),
       // The home header: a shorter, brighter sweep under the greeting.
+      // Sign-in: the brand blue, opening toward the logo's own blue — never
+      // darker than the header, so the mark reads on it instead of under it.
+      BrandGradientVariant.signIn => LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          palette.primary,
+          Color.lerp(palette.primary, RaeedLogoColors.blueAverage, 0.3)!,
+        ],
+      ),
       BrandGradientVariant.header => LinearGradient(
         begin: AlignmentDirectional.topStart,
         end: AlignmentDirectional.bottomEnd,
@@ -80,6 +88,9 @@ enum BrandGradientVariant {
 
   /// A header band under a status bar.
   header,
+
+  /// The sign-in band above the form card.
+  signIn,
 }
 
 /// The RAEED wordmark, as the design places it on the sign-in gradient.
@@ -92,85 +103,30 @@ enum BrandGradientVariant {
 /// the mark's own colours stay untouched, which is what the style guide
 /// allows: the backdrop is "a presentation choice, not a mandate", the mark
 /// itself is never recoloured. Only correct on a dark ground.
-class BrandWordmark extends StatefulWidget {
+class BrandWordmark extends StatelessWidget {
   const BrandWordmark({this.width = 260, super.key});
 
   /// Rendered width. The guide sets a 32px floor, below which the Arabic
   /// wordmark's diacritics disappear.
   final double width;
 
-  @override
-  State<BrandWordmark> createState() => _BrandWordmarkState();
-}
-
-class _BrandWordmarkState extends State<BrandWordmark> {
-  static const AssetImage _asset = AssetImage('assets/images/logo.jpeg');
+  /// The mark with its black backdrop keyed out, so it sits on any brand
+  /// surface with its own colours — the JPEG in `logo/` is the source.
+  static const AssetImage asset = AssetImage(
+    'assets/images/logo_transparent.png',
+  );
 
   /// The source file's proportions, so the box holds its place before decode.
   static const double _aspectRatio = 666 / 375;
-
-  ImageStream? _stream;
-  ImageStreamListener? _listener;
-  ui.Image? _image;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final stream = _asset.resolve(createLocalImageConfiguration(context));
-    if (stream.key == _stream?.key) return;
-    _detach();
-    _stream = stream;
-    _listener = ImageStreamListener((info, _) {
-      if (mounted) setState(() => _image = info.image);
-    });
-    stream.addListener(_listener!);
-  }
-
-  void _detach() {
-    final listener = _listener;
-    if (listener != null) _stream?.removeListener(listener);
-  }
-
-  @override
-  void dispose() {
-    _detach();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) => Semantics(
     label: 'أكاديمية الطفل الرائد',
     image: true,
     child: SizedBox(
-      width: widget.width,
-      height: widget.width / _aspectRatio,
-      child: _image == null
-          ? null
-          : CustomPaint(painter: _ScreenBlendPainter(_image!)),
+      width: width,
+      height: width / _aspectRatio,
+      child: const Image(image: asset, fit: BoxFit.contain),
     ),
   );
-}
-
-class _ScreenBlendPainter extends CustomPainter {
-  const _ScreenBlendPainter(this.image);
-
-  final ui.Image image;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final source = Rect.fromLTWH(
-      0,
-      0,
-      image.width.toDouble(),
-      image.height.toDouble(),
-    );
-    final paint = Paint()
-      ..blendMode = BlendMode.screen
-      ..filterQuality = FilterQuality.medium;
-    canvas.drawImageRect(image, source, Offset.zero & size, paint);
-  }
-
-  @override
-  bool shouldRepaint(_ScreenBlendPainter oldDelegate) =>
-      oldDelegate.image != image;
 }
