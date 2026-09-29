@@ -104,7 +104,7 @@ export class ChildrenService {
       present: number | null;
       expected: number | null;
     }> = await this.dataSource.query(
-      `select c.id, c.full_name, c.photo_url, c.dob,
+      `select c.id, c.full_name, c.photo_url, to_char(c.dob, 'YYYY-MM-DD') as dob,
               g.id as group_id, g.name as group_name,
               (c.health_json is not null and c.health_json <> '{}'::jsonb) as health_alert,
               ${user.hasOversight ? this.oversightColumns() : 'null as image_rights_level, null as present, null as expected'}
@@ -180,7 +180,7 @@ export class ChildrenService {
       group_name: string | null;
       branch_id: string | null;
     }> = await this.dataSource.query(
-      `select c.id, c.full_name, c.photo_url, c.dob, c.school_level, c.health_json,
+      `select c.id, c.full_name, c.photo_url, to_char(c.dob, 'YYYY-MM-DD') as dob, c.school_level, c.health_json,
               g.id as group_id, g.name as group_name, g.branch_id
          from child c
          left join child_group cg on cg.child_id = c.id and cg.valid_to is null

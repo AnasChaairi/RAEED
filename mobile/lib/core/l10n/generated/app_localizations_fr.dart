@@ -1831,6 +1831,23 @@ class AppL10nFr extends AppL10n {
   String get weekdaySat => 'samedi';
 
   @override
+  String get scheduleEditTitle => 'Horaire hebdomadaire';
+
+  @override
+  String get scheduleAddSlot => '+ Créneau hebdomadaire';
+
+  @override
+  String get scheduleEmptyHint =>
+      'Pas d\'horaire : sans horaire, aucune séance n\'est créée pour ce groupe.';
+
+  @override
+  String get scheduleRecorded =>
+      '⦿ La modification est enregistrée à votre nom et les séances des prochaines semaines sont créées aussitôt.';
+
+  @override
+  String get scheduleSavedToast => 'Horaire enregistré';
+
+  @override
   String get newFamilyTitle => 'Nouvelle famille';
 
   @override

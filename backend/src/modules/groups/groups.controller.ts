@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -17,7 +18,7 @@ import {
 } from '../../common/abilities/check-ability.guard';
 import { CurrentUser } from '../../common/auth/current-user.decorator';
 import { JwtAuthGuard } from '../../common/auth/jwt-auth.guard';
-import { AssignChildrenDto, CreateGroupDto } from './dto/group.dto';
+import { AssignChildrenDto, CreateGroupDto, UpdateGroupScheduleDto } from './dto/group.dto';
 import { GroupSessionView, GroupsService, GroupView, RosterChildView } from './groups.service';
 
 @Controller('groups')
@@ -75,6 +76,16 @@ export class GroupsController {
     @Param('groupId', ParseUUIDPipe) groupId: string,
   ): Promise<GroupView> {
     return this.groups.detail(user, groupId);
+  }
+
+  @Patch(':groupId')
+  @CheckAbility('update', 'Group')
+  updateSchedule(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('groupId', ParseUUIDPipe) groupId: string,
+    @Body() body: UpdateGroupScheduleDto,
+  ): Promise<GroupView> {
+    return this.groups.updateSchedule(user, groupId, body);
   }
 
   @Get(':groupId/sessions')

@@ -1883,6 +1883,23 @@ class AppL10nAr extends AppL10n {
   String get weekdaySat => 'السبت';
 
   @override
+  String get scheduleEditTitle => 'الجدول الأسبوعي';
+
+  @override
+  String get scheduleAddSlot => '+ حصة أسبوعية';
+
+  @override
+  String get scheduleEmptyHint =>
+      'لا جدول بعد: بلا جدول لا تُنشأ جلسات لهذه المجموعة.';
+
+  @override
+  String get scheduleRecorded =>
+      '⦿ يُسجَّل التعديل باسمك، وتُنشأ جلسات الأسابيع القادمة فورًا.';
+
+  @override
+  String get scheduleSavedToast => 'حُفظ الجدول';
+
+  @override
   String get newFamilyTitle => 'أسرة جديدة';
 
   @override

@@ -35,6 +35,23 @@ ExecutiveGroup executiveGroupFromJson(Map<String, Object?> json) {
           ]
         : stringList(json['educator_names']),
     scheduleLabel: stringOrNull(json['schedule_label']),
+    weeklySchedule: [
+      for (final slot in objectList(
+        json['weekly_schedule'],
+        field: 'weekly_schedule',
+      ))
+        if ((
+              intOrNull(slot['weekday']),
+              stringOrNull(slot['starts_at']),
+              stringOrNull(slot['ends_at']),
+            )
+            case (
+              final int weekday,
+              final String startsAt,
+              final String endsAt,
+            ))
+          ScheduleSlot(weekday: weekday, startsAt: startsAt, endsAt: endsAt),
+    ],
     place: stringOrNull(json['place']),
     stats: _statsOrNull(objectOrNull(json['stats'])),
   );
@@ -86,3 +103,10 @@ GroupSession groupSessionFromJson(Map<String, Object?> json) {
     ),
   );
 }
+
+/// One slot, as `PATCH /groups/{id}` wants it.
+Map<String, Object?> scheduleSlotToJson(ScheduleSlot slot) => {
+  'weekday': slot.weekday,
+  'starts_at': slot.startsAt,
+  'ends_at': slot.endsAt,
+};

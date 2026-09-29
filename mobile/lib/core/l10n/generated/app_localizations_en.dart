@@ -1816,6 +1816,23 @@ class AppL10nEn extends AppL10n {
   String get weekdaySat => 'Saturday';
 
   @override
+  String get scheduleEditTitle => 'Weekly schedule';
+
+  @override
+  String get scheduleAddSlot => '+ Weekly slot';
+
+  @override
+  String get scheduleEmptyHint =>
+      'No schedule yet: without one, no sessions are created for this group.';
+
+  @override
+  String get scheduleRecorded =>
+      '⦿ The change is recorded in your name and the coming weeks\' sessions are created at once.';
+
+  @override
+  String get scheduleSavedToast => 'Schedule saved';
+
+  @override
   String get newFamilyTitle => 'New family';
 
   @override

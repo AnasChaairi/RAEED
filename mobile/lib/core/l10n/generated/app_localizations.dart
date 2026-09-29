@@ -2997,6 +2997,36 @@ abstract class AppL10n {
   /// **'السبت'**
   String get weekdaySat;
 
+  /// No description provided for @scheduleEditTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجدول الأسبوعي'**
+  String get scheduleEditTitle;
+
+  /// No description provided for @scheduleAddSlot.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ حصة أسبوعية'**
+  String get scheduleAddSlot;
+
+  /// No description provided for @scheduleEmptyHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا جدول بعد: بلا جدول لا تُنشأ جلسات لهذه المجموعة.'**
+  String get scheduleEmptyHint;
+
+  /// No description provided for @scheduleRecorded.
+  ///
+  /// In ar, this message translates to:
+  /// **'⦿ يُسجَّل التعديل باسمك، وتُنشأ جلسات الأسابيع القادمة فورًا.'**
+  String get scheduleRecorded;
+
+  /// No description provided for @scheduleSavedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'حُفظ الجدول'**
+  String get scheduleSavedToast;
+
   /// No description provided for @newFamilyTitle.
   ///
   /// In ar, this message translates to:
