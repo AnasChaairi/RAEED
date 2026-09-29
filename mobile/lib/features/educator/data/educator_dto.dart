@@ -82,8 +82,20 @@ SessionItem sessionItemFromJson(Map<String, Object?> json) {
     summarySent: boolOr(json['summary_sent'], false),
     rescheduledFrom: dateOrNull(json['rescheduled_from']),
     coEducatorNames: stringList(json['co_educator_names']),
+    kind: SessionKind.fromWire(stringOrNull(json['kind'])),
   );
 }
+
+/// The `POST /sessions` body.
+Map<String, Object?> activityDraftToJson(ActivityDraft draft) => {
+  'group_id': draft.groupId,
+  'kind': draft.kind.wireValue,
+  'starts_at': draft.startsAtDateTime!.toUtc().toIso8601String(),
+  'ends_at': draft.endsAtDateTime!.toUtc().toIso8601String(),
+  'title': draft.title.trim(),
+  if (draft.place.trim().isNotEmpty) 'place': draft.place.trim(),
+  if (draft.objectives.trim().isNotEmpty) 'objectives': draft.objectives.trim(),
+};
 
 SessionMaterial materialFromJson(Map<String, Object?> json) => SessionMaterial(
   id: requireField<String>(json, 'id'),

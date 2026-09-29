@@ -1735,7 +1735,29 @@ paths:
           in: query
           schema: { type: string, format: uuid }
       responses:
-        '200': { description: OK — each row carries has_content, material_count, homework_count, attendance_recorded, summary_sent, rescheduled_from }
+        '200': { description: OK — each row carries kind (session · sport · workshop), has_content, material_count, homework_count, attendance_recorded, summary_sent, rescheduled_from. A guardian sees their children's groups. }
+    post:
+      summary: Add an activity by hand — a sport outing, a workshop or an extra حصة — for one of the caller's groups (EDU-M-03); guardians are notified and it appears on the child's schedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [group_id, kind, starts_at, ends_at]
+              properties:
+                group_id: { type: string, format: uuid }
+                kind: { type: string, enum: [session, sport, workshop] }
+                starts_at: { type: string, format: date-time }
+                ends_at: { type: string, format: date-time }
+                title: { type: string }
+                place: { type: string }
+                theme: { type: string }
+                objectives: { type: string }
+      responses:
+        '201': { description: Created — the session detail; recorded as `session.create` }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { description: "`validation.failed` — ends_at must be after starts_at" }
 
   /sessions/{sessionId}:
     parameters:

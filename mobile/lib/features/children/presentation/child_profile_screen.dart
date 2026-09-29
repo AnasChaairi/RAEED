@@ -9,8 +9,11 @@ import '../../../core/theme/raeed_theme.dart';
 import '../../../shared/widgets/brand_gradient.dart';
 import '../../../shared/widgets/raeed_error_view.dart';
 import '../../../shared/widgets/skeleton.dart';
+import '../../executive/presentation/relative_time.dart';
+import '../domain/child.dart';
 import '../domain/child_age.dart';
 import '../domain/child_detail.dart';
+import '../domain/session_kind.dart';
 import 'home_providers.dart';
 
 /// The four sub-tabs from the routing table in `specs/06-mobile-app-spec.md`.
@@ -143,7 +146,10 @@ class _ChildProfileView extends StatelessWidget {
           body: TabBarView(
             children: [
               for (final tab in ChildProfileTab.values)
-                _TabPlaceholder(tab: tab),
+                if (tab == ChildProfileTab.schedule)
+                  _ScheduleTab(group: child.summary.group)
+                else
+                  _TabPlaceholder(tab: tab),
             ],
           ),
         ),
@@ -447,4 +453,129 @@ class _ProfileSkeleton extends StatelessWidget {
       ],
     ),
   );
+}
+
+/// The coming month of the child's group: sessions and the activities the
+/// educator added, each with its kind, time and place.
+class _ScheduleTab extends ConsumerWidget {
+  const _ScheduleTab({required this.group});
+
+  final ChildGroupRef? group;
+
+  static String kindLabel(AppL10n l10n, SessionKind kind) => switch (kind) {
+    SessionKind.session => l10n.activityKindSession,
+    SessionKind.sport => l10n.activityKindSport,
+    SessionKind.workshop => l10n.activityKindWorkshop,
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
+    final palette = context.palette;
+    final group = this.group;
+    if (group == null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(RaeedSpacing.xl2),
+          child: Text(
+            l10n.childScheduleNoGroup,
+            style: context.type.body.copyWith(color: palette.inkDim),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+    final sessions = ref.watch(childSessionsProvider(group.id));
+    final locale = Localizations.localeOf(context);
+    return sessions.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => RaeedErrorView(
+        error: error,
+        onRetry: () => ref.invalidate(childSessionsProvider(group.id)),
+      ),
+      data: (list) => list.isEmpty
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(RaeedSpacing.xl2),
+                child: Text(
+                  l10n.childScheduleEmpty,
+                  style: context.type.body.copyWith(color: palette.inkDim),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+          : ListView.separated(
+              padding: const EdgeInsets.all(RaeedSpacing.lg),
+              itemCount: list.length,
+              separatorBuilder: (_, _) =>
+                  const SizedBox(height: RaeedSpacing.sm),
+              itemBuilder: (_, index) {
+                final item = list[index];
+                final kind = kindLabel(l10n, item.kind);
+                return Container(
+                  key: Key('child-session-${item.id}'),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: RaeedSpacing.md + 2,
+                    vertical: RaeedSpacing.sm + 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: palette.surface,
+                    borderRadius: BorderRadius.circular(RaeedRadius.lg + 2),
+                    border: Border.all(color: palette.border),
+                  ),
+                  child: Opacity(
+                    opacity: item.isCancelled ? 0.6 : 1,
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 44,
+                          child: Text(
+                            clockTime(locale, item.startsAt),
+                            style: context.type
+                                .tabular(context.type.label)
+                                .copyWith(
+                                  color: palette.inkDim,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.title ?? kind,
+                                style: context.type.label.copyWith(
+                                  color: palette.ink,
+                                  fontWeight: FontWeight.w700,
+                                  decoration: item.isCancelled
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                [
+                                  fullDate(locale, item.startsAt),
+                                  if (item.title != null) kind,
+                                  if (item.place != null) item.place!,
+                                  if (item.isCancelled)
+                                    l10n.childScheduleCancelled,
+                                ].join(' · '),
+                                style: context.type.caption.copyWith(
+                                  color: palette.inkDim,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+    );
+  }
 }

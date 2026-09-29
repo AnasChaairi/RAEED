@@ -12,6 +12,10 @@ abstract interface class SessionsRepository {
 
   Future<SessionDetail> fetchSession(String sessionId);
 
+  /// Adds an activity for one of the caller's groups; the group's guardians
+  /// are told and it appears on the child's schedule.
+  Future<SessionDetail> createActivity(ActivityDraft draft);
+
   Future<SessionDetail> updateContent(
     String sessionId,
     SessionContentDraft draft,

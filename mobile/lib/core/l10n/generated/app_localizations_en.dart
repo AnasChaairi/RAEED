@@ -2629,10 +2629,75 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get sessFooter =>
-      'Sessions are created from the group schedule — add content only.';
+      'Sessions come from the group schedule — add content, or create an activity with +.';
 
   @override
   String get sessEmptyWeek => 'No sessions this week';
+
+  @override
+  String get activityNewTitle => 'New activity';
+
+  @override
+  String get activityNewSubtitle =>
+      'A session, sport or workshop for one of your groups';
+
+  @override
+  String get activityGroup => 'Group';
+
+  @override
+  String get activityKind => 'Kind';
+
+  @override
+  String get activityKindSession => 'Session';
+
+  @override
+  String get activityKindSport => 'Sport';
+
+  @override
+  String get activityKindWorkshop => 'Workshop';
+
+  @override
+  String get activitySlot => 'When';
+
+  @override
+  String get activityPickDay => 'Pick a day';
+
+  @override
+  String get activityTitleHint => 'e.g. Friendly match, Calligraphy workshop';
+
+  @override
+  String get activityPlace => 'Place';
+
+  @override
+  String get activityPlaceHint => 'Hall, pitch…';
+
+  @override
+  String get activityContent => 'Content';
+
+  @override
+  String get activityContentHint => 'What will happen — guardians see this.';
+
+  @override
+  String get activityNotice =>
+      'The group\'s guardians are notified at once and the activity appears on their children\'s schedule. ⦿ Recorded in your name.';
+
+  @override
+  String get activityCreateCta => 'Create and notify guardians';
+
+  @override
+  String get activityCreatedToast => 'Activity created, guardians notified';
+
+  @override
+  String get shortcutActivity => 'Activity';
+
+  @override
+  String get childScheduleEmpty => 'Nothing coming up for this group.';
+
+  @override
+  String get childScheduleNoGroup => 'The child is not in a group yet.';
+
+  @override
+  String get childScheduleCancelled => 'cancelled';
 
   @override
   String get sessObjectives => 'Objectives';

@@ -2731,10 +2731,74 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get sessFooter =>
-      'الجلسات تُنشأ تلقائيًا من جدول المجموعة — أضف المحتوى فقط.';
+      'الحصص تُنشأ من جدول المجموعة تلقائيًا — أضف المحتوى، أو أنشئ نشاطًا بزر +.';
 
   @override
   String get sessEmptyWeek => 'لا جلسات هذا الأسبوع';
+
+  @override
+  String get activityNewTitle => 'نشاط جديد';
+
+  @override
+  String get activityNewSubtitle => 'حصة أو رياضة أو ورشة لإحدى مجموعاتك';
+
+  @override
+  String get activityGroup => 'المجموعة';
+
+  @override
+  String get activityKind => 'النوع';
+
+  @override
+  String get activityKindSession => 'حصة';
+
+  @override
+  String get activityKindSport => 'رياضة';
+
+  @override
+  String get activityKindWorkshop => 'ورشة';
+
+  @override
+  String get activitySlot => 'الموعد';
+
+  @override
+  String get activityPickDay => 'اختر اليوم';
+
+  @override
+  String get activityTitleHint => 'مثال: مباراة ودية، ورشة الخط';
+
+  @override
+  String get activityPlace => 'المكان';
+
+  @override
+  String get activityPlaceHint => 'القاعة، الملعب…';
+
+  @override
+  String get activityContent => 'المحتوى';
+
+  @override
+  String get activityContentHint => 'ما سيحدث في هذا النشاط — يراه الأولياء.';
+
+  @override
+  String get activityNotice =>
+      'يُبلَّغ أولياء المجموعة فور الإنشاء، ويظهر النشاط في جدول أطفالهم. ⦿ يُسجَّل باسمك.';
+
+  @override
+  String get activityCreateCta => 'إنشاء النشاط وإبلاغ الأولياء';
+
+  @override
+  String get activityCreatedToast => 'أُنشئ النشاط وأُبلغ الأولياء';
+
+  @override
+  String get shortcutActivity => 'نشاط';
+
+  @override
+  String get childScheduleEmpty => 'لا مواعيد قادمة لهذه المجموعة.';
+
+  @override
+  String get childScheduleNoGroup => 'لم يُسند الطفل إلى مجموعة بعد.';
+
+  @override
+  String get childScheduleCancelled => 'ملغاة';
 
   @override
   String get sessObjectives => 'الأهداف';

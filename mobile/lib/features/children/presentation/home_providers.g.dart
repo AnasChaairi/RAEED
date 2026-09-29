@@ -398,3 +398,89 @@ final class ChildDetailFamily extends $Family
   @override
   String toString() => r'childDetailProvider';
 }
+
+/// The coming month of a child's group, for the schedule tab.
+
+@ProviderFor(childSessions)
+const childSessionsProvider = ChildSessionsFamily._();
+
+/// The coming month of a child's group, for the schedule tab.
+
+final class ChildSessionsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<ChildSession>>,
+          List<ChildSession>,
+          FutureOr<List<ChildSession>>
+        >
+    with
+        $FutureModifier<List<ChildSession>>,
+        $FutureProvider<List<ChildSession>> {
+  /// The coming month of a child's group, for the schedule tab.
+  const ChildSessionsProvider._({
+    required ChildSessionsFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'childSessionsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$childSessionsHash();
+
+  @override
+  String toString() {
+    return r'childSessionsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<ChildSession>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<ChildSession>> create(Ref ref) {
+    final argument = this.argument as String;
+    return childSessions(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ChildSessionsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$childSessionsHash() => r'd83a3ec1b0cdf46a1738b0f4df1cf726c85a4983';
+
+/// The coming month of a child's group, for the schedule tab.
+
+final class ChildSessionsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<ChildSession>>, String> {
+  const ChildSessionsFamily._()
+    : super(
+        retry: null,
+        name: r'childSessionsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// The coming month of a child's group, for the schedule tab.
+
+  ChildSessionsProvider call(String groupId) =>
+      ChildSessionsProvider._(argument: groupId, from: this);
+
+  @override
+  String toString() => r'childSessionsProvider';
+}

@@ -6,7 +6,9 @@ import 'package:raeed/core/l10n/generated/app_localizations.dart';
 import 'package:raeed/core/theme/raeed_theme.dart';
 import 'package:raeed/features/children/domain/child.dart';
 import 'package:raeed/features/children/domain/child_detail.dart';
+import 'package:raeed/features/children/domain/child_session.dart';
 import 'package:raeed/features/children/domain/children_repository.dart';
+import 'package:raeed/features/children/domain/session_kind.dart';
 import 'package:raeed/features/children/presentation/child_profile_screen.dart';
 import 'package:raeed/features/children/presentation/home_providers.dart';
 
@@ -38,8 +40,16 @@ void main() {
     WidgetTester tester,
     ChildDetail child, {
     double textScale = 1,
+    List<ChildSession> sessions = const [],
   }) async {
     when(() => children.fetchChild('child-1')).thenAnswer((_) async => child);
+    when(
+      () => children.fetchSessions(
+        groupId: any(named: 'groupId'),
+        from: any(named: 'from'),
+        to: any(named: 'to'),
+      ),
+    ).thenAnswer((_) async => sessions);
 
     final container = ProviderContainer(
       overrides: [childrenRepositoryProvider.overrideWithValue(children)],
@@ -66,6 +76,41 @@ void main() {
 
   AppL10n l10nOf(WidgetTester tester) =>
       AppL10n.of(tester.element(find.byType(ChildProfileScreen)));
+
+  testWidgets(
+    'the schedule lists what the educator planned, kind and place included',
+    (tester) async {
+      await pumpProfile(
+        tester,
+        detail(),
+        sessions: [
+          ChildSession(
+            id: 's1',
+            kind: SessionKind.session,
+            startsAt: DateTime(2026, 10, 3, 10),
+            endsAt: DateTime(2026, 10, 3, 12),
+            isCancelled: false,
+          ),
+          ChildSession(
+            id: 's2',
+            kind: SessionKind.sport,
+            startsAt: DateTime(2026, 10, 1, 14),
+            endsAt: DateTime(2026, 10, 1, 16),
+            isCancelled: false,
+            title: 'مباراة ودية',
+            place: 'الملعب',
+          ),
+        ],
+      );
+
+      expect(find.byKey(const Key('child-session-s1')), findsOneWidget);
+      // A plain session is named by its kind; an activity by its title, with
+      // the kind and place alongside.
+      expect(find.text('حصة'), findsOneWidget);
+      expect(find.text('مباراة ودية'), findsOneWidget);
+      expect(find.textContaining('رياضة · الملعب'), findsOneWidget);
+    },
+  );
 
   testWidgets('leads with who the child is', (tester) async {
     await pumpProfile(tester, detail());

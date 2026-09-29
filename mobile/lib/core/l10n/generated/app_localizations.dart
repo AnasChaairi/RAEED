@@ -4236,7 +4236,7 @@ abstract class AppL10n {
   /// No description provided for @sessFooter.
   ///
   /// In ar, this message translates to:
-  /// **'الجلسات تُنشأ تلقائيًا من جدول المجموعة — أضف المحتوى فقط.'**
+  /// **'الحصص تُنشأ من جدول المجموعة تلقائيًا — أضف المحتوى، أو أنشئ نشاطًا بزر +.'**
   String get sessFooter;
 
   /// No description provided for @sessEmptyWeek.
@@ -4244,6 +4244,132 @@ abstract class AppL10n {
   /// In ar, this message translates to:
   /// **'لا جلسات هذا الأسبوع'**
   String get sessEmptyWeek;
+
+  /// No description provided for @activityNewTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشاط جديد'**
+  String get activityNewTitle;
+
+  /// No description provided for @activityNewSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حصة أو رياضة أو ورشة لإحدى مجموعاتك'**
+  String get activityNewSubtitle;
+
+  /// No description provided for @activityGroup.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموعة'**
+  String get activityGroup;
+
+  /// No description provided for @activityKind.
+  ///
+  /// In ar, this message translates to:
+  /// **'النوع'**
+  String get activityKind;
+
+  /// No description provided for @activityKindSession.
+  ///
+  /// In ar, this message translates to:
+  /// **'حصة'**
+  String get activityKindSession;
+
+  /// No description provided for @activityKindSport.
+  ///
+  /// In ar, this message translates to:
+  /// **'رياضة'**
+  String get activityKindSport;
+
+  /// No description provided for @activityKindWorkshop.
+  ///
+  /// In ar, this message translates to:
+  /// **'ورشة'**
+  String get activityKindWorkshop;
+
+  /// No description provided for @activitySlot.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموعد'**
+  String get activitySlot;
+
+  /// No description provided for @activityPickDay.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر اليوم'**
+  String get activityPickDay;
+
+  /// No description provided for @activityTitleHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'مثال: مباراة ودية، ورشة الخط'**
+  String get activityTitleHint;
+
+  /// No description provided for @activityPlace.
+  ///
+  /// In ar, this message translates to:
+  /// **'المكان'**
+  String get activityPlace;
+
+  /// No description provided for @activityPlaceHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'القاعة، الملعب…'**
+  String get activityPlaceHint;
+
+  /// No description provided for @activityContent.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحتوى'**
+  String get activityContent;
+
+  /// No description provided for @activityContentHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما سيحدث في هذا النشاط — يراه الأولياء.'**
+  String get activityContentHint;
+
+  /// No description provided for @activityNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُبلَّغ أولياء المجموعة فور الإنشاء، ويظهر النشاط في جدول أطفالهم. ⦿ يُسجَّل باسمك.'**
+  String get activityNotice;
+
+  /// No description provided for @activityCreateCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنشاء النشاط وإبلاغ الأولياء'**
+  String get activityCreateCta;
+
+  /// No description provided for @activityCreatedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُنشئ النشاط وأُبلغ الأولياء'**
+  String get activityCreatedToast;
+
+  /// No description provided for @shortcutActivity.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشاط'**
+  String get shortcutActivity;
+
+  /// No description provided for @childScheduleEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا مواعيد قادمة لهذه المجموعة.'**
+  String get childScheduleEmpty;
+
+  /// No description provided for @childScheduleNoGroup.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يُسند الطفل إلى مجموعة بعد.'**
+  String get childScheduleNoGroup;
+
+  /// No description provided for @childScheduleCancelled.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملغاة'**
+  String get childScheduleCancelled;
 
   /// No description provided for @sessObjectives.
   ///

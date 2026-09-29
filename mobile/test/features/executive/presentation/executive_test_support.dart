@@ -147,6 +147,7 @@ class ExecutiveMocks {
     when(() => structure.fetchAuditLog(action: any(named: 'action')))
         .thenAnswer((_) async => const []);
     registerFallbackValue(const HomeworkDraft());
+    registerFallbackValue(const ActivityDraft());
     registerFallbackValue(const CancelDraft());
     registerFallbackValue(const SessionContentDraft());
     registerFallbackValue(const PostDraft());
@@ -162,6 +163,13 @@ class ExecutiveMocks {
       ),
     ).thenAnswer((_) async => const []);
     when(() => sessions.fetchRoster(any())).thenAnswer((_) async => const []);
+    when(
+      () => children.fetchSessions(
+        groupId: any(named: 'groupId'),
+        from: any(named: 'from'),
+        to: any(named: 'to'),
+      ),
+    ).thenAnswer((_) async => const []);
     when(() => sessions.fetchGroupHomework(any()))
         .thenAnswer((_) async => const []);
     when(() => educatorMemories.fetchMyPosts())

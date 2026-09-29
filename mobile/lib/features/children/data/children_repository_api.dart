@@ -2,6 +2,7 @@ import '../../../core/network/api_client.dart';
 import '../../../core/network/api_envelope.dart';
 import '../domain/child.dart';
 import '../domain/child_detail.dart';
+import '../domain/child_session.dart';
 import '../domain/children_repository.dart';
 import 'child_dto.dart';
 
@@ -31,5 +32,23 @@ class ApiChildrenRepository implements ChildrenRepository {
   Future<ChildDetail> fetchChild(String childId) async {
     final json = await _client.getObject('/children/$childId');
     return childDetailFromJson(json);
+  }
+
+  @override
+  Future<List<ChildSession>> fetchSessions({
+    required String groupId,
+    required DateTime from,
+    required DateTime to,
+  }) async {
+    final page = await _client.getList<ChildSession>(
+      '/sessions',
+      childSessionFromJson,
+      query: {
+        'group_id': groupId,
+        'from': from.toUtc().toIso8601String(),
+        'to': to.toUtc().toIso8601String(),
+      },
+    );
+    return page.items;
   }
 }

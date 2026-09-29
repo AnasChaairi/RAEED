@@ -18,6 +18,8 @@ import '../../../core/network/api_envelope.dart';
 import '../domain/child.dart';
 import '../domain/child_day_status.dart';
 import '../domain/child_detail.dart';
+import '../domain/child_session.dart';
+import '../domain/session_kind.dart';
 import '../domain/session_summary.dart';
 
 /// Wire values of `attendance_status` and the presence-answer states, mapped
@@ -174,3 +176,13 @@ String? _renderUnknownHealthValue(Object? value) => switch (value) {
         : list.whereType<String>().join('، '),
   _ => null,
 };
+
+ChildSession childSessionFromJson(Map<String, Object?> json) => ChildSession(
+  id: requireField<String>(json, 'id'),
+  kind: SessionKind.fromWire(json['kind'] as String?),
+  startsAt: requireDateTime(json, 'starts_at'),
+  endsAt: requireDateTime(json, 'ends_at'),
+  isCancelled: json['status'] == 'cancelled',
+  title: _optionalString(json, 'title'),
+  place: _optionalString(json, 'place'),
+);

@@ -2644,10 +2644,77 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get sessFooter =>
-      'Les séances sont créées depuis le planning du groupe — ajoutez seulement le contenu.';
+      'Les séances viennent de l\'horaire du groupe — ajoutez le contenu, ou créez une activité avec +.';
 
   @override
   String get sessEmptyWeek => 'Pas de séance cette semaine';
+
+  @override
+  String get activityNewTitle => 'Nouvelle activité';
+
+  @override
+  String get activityNewSubtitle =>
+      'Séance, sport ou atelier pour un de vos groupes';
+
+  @override
+  String get activityGroup => 'Groupe';
+
+  @override
+  String get activityKind => 'Type';
+
+  @override
+  String get activityKindSession => 'Séance';
+
+  @override
+  String get activityKindSport => 'Sport';
+
+  @override
+  String get activityKindWorkshop => 'Atelier';
+
+  @override
+  String get activitySlot => 'Créneau';
+
+  @override
+  String get activityPickDay => 'Choisir le jour';
+
+  @override
+  String get activityTitleHint => 'ex. Match amical, Atelier calligraphie';
+
+  @override
+  String get activityPlace => 'Lieu';
+
+  @override
+  String get activityPlaceHint => 'Salle, terrain…';
+
+  @override
+  String get activityContent => 'Contenu';
+
+  @override
+  String get activityContentHint =>
+      'Ce qui se passera — visible par les parents.';
+
+  @override
+  String get activityNotice =>
+      'Les parents du groupe sont prévenus aussitôt et l\'activité apparaît dans l\'horaire de leurs enfants. ⦿ Enregistré à votre nom.';
+
+  @override
+  String get activityCreateCta => 'Créer et prévenir les parents';
+
+  @override
+  String get activityCreatedToast => 'Activité créée, parents prévenus';
+
+  @override
+  String get shortcutActivity => 'Activité';
+
+  @override
+  String get childScheduleEmpty => 'Rien à venir pour ce groupe.';
+
+  @override
+  String get childScheduleNoGroup =>
+      'L\'enfant n\'est pas encore dans un groupe.';
+
+  @override
+  String get childScheduleCancelled => 'annulée';
 
   @override
   String get sessObjectives => 'Objectifs';

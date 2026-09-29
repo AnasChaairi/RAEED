@@ -22,6 +22,7 @@ import {
   AddMaterialDto,
   ChangeSessionDto,
   CreateHomeworkDto,
+  CreateSessionDto,
   SendSummaryDto,
   UpdateSessionDto,
 } from './dto/session.dto';
@@ -77,6 +78,17 @@ export class SessionsController {
       data: await this.sessions.list(user, { from: start, to: end, groupId }),
       page: { cursor: null, has_more: false },
     };
+  }
+
+  /** An activity the educator adds by hand for one of their groups (EDU-M-03). */
+  @Post('sessions')
+  @HttpCode(HttpStatus.CREATED)
+  @CheckAbility('create', 'Session')
+  create(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: CreateSessionDto,
+  ): Promise<SessionDetailView> {
+    return this.sessions.create(user, body);
   }
 
   @Get('sessions/:sessionId')

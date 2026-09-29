@@ -209,6 +209,8 @@ create table session (
   objectives text,
   theme text,
   status session_status not null default 'planned',
+  kind text not null default 'session' check (kind in ('session', 'sport', 'workshop')),
+                                             -- the weekly حصة, or an activity the educator adds by hand
   is_customized boolean not null default false, -- true once an educator edits it — protects
                                                   -- it from silent regeneration (SES-02)
   summary text,                              -- "what we did today", sent to guardians (EDU-M-04)

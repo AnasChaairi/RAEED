@@ -12,6 +12,7 @@ import '../domain/announcement.dart';
 import '../domain/announcements_repository.dart';
 import '../domain/child.dart';
 import '../domain/child_detail.dart';
+import '../domain/child_session.dart';
 import '../domain/children_repository.dart';
 
 part 'home_providers.g.dart';
@@ -144,3 +145,17 @@ class HomeController extends _$HomeController {
 @riverpod
 Future<ChildDetail> childDetail(Ref ref, String childId) =>
     ref.watch(childrenRepositoryProvider).fetchChild(childId);
+
+/// The coming month of a child's group, for the schedule tab.
+@riverpod
+Future<List<ChildSession>> childSessions(Ref ref, String groupId) {
+  final today = DateTime.now();
+  final from = DateTime(today.year, today.month, today.day);
+  return ref
+      .watch(childrenRepositoryProvider)
+      .fetchSessions(
+        groupId: groupId,
+        from: from,
+        to: from.add(const Duration(days: 30)),
+      );
+}

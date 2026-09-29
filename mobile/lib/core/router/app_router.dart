@@ -58,6 +58,7 @@ class AppScreens {
     required this.sessionSummary,
     required this.sessionPresence,
     required this.sessionHomeworkNew,
+    required this.sessionNew,
     required this.notFound,
   });
 
@@ -141,6 +142,7 @@ class AppScreens {
 
   /// New homework (EDU-M-05).
   final ScreenBuilder sessionHomeworkNew;
+  final ScreenBuilder sessionNew;
 
   /// Fallback for an unknown or stale deep link.
   final ScreenBuilder notFound;
@@ -244,6 +246,11 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.conversation,
         name: AppRoutes.conversationName,
         builder: screens.conversation,
+      ),
+      GoRoute(
+        path: AppRoutes.sessionNew,
+        name: AppRoutes.sessionNewName,
+        builder: screens.sessionNew,
       ),
       GoRoute(
         path: AppRoutes.session,
