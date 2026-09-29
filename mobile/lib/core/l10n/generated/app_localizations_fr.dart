@@ -315,6 +315,9 @@ class AppL10nFr extends AppL10n {
   String get childNoSessionToday => 'Pas de séance aujourd\'hui';
 
   @override
+  String get statusScheduled => 'Séance aujourd\'hui';
+
+  @override
   String childNextSession(String when) {
     return 'Prochaine séance : $when';
   }
@@ -1831,6 +1834,23 @@ class AppL10nFr extends AppL10n {
   String get weekdaySat => 'samedi';
 
   @override
+  String get scheduleEditTitle => 'Horaire hebdomadaire';
+
+  @override
+  String get scheduleAddSlot => '+ Créneau hebdomadaire';
+
+  @override
+  String get scheduleEmptyHint =>
+      'Pas d\'horaire : sans horaire, aucune séance n\'est créée pour ce groupe.';
+
+  @override
+  String get scheduleRecorded =>
+      '⦿ La modification est enregistrée à votre nom et les séances des prochaines semaines sont créées aussitôt.';
+
+  @override
+  String get scheduleSavedToast => 'Horaire enregistré';
+
+  @override
   String get newFamilyTitle => 'Nouvelle famille';
 
   @override
@@ -2240,6 +2260,18 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get actionCreate => 'création';
+
+  @override
+  String get actionUpdate => 'Modification';
+
+  @override
+  String get actionLink => 'Tuteur lié';
+
+  @override
+  String get actionUnlink => 'Tuteur retiré';
+
+  @override
+  String get actionEmergencyCall => 'Appel d\'urgence';
 
   @override
   String get actionPublish => 'annonce publiée';

@@ -7,7 +7,13 @@ import { defineAbilityFor, subject } from '../../common/abilities/define-ability
 import { loadLocale, scheduleLabel } from '../../common/i18n/user-locale';
 import { ApiError } from '../../common/http/api-error';
 import { displayNameOf } from '../../common/sql/display-name';
-import { AssignChildrenDto, CreateGroupDto } from './dto/group.dto';
+import { SessionsService } from '../sessions/sessions.service';
+import {
+  AssignChildrenDto,
+  CreateGroupDto,
+  ScheduleSlotDto,
+  UpdateGroupScheduleDto,
+} from './dto/group.dto';
 
 export interface GroupView {
   id: string;
@@ -17,6 +23,8 @@ export interface GroupView {
   capacity: number | null;
   educators: Array<{ id: string; display_name: string }>;
   schedule_label: string | null;
+  /** The slots behind the label, for the editor. */
+  weekly_schedule: ScheduleSlotDto[];
   place: string | null;
   /** The educator's at-a-glance numbers (EDU-M-06); absent for oversight lists. */
   stats?: GroupStats;
@@ -79,7 +87,10 @@ interface GroupRow {
  */
 @Injectable()
 export class GroupsService {
-  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
+  constructor(
+    @InjectDataSource() private readonly dataSource: DataSource,
+    private readonly sessionsService: SessionsService,
+  ) {}
 
   async list(user: AuthenticatedUser): Promise<GroupView[]> {
     const params: unknown[] = [];
@@ -242,6 +253,14 @@ export class GroupsService {
     groupId: string,
   ): Promise<GroupSessionView[]> {
     const group = await this.loadReadable(user, groupId);
+    // The schedule implies the coming sessions; materialise the next eight
+    // weeks so the page shows them before an educator ever opens Today.
+    await this.sessionsService.ensureGenerated(
+      this.dataSource,
+      [group.id],
+      new Date(),
+      new Date(Date.now() + 56 * 24 * 3600 * 1000),
+    );
 
     const rows: Array<{
       id: string;
@@ -279,6 +298,46 @@ export class GroupsService {
         enrolled_count: row.attendance_recorded ? group.enrolled_count : null,
       },
     }));
+  }
+
+  /**
+   * Replaces the weekly schedule. Sessions already generated stay as they
+   * are — a slot that was planned is a session that was planned — and the
+   * new slots are materialised for the coming weeks at once.
+   */
+  async updateSchedule(
+    user: AuthenticatedUser,
+    groupId: string,
+    input: UpdateGroupScheduleDto,
+  ): Promise<GroupView> {
+    const group = await this.loadReadable(user, groupId);
+    const ability = defineAbilityFor(user);
+    if (!ability.can('update', subject('Group', { id: group.id, branchId: group.branch_id }))) {
+      throw ApiError.scopeForbidden();
+    }
+    for (const slot of input.weekly_schedule) {
+      if (slot.ends_at <= slot.starts_at) {
+        throw ApiError.validationFailed({ weekly_schedule: ['ends_at must be after starts_at'] });
+      }
+    }
+    await this.dataSource.transaction(async (tx) => {
+      await tx.query(
+        `update "group" set weekly_schedule_json = $2::jsonb, updated_at = now() where id = $1`,
+        [group.id, JSON.stringify(input.weekly_schedule)],
+      );
+      await tx.query(
+        `insert into audit_log_entry (actor_user_id, action, resource_type, resource_id, device_meta)
+         values ($1, 'group.update', 'group', $2, $3::jsonb)`,
+        [user.id, group.id, JSON.stringify({ changed: ['weekly_schedule'], slots: input.weekly_schedule.length })],
+      );
+    });
+    await this.sessionsService.ensureGenerated(
+      this.dataSource,
+      [group.id],
+      new Date(),
+      new Date(Date.now() + 56 * 24 * 3600 * 1000),
+    );
+    return this.detail(user, groupId);
   }
 
   /**
@@ -457,7 +516,25 @@ export class GroupsService {
       capacity: row.capacity,
       educators: row.educators,
       schedule_label: scheduleLabel(locale, row.weekly_schedule_json),
+      weekly_schedule: scheduleSlots(row.weekly_schedule_json),
       place: row.place,
     };
   }
+}
+
+/** The stored slots, kept only when well-formed — a malformed entry is dropped, not guessed at. */
+function scheduleSlots(raw: unknown): ScheduleSlotDto[] {
+  if (!Array.isArray(raw)) return [];
+  const slots: ScheduleSlotDto[] = [];
+  for (const entry of raw) {
+    if (!entry || typeof entry !== 'object') continue;
+    const { weekday, starts_at, ends_at } = entry as Record<string, unknown>;
+    if (
+      typeof weekday === 'number' && weekday >= 0 && weekday <= 6 &&
+      typeof starts_at === 'string' && typeof ends_at === 'string'
+    ) {
+      slots.push({ weekday, starts_at, ends_at });
+    }
+  }
+  return slots;
 }

@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
+import { SessionsService } from '../sessions/sessions.service';
+import { ORG_TIMEZONE } from '../../common/i18n/user-locale';
 import { DataSource } from 'typeorm';
 
 import { AuthenticatedUser } from '../../common/abilities/authenticated-user';
@@ -16,6 +18,10 @@ export interface ChildListItem {
   /** Presence-only flag. The health text itself is never in a list payload. */
   health_alert: boolean;
 
+  /** The guardian's Home card: the main group's next session, and today's state. */
+  next_session?: NextSessionView | null;
+  today_status?: TodayStatusView;
+
   /** Oversight callers only — see `list`. */
   image_rights_level?: 'allowed' | 'app_only' | 'not_allowed';
   attendance?: { present: number; expected: number } | null;
@@ -29,7 +35,10 @@ export interface ChildDetailView extends ChildListItem {
 
 @Injectable()
 export class ChildrenService {
-  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
+  constructor(
+    @InjectDataSource() private readonly dataSource: DataSource,
+    private readonly sessions: SessionsService,
+  ) {}
 
   /**
    * Children the caller may see.
@@ -104,7 +113,7 @@ export class ChildrenService {
       present: number | null;
       expected: number | null;
     }> = await this.dataSource.query(
-      `select c.id, c.full_name, c.photo_url, c.dob,
+      `select c.id, c.full_name, c.photo_url, to_char(c.dob, 'YYYY-MM-DD') as dob,
               g.id as group_id, g.name as group_name,
               (c.health_json is not null and c.health_json <> '{}'::jsonb) as health_alert,
               ${user.hasOversight ? this.oversightColumns() : 'null as image_rights_level, null as present, null as expected'}
@@ -119,6 +128,7 @@ export class ChildrenService {
 
     const hasMore = rows.length > options.limit;
     const page = hasMore ? rows.slice(0, options.limit) : rows;
+    const day = await this.dayOf(page);
 
     return {
       items: page.map((row) => ({
@@ -131,6 +141,8 @@ export class ChildrenService {
             ? { id: row.group_id, name: row.group_name }
             : null,
         health_alert: row.health_alert,
+        next_session: row.group_id ? (day.nextByGroup.get(row.group_id) ?? null) : null,
+        today_status: day.statusByChild.get(row.id) ?? { status: 'no_session' },
         // Oversight-only columns: a guardian's list never carries another
         // family's consent level or attendance.
         ...(user.hasOversight
@@ -180,7 +192,7 @@ export class ChildrenService {
       group_name: string | null;
       branch_id: string | null;
     }> = await this.dataSource.query(
-      `select c.id, c.full_name, c.photo_url, c.dob, c.school_level, c.health_json,
+      `select c.id, c.full_name, c.photo_url, to_char(c.dob, 'YYYY-MM-DD') as dob, c.school_level, c.health_json,
               g.id as group_id, g.name as group_name, g.branch_id
          from child c
          left join child_group cg on cg.child_id = c.id and cg.valid_to is null
@@ -275,6 +287,83 @@ export class ChildrenService {
     if (rows.some((row) => row.level === 'app_only')) return 'app_only';
     return 'allowed';
   }
+
+  /**
+   * What the guardian's Home card answers per child: the next session of
+   * the main group (generated first, so a fresh schedule shows up without
+   * an educator having opened Today) and today's status — the attendance
+   * mark once one exists, else the presence answer, else the open question,
+   * else simply that a session is scheduled.
+   */
+  private async dayOf(
+    page: Array<{ id: string; group_id: string | null }>,
+  ): Promise<{
+    nextByGroup: Map<string, NextSessionView>;
+    statusByChild: Map<string, TodayStatusView>;
+  }> {
+    const nextByGroup = new Map<string, NextSessionView>();
+    const statusByChild = new Map<string, TodayStatusView>();
+    const groupIds = [...new Set(page.map((row) => row.group_id).filter((id): id is string => !!id))];
+    if (groupIds.length === 0) return { nextByGroup, statusByChild };
+
+    const now = new Date();
+    await this.sessions.ensureGenerated(
+      this.dataSource,
+      groupIds,
+      now,
+      new Date(now.getTime() + 14 * 24 * 3600 * 1000),
+    );
+
+    const next: Array<{ id: string; group_id: string; starts_at: Date; title: string | null }> =
+      await this.dataSource.query(
+        `select distinct on (s.group_id) s.id, s.group_id, s.starts_at, s.title
+           from session s
+          where s.group_id = any($1::uuid[]) and s.deleted_at is null
+            and s.status <> 'cancelled' and s.ends_at >= now()
+          order by s.group_id, s.starts_at`,
+        [groupIds],
+      );
+    for (const row of next) {
+      nextByGroup.set(row.group_id, {
+        id: row.id,
+        group_id: row.group_id,
+        starts_at: row.starts_at.toISOString(),
+        title: row.title,
+      });
+    }
+
+    const childIds = page.map((row) => row.id);
+    const today: Array<{
+      child_id: string;
+      attendance: string | null;
+      recorded_at: Date | null;
+      answer: string | null;
+      confirmation_open: boolean;
+    }> = await this.dataSource.query(
+      `select cg.child_id,
+              ar.status as attendance, ar.recorded_at,
+              pa.answer,
+              (pc.id is not null) as confirmation_open
+         from child_group cg
+         join session s on s.group_id = cg.group_id and s.deleted_at is null
+                       and s.status <> 'cancelled'
+                       and (s.starts_at at time zone $3)::date = (now() at time zone $3)::date
+         left join attendance_record ar on ar.session_id = s.id and ar.child_id = cg.child_id
+                                        and ar.superseded_at is null
+         left join presence_confirmation pc on pc.session_id = s.id
+         left join presence_answer pa on pa.presence_confirmation_id = pc.id and pa.child_id = cg.child_id
+        where cg.child_id = any($1::uuid[]) and cg.valid_to is null and cg.is_main
+          and cg.group_id = any($2::uuid[])
+        order by cg.child_id, s.starts_at`,
+      [childIds, groupIds, ORG_TIMEZONE],
+    );
+    for (const row of today) {
+      if (statusByChild.has(row.child_id)) continue;
+      statusByChild.set(row.child_id, todayStatus(row));
+    }
+    return { nextByGroup, statusByChild };
+  }
+
 }
 
 function encodeCursor(name: string, id: string): string {
@@ -306,4 +395,60 @@ function parseCursor(cursor: string): { n: string; i: string } {
     // Falls through to the error below.
   }
   throw ApiError.validationFailed({ cursor: ['cursor is not valid'] });
+}
+
+export interface NextSessionView {
+  id: string;
+  group_id: string;
+  starts_at: string;
+  title: string | null;
+}
+
+export interface TodayStatusView {
+  status:
+    | 'no_session'
+    | 'scheduled'
+    | 'awaiting_presence_answer'
+    | 'presence_confirmed'
+    | 'presence_declined'
+    | 'presence_late'
+    | 'present'
+    | 'late'
+    | 'absent'
+    | 'excused';
+  /** When an unexplained absence was recorded — the Home card's alert freshness. */
+  alert_raised_at?: string;
+}
+
+/** Today's status from what is known: the mark wins, then the answer, then the question. */
+function todayStatus(row: {
+  attendance: string | null;
+  recorded_at: Date | null;
+  answer: string | null;
+  confirmation_open: boolean;
+}): TodayStatusView {
+  switch (row.attendance) {
+    case 'present':
+    case 'late':
+    case 'excused':
+      return { status: row.attendance };
+    case 'absent':
+      return {
+        status: 'absent',
+        ...(row.recorded_at ? { alert_raised_at: row.recorded_at.toISOString() } : {}),
+      };
+    default:
+      break;
+  }
+  switch (row.answer) {
+    case 'yes':
+      return { status: 'presence_confirmed' };
+    case 'no':
+      return { status: 'presence_declined' };
+    case 'late':
+      return { status: 'presence_late' };
+    default:
+      break;
+  }
+  return { status: row.confirmation_open ? 'awaiting_presence_answer' : 'scheduled' };
 }

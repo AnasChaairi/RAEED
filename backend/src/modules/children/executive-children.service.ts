@@ -283,7 +283,7 @@ export class ExecutiveChildrenService {
     subjectType: 'Child' | 'ChildHealth' = 'Child',
   ): Promise<ChildRow> {
     const rows: ChildRow[] = await this.dataSource.query(
-      `select c.id, c.full_name, c.photo_url, c.dob, c.school_level,
+      `select c.id, c.full_name, c.photo_url, to_char(c.dob, 'YYYY-MM-DD') as dob, c.school_level,
               c.health_json, c.health_json_version, c.special_needs_notes,
               g.id as group_id, g.name as group_name, g.branch_id
          from child c

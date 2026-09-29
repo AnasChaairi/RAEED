@@ -295,10 +295,15 @@ export class DashboardService {
           where c.deleted_at is null
        )
        select (select count(*) from scoped_children)::int as children,
-              (select count(distinct pc.guardian_user_id)
-                 from parent_child pc
-                 join scoped_children sc on sc.id = pc.child_id
-                where pc.unlinked_at is null)::int as families,
+              -- A household is the set of guardians a child shares, the same
+              -- derivation the families list uses — not a count of guardians.
+              (select count(distinct guardian_set)
+                 from (select string_agg(pc.guardian_user_id::text, ',' order by pc.guardian_user_id)
+                                as guardian_set
+                         from parent_child pc
+                         join scoped_children sc on sc.id = pc.child_id
+                        where pc.unlinked_at is null
+                        group by pc.child_id) households)::int as families,
               (select count(*) from scoped_groups)::int as groups,
               (select count(distinct ge.educator_user_id)
                  from group_educator ge

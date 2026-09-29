@@ -297,10 +297,31 @@ class AuditEntryCard extends StatelessWidget {
           ChipTone.info,
           Icons.group_add_outlined,
         ),
-        'group.create' || 'family.create' || 'branch.create' => (
-          l10n.actionCreate,
+        'group.create' ||
+        'family.create' ||
+        'branch.create' ||
+        'category.create' ||
+        'season.create' ||
+        'child.create' => (l10n.actionCreate, ChipTone.info, Icons.add_rounded),
+        'guardian.update' || 'child.update' || 'group.update' => (
+          l10n.actionUpdate,
+          ChipTone.neutral,
+          Icons.edit_outlined,
+        ),
+        'guardian.link' => (
+          l10n.actionLink,
           ChipTone.info,
-          Icons.add_rounded,
+          Icons.person_add_outlined,
+        ),
+        'guardian.unlink' => (
+          l10n.actionUnlink,
+          ChipTone.warning,
+          Icons.person_remove_outlined,
+        ),
+        'guardian.emergency_call' => (
+          l10n.actionEmergencyCall,
+          ChipTone.danger,
+          Icons.phone_in_talk_outlined,
         ),
         'season.archive' => (
           l10n.actionArchive,

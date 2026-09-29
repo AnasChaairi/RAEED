@@ -313,6 +313,9 @@ class AppL10nEn extends AppL10n {
   String get childNoSessionToday => 'No session today';
 
   @override
+  String get statusScheduled => 'Session today';
+
+  @override
   String childNextSession(String when) {
     return 'Next session: $when';
   }
@@ -1816,6 +1819,23 @@ class AppL10nEn extends AppL10n {
   String get weekdaySat => 'Saturday';
 
   @override
+  String get scheduleEditTitle => 'Weekly schedule';
+
+  @override
+  String get scheduleAddSlot => '+ Weekly slot';
+
+  @override
+  String get scheduleEmptyHint =>
+      'No schedule yet: without one, no sessions are created for this group.';
+
+  @override
+  String get scheduleRecorded =>
+      '⦿ The change is recorded in your name and the coming weeks\' sessions are created at once.';
+
+  @override
+  String get scheduleSavedToast => 'Schedule saved';
+
+  @override
   String get newFamilyTitle => 'New family';
 
   @override
@@ -2225,6 +2245,18 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get actionCreate => 'created';
+
+  @override
+  String get actionUpdate => 'Edit';
+
+  @override
+  String get actionLink => 'Guardian linked';
+
+  @override
+  String get actionUnlink => 'Guardian unlinked';
+
+  @override
+  String get actionEmergencyCall => 'Emergency call';
 
   @override
   String get actionPublish => 'announcement published';

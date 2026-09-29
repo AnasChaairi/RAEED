@@ -27,6 +27,19 @@ class ApiGroupsRepository implements GroupsRepository {
       executiveGroupFromJson(await _client.getObject('/groups/$groupId'));
 
   @override
+  Future<ExecutiveGroup> updateSchedule(
+    String groupId,
+    List<ScheduleSlot> slots,
+  ) async => executiveGroupFromJson(
+    await _client.patch(
+      '/groups/$groupId',
+      body: {
+        'weekly_schedule': [for (final s in slots) scheduleSlotToJson(s)],
+      },
+    ),
+  );
+
+  @override
   Future<List<GroupSession>> fetchSessions(String groupId) async {
     final page = await _client.getList<GroupSession>(
       '/groups/$groupId/sessions',

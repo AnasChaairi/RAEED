@@ -73,3 +73,12 @@ export class AssignChildrenDto {
   @IsUUID('all', { each: true })
   child_ids: string[];
 }
+
+/** `PATCH /groups/{id}` — the weekly schedule, replaced whole. */
+export class UpdateGroupScheduleDto {
+  @IsArray()
+  @ArrayMaxSize(7)
+  @ValidateNested({ each: true })
+  @Type(() => ScheduleSlotDto)
+  weekly_schedule: ScheduleSlotDto[];
+}

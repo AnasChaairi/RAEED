@@ -312,6 +312,9 @@ class AppL10nAr extends AppL10n {
   String get childNoSessionToday => 'لا حصة اليوم';
 
   @override
+  String get statusScheduled => 'حصة اليوم';
+
+  @override
   String childNextSession(String when) {
     return 'الحصة القادمة: $when';
   }
@@ -1883,6 +1886,23 @@ class AppL10nAr extends AppL10n {
   String get weekdaySat => 'السبت';
 
   @override
+  String get scheduleEditTitle => 'الجدول الأسبوعي';
+
+  @override
+  String get scheduleAddSlot => '+ حصة أسبوعية';
+
+  @override
+  String get scheduleEmptyHint =>
+      'لا جدول بعد: بلا جدول لا تُنشأ جلسات لهذه المجموعة.';
+
+  @override
+  String get scheduleRecorded =>
+      '⦿ يُسجَّل التعديل باسمك، وتُنشأ جلسات الأسابيع القادمة فورًا.';
+
+  @override
+  String get scheduleSavedToast => 'حُفظ الجدول';
+
+  @override
   String get newFamilyTitle => 'أسرة جديدة';
 
   @override
@@ -2300,6 +2320,18 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get actionCreate => 'إنشاء';
+
+  @override
+  String get actionUpdate => 'تعديل';
+
+  @override
+  String get actionLink => 'ربط وليّ';
+
+  @override
+  String get actionUnlink => 'فصل وليّ';
+
+  @override
+  String get actionEmergencyCall => 'اتصال طارئ';
 
   @override
   String get actionPublish => 'نشر إعلان';

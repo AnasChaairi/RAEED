@@ -1,5 +1,41 @@
 import 'package:meta/meta.dart';
 
+/// One weekly slot of a group's schedule — sessions are generated from it.
+@immutable
+class ScheduleSlot {
+  const ScheduleSlot({
+    required this.weekday,
+    required this.startsAt,
+    required this.endsAt,
+  });
+
+  /// 0 = Sunday, as in `weekly_schedule_json`.
+  final int weekday;
+
+  /// "16:00", 24-hour.
+  final String startsAt;
+  final String endsAt;
+
+  bool get isWellFormed => endsAt.compareTo(startsAt) > 0;
+
+  ScheduleSlot copyWith({int? weekday, String? startsAt, String? endsAt}) =>
+      ScheduleSlot(
+        weekday: weekday ?? this.weekday,
+        startsAt: startsAt ?? this.startsAt,
+        endsAt: endsAt ?? this.endsAt,
+      );
+
+  @override
+  bool operator ==(Object other) =>
+      other is ScheduleSlot &&
+      other.weekday == weekday &&
+      other.startsAt == startsAt &&
+      other.endsAt == endsAt;
+
+  @override
+  int get hashCode => Object.hash(weekday, startsAt, endsAt);
+}
+
 /// A group as the executive's list shows it.
 @immutable
 class ExecutiveGroup {
@@ -11,6 +47,7 @@ class ExecutiveGroup {
     this.capacity,
     this.educatorNames = const [],
     this.scheduleLabel,
+    this.weeklySchedule = const [],
     this.place,
     this.stats,
   });
@@ -30,6 +67,9 @@ class ExecutiveGroup {
 
   /// "السبت 10:00", already rendered by the server from `weekly_schedule_json`.
   final String? scheduleLabel;
+
+  /// The slots behind [scheduleLabel], for the editor.
+  final List<ScheduleSlot> weeklySchedule;
 
   /// The usual room.
   final String? place;

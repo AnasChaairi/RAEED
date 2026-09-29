@@ -97,6 +97,12 @@ StatusPill resolveStatusPill(Child child, DateTime now) {
       isAlert: false,
       isActionable: false,
     ),
+    DayStatusKind.scheduled => const StatusPill(
+      kind: DayStatusKind.scheduled,
+      tone: StatusPillTone.neutral,
+      isAlert: false,
+      isActionable: false,
+    ),
     DayStatusKind.awaitingPresenceAnswer => const StatusPill(
       kind: DayStatusKind.awaitingPresenceAnswer,
       tone: StatusPillTone.attention,

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { IdentityModule } from '../identity/identity.module';
+import { SessionsModule } from '../sessions/sessions.module';
 import { ChildrenController } from './children.controller';
 import { ChildrenService } from './children.service';
 import { ConsentService } from './consent.service';
@@ -15,7 +16,7 @@ import { ExecutiveChildrenService } from './executive-children.service';
  * rule the modular monolith rests on.
  */
 @Module({
-  imports: [IdentityModule],
+  imports: [IdentityModule, SessionsModule],
   controllers: [ChildrenController],
   providers: [ChildrenService, ConsentService, ExecutiveChildrenService],
   exports: [ChildrenService, ConsentService],

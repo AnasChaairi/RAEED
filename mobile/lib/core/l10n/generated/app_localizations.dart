@@ -639,6 +639,12 @@ abstract class AppL10n {
   /// **'لا حصة اليوم'**
   String get childNoSessionToday;
 
+  /// No description provided for @statusScheduled.
+  ///
+  /// In ar, this message translates to:
+  /// **'حصة اليوم'**
+  String get statusScheduled;
+
   /// No description provided for @childNextSession.
   ///
   /// In ar, this message translates to:
@@ -2997,6 +3003,36 @@ abstract class AppL10n {
   /// **'السبت'**
   String get weekdaySat;
 
+  /// No description provided for @scheduleEditTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجدول الأسبوعي'**
+  String get scheduleEditTitle;
+
+  /// No description provided for @scheduleAddSlot.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ حصة أسبوعية'**
+  String get scheduleAddSlot;
+
+  /// No description provided for @scheduleEmptyHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا جدول بعد: بلا جدول لا تُنشأ جلسات لهذه المجموعة.'**
+  String get scheduleEmptyHint;
+
+  /// No description provided for @scheduleRecorded.
+  ///
+  /// In ar, this message translates to:
+  /// **'⦿ يُسجَّل التعديل باسمك، وتُنشأ جلسات الأسابيع القادمة فورًا.'**
+  String get scheduleRecorded;
+
+  /// No description provided for @scheduleSavedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'حُفظ الجدول'**
+  String get scheduleSavedToast;
+
   /// No description provided for @newFamilyTitle.
   ///
   /// In ar, this message translates to:
@@ -3662,6 +3698,30 @@ abstract class AppL10n {
   /// In ar, this message translates to:
   /// **'إنشاء'**
   String get actionCreate;
+
+  /// No description provided for @actionUpdate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل'**
+  String get actionUpdate;
+
+  /// No description provided for @actionLink.
+  ///
+  /// In ar, this message translates to:
+  /// **'ربط وليّ'**
+  String get actionLink;
+
+  /// No description provided for @actionUnlink.
+  ///
+  /// In ar, this message translates to:
+  /// **'فصل وليّ'**
+  String get actionUnlink;
+
+  /// No description provided for @actionEmergencyCall.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصال طارئ'**
+  String get actionEmergencyCall;
 
   /// No description provided for @actionPublish.
   ///

@@ -6,6 +6,7 @@ import '../../../core/l10n/generated/app_localizations.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/design_tokens.gen.dart';
 import '../../../core/theme/raeed_theme.dart';
+import '../../../shared/errors/failure_presenter.dart';
 import '../../../shared/widgets/raeed_error_view.dart';
 import '../../children/domain/child.dart';
 import '../../children/presentation/widgets/health_alert_badge.dart';
@@ -15,6 +16,7 @@ import 'relative_time.dart';
 import 'widgets/executive_card.dart';
 import 'widgets/executive_empty_state.dart';
 import 'widgets/executive_skeletons.dart';
+import 'widgets/schedule_sheet.dart';
 import 'widgets/tone_chip.dart';
 
 /// EXEC-M-05 — one group: its sessions and its roster (`/groups/:id`).
@@ -38,6 +40,29 @@ enum _Segment { sessions, roster }
 class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen> {
   _Segment _segment = _Segment.sessions;
 
+  Future<void> _editSchedule(ExecutiveGroup group) async {
+    final l10n = AppL10n.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final slots = await ScheduleSheet.show(
+      context,
+      initial: group.weeklySchedule,
+    );
+    if (slots == null || !mounted) return;
+    try {
+      await ref.read(groupsRepositoryProvider).updateSchedule(group.id, slots);
+      ref.invalidate(executiveGroupProvider(group.id));
+      ref.invalidate(groupSessionsProvider(group.id));
+      ref.invalidate(executiveGroupsProvider);
+      messenger.showSnackBar(
+        SnackBar(content: Text('${l10n.scheduleSavedToast} · ⦿')),
+      );
+    } catch (error) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(presentFailure(error, l10n).body)),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
@@ -53,6 +78,9 @@ class _GroupDetailScreenState extends ConsumerState<GroupDetailScreen> {
             rosterCount: roster.value?.length,
             segment: _segment,
             onSegment: (segment) => setState(() => _segment = segment),
+            onEditSchedule: group.value == null
+                ? null
+                : () => _editSchedule(group.value!),
             onBack: () => context.canPop()
                 ? context.pop()
                 : context.go(
@@ -89,6 +117,7 @@ class _GroupHeader extends StatelessWidget {
     required this.segment,
     required this.onSegment,
     required this.onBack,
+    required this.onEditSchedule,
   });
 
   final ExecutiveGroup? group;
@@ -96,6 +125,9 @@ class _GroupHeader extends StatelessWidget {
   final _Segment segment;
   final ValueChanged<_Segment> onSegment;
   final VoidCallback onBack;
+
+  /// Opens the schedule editor; null while the group is still loading.
+  final VoidCallback? onEditSchedule;
 
   @override
   Widget build(BuildContext context) {
@@ -155,6 +187,13 @@ class _GroupHeader extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
+                  IconButton(
+                    key: const Key('edit-schedule'),
+                    tooltip: l10n.scheduleEditTitle,
+                    color: on,
+                    onPressed: onEditSchedule,
+                    icon: const Icon(Icons.edit_calendar_outlined),
                   ),
                 ],
               ),

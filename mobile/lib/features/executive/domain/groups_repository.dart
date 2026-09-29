@@ -17,4 +17,11 @@ abstract interface class GroupsRepository {
 
   /// The group's sessions, most recent first as the server orders them.
   Future<List<GroupSession>> fetchSessions(String groupId);
+
+  /// Replaces the weekly schedule; the coming weeks' sessions are generated
+  /// server-side at once. Returns the group as it now is.
+  Future<ExecutiveGroup> updateSchedule(
+    String groupId,
+    List<ScheduleSlot> slots,
+  );
 }

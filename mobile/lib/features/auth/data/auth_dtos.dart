@@ -60,7 +60,9 @@ ConsentRequirement consentRequirementFromJson(Map<String, Object?> json) {
   if (rawChildren is List) {
     for (final raw in rawChildren) {
       final child = asJsonObject(raw, context: 'children[]');
-      final level = child['image_rights_level'];
+      // The API names it `current_level` (`GET /consent`); the older key is
+      // kept so a build and a server can ship out of step.
+      final level = child['current_level'] ?? child['image_rights_level'];
       children.add(
         ConsentChild(
           id: requireField<String>(child, 'id'),

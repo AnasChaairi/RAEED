@@ -51,6 +51,15 @@ class ManageScreen extends ConsumerStatefulWidget {
 class _ManageScreenState extends ConsumerState<ManageScreen> {
   late ManageTab _tab = widget.initialTab;
 
+  // A `go` to the same route with another `?tab=` keeps this State alive, so
+  // the tab has to follow the widget or a group card's "assign here" — which
+  // navigates to the unassigned tab — would appear to do nothing.
+  @override
+  void didUpdateWidget(covariant ManageScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialTab != widget.initialTab) _tab = widget.initialTab;
+  }
+
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
@@ -103,7 +112,11 @@ class _ManageScreenState extends ConsumerState<ManageScreen> {
                   selection: selection,
                 ),
                 ManageTab.families => _FamiliesTab(families: families),
-                ManageTab.groups => _GroupsTab(groups: groups),
+                ManageTab.groups => _GroupsTab(
+                  groups: groups,
+                  onAssignHere: () =>
+                      setState(() => _tab = ManageTab.unassigned),
+                ),
               },
             ),
             switch (_tab) {
@@ -819,9 +832,10 @@ class FamilyCard extends ConsumerWidget {
 }
 
 class _GroupsTab extends ConsumerWidget {
-  const _GroupsTab({required this.groups});
+  const _GroupsTab({required this.groups, required this.onAssignHere});
 
   final AsyncValue<List<ExecutiveGroup>> groups;
+  final VoidCallback onAssignHere;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -848,7 +862,10 @@ class _GroupsTab extends ConsumerWidget {
               itemCount: list.length,
               separatorBuilder: (_, _) =>
                   const SizedBox(height: RaeedSpacing.sm),
-              itemBuilder: (_, index) => GroupCapacityCard(group: list[index]),
+              itemBuilder: (_, index) => GroupCapacityCard(
+                group: list[index],
+                onAssignHere: onAssignHere,
+              ),
             ),
     );
   }
@@ -856,9 +873,13 @@ class _GroupsTab extends ConsumerWidget {
 
 /// A group with its capacity bar and the "assign children" shortcut.
 class GroupCapacityCard extends StatelessWidget {
-  const GroupCapacityCard({required this.group, super.key});
+  const GroupCapacityCard({required this.group, this.onAssignHere, super.key});
 
   final ExecutiveGroup group;
+
+  /// Switches the hub to the unassigned tab in place. Falls back to a
+  /// route change when the card is shown outside the hub.
+  final VoidCallback? onAssignHere;
 
   @override
   Widget build(BuildContext context) {
@@ -932,8 +953,11 @@ class GroupCapacityCard extends StatelessWidget {
               minimumSize: const Size(0, 36),
               backgroundColor: palette.bg,
             ),
-            onPressed: () =>
-                context.go(AppRoutes.manageTabPath(ManageTab.unassigned.slug)),
+            onPressed:
+                onAssignHere ??
+                () => context.go(
+                  AppRoutes.manageTabPath(ManageTab.unassigned.slug),
+                ),
             child: Text(l10n.groupAssignHere),
           ),
         ],

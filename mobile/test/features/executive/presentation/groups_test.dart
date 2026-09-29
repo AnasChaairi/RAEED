@@ -7,6 +7,7 @@ import 'package:raeed/features/children/presentation/widgets/health_alert_badge.
 import 'package:raeed/features/executive/domain/executive_group.dart';
 import 'package:raeed/features/executive/presentation/group_detail_screen.dart';
 import 'package:raeed/features/executive/presentation/groups_tab.dart';
+import 'package:raeed/features/executive/presentation/widgets/schedule_sheet.dart';
 
 import 'executive_test_support.dart';
 
@@ -56,6 +57,51 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('مقيَّد'), findsOneWidget);
+  });
+
+  testWidgets('the group page edits the weekly schedule and refreshes', (
+    tester,
+  ) async {
+    when(() => mocks.groups.fetchGroup('g1')).thenAnswer((_) async => ashbal);
+    when(() => mocks.groups.fetchSessions('g1')).thenAnswer((_) async => []);
+    when(() => mocks.groups.updateSchedule('g1', any())).thenAnswer(
+      (_) async => const ExecutiveGroup(
+        id: 'g1',
+        name: 'الأشبال 1',
+        categoryName: 'الأشبال',
+        enrolledCount: 20,
+        scheduleLabel: 'الجمعة 16:00',
+      ),
+    );
+    final container = await executiveContainer(mocks);
+
+    await pumpExecutive(
+      tester,
+      container,
+      GroupDetailScreen(groupId: 'g1', now: now),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('edit-schedule')));
+    await tester.pumpAndSettle();
+    // No slots yet: the hint says why it matters, and there is nothing to save.
+    expect(find.textContaining('لا تُنشأ جلسات'), findsOneWidget);
+    final save = find.byKey(const Key('sheet-save'));
+    expect(tester.widget<FilledButton>(save).onPressed, isNull);
+
+    await tester.tap(find.byKey(const Key('slot-add')));
+    await tester.pumpAndSettle();
+    expect(find.text('الجمعة'), findsOneWidget);
+    await tester.tap(save);
+    await tester.pumpAndSettle();
+
+    final slots =
+        verify(() => mocks.groups.updateSchedule('g1', captureAny()))
+                .captured
+                .single
+            as List<ScheduleSlot>;
+    expect(slots, [ScheduleSheet.defaultSlot]);
+    expect(find.textContaining('حُفظ الجدول'), findsOneWidget);
   });
 
   testWidgets('group detail lists sessions with their attendance state', (

@@ -11,6 +11,9 @@ enum DayStatusKind {
   /// No session scheduled today. The quietest state, and the common one.
   noSession,
 
+  /// A session is scheduled today and nothing has been asked or marked yet.
+  scheduled,
+
   /// A presence confirmation is open and nobody has answered it yet.
   ///
   /// `specs/06-mobile-app-spec.md`: an unanswered confirmation surfaces on the

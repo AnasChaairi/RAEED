@@ -27,6 +27,7 @@ import 'package:raeed/features/executive/domain/dashboard_overview.dart';
 import 'package:raeed/features/executive/domain/dashboard_repository.dart';
 import 'package:raeed/features/executive/domain/executive_announcements_repository.dart';
 import 'package:raeed/features/executive/domain/executive_children_repository.dart';
+import 'package:raeed/features/executive/domain/executive_group.dart';
 import 'package:raeed/features/executive/domain/families_repository.dart';
 import 'package:raeed/features/executive/domain/family.dart';
 import 'package:raeed/features/executive/domain/groups_repository.dart';
@@ -125,6 +126,7 @@ class ExecutiveMocks {
     registerFallbackValue(const GuardianPatch());
     registerFallbackValue(const ChildPatch());
     registerFallbackValue(const GroupDraft());
+    registerFallbackValue(<ScheduleSlot>[]);
     registerFallbackValue(<ExportField>{});
     when(
       () => executiveChildren.fetchChildren(
