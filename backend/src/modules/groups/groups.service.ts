@@ -298,7 +298,7 @@ export class GroupsService {
     const seasons: Array<{ id: string }> = await this.dataSource.query(
       `select id from season where status = 'active' order by start_date desc limit 1`,
     );
-    if (seasons.length === 0) throw ApiError.validationFailed({ season: ['no active season'] });
+    if (seasons.length === 0) throw ApiError.groupsNoActiveSeason();
 
     const groupId = await this.dataSource.transaction(async (tx) => {
       const rows: Array<{ id: string }> = await tx.query(
@@ -394,7 +394,7 @@ export class GroupsService {
     const rows: Array<{ id: string }> = await this.dataSource.query(
       'select id from branch where deleted_at is null order by created_at limit 1',
     );
-    if (rows.length === 0) throw ApiError.validationFailed({ branch: ['no branch exists'] });
+    if (rows.length === 0) throw ApiError.groupsNoBranch();
     return rows[0].id;
   }
 

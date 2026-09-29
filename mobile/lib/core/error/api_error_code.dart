@@ -55,6 +55,13 @@ enum ApiErrorCode {
   /// child of the household (409).
   guardiansAlreadyLinked('guardians.already_linked'),
 
+  /// `groups.no_active_season` — a group needs an active season and none is
+  /// open (422). Nothing on the form is wrong; Structure is where to go.
+  groupsNoActiveSeason('groups.no_active_season'),
+
+  /// `groups.no_branch` — a group needs a branch and none exists yet (422).
+  groupsNoBranch('groups.no_branch'),
+
   /// `validation.failed` — DTO-level schema validation failure (422); the
   /// `details` map carries the per-field errors.
   validationFailed('validation.failed'),

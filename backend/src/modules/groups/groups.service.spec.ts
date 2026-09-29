@@ -53,6 +53,15 @@ describe('GroupsService assign', () => {
     expect(statements.some((s) => s.includes("'group.assign'"))).toBe(true);
   });
 
+  it('creating a group names the missing prerequisite, not a field', async () => {
+    const { service } = buildService();
+    const draft = { name: 'الأشبال', category_id: 'cat', educator_ids: ['e1'] };
+    // No branch at all: the first thing a fresh installation lacks.
+    await expect(service.create(executive, draft)).rejects.toMatchObject({
+      code: ApiErrorCode.GROUPS_NO_BRANCH,
+    });
+  });
+
   it('an educator cannot reassign children, even in their own group', async () => {
     const { service } = buildService();
     await expect(service.assign(educator, 'g1', { child_ids: ['c1'] })).rejects.toMatchObject({

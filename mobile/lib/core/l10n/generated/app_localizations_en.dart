@@ -67,6 +67,17 @@ class AppL10nEn extends AppL10n {
       'This account is already a guardian of these children.';
 
   @override
+  String get errorNoActiveSeason =>
+      'No active season. Open one in Structure, then create the group.';
+
+  @override
+  String get errorNoBranch =>
+      'No branch yet. Add one in Structure, then create the group.';
+
+  @override
+  String get openStructure => 'Structure';
+
+  @override
   String get errorSessionExpiredTitle => 'Session expired';
 
   @override

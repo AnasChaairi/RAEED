@@ -91,6 +91,18 @@ PresentedFailure presentFailure(Object error, AppL10n l10n) => switch (error) {
     body: l10n.errorGuardianAlreadyLinked,
     isRetryable: false,
   ),
+  // A group's prerequisites live in Structure, so the screen offers the
+  // way there rather than a retry that would fail the same way.
+  ApiException(code: ApiErrorCode.groupsNoActiveSeason) => PresentedFailure(
+    title: l10n.errorGenericTitle,
+    body: l10n.errorNoActiveSeason,
+    isRetryable: false,
+  ),
+  ApiException(code: ApiErrorCode.groupsNoBranch) => PresentedFailure(
+    title: l10n.errorGenericTitle,
+    body: l10n.errorNoBranch,
+    isRetryable: false,
+  ),
   _ => PresentedFailure(
     title: l10n.errorGenericTitle,
     body: l10n.errorGenericBody,

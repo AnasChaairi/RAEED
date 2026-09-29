@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/error/api_error_code.dart';
+import '../../../core/error/raeed_exception.dart';
 import '../../../core/l10n/generated/app_localizations.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/design_tokens.gen.dart';
@@ -49,8 +51,25 @@ class _NewGroupScreenState extends ConsumerState<NewGroupScreen> {
       router.go(AppRoutes.manageTabPath(ManageTab.groups.slug));
     } catch (error) {
       if (mounted) {
+        // A missing season or branch is not the form's fault: the message
+        // says what is missing and the action goes where it is set.
+        final needsStructure =
+            error is ApiException &&
+            (error.code == ApiErrorCode.groupsNoActiveSeason ||
+                error.code == ApiErrorCode.groupsNoBranch);
         messenger.showSnackBar(
-          SnackBar(content: Text(presentFailure(error, l10n).body)),
+          SnackBar(
+            content: Text(presentFailure(error, l10n).body),
+            duration: needsStructure
+                ? const Duration(seconds: 8)
+                : const Duration(seconds: 4),
+            action: needsStructure
+                ? SnackBarAction(
+                    label: l10n.openStructure,
+                    onPressed: () => router.push(AppRoutes.structure),
+                  )
+                : null,
+          ),
         );
       }
     } finally {

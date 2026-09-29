@@ -65,6 +65,17 @@ class AppL10nAr extends AppL10n {
       'هذا الحساب وليٌّ لهؤلاء الأطفال بالفعل.';
 
   @override
+  String get errorNoActiveSeason =>
+      'لا يوجد موسم نشط. افتح موسمًا من «الهيكل» ثم أنشئ المجموعة.';
+
+  @override
+  String get errorNoBranch =>
+      'لا يوجد فرع بعد. أضف فرعًا من «الهيكل» ثم أنشئ المجموعة.';
+
+  @override
+  String get openStructure => 'الهيكل';
+
+  @override
   String get errorSessionExpiredTitle => 'انتهت الجلسة';
 
   @override

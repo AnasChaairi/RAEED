@@ -67,6 +67,17 @@ class AppL10nFr extends AppL10n {
       'Ce compte est déjà tuteur de ces enfants.';
 
   @override
+  String get errorNoActiveSeason =>
+      'Aucune saison active. Ouvrez-en une dans « Structure », puis créez le groupe.';
+
+  @override
+  String get errorNoBranch =>
+      'Aucune antenne pour l\'instant. Ajoutez-en une dans « Structure », puis créez le groupe.';
+
+  @override
+  String get openStructure => 'Structure';
+
+  @override
   String get errorSessionExpiredTitle => 'Session expirée';
 
   @override
