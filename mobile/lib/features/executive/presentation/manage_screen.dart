@@ -711,6 +711,10 @@ class FamilyCard extends ConsumerWidget {
         horizontal: RaeedSpacing.md + 2,
         vertical: RaeedSpacing.md,
       ),
+      // The card is the summary; the page is where the household is edited.
+      // It travels along as `extra`, so the page renders it at once.
+      onTap: () =>
+          context.push(AppRoutes.manageFamilyPath(family.id), extra: family),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -766,7 +770,11 @@ class FamilyCard extends ConsumerWidget {
               ],
               OutlinedButton(
                 style: OutlinedButton.styleFrom(minimumSize: const Size(0, 36)),
-                onPressed: () => context.push(AppRoutes.manageNewFamily),
+                // Adds to *this* household: the page opens with the sheet up.
+                onPressed: () => context.push(
+                  AppRoutes.manageFamilyPath(family.id, addChild: true),
+                  extra: family,
+                ),
                 child: Text(l10n.familyAddChild),
               ),
             ],
