@@ -168,7 +168,7 @@
   "@consentSubmit": {},
   "navHome": "الرئيسية",
   "@navHome": {},
-  "navSchedule": "الجدول",
+  "navSchedule": "الأنشطة",
   "@navSchedule": {},
   "navMessages": "الرسائل",
   "@navMessages": {},
@@ -293,7 +293,7 @@
   "@childProfileComingSoon": {},
   "pullToRefresh": "اسحب للتحديث",
   "@pullToRefresh": {},
-  "childTabSchedule": "الجدول",
+  "childTabSchedule": "الأنشطة",
   "@childTabSchedule": {
     "description": "Child profile sub-tab."
   },

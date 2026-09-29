@@ -227,6 +227,26 @@ extension RaeedDatabaseQueries on RaeedDatabase {
     await batch((b) => b.insertAll(cachedAttendanceEntries, rows));
   });
 
+  /// Records that the server accepted a mark, so the cached view reflects it
+  /// the moment its queued write is gone. Without this the sheet would fall
+  /// back to the server view cached *before* the mark and the chip would
+  /// visibly revert until the next reload.
+  Future<void> applyAcceptedMark({
+    required String sessionId,
+    required String childId,
+    required String status,
+    required DateTime recordedAt,
+  }) =>
+      (update(cachedAttendanceEntries)..where(
+            (t) => t.sessionId.equals(sessionId) & t.childId.equals(childId),
+          ))
+          .write(
+            CachedAttendanceEntriesCompanion(
+              serverStatus: Value(status),
+              serverRecordedAt: Value(recordedAt),
+            ),
+          );
+
   // --- Pending write queue --------------------------------------------------
 
   /// Adds or replaces the queued write for one child.

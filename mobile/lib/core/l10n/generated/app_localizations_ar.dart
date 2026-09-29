@@ -236,7 +236,7 @@ class AppL10nAr extends AppL10n {
   String get navHome => 'الرئيسية';
 
   @override
-  String get navSchedule => 'الجدول';
+  String get navSchedule => 'الأنشطة';
 
   @override
   String get navMessages => 'الرسائل';
@@ -395,7 +395,7 @@ class AppL10nAr extends AppL10n {
   String get pullToRefresh => 'اسحب للتحديث';
 
   @override
-  String get childTabSchedule => 'الجدول';
+  String get childTabSchedule => 'الأنشطة';
 
   @override
   String get childTabAttendance => 'الحضور';

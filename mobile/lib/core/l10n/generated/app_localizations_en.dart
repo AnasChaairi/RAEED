@@ -241,7 +241,7 @@ class AppL10nEn extends AppL10n {
   String get navHome => 'Home';
 
   @override
-  String get navSchedule => 'Schedule';
+  String get navSchedule => 'Activities';
 
   @override
   String get navMessages => 'Messages';
@@ -396,7 +396,7 @@ class AppL10nEn extends AppL10n {
   String get pullToRefresh => 'Pull to refresh';
 
   @override
-  String get childTabSchedule => 'Schedule';
+  String get childTabSchedule => 'Activities';
 
   @override
   String get childTabAttendance => 'Attendance';
