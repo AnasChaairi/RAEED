@@ -14,6 +14,8 @@ import { NotifyService } from '../notifications/notify.service';
 import {
   AddMaterialDto,
   ChangeSessionDto,
+  CreateSessionDto,
+  SessionKind,
   MaterialKind,
   MaterialVisibility,
   SendSummaryDto,
@@ -25,6 +27,8 @@ export type SessionStatus = 'planned' | 'delivered' | 'cancelled';
 export interface SessionListItem {
   id: string;
   group: { id: string; name: string };
+  /** The weekly حصة, or an activity the educator added: sport or workshop. */
+  kind: SessionKind;
   title: string | null;
   theme: string | null;
   starts_at: string;
@@ -110,6 +114,7 @@ interface SessionRow {
   group_id: string;
   group_name: string;
   branch_id: string;
+  kind: SessionKind;
   title: string | null;
   theme: string | null;
   objectives: string | null;
@@ -232,6 +237,85 @@ export class SessionsService {
           ? { body: row.summary, sent_at: row.summary_sent_at.toISOString() }
           : null,
     };
+  }
+
+  /**
+   * An activity the educator adds by hand — a sport outing, a workshop, or
+   * an extra حصة — for one of their groups at a slot of their choosing.
+   * Customised from birth, so regeneration never touches it, and the
+   * group's guardians are told at once: it is on their child's schedule.
+   */
+  async create(user: AuthenticatedUser, input: CreateSessionDto): Promise<SessionDetailView> {
+    const groups: Array<{ id: string; branch_id: string; name: string }> = await this.dataSource.query(
+      'select g.id, g.branch_id, g.name from "group" g where g.id = $1 and g.deleted_at is null',
+      [input.group_id],
+    );
+    const group = groups[0];
+    if (!group) throw ApiError.scopeForbidden('No such group, or not yours.');
+    const ability = defineAbilityFor(user);
+    if (!ability.can('create', subject('Session', { groupId: group.id, branchId: group.branch_id }))) {
+      throw ApiError.scopeForbidden();
+    }
+    const startsAt = new Date(input.starts_at);
+    const endsAt = new Date(input.ends_at);
+    if (!(endsAt > startsAt)) {
+      throw ApiError.validationFailed({ ends_at: ['must be after starts_at'] });
+    }
+    const locale = await loadLocale(this.dataSource, user.id);
+
+    const created = await this.dataSource.transaction(async (tx) => {
+      const rows: Array<{ id: string }> = await tx.query(
+        `insert into session (group_id, kind, starts_at, ends_at, title, place, theme, objectives,
+                              status, is_customized)
+         values ($1, $2, $3, $4, $5, $6, $7, $8, 'planned', true)
+         returning id`,
+        [
+          group.id,
+          input.kind,
+          startsAt,
+          endsAt,
+          input.title?.trim() || null,
+          input.place?.trim() || null,
+          input.theme?.trim() || null,
+          input.objectives?.trim() || null,
+        ],
+      );
+      const id = rows[0].id;
+      const guardians = await this.notify.guardiansOfGroup(tx, group.id);
+      const kindWord = pick(locale, {
+        ar: { session: 'حصة', sport: 'نشاط رياضي', workshop: 'ورشة' }[input.kind],
+        fr: { session: 'Séance', sport: 'Activité sportive', workshop: 'Atelier' }[input.kind],
+        en: { session: 'Session', sport: 'Sports activity', workshop: 'Workshop' }[input.kind],
+      });
+      const when = formatSlot(locale, startsAt);
+      const title = pick(locale, {
+        ar: `${kindWord} جديدة لـ ${group.name} — ${when}`,
+        fr: `${kindWord} — ${group.name}, ${when}`,
+        en: `${kindWord} — ${group.name}, ${when}`,
+      });
+      const notified = await this.notify.notify(tx, guardians.filter((id) => id !== user.id), {
+        kind: 'other',
+        title,
+        body: input.title?.trim() || null,
+        destination: 'groups',
+        data: { type: 'session-created', session_id: id },
+      });
+      await this.audit(tx, user.id, 'session.create', id, {
+        group_id: group.id,
+        kind: input.kind,
+        starts_at: startsAt.toISOString(),
+        notified: notified.length,
+      });
+      return { id, notified, title };
+    });
+
+    await this.notify.pushTo(this.dataSource.manager, created.notified, {
+      kind: 'other',
+      title: created.title,
+      body: input.title?.trim() || null,
+      data: { type: 'session-created', session_id: created.id },
+    });
+    return this.detail(user, created.id);
   }
 
   /** Adds or edits the content of a session; marks it customised. */
@@ -562,6 +646,20 @@ export class SessionsService {
       );
       return rows.map((row) => row.id);
     }
+    if (user.hasRole('parent') && user.reachableChildIds.size > 0) {
+      // A guardian's groups are their children's current main groups — the
+      // schedule tab lists what the child will attend, nothing else.
+      const rows: Array<{ group_id: string }> = await this.dataSource.query(
+        `select distinct cg.group_id
+           from child_group cg
+           join "group" g on g.id = cg.group_id and g.deleted_at is null
+          where cg.child_id = any($1::uuid[]) and cg.valid_to is null and cg.is_main`,
+        [[...user.reachableChildIds]],
+      );
+      const theirs = rows.map((row) => row.group_id);
+      const mine = [...new Set([...user.reachableGroupIds, ...theirs])];
+      return groupId ? mine.filter((id) => id === groupId) : mine;
+    }
     const mine = [...user.reachableGroupIds];
     return groupId ? mine.filter((id) => id === groupId) : mine;
   }
@@ -671,6 +769,7 @@ export class SessionsService {
     return {
       id: row.id,
       group: { id: row.group_id, name: row.group_name },
+      kind: row.kind,
       title: row.title,
       theme: row.theme,
       starts_at: row.starts_at.toISOString(),
@@ -690,7 +789,7 @@ export class SessionsService {
 
   rows(where: string, params: unknown[], orderBy: string): Promise<SessionRow[]> {
     return this.dataSource.query(
-      `select s.id, s.group_id, g.name as group_name, g.branch_id,
+      `select s.id, s.group_id, g.name as group_name, g.branch_id, s.kind,
               s.title, s.theme, s.objectives, s.starts_at, s.ends_at, s.place, s.status,
               s.is_customized, s.summary, s.summary_sent_at, s.cancel_reason,
               s.rescheduled_from, s.changed_by,

@@ -41,6 +41,8 @@ describe('SessionsService', () => {
     const runQuery = async (sql: string, params: unknown[] = []): Promise<unknown> => {
       statements.push({ sql, params });
       if (sql.includes('from session s') && sql.includes('join "group" g on g.id = s.group_id')) return [row];
+      if (sql.includes('select g.id, g.branch_id, g.name from "group" g')) return [{ id: 'g1', branch_id: 'b1', name: 'الأشبال 1' }];
+      if (sql.includes('insert into session (group_id, kind')) return [{ id: 's1' }];
       if (sql.includes('select preferred_locale')) return [{ preferred_locale: 'ar' }];
       if (sql.includes('from presence_confirmation where session_id')) return confirmation ? [confirmation] : [];
       if (sql.includes('update presence_confirmation set reminder_sent_at')) return [{ reminder_sent_at: new Date() }];
@@ -67,6 +69,41 @@ describe('SessionsService', () => {
     const service = new SessionsService(dataSource, { add: queueAdd } as never, notify as never);
     return { service, statements, queueAdd, notify };
   }
+
+  it('an educator adds a workshop for their group: customised, guardians told, recorded', async () => {
+    const { service, statements, notify } = buildService(sessionRow({ kind: 'workshop', title: 'ورشة الخط' }));
+
+    const view = await service.create(educator, {
+      group_id: 'g1',
+      kind: 'workshop',
+      starts_at: '2026-10-03T09:00:00Z',
+      ends_at: '2026-10-03T11:00:00Z',
+      title: 'ورشة الخط',
+      place: 'القاعة الكبرى',
+    });
+
+    const insert = statements.find((s) => s.sql.includes('insert into session (group_id, kind'))!;
+    expect(insert.sql).toContain("'planned', true");
+    expect(insert.params.slice(0, 2)).toEqual(['g1', 'workshop']);
+    expect(notify.notify).toHaveBeenCalledWith(
+      expect.anything(),
+      ['p1', 'p2', 'p3'],
+      expect.objectContaining({ kind: 'other', data: { type: 'session-created', session_id: 's1' } }),
+    );
+    expect(statements.some((s) => s.sql.includes('audit_log_entry') && s.params.includes('session.create'))).toBe(true);
+    expect(view.kind).toBe('workshop');
+  });
+
+  it('an activity that ends before it starts, or for another group, is refused', async () => {
+    const { service, statements } = buildService(sessionRow());
+    await expect(
+      service.create(educator, { group_id: 'g1', kind: 'sport', starts_at: '2026-10-03T11:00:00Z', ends_at: '2026-10-03T09:00:00Z' }),
+    ).rejects.toMatchObject({ code: ApiErrorCode.VALIDATION_FAILED });
+    await expect(
+      service.create(stranger, { group_id: 'g1', kind: 'sport', starts_at: '2026-10-03T09:00:00Z', ends_at: '2026-10-03T11:00:00Z' }),
+    ).rejects.toMatchObject({ code: ApiErrorCode.SCOPE_FORBIDDEN });
+    expect(statements.some((s) => s.sql.includes('insert into session'))).toBe(false);
+  });
 
   it('refuses a session outside the educator’s groups', async () => {
     const { service } = buildService(sessionRow());

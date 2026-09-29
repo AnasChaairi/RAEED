@@ -141,3 +141,42 @@ export class CreateHomeworkDto {
   @MaxLength(2000)
   attachment_storage_key?: string;
 }
+
+export const SESSION_KINDS = ['session', 'sport', 'workshop'] as const;
+export type SessionKind = (typeof SESSION_KINDS)[number];
+
+/** `POST /sessions` — an activity the educator adds by hand for one of their groups. */
+export class CreateSessionDto {
+  @IsUUID()
+  group_id: string;
+
+  @IsIn(SESSION_KINDS)
+  kind: SessionKind;
+
+  @IsISO8601({ strict: true })
+  starts_at: string;
+
+  @IsISO8601({ strict: true })
+  ends_at: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(2)
+  @MaxLength(120)
+  title?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  place?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  theme?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(2000)
+  objectives?: string;
+}
