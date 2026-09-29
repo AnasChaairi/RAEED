@@ -78,50 +78,94 @@ class AuthScaffold extends StatelessWidget {
   Widget _buildImmersive(BuildContext context) {
     final palette = context.palette;
 
+    // A brand-blue band carries the mark; the page under the card is light.
+    // The old near-black gradient made the backdrop the loudest thing on the
+    // screen, and the logo is what should read first.
     return Scaffold(
-      backgroundColor: palette.primary,
-      body: BrandGradient(
-        variant: BrandGradientVariant.immersive,
-        child: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) => SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: RaeedSpacing.xl2,
-                vertical: RaeedSpacing.xl2,
-              ),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight - RaeedSpacing.xl3,
-                  maxWidth: 420,
+      backgroundColor: palette.bg,
+      body: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                BrandGradient(
+                  variant: BrandGradientVariant.signIn,
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(RaeedRadius.xl2 + 8),
+                  ),
+                  child: SafeArea(
+                    bottom: false,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        RaeedSpacing.xl2,
+                        RaeedSpacing.xl3,
+                        RaeedSpacing.xl2,
+                        RaeedSpacing.xl3 + RaeedSpacing.xl,
+                      ),
+                      child: Column(
+                        children: [
+                          // The mark was drawn for a dark ground, so it keeps
+                          // one — a tile no bigger than itself, not the page.
+                          Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: RaeedSpacing.lg,
+                                vertical: RaeedSpacing.md,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Color.lerp(
+                                  RaeedLogoColors.blueDark,
+                                  palette.ink,
+                                  0.45,
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                  RaeedRadius.xl,
+                                ),
+                              ),
+                              child: const BrandWordmark(width: 220),
+                            ),
+                          ),
+                          if (tagline != null) ...[
+                            const SizedBox(height: RaeedSpacing.sm),
+                            Text(
+                              tagline!,
+                              textAlign: TextAlign.center,
+                              style: context.type.bodySmall.copyWith(
+                                color: palette.primaryOn.withValues(alpha: 0.8),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Center(child: BrandWordmark()),
-                    if (tagline != null) ...[
-                      const SizedBox(height: RaeedSpacing.sm),
-                      Text(
-                        tagline!,
-                        textAlign: TextAlign.center,
-                        style: context.type.bodySmall.copyWith(
-                          // On the gradient, not on a palette surface — a
-                          // translucent white is the only correct value here.
-                          color: palette.primaryOn.withValues(alpha: 0.62),
+                // The card rides up over the band's edge, so the two read as
+                // one composition rather than a header and a form.
+                Transform.translate(
+                  offset: const Offset(0, -RaeedSpacing.xl2),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: RaeedSpacing.xl2,
+                    ),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 420),
+                        child: _FormCard(
+                          title: title,
+                          subtitle: subtitle,
+                          error: error,
+                          onBack: onBack,
+                          children: children,
                         ),
                       ),
-                    ],
-                    const SizedBox(height: RaeedSpacing.xl3),
-                    _FormCard(
-                      title: title,
-                      subtitle: subtitle,
-                      error: error,
-                      onBack: onBack,
-                      children: children,
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                const SizedBox(height: RaeedSpacing.sm),
+              ],
             ),
           ),
         ),
