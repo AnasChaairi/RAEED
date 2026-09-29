@@ -117,35 +117,34 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return AuthScaffold.immersive(
       title: l10n.loginTitle,
       subtitle: l10n.loginSubtitle,
-      tagline: l10n.brandTagline,
       error: _error,
       children: [
-        TextField(
-          key: const Key('login-phone'),
-          controller: _phoneController,
-          focusNode: _phoneFocus,
-          autofocus: true,
-          keyboardType: TextInputType.phone,
-          textInputAction: TextInputAction.next,
-          onSubmitted: (_) => _passwordFocus.requestFocus(),
-          enabled: !_isSubmitting,
-          // A phone number reads left-to-right even inside an Arabic layout:
-          // the country code belongs at the start of the number, not at the
-          // visual end of an RTL line.
+        // A phone number is left-to-right even inside an Arabic layout: the
+        // country code sits at the left, the digits follow it and the cursor
+        // moves right — so the whole field, not just its text, is LTR.
+        Directionality(
           textDirection: TextDirection.ltr,
-          textAlign: context.isRtl ? TextAlign.end : TextAlign.start,
-          autofillHints: const [AutofillHints.telephoneNumber],
-          inputFormatters: [
-            LengthLimitingTextInputFormatter(_maxPhoneInputLength),
-          ],
-          style: context.type.body.copyWith(color: palette.ink),
-          decoration: InputDecoration(
-            labelText: l10n.loginPhoneLabel,
-            hintText: l10n.loginPhoneHint,
-            hintTextDirection: TextDirection.ltr,
-            errorText: _phoneValidationError,
-            prefixIcon: const _CountryCodePrefix(),
-            prefixIconConstraints: const BoxConstraints(),
+          child: TextField(
+            key: const Key('login-phone'),
+            controller: _phoneController,
+            focusNode: _phoneFocus,
+            autofocus: true,
+            keyboardType: TextInputType.phone,
+            textInputAction: TextInputAction.next,
+            onSubmitted: (_) => _passwordFocus.requestFocus(),
+            enabled: !_isSubmitting,
+            autofillHints: const [AutofillHints.telephoneNumber],
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(_maxPhoneInputLength),
+            ],
+            style: context.type.body.copyWith(color: palette.ink),
+            decoration: InputDecoration(
+              labelText: l10n.loginPhoneLabel,
+              hintText: l10n.loginPhoneHint,
+              errorText: _phoneValidationError,
+              prefixIcon: const _CountryCodePrefix(),
+              prefixIconConstraints: const BoxConstraints(),
+            ),
           ),
         ),
         const SizedBox(height: RaeedSpacing.lg),

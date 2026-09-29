@@ -234,7 +234,7 @@ abstract class AppL10n {
   /// No description provided for @loginPhoneHint.
   ///
   /// In ar, this message translates to:
-  /// **'‎+212 6XX XXX XXX'**
+  /// **'6XX XXX XXX'**
   String get loginPhoneHint;
 
   /// No description provided for @loginPhoneInvalid.

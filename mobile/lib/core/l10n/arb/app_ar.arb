@@ -59,7 +59,7 @@
   "@loginTitle": {},
   "loginPhoneLabel": "رقم الهاتف",
   "@loginPhoneLabel": {},
-  "loginPhoneHint": "‎+212 6XX XXX XXX",
+  "loginPhoneHint": "6XX XXX XXX",
   "@loginPhoneHint": {},
   "loginPhoneInvalid": "أدخل رقم هاتف صحيحًا.",
   "@loginPhoneInvalid": {},

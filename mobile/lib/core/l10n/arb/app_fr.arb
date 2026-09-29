@@ -22,7 +22,7 @@
   "offlineRefreshFailed": "Actualisation impossible",
   "loginTitle": "Bienvenue sur RAEED",
   "loginPhoneLabel": "Numéro de téléphone",
-  "loginPhoneHint": "+212 6XX XXX XXX",
+  "loginPhoneHint": "6XX XXX XXX",
   "loginPhoneInvalid": "Saisissez un numéro de téléphone valide.",
   "loginNoAccountNotice": "Les comptes sont créés uniquement par l'administration de l'académie. Si vous n'avez pas de compte, contactez-la.",
   "loginSubtitle": "Saisissez votre numéro de téléphone et votre mot de passe.",
