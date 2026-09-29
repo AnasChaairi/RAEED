@@ -42,6 +42,8 @@ Every request except `/auth/login` and `/auth/refresh` requires `Authorization: 
 | `children.last_guardian` | 409 | Attempted to unlink a child's only remaining guardian |
 | `guardians.phone_taken` | 409 | Another account already signs in with that phone number |
 | `guardians.already_linked` | 409 | The account is already a guardian of every child of the household |
+| `groups.no_active_season` | 422 | A group needs an active season and none is open — Structure, not the form, is where to go |
+| `groups.no_branch` | 422 | A group needs a branch and none exists yet |
 | `validation.failed` | 422 | DTO-level schema validation failure (class-validator) — `details` carries the field errors |
 
 ## Versioning

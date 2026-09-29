@@ -19,6 +19,8 @@ export const ApiErrorCode = {
   CHILDREN_LAST_GUARDIAN: 'children.last_guardian',
   GUARDIANS_PHONE_TAKEN: 'guardians.phone_taken',
   GUARDIANS_ALREADY_LINKED: 'guardians.already_linked',
+  GROUPS_NO_ACTIVE_SEASON: 'groups.no_active_season',
+  GROUPS_NO_BRANCH: 'groups.no_branch',
   PRESENCE_REMINDER_ALREADY_SENT: 'presence.reminder_already_sent',
   SESSION_SUMMARY_ALREADY_SENT: 'session.summary_already_sent',
   VALIDATION_FAILED: 'validation.failed',
@@ -167,6 +169,30 @@ export class ApiError extends HttpException {
       ApiErrorCode.GUARDIANS_ALREADY_LINKED,
       'This account is already a guardian of these children.',
       HttpStatus.CONFLICT,
+    );
+  }
+
+  /**
+   * 422 — a group needs an active season and there is none.
+   *
+   * Its own code rather than a generic validation failure: nothing on the
+   * form is wrong, and the app has to send the admin to Structure, not back
+   * to the fields.
+   */
+  static groupsNoActiveSeason(): ApiError {
+    return new ApiError(
+      ApiErrorCode.GROUPS_NO_ACTIVE_SEASON,
+      'No active season: open one before creating a group.',
+      HttpStatus.UNPROCESSABLE_ENTITY,
+    );
+  }
+
+  /** 422 — a group needs a branch and none exists yet. */
+  static groupsNoBranch(): ApiError {
+    return new ApiError(
+      ApiErrorCode.GROUPS_NO_BRANCH,
+      'No branch exists yet: add one before creating a group.',
+      HttpStatus.UNPROCESSABLE_ENTITY,
     );
   }
 

@@ -466,6 +466,50 @@ void main() {
     });
   });
 
+  group('new group prerequisites', () {
+    testWidgets('a missing season is named, with the way to Structure', (
+      tester,
+    ) async {
+      when(() => mocks.structure.fetchCategories()).thenAnswer(
+        (_) async => const [
+          Category(id: 'cat1', name: 'الأشبال', childCount: 0, groupCount: 0),
+        ],
+      );
+      when(() => mocks.families.fetchEducators()).thenAnswer(
+        (_) async => const [
+          Educator(id: 'e1', displayName: 'عبد الله المرابط', groupCount: 0),
+        ],
+      );
+      when(() => mocks.families.createGroup(any())).thenThrow(
+        const ApiException(
+          code: ApiErrorCode.groupsNoActiveSeason,
+          message: 'no season',
+          statusCode: 422,
+        ),
+      );
+      final container = await executiveContainer(mocks);
+
+      await pumpExecutive(
+        tester,
+        container,
+        const NewGroupScreen(),
+        routes: {'/structure': const Text('structure page')},
+      );
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'الأشبال 2');
+      await tester.tap(find.text('الأشبال'));
+      await tester.tap(find.text('عبد الله المرابط'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(FilledButton));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('لا يوجد موسم نشط'), findsOneWidget);
+      await tester.tap(find.text('الهيكل'));
+      await tester.pumpAndSettle();
+      expect(find.text('structure page'), findsOneWidget);
+    });
+  });
+
   group('reports', () {
     testWidgets('rates carry their raw pair', (tester) async {
       when(() => mocks.reports.fetchAttendance()).thenAnswer(

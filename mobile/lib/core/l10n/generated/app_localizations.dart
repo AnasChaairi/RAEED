@@ -201,6 +201,24 @@ abstract class AppL10n {
   /// **'هذا الحساب وليٌّ لهؤلاء الأطفال بالفعل.'**
   String get errorGuardianAlreadyLinked;
 
+  /// No description provided for @errorNoActiveSeason.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد موسم نشط. افتح موسمًا من «الهيكل» ثم أنشئ المجموعة.'**
+  String get errorNoActiveSeason;
+
+  /// No description provided for @errorNoBranch.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد فرع بعد. أضف فرعًا من «الهيكل» ثم أنشئ المجموعة.'**
+  String get errorNoBranch;
+
+  /// No description provided for @openStructure.
+  ///
+  /// In ar, this message translates to:
+  /// **'الهيكل'**
+  String get openStructure;
+
   /// No description provided for @errorSessionExpiredTitle.
   ///
   /// In ar, this message translates to:
