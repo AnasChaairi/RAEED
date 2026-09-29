@@ -243,7 +243,7 @@ class AppL10nFr extends AppL10n {
   String get navHome => 'Accueil';
 
   @override
-  String get navSchedule => 'Planning';
+  String get navSchedule => 'Activités';
 
   @override
   String get navMessages => 'Messages';
@@ -399,7 +399,7 @@ class AppL10nFr extends AppL10n {
   String get pullToRefresh => 'Tirez pour actualiser';
 
   @override
-  String get childTabSchedule => 'Planning';
+  String get childTabSchedule => 'Activités';
 
   @override
   String get childTabAttendance => 'Présence';

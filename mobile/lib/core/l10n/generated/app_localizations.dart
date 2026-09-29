@@ -516,7 +516,7 @@ abstract class AppL10n {
   /// No description provided for @navSchedule.
   ///
   /// In ar, this message translates to:
-  /// **'الجدول'**
+  /// **'الأنشطة'**
   String get navSchedule;
 
   /// No description provided for @navMessages.
@@ -804,7 +804,7 @@ abstract class AppL10n {
   /// Child profile sub-tab.
   ///
   /// In ar, this message translates to:
-  /// **'الجدول'**
+  /// **'الأنشطة'**
   String get childTabSchedule;
 
   /// No description provided for @childTabAttendance.
