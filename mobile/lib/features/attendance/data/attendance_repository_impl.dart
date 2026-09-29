@@ -243,6 +243,19 @@ class OfflineFirstAttendanceRepository implements AttendanceRepository {
         );
         // Deleted under the same claim token, so an accepted write is removed
         // exactly once even if another drain started meanwhile.
+        // The accepted mark becomes the cached server view in the same
+        // breath the queued write goes: otherwise the sheet re-composes from
+        // the pre-mark cache and the chip reverts until a reload.
+        final sent = jsonDecode(write.payload) as Map<String, dynamic>;
+        final status = sent['status'] as String?;
+        if (status != null) {
+          await _db.applyAcceptedMark(
+            sessionId: write.targetId,
+            childId: write.childId,
+            status: status,
+            recordedAt: write.recordedAtClient,
+          );
+        }
         await _db.completeWrite(id: write.id, claimToken: token);
         accepted++;
       } on NetworkException {

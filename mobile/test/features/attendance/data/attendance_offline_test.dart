@@ -85,6 +85,38 @@ void main() {
   /// in-flight drain rather than starting a second one, so one call is enough.
   Future<SyncOutcome> settle() => repository.sync(sessionId: sessionId);
 
+  group('an accepted mark', () {
+    test('stays on the sheet once its queued write is gone', () async {
+      adapter.respond(200, {
+        'applied': ['child-1'],
+        'alerts_enqueued': <String>[],
+      });
+      final tapAt = DateTime.utc(2026, 9, 13, 9, 5);
+
+      await repository.mark(
+        sessionId: sessionId,
+        childId: 'child-1',
+        status: AttendanceStatus.present,
+        recordedAtClient: tapAt,
+      );
+      final outcome = await settle();
+      expect(outcome.acceptedCount, 1);
+      expect(await queue(), isEmpty);
+
+      final sheet = await repository
+          .loadSheet(sessionId: sessionId, groupId: groupId)
+          .catchError(
+            (_) => repository
+                .watchSheet(sessionId: sessionId, groupId: groupId)
+                .first,
+          );
+      final adam = sheet.entries.firstWhere((e) => e.childId == 'child-1');
+      expect(adam.pendingStatus, isNull);
+      expect(adam.serverStatus, AttendanceStatus.present);
+      expect(adam.serverRecordedAt, tapAt);
+    });
+  });
+
   group('non-negotiable case 1 — attendance conflict', () {
     test('a stale mark is surfaced as a conflict, never silently '
         'overwritten', () async {
