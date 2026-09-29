@@ -163,6 +163,12 @@ Verified against the running stack:
   nothing.
 - `GET /presence-confirmations/pending` and `POST .../answers`, including two
   siblings sharing one confirmation
+- **The presence question goes out by itself** (`ATT-03`): a scheduler on the
+  normal queue asks the group's guardians at `PRESENCE_SEND_HOUR` the day
+  before each session, sets the deadline `PRESENCE_DEADLINE_HOURS_BEFORE` the
+  start, and reminds the unanswered once `PRESENCE_REMINDER_HOURS_BEFORE` the
+  deadline. Lower `PRESENCE_SEND_HOUR` and `PRESENCE_TICK_MINUTES` in
+  `.env.local` to see it fire on a fresh database within a minute.
 
 ## Not built yet
 

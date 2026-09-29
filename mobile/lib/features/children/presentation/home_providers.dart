@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/error/raeed_exception.dart';
 import '../../../core/network/api_client_provider.dart';
 import '../../../core/session/session_controller.dart';
+import '../../attendance/presentation/attendance_providers.dart';
 import '../application/home_scope.dart';
 import '../application/select_pinned_announcements.dart';
 import '../data/announcements_repository_api.dart';
@@ -89,6 +90,8 @@ class HomeController extends _$HomeController {
 
   /// Re-fetches, used by pull-to-refresh.
   Future<void> refresh() async {
+    // Pull-to-refresh asks for the open presence questions again as well.
+    ref.invalidate(unansweredConfirmationsProvider);
     state = await AsyncValue.guard(_load);
   }
 

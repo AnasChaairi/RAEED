@@ -47,6 +47,7 @@ void main() {
     WidgetTester tester,
     List<PendingPresenceConfirmation> pending,
   ) async {
+    when(repository.refreshUnanswered).thenAnswer((_) async => pending);
     when(repository.watchUnanswered).thenAnswer((_) => Stream.value(pending));
 
     final container = ProviderContainer(
@@ -129,9 +130,9 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
 
-    when(repository.watchUnanswered).thenAnswer(
-      (_) => Stream.value([confirmationFor('child-1', 'عبد الرحمن الإدريسي')]),
-    );
+    final scaled = [confirmationFor('child-1', 'عبد الرحمن الإدريسي')];
+    when(repository.refreshUnanswered).thenAnswer((_) async => scaled);
+    when(repository.watchUnanswered).thenAnswer((_) => Stream.value(scaled));
     final container = ProviderContainer(
       overrides: [presenceRepositoryProvider.overrideWithValue(repository)],
     );

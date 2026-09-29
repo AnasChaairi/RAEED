@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/database/raeed_database.dart';
+import '../../../core/error/raeed_exception.dart';
 import '../../../core/network/api_client_provider.dart';
 import '../data/attendance_repository_impl.dart';
 import '../data/presence_repository_impl.dart';
@@ -42,9 +43,21 @@ Stream<int> pendingWriteCount(Ref ref) =>
 /// Confirmations the guardian has not answered.
 ///
 /// Read by the Home card so an unanswered confirmation survives a missed push.
+/// The open presence questions, asked of the server first so a question
+/// that went out since the last launch reaches the Home card; offline, the
+/// cached snapshot stands — the card is how a missed push survives.
 @riverpod
-Stream<List<PendingPresenceConfirmation>> unansweredConfirmations(Ref ref) =>
-    ref.watch(presenceRepositoryProvider).watchUnanswered();
+Stream<List<PendingPresenceConfirmation>> unansweredConfirmations(
+  Ref ref,
+) async* {
+  final repository = ref.watch(presenceRepositoryProvider);
+  try {
+    await repository.refreshUnanswered();
+  } on RaeedException {
+    // Offline or refused: whatever was fetched last time is still shown.
+  }
+  yield* repository.watchUnanswered();
+}
 
 /// The attendance sheet for one session, kept live as writes queue and drain.
 @riverpod

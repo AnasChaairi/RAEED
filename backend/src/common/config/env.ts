@@ -33,6 +33,17 @@ export interface AppConfig {
   };
   readonly sentryDsn: string;
   readonly hijriOffsetDays: number;
+  /** ATT-03: when the presence question goes out, and how long parents have. */
+  readonly presence: {
+    /** Hour of the day before the session, in the association's time zone. */
+    readonly sendHour: number;
+    /** The deadline sits this many hours before the session starts. */
+    readonly deadlineHoursBefore: number;
+    /** The one reminder goes to unanswered guardians this long before the deadline. */
+    readonly reminderHoursBefore: number;
+    /** How often the scheduler looks. */
+    readonly tickMinutes: number;
+  };
 }
 
 /** Placeholder secrets that must never reach a deployed environment. */
@@ -92,6 +103,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     },
     sentryDsn: env.SENTRY_DSN ?? '',
     hijriOffsetDays: Number(env.HIJRI_OFFSET_DAYS ?? 0),
+    presence: presenceSettings(env),
   };
 
   return config;
@@ -106,4 +118,18 @@ function required(env: NodeJS.ProcessEnv, key: string): string {
     );
   }
   return value;
+}
+
+/**
+ * The presence-confirmation timings on their own (ATT-03). Nothing here is
+ * required, so the scheduler can read them without the rest of the
+ * configuration — and so can a unit test.
+ */
+export function presenceSettings(env: NodeJS.ProcessEnv = process.env): AppConfig['presence'] {
+  return {
+    sendHour: Number(env.PRESENCE_SEND_HOUR ?? 18),
+    deadlineHoursBefore: Number(env.PRESENCE_DEADLINE_HOURS_BEFORE ?? 2),
+    reminderHoursBefore: Number(env.PRESENCE_REMINDER_HOURS_BEFORE ?? 3),
+    tickMinutes: Number(env.PRESENCE_TICK_MINUTES ?? 5),
+  };
 }
