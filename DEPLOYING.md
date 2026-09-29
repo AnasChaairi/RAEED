@@ -37,14 +37,33 @@ ssh ubuntu@152.228.213.182 \
 
 ## Deploying a change
 
-From the laptop, on the commit you want running:
+Every push to `main` that touches `backend/` builds the API image in GitHub
+Actions (`.github/workflows/backend-image.yml`) and publishes it to
+`ghcr.io/anaschaairi/raeed-api`, tagged `latest` and `sha-<short commit>`. The
+tests gate it: nothing is published from a red commit. Then, from the laptop:
 
 ```bash
-infrastructure/deploy-server.sh
+infrastructure/deploy-server.sh                            # latest main
+RAEED_API_TAG=sha-1a2b3c4 infrastructure/deploy-server.sh  # roll back or forward to one commit
 ```
 
-It rsyncs `backend/` and `infrastructure/`, rebuilds the image, applies pending
+It syncs `infrastructure/`, pulls the image on the VM, applies pending
 migrations and restarts. It never seeds and never touches `.env.server`.
+
+The VM must be able to pull the package **once**: either make the package
+public (GitHub → Packages → `raeed-api` → Package settings → Change
+visibility), or sign the VM in with a token that has `read:packages`:
+
+```bash
+ssh ubuntu@152.228.213.182 'echo <token> | docker login ghcr.io -u AnasChaairi --password-stdin'
+```
+
+Without the registry (or before the first workflow run), the old path still
+works and builds on the VM itself:
+
+```bash
+infrastructure/deploy-server.sh --build
+```
 
 On the VM, the compose command is always:
 
