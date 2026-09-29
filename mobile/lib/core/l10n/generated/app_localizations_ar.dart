@@ -2322,6 +2322,18 @@ class AppL10nAr extends AppL10n {
   String get actionCreate => 'إنشاء';
 
   @override
+  String get actionUpdate => 'تعديل';
+
+  @override
+  String get actionLink => 'ربط وليّ';
+
+  @override
+  String get actionUnlink => 'فصل وليّ';
+
+  @override
+  String get actionEmergencyCall => 'اتصال طارئ';
+
+  @override
   String get actionPublish => 'نشر إعلان';
 
   @override

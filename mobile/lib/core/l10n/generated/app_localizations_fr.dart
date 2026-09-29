@@ -2262,6 +2262,18 @@ class AppL10nFr extends AppL10n {
   String get actionCreate => 'création';
 
   @override
+  String get actionUpdate => 'Modification';
+
+  @override
+  String get actionLink => 'Tuteur lié';
+
+  @override
+  String get actionUnlink => 'Tuteur retiré';
+
+  @override
+  String get actionEmergencyCall => 'Appel d\'urgence';
+
+  @override
   String get actionPublish => 'annonce publiée';
 
   @override

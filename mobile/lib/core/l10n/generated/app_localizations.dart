@@ -3699,6 +3699,30 @@ abstract class AppL10n {
   /// **'إنشاء'**
   String get actionCreate;
 
+  /// No description provided for @actionUpdate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل'**
+  String get actionUpdate;
+
+  /// No description provided for @actionLink.
+  ///
+  /// In ar, this message translates to:
+  /// **'ربط وليّ'**
+  String get actionLink;
+
+  /// No description provided for @actionUnlink.
+  ///
+  /// In ar, this message translates to:
+  /// **'فصل وليّ'**
+  String get actionUnlink;
+
+  /// No description provided for @actionEmergencyCall.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصال طارئ'**
+  String get actionEmergencyCall;
+
   /// No description provided for @actionPublish.
   ///
   /// In ar, this message translates to:

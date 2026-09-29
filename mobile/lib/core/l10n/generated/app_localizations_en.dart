@@ -2247,6 +2247,18 @@ class AppL10nEn extends AppL10n {
   String get actionCreate => 'created';
 
   @override
+  String get actionUpdate => 'Edit';
+
+  @override
+  String get actionLink => 'Guardian linked';
+
+  @override
+  String get actionUnlink => 'Guardian unlinked';
+
+  @override
+  String get actionEmergencyCall => 'Emergency call';
+
+  @override
   String get actionPublish => 'announcement published';
 
   @override
