@@ -1,0 +1,89 @@
+# Builds the API image and publishes it to GitHub's container registry.
+#
+# `specs/12-devops-and-environments.md`: rollback is "redeploy the previous
+# tagged Docker image", which needs the images to exist somewhere other than
+# the VM that runs them. The 2 GB dev server also stops building on its own —
+# `infrastructure/deploy-server.sh` pulls what this workflow pushed.
+#
+# Every image is tagged with the commit (`sha-<short>`) and, on main, `latest`.
+# The tests gate the build: an image is never published from a red commit.
+name: Backend image
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-image.yml'
+  pull_request:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-image.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: backend-image-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IMAGE: ghcr.io/${{ github.repository_owner }}/raeed-api
+
+jobs:
+  test:
+    name: Typecheck and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+
+  image:
+    name: Build and publish
+    needs: test
+    # Pull requests only prove the image builds; nothing is published from them.
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Sign in to the registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Image tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+          # Lower-cased by the action: registry names cannot carry capitals.
+          tags: |
+            type=sha,prefix=sha-,format=short
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=tag
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: backend
+          target: runtime
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

@@ -6,7 +6,8 @@
 # stack is exposure: the secrets are generated, Postgres and Redis publish no
 # port (Docker's published ports bypass ufw), and only Caddy faces the internet.
 #
-#     docker compose --env-file .env.server -f docker-compose.server.yml up -d --build
+#     docker compose --env-file .env.server -f docker-compose.server.yml pull api
+#     docker compose --env-file .env.server -f docker-compose.server.yml up -d
 name: raeed
 
 services:
@@ -39,6 +40,10 @@ services:
       retries: 20
 
   api:
+    # The image CI published (.github/workflows/backend-image.yml). Pin a
+    # commit with RAEED_API_TAG=sha-<short> in .env.server to roll back; the
+    # build block stays for `deploy-server.sh --build`, the no-registry path.
+    image: ${RAEED_API_IMAGE:-ghcr.io/anaschaairi/raeed-api}:${RAEED_API_TAG:-latest}
     build:
       context: ../backend
       dockerfile: Dockerfile
