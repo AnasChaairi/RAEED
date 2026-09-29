@@ -11,7 +11,10 @@ describe('IdentityService sign-in', () => {
   const passwords = new PasswordService();
   const device = '3c6d3b9e-6b4a-4d4b-9d3e-2f1a0c8b7e6d';
 
-  async function build(rows: Array<{ id: string; is_active: boolean; password_hash: string | null }>) {
+  async function build(
+    rows: Array<{ id: string; is_active: boolean; password_hash: string | null }>,
+    deviceOwner: string | null = null,
+  ) {
     const statements: Array<{ sql: string; params: unknown[] }> = [];
     const runQuery = async (sql: string, params: unknown[] = []): Promise<unknown> => {
       statements.push({ sql, params });
@@ -19,6 +22,7 @@ describe('IdentityService sign-in', () => {
       if (sql.includes('select password_hash from app_user')) {
         return rows.map((r) => ({ password_hash: r.password_hash }));
       }
+      if (sql.includes('select user_id from user_device')) return deviceOwner ? [{ user_id: deviceOwner }] : [];
       return [];
     };
     const dataSource = {
@@ -32,6 +36,7 @@ describe('IdentityService sign-in', () => {
     };
     const tokens = {
       issue: jest.fn().mockResolvedValue({ accessToken: 'a', refreshToken: 'r' }),
+      revokeDevice: jest.fn().mockResolvedValue(undefined),
     };
     const service = new IdentityService(
       dataSource,
@@ -60,6 +65,28 @@ describe('IdentityService sign-in', () => {
     expect(throttle.recordFailure).not.toHaveBeenCalled();
     expect(tokens.issue).toHaveBeenCalledWith('u1', device);
     expect(statements.some((s) => s.sql.includes('insert into user_device'))).toBe(true);
+  });
+
+  it('a second person on the same phone takes the device over, and the first loses its refresh', async () => {
+    const hash = await passwords.hash('raeed1');
+    const { service, statements, tokens } = await build(
+      [{ id: 'u2', is_active: true, password_hash: hash }],
+      'u1',
+    );
+
+    await service.login('+212600000002', 'raeed1', device, '10.0.0.1');
+
+    expect(tokens.revokeDevice).toHaveBeenCalledWith('u1', device);
+    const upsert = statements.find((s) => s.sql.includes('insert into user_device'))!;
+    expect(upsert.sql).toContain('set user_id = excluded.user_id');
+    expect(upsert.params).toEqual([device, 'u2']);
+  });
+
+  it('the same person signing in again keeps their refresh', async () => {
+    const hash = await passwords.hash('raeed1');
+    const { service, tokens } = await build([{ id: 'u1', is_active: true, password_hash: hash }], 'u1');
+    await service.login('+212600000001', 'raeed1', device, '10.0.0.1');
+    expect(tokens.revokeDevice).not.toHaveBeenCalled();
   });
 
   it('a wrong password, an unknown number, a deactivated account and a passwordless account all fail alike', async () => {

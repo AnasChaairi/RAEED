@@ -219,13 +219,30 @@ export class IdentityService {
       : null;
   }
 
-  /** Records the device so a refresh token has something to be scoped to. */
+  /**
+   * Records the device so a refresh token has something to be scoped to.
+   *
+   * One install keeps one device id across sign-outs, so a second person
+   * signing in on the same phone takes the row over: the previous holder's
+   * refresh token for it is dropped first, since the row's user is what a
+   * refresh trusts. Left bound to the earlier user, the new session would
+   * refresh as the wrong person and be refused fifteen minutes in.
+   */
   private async registerDevice(userId: string, deviceId: string): Promise<void> {
+    const rows: Array<{ user_id: string }> = await this.dataSource.query(
+      'select user_id from user_device where id = $1',
+      [deviceId],
+    );
+    const previous = rows[0]?.user_id;
+    if (previous && previous !== userId) {
+      await this.tokens.revokeDevice(previous, deviceId);
+    }
     await this.dataSource.query(
       `insert into user_device (id, user_id, last_seen_at, created_at)
        values ($1, $2, now(), now())
        on conflict (id) do update
-         set last_seen_at = now(),
+         set user_id = excluded.user_id,
+             last_seen_at = now(),
              revoked_at = null`,
       [deviceId, userId],
     );
