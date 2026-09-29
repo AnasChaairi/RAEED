@@ -5,6 +5,7 @@ import { MediaModule } from '../media/media.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { EducatorTodayService } from './educator-today.service';
 import { HomeworkService } from './homework.service';
+import { PresenceScheduler } from './presence-scheduler';
 import { SessionsController } from './sessions.controller';
 import { SessionsService } from './sessions.service';
 
@@ -15,7 +16,7 @@ import { SessionsService } from './sessions.service';
 @Module({
   imports: [IdentityModule, NotificationsModule, MediaModule],
   controllers: [SessionsController],
-  providers: [SessionsService, HomeworkService, EducatorTodayService],
+  providers: [SessionsService, HomeworkService, EducatorTodayService, PresenceScheduler],
   exports: [SessionsService],
 })
 export class SessionsModule {}

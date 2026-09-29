@@ -33,6 +33,10 @@ export const CriticalJob = {
 } as const;
 
 /** The payload an absence alert carries. */
+export const NormalJob = {
+  PRESENCE_TICK: 'send-presence-confirmation',
+} as const;
+
 export interface AbsenceAlertJob {
   readonly attendanceRecordId: string;
   readonly sessionId: string;
