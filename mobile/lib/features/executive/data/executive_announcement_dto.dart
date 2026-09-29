@@ -21,6 +21,7 @@ const Map<String, AudienceMode> _audienceModeByWire = {
   'parents': AudienceMode.parents,
   'educators': AudienceMode.educators,
   'categories': AudienceMode.categories,
+  'groups': AudienceMode.groups,
 };
 
 AnnouncementAudience audienceFromJson(Object? value) {
@@ -35,6 +36,9 @@ AnnouncementAudience audienceFromJson(Object? value) {
     mode: mode,
     categoryIds: mode == AudienceMode.categories
         ? stringList(json['category_ids']).toSet()
+        : const {},
+    groupIds: mode == AudienceMode.groups
+        ? stringList(json['group_ids']).toSet()
         : const {},
   );
 }
