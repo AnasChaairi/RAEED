@@ -2644,7 +2644,7 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get sessFooter =>
-      'Les séances sont créées depuis le planning du groupe — ajoutez seulement le contenu.';
+      'Les séances viennent de l\'horaire du groupe — ajoutez le contenu, ou créez une activité avec +.';
 
   @override
   String get sessEmptyWeek => 'Pas de séance cette semaine';

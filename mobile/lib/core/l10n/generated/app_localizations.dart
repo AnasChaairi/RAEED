@@ -4236,7 +4236,7 @@ abstract class AppL10n {
   /// No description provided for @sessFooter.
   ///
   /// In ar, this message translates to:
-  /// **'الجلسات تُنشأ تلقائيًا من جدول المجموعة — أضف المحتوى فقط.'**
+  /// **'الحصص تُنشأ من جدول المجموعة تلقائيًا — أضف المحتوى، أو أنشئ نشاطًا بزر +.'**
   String get sessFooter;
 
   /// No description provided for @sessEmptyWeek.

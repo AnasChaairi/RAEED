@@ -689,7 +689,7 @@
   "sessMetaHomework": "devoir",
   "sessMetaGenerated": "créée depuis le planning",
   "sessMetaWith": "avec {name}",
-  "sessFooter": "Les séances sont créées depuis le planning du groupe — ajoutez seulement le contenu.",
+  "sessFooter": "Les séances viennent de l'horaire du groupe — ajoutez le contenu, ou créez une activité avec +.",
   "sessEmptyWeek": "Pas de séance cette semaine",
   "activityNewTitle": "Nouvelle activité",
   "activityNewSubtitle": "Séance, sport ou atelier pour un de vos groupes",

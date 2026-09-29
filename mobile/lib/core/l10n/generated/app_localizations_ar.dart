@@ -2731,7 +2731,7 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get sessFooter =>
-      'الجلسات تُنشأ تلقائيًا من جدول المجموعة — أضف المحتوى فقط.';
+      'الحصص تُنشأ من جدول المجموعة تلقائيًا — أضف المحتوى، أو أنشئ نشاطًا بزر +.';
 
   @override
   String get sessEmptyWeek => 'لا جلسات هذا الأسبوع';

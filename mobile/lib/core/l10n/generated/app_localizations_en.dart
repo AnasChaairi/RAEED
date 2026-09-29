@@ -2629,7 +2629,7 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get sessFooter =>
-      'Sessions are created from the group schedule — add content only.';
+      'Sessions come from the group schedule — add content, or create an activity with +.';
 
   @override
   String get sessEmptyWeek => 'No sessions this week';
