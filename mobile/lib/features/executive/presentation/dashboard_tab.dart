@@ -59,8 +59,10 @@ class DashboardTab extends ConsumerWidget {
               ? 0
               : _count(overview, today, SessionAttendanceState.upcoming),
           hasUnread: unread != null && unreadCount(unread) > 0,
-          onNotificationsTap: () => context.go(AppRoutes.notifications),
-          onMoreTap: () => context.go(AppRoutes.more),
+          // Pushed, not replaced: the system back key returns here rather
+          // than leaving the app.
+          onNotificationsTap: () => context.push(AppRoutes.notifications),
+          onMoreTap: () => context.push(AppRoutes.more),
         ),
         Expanded(
           child: dashboard.when(
@@ -174,7 +176,8 @@ class _DashboardBody extends ConsumerWidget {
                 child: TodaySessionTile(
                   session: session,
                   now: now,
-                  onTap: () => context.go(AppRoutes.groupPath(session.groupId)),
+                  onTap: () =>
+                      context.push(AppRoutes.groupPath(session.groupId)),
                 ),
               ),
         ],
@@ -187,7 +190,7 @@ class _DashboardBody extends ConsumerWidget {
   void _openAlert(BuildContext context, WidgetRef ref, DashboardAlert alert) {
     final tab = ExecutiveTab.forDestination(alert.destination);
     if (tab == null) {
-      context.go(AppRoutes.notifications);
+      context.push(AppRoutes.notifications);
       return;
     }
     ref.read(executiveTabControllerProvider.notifier).select(tab);
