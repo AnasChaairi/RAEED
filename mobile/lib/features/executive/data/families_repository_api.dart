@@ -105,13 +105,6 @@ Map<String, Object?> groupDraftToJson(GroupDraft draft) => {
   'name': draft.name.trim(),
   'category_id': draft.categoryId,
   'capacity': draft.capacity,
-  'weekly_schedule': [
-    {
-      'weekday': draft.slot.weekday,
-      'starts_at': draft.slot.startsAt,
-      'ends_at': draft.slot.endsAt,
-    },
-  ],
   'educator_ids': draft.educatorIds.toList()..sort(),
   if (draft.childIds.isNotEmpty) 'child_ids': draft.childIds.toList()..sort(),
 };
