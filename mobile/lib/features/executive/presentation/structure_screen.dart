@@ -112,17 +112,87 @@ class _StructureScreenState extends ConsumerState<StructureScreen> {
   }
 }
 
-class _SeasonsTab extends ConsumerWidget {
+class _SeasonsTab extends ConsumerStatefulWidget {
   const _SeasonsTab({required this.seasons});
 
   final AsyncValue<List<Season>> seasons;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_SeasonsTab> createState() => _SeasonsTabState();
+}
+
+class _SeasonsTabState extends ConsumerState<_SeasonsTab> {
+  bool _adding = false;
+  final _label = TextEditingController();
+  DateTime? _start;
+  DateTime? _end;
+
+  @override
+  void dispose() {
+    _label.dispose();
+    super.dispose();
+  }
+
+  bool get _canSave =>
+      _label.text.trim().length >= 2 &&
+      _start != null &&
+      _end != null &&
+      _end!.isAfter(_start!);
+
+  Future<void> _pick({required bool start}) async {
+    final now = DateTime.now();
+    final current = start ? _start : _end;
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: current ?? (start ? now : _start ?? now),
+      firstDate: DateTime(now.year - 2),
+      lastDate: DateTime(now.year + 3),
+    );
+    if (picked == null) return;
+    setState(() {
+      if (start) {
+        _start = picked;
+      } else {
+        _end = picked;
+      }
+    });
+  }
+
+  Future<void> _create() async {
+    final l10n = AppL10n.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await ref
+          .read(structureRepositoryProvider)
+          .createSeason(
+            label: _label.text.trim(),
+            startDate: _start!,
+            endDate: _end!,
+          );
+      ref.invalidate(seasonsProvider);
+      if (!mounted) return;
+      setState(() {
+        _adding = false;
+        _start = null;
+        _end = null;
+      });
+      _label.clear();
+      messenger.showSnackBar(
+        SnackBar(content: Text('${l10n.seasonCreatedToast} · ⦿')),
+      );
+    } catch (error) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(presentFailure(error, l10n).body)),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final palette = context.palette;
     final l10n = AppL10n.of(context);
     final locale = Localizations.localeOf(context);
-    return seasons.when(
+    return widget.seasons.when(
       loading: () => const SkeletonCardList(count: 3, height: 90),
       error: (error, _) => RaeedErrorView(
         error: error,
@@ -200,6 +270,70 @@ class _SeasonsTab extends ConsumerWidget {
               style: context.type.caption.copyWith(color: palette.inkDim),
             ),
           ),
+          const SizedBox(height: RaeedSpacing.sm),
+          if (_adding)
+            _AddForm(
+              canSave: _canSave,
+              onSave: _create,
+              onCancel: () => setState(() => _adding = false),
+              fields: [
+                TextField(
+                  key: const Key('season-label'),
+                  controller: _label,
+                  autofocus: true,
+                  onChanged: (_) => setState(() {}),
+                  decoration: InputDecoration(
+                    hintText: l10n.seasonLabelHint,
+                    isDense: true,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        key: const Key('season-start'),
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size(0, RaeedTouchTarget.minPx),
+                          foregroundColor: palette.ink,
+                        ),
+                        onPressed: () => _pick(start: true),
+                        icon: const Icon(Icons.play_arrow_outlined, size: 18),
+                        label: Text(
+                          _start == null
+                              ? l10n.seasonStartPick
+                              : fullDate(locale, _start!),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: RaeedSpacing.sm),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        key: const Key('season-end'),
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size(0, RaeedTouchTarget.minPx),
+                          foregroundColor: palette.ink,
+                        ),
+                        onPressed: () => _pick(start: false),
+                        icon: const Icon(Icons.stop_outlined, size: 18),
+                        label: Text(
+                          _end == null
+                              ? l10n.seasonEndPick
+                              : fullDate(locale, _end!),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          else
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size.fromHeight(RaeedTouchTarget.minPx),
+              ),
+              onPressed: () => setState(() => _adding = true),
+              child: Text(l10n.newSeason),
+            ),
         ],
       ),
     );
@@ -236,11 +370,46 @@ class _SeasonsTab extends ConsumerWidget {
   }
 }
 
-class _CategoriesTab extends ConsumerWidget {
+class _CategoriesTab extends ConsumerStatefulWidget {
   const _CategoriesTab();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_CategoriesTab> createState() => _CategoriesTabState();
+}
+
+class _CategoriesTabState extends ConsumerState<_CategoriesTab> {
+  bool _adding = false;
+  final _name = TextEditingController();
+
+  @override
+  void dispose() {
+    _name.dispose();
+    super.dispose();
+  }
+
+  Future<void> _create() async {
+    final l10n = AppL10n.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await ref
+          .read(structureRepositoryProvider)
+          .createCategory(name: _name.text.trim());
+      ref.invalidate(categoriesProvider);
+      if (!mounted) return;
+      setState(() => _adding = false);
+      _name.clear();
+      messenger.showSnackBar(
+        SnackBar(content: Text('${l10n.categoryCreatedToast} · ⦿')),
+      );
+    } catch (error) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(presentFailure(error, l10n).body)),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final palette = context.palette;
     final l10n = AppL10n.of(context);
     final categories = ref.watch(categoriesProvider);
@@ -274,55 +443,150 @@ class _CategoriesTab extends ConsumerWidget {
           ),
           const SizedBox(height: RaeedSpacing.sm),
           for (final category in list) ...[
-            ExecutiveCard(
-              radius: RaeedRadius.lg + 2,
-              padding: const EdgeInsets.symmetric(
-                horizontal: RaeedSpacing.md + 2,
-                vertical: RaeedSpacing.md,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          category.name,
-                          style: context.type.h3.copyWith(color: palette.ink),
-                        ),
-                        Text(
-                          '${l10n.childrenCount(category.childCount)} · ${l10n.grpCount(category.groupCount)}',
-                          style: context.type
-                              .tabular(context.type.caption)
-                              .copyWith(color: palette.inkDim),
-                        ),
-                      ],
-                    ),
-                  ),
-                  ToneChip(
-                    label: category.isRangeSet
-                        ? [
-                            if (category.minAge != null ||
-                                category.maxAge != null)
-                              l10n.catAgeRange(
-                                category.minAge ?? 0,
-                                category.maxAge ?? 0,
-                              ),
-                            if (category.gender != null)
-                              switch (category.gender!) {
-                                CategoryGender.boys => l10n.genderBoys,
-                                CategoryGender.girls => l10n.genderGirls,
-                                CategoryGender.mixed => l10n.genderMixed,
-                              },
-                          ].join(' · ')
-                        : l10n.catAgeGenderUnset,
-                    tone: ChipTone.accent,
-                  ),
-                ],
-              ),
-            ),
+            _CategoryCard(category: category),
             const SizedBox(height: RaeedSpacing.sm),
           ],
+          if (_adding)
+            _AddForm(
+              onSave: _create,
+              onCancel: () => setState(() => _adding = false),
+              // Name only: the range and gender are not asked (open
+              // decision #1), and a field left blank is not a decision.
+              fields: [
+                TextField(
+                  key: const Key('category-name'),
+                  controller: _name,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: l10n.categoryNameHint,
+                    isDense: true,
+                  ),
+                ),
+              ],
+            )
+          else
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size.fromHeight(RaeedTouchTarget.minPx),
+              ),
+              onPressed: () => setState(() => _adding = true),
+              child: Text(l10n.newCategory),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CategoryCard extends StatelessWidget {
+  const _CategoryCard({required this.category});
+
+  final Category category;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final l10n = AppL10n.of(context);
+    return ExecutiveCard(
+      radius: RaeedRadius.lg + 2,
+      padding: const EdgeInsets.symmetric(
+        horizontal: RaeedSpacing.md + 2,
+        vertical: RaeedSpacing.md,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  category.name,
+                  style: context.type.h3.copyWith(color: palette.ink),
+                ),
+                Text(
+                  '${l10n.childrenCount(category.childCount)} · ${l10n.grpCount(category.groupCount)}',
+                  style: context.type
+                      .tabular(context.type.caption)
+                      .copyWith(color: palette.inkDim),
+                ),
+              ],
+            ),
+          ),
+          ToneChip(
+            label: category.isRangeSet
+                ? [
+                    if (category.minAge != null || category.maxAge != null)
+                      l10n.catAgeRange(
+                        category.minAge ?? 0,
+                        category.maxAge ?? 0,
+                      ),
+                    if (category.gender != null)
+                      switch (category.gender!) {
+                        CategoryGender.boys => l10n.genderBoys,
+                        CategoryGender.girls => l10n.genderGirls,
+                        CategoryGender.mixed => l10n.genderMixed,
+                      },
+                  ].join(' · ')
+                : l10n.catAgeGenderUnset,
+            tone: ChipTone.accent,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The inline add form the structure tabs share: fields, save, cancel.
+class _AddForm extends StatelessWidget {
+  const _AddForm({
+    required this.fields,
+    required this.onSave,
+    required this.onCancel,
+    this.canSave = true,
+  });
+
+  final List<Widget> fields;
+  final VoidCallback onSave;
+  final VoidCallback onCancel;
+  final bool canSave;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final l10n = AppL10n.of(context);
+    return ExecutiveCard(
+      radius: RaeedRadius.lg + 2,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final (index, field) in fields.indexed) ...[
+            if (index > 0) const SizedBox(height: RaeedSpacing.sm),
+            field,
+          ],
+          const SizedBox(height: RaeedSpacing.sm + 2),
+          Row(
+            children: [
+              Expanded(
+                child: FilledButton(
+                  key: const Key('structure-save'),
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size.fromHeight(RaeedTouchTarget.minPx),
+                  ),
+                  onPressed: canSave ? onSave : null,
+                  child: Text(l10n.commonSave),
+                ),
+              ),
+              const SizedBox(width: RaeedSpacing.sm),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(0, RaeedTouchTarget.minPx),
+                  foregroundColor: palette.ink,
+                ),
+                onPressed: onCancel,
+                child: Text(l10n.dialogCancel),
+              ),
+            ],
+          ),
         ],
       ),
     );

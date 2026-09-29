@@ -3489,6 +3489,54 @@ abstract class AppL10n {
   /// **'أُنشئ الفرع'**
   String get branchCreatedToast;
 
+  /// No description provided for @newCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ فئة جديدة'**
+  String get newCategory;
+
+  /// No description provided for @categoryNameHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم الفئة'**
+  String get categoryNameHint;
+
+  /// No description provided for @categoryCreatedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُنشئت الفئة'**
+  String get categoryCreatedToast;
+
+  /// No description provided for @newSeason.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ موسم جديد'**
+  String get newSeason;
+
+  /// No description provided for @seasonLabelHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم الموسم، مثل 2026-2027'**
+  String get seasonLabelHint;
+
+  /// No description provided for @seasonStartPick.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ البداية'**
+  String get seasonStartPick;
+
+  /// No description provided for @seasonEndPick.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ النهاية'**
+  String get seasonEndPick;
+
+  /// No description provided for @seasonCreatedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'فُتح الموسم'**
+  String get seasonCreatedToast;
+
   /// No description provided for @adminOnlyTitle.
   ///
   /// In ar, this message translates to:

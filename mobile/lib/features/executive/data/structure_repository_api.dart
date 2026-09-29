@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../../../core/network/api_client.dart';
 import '../../../core/network/api_envelope.dart';
 import '../domain/structure.dart';
@@ -71,8 +73,33 @@ class ApiStructureRepository implements StructureRepository {
       (await _client.getList<Category>('/categories', categoryFromJson)).items;
 
   @override
+  Future<Category> createCategory({required String name}) async =>
+      categoryFromJson(
+        await _client.post('/categories', body: {'name': name.trim()}),
+      );
+
+  @override
   Future<List<Season>> fetchSeasons() async =>
       (await _client.getList<Season>('/seasons', seasonFromJson)).items;
+
+  @override
+  Future<Season> createSeason({
+    required String label,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    final wire = DateFormat('yyyy-MM-dd');
+    return seasonFromJson(
+      await _client.post(
+        '/seasons',
+        body: {
+          'label': label.trim(),
+          'start_date': wire.format(startDate),
+          'end_date': wire.format(endDate),
+        },
+      ),
+    );
+  }
 
   @override
   Future<void> archiveSeason(String seasonId) =>

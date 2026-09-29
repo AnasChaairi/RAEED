@@ -1581,6 +1581,23 @@ paths:
       responses:
         '200': { description: OK }
         '403': { $ref: '#/components/responses/Forbidden' }
+    post:
+      summary: Open a season (Admin only) — active from creation; the previous one is archived from the list, never closed by this call
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [label, start_date, end_date]
+              properties:
+                label: { type: string, example: "2026-2027" }
+                start_date: { type: string, format: date }
+                end_date: { type: string, format: date }
+      responses:
+        '201': { description: Created — recorded as `season.create` }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { description: "`validation.failed` — end_date must be after start_date" }
 
   /seasons/{seasonId}/archive:
     post:
@@ -1598,6 +1615,20 @@ paths:
       summary: The categories (فئات) with counts; age range and gender are null until decided (open decision #1)
       responses:
         '200': { description: OK }
+    post:
+      summary: Add a category (Admin only) — by name; age range and gender are not taken until open decision #1 is settled
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, example: الأشبال }
+      responses:
+        '201': { description: Created — recorded as `category.create` }
+        '403': { $ref: '#/components/responses/Forbidden' }
 
   /branches:
     get:
