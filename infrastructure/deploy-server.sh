@@ -20,7 +20,9 @@ REPO="${RAEED_REPO:-git@github.com:AnasChaairi/RAEED.git}"
 REF="${RAEED_REF:-main}"
 MODE="${1:-auto}"
 
-ssh "$HOST" "REPO='$REPO' REF='$REF' MODE='$MODE' bash -s" <<'REMOTE'
+# The remote script travels as an argument, not on stdin: docker reads stdin
+# and would swallow the rest of a script streamed to `bash -s`.
+REMOTE=$(cat <<'REMOTE_SCRIPT'
 set -euo pipefail
 SRC=~/raeed/src
 if [ ! -d "$SRC/.git" ]; then
@@ -53,4 +55,6 @@ $C run --rm --no-deps api \
 $C up -d
 until curl -sf localhost:3000/api/v1/health; do sleep 2; done; echo
 $C ps --format 'table {{.Service}}\t{{.Status}}\t{{.Image}}'
-REMOTE
+REMOTE_SCRIPT
+)
+ssh "$HOST" "REPO='$REPO' REF='$REF' MODE='$MODE' bash -c $(printf '%q' "$REMOTE")"
