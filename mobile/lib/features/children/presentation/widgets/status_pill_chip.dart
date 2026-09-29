@@ -98,6 +98,7 @@ class StatusPillChip extends StatelessWidget {
 
   String _labelFor(AppL10n l10n) => switch (pill.kind) {
     DayStatusKind.noSession => l10n.childNoSessionToday,
+    DayStatusKind.scheduled => l10n.statusScheduled,
     DayStatusKind.awaitingPresenceAnswer => l10n.statusAwaitingAnswer,
     DayStatusKind.presenceConfirmed => l10n.statusPresenceConfirmed,
     DayStatusKind.presenceDeclined => l10n.statusPresenceDeclined,
@@ -113,6 +114,7 @@ class StatusPillChip extends StatelessWidget {
     if (pill.isAlert) return Icons.warning_amber_rounded;
     return switch (pill.kind) {
       DayStatusKind.noSession => Icons.event_busy_outlined,
+      DayStatusKind.scheduled => Icons.event_outlined,
       DayStatusKind.awaitingPresenceAnswer => Icons.help_outline,
       DayStatusKind.presenceConfirmed => Icons.event_available_outlined,
       DayStatusKind.presenceDeclined => Icons.event_busy_outlined,

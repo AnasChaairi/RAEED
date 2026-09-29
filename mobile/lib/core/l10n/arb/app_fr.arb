@@ -90,6 +90,7 @@
   "homeEmptyBody": "Veuillez contacter l'administration de l'académie pour lier votre enfant à votre compte.",
   "childAgeYears": "{years, plural, one{{years} an} other{{years} ans}}",
   "childNoSessionToday": "Pas de séance aujourd'hui",
+  "statusScheduled": "Séance aujourd'hui",
   "childNextSession": "Prochaine séance : {when}",
   "statusAwaitingAnswer": "Confirmation de présence attendue",
   "statusPresenceConfirmed": "Présence confirmée",

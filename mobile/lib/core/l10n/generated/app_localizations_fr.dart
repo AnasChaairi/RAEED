@@ -315,6 +315,9 @@ class AppL10nFr extends AppL10n {
   String get childNoSessionToday => 'Pas de séance aujourd\'hui';
 
   @override
+  String get statusScheduled => 'Séance aujourd\'hui';
+
+  @override
   String childNextSession(String when) {
     return 'Prochaine séance : $when';
   }

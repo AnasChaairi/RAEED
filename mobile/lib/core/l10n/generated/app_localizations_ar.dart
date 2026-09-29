@@ -312,6 +312,9 @@ class AppL10nAr extends AppL10n {
   String get childNoSessionToday => 'لا حصة اليوم';
 
   @override
+  String get statusScheduled => 'حصة اليوم';
+
+  @override
   String childNextSession(String when) {
     return 'الحصة القادمة: $when';
   }

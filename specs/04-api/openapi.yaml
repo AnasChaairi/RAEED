@@ -79,6 +79,23 @@ components:
         health_alert:
           type: boolean
           description: Presence-only flag; full health text is never inlined in a list response.
+        next_session:
+          type: object
+          nullable: true
+          description: The main group's next session that has not ended, generated from the weekly schedule first — what the guardian's Home card shows
+          properties:
+            id: { type: string, format: uuid }
+            group_id: { type: string, format: uuid }
+            starts_at: { type: string, format: date-time }
+            title: { type: string, nullable: true }
+        today_status:
+          type: object
+          description: Today's state for the Home card — the attendance mark once one exists, else the presence answer, else the open question, else that a session is scheduled
+          properties:
+            status:
+              type: string
+              enum: [no_session, scheduled, awaiting_presence_answer, presence_confirmed, presence_declined, presence_late, present, late, absent, excused]
+            alert_raised_at: { type: string, format: date-time, description: When an unexplained absence was recorded }
 
     ChildDetail:
       allOf:

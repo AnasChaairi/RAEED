@@ -639,6 +639,12 @@ abstract class AppL10n {
   /// **'لا حصة اليوم'**
   String get childNoSessionToday;
 
+  /// No description provided for @statusScheduled.
+  ///
+  /// In ar, this message translates to:
+  /// **'حصة اليوم'**
+  String get statusScheduled;
+
   /// No description provided for @childNextSession.
   ///
   /// In ar, this message translates to:

@@ -90,6 +90,7 @@
   "homeEmptyBody": "Please contact the academy's administration to link your child to your account.",
   "childAgeYears": "{years, plural, one{{years} year} other{{years} years}}",
   "childNoSessionToday": "No session today",
+  "statusScheduled": "Session today",
   "childNextSession": "Next session: {when}",
   "statusAwaitingAnswer": "Presence confirmation needed",
   "statusPresenceConfirmed": "Presence confirmed",

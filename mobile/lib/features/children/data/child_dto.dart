@@ -28,6 +28,7 @@ import '../domain/session_summary.dart';
 /// the one screen a parent opens first.
 const Map<String, DayStatusKind> _dayStatusByWire = {
   'no_session': DayStatusKind.noSession,
+  'scheduled': DayStatusKind.scheduled,
   'awaiting_presence_answer': DayStatusKind.awaitingPresenceAnswer,
   'presence_confirmed': DayStatusKind.presenceConfirmed,
   'presence_declined': DayStatusKind.presenceDeclined,

@@ -224,6 +224,8 @@
   },
   "childNoSessionToday": "لا حصة اليوم",
   "@childNoSessionToday": {},
+  "statusScheduled": "حصة اليوم",
+  "@statusScheduled": {},
   "childNextSession": "الحصة القادمة: {when}",
   "@childNextSession": {
     "placeholders": {

@@ -44,7 +44,7 @@ describe('ExecutiveChildrenService', () => {
       return [];
     };
     const dataSource = { query: runQuery } as unknown as DataSource;
-    const service = new ExecutiveChildrenService(dataSource, new ChildrenService(dataSource));
+    const service = new ExecutiveChildrenService(dataSource, new ChildrenService(dataSource, { ensureGenerated: async () => undefined } as never));
     return { service, statements };
   }
 
