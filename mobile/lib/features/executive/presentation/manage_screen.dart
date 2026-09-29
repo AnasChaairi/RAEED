@@ -17,6 +17,7 @@ import 'widgets/executive_card.dart';
 import 'widgets/executive_confirm_sheet.dart';
 import 'widgets/executive_empty_state.dart';
 import 'widgets/executive_skeletons.dart';
+import 'widgets/family_fields.dart';
 import 'widgets/password_handover_dialog.dart';
 import 'widgets/section_header.dart';
 import 'widgets/tone_chip.dart';
@@ -702,23 +703,7 @@ class FamilyCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = context.palette;
     final l10n = AppL10n.of(context);
-    final status = switch (family.status) {
-      FamilyStatus.active => ToneChip(
-        label: l10n.familyStatusActive,
-        tone: ChipTone.success,
-        icon: Icons.check_rounded,
-      ),
-      FamilyStatus.partial => ToneChip(
-        label: l10n.familyStatusPartial,
-        tone: ChipTone.info,
-        icon: Icons.contrast_rounded,
-      ),
-      FamilyStatus.pending => ToneChip(
-        label: l10n.familyStatusPending,
-        tone: ChipTone.warning,
-        icon: Icons.schedule_rounded,
-      ),
-    };
+    final status = familyStatusChip(l10n, family.status);
 
     return ExecutiveCard(
       radius: RaeedRadius.lg + 2,

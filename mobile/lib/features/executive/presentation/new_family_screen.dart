@@ -14,6 +14,7 @@ import 'executive_providers.dart';
 import 'manage_screen.dart' show ManageTab;
 import 'relative_time.dart';
 import 'widgets/executive_card.dart';
+import 'widgets/family_fields.dart';
 import 'widgets/password_handover_dialog.dart';
 import 'widgets/section_header.dart';
 import 'widgets/tone_chip.dart';
@@ -261,7 +262,7 @@ class _NewFamilyScreenState extends ConsumerState<NewFamilyScreen> {
               _draft.guardians
                   .map(
                     (g) =>
-                        '+212 ${g.phone} (${_relLabel(l10n, g.relationship)})',
+                        '+212 ${g.phone} (${relationshipLabel(l10n, g.relationship)})',
                   )
                   .join(' · '),
               textDirection: TextDirection.ltr,
@@ -367,13 +368,6 @@ class _NewFamilyScreenState extends ConsumerState<NewFamilyScreen> {
       ],
     ];
   }
-
-  static String _relLabel(AppL10n l10n, String relationship) =>
-      switch (relationship) {
-        'mother' => l10n.relMother,
-        'father' => l10n.relFather,
-        _ => l10n.relGuardian,
-      };
 }
 
 class _GuardianCard extends StatelessWidget {
@@ -412,43 +406,16 @@ class _GuardianCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: RaeedSpacing.sm),
-              DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: draft.relationship,
-                  items: [
-                    DropdownMenuItem(
-                      value: 'mother',
-                      child: Text(l10n.relMother),
-                    ),
-                    DropdownMenuItem(
-                      value: 'father',
-                      child: Text(l10n.relFather),
-                    ),
-                    DropdownMenuItem(
-                      value: 'parent',
-                      child: Text(l10n.relGuardian),
-                    ),
-                  ],
-                  onChanged: (v) => v == null
-                      ? null
-                      : onChanged(draft.copyWith(relationship: v)),
-                ),
+              RelationshipDropdown(
+                value: draft.relationship,
+                onChanged: (v) => onChanged(draft.copyWith(relationship: v)),
               ),
             ],
           ),
           const SizedBox(height: RaeedSpacing.sm),
-          TextFormField(
+          NationalPhoneField(
             initialValue: draft.phone,
-            keyboardType: TextInputType.phone,
-            textDirection: TextDirection.ltr,
-            onChanged: (v) => onChanged(
-              draft.copyWith(phone: v.replaceAll(RegExp(r'\D'), '')),
-            ),
-            decoration: InputDecoration(
-              prefixText: '+212 ',
-              hintText: l10n.guardianPhoneHint,
-              isDense: true,
-            ),
+            onChanged: (v) => onChanged(draft.copyWith(phone: v)),
           ),
           if (removable)
             Align(

@@ -120,6 +120,10 @@ class ExecutiveMocks {
       ),
     ).thenAnswer((_) async => const Paginated.empty());
     registerFallbackValue(const FamilyDraft());
+    registerFallbackValue(const GuardianDraft());
+    registerFallbackValue(const ChildDraft());
+    registerFallbackValue(const GuardianPatch());
+    registerFallbackValue(const ChildPatch());
     registerFallbackValue(const GroupDraft());
     registerFallbackValue(<ExportField>{});
     when(

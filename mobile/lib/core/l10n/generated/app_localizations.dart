@@ -2661,6 +2661,156 @@ abstract class AppL10n {
   /// **'+ أسرة جديدة'**
   String get newFamilyCta;
 
+  /// No description provided for @familyDetailSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'{guardians, plural, one{وليّ واحد} two{وليّان} few{{guardians} أولياء} many{{guardians} وليًّا} other{{guardians} وليّ}} · {children, plural, one{طفل واحد} two{طفلان} few{{children} أطفال} many{{children} طفلًا} other{{children} طفل}}'**
+  String familyDetailSubtitle(int guardians, int children);
+
+  /// No description provided for @familyGuardiansSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأولياء'**
+  String get familyGuardiansSection;
+
+  /// No description provided for @familyChildrenSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأطفال'**
+  String get familyChildrenSection;
+
+  /// No description provided for @familyAddGuardian.
+  ///
+  /// In ar, this message translates to:
+  /// **'+ وليّ آخر'**
+  String get familyAddGuardian;
+
+  /// No description provided for @familyEditGuardian.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل الوليّ'**
+  String get familyEditGuardian;
+
+  /// No description provided for @familyUnlinkGuardian.
+  ///
+  /// In ar, this message translates to:
+  /// **'فصل عن الأسرة'**
+  String get familyUnlinkGuardian;
+
+  /// No description provided for @familyUnlinkConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'فصل {name} عن الأسرة؟'**
+  String familyUnlinkConfirmTitle(String name);
+
+  /// No description provided for @familyUnlinkConfirmBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يبقى الأطفال مع أوليائهم الآخرين، ويبقى الحساب موجودًا دون أطفال. لا يمكن فصل آخر وليّ لطفل.'**
+  String get familyUnlinkConfirmBody;
+
+  /// No description provided for @familyUnlinkRecorded.
+  ///
+  /// In ar, this message translates to:
+  /// **'⦿ يُسجَّل الفصل باسمك.'**
+  String get familyUnlinkRecorded;
+
+  /// No description provided for @familyUnlinkCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'فصل'**
+  String get familyUnlinkCta;
+
+  /// No description provided for @familyUnlinkDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'فُصل الوليّ عن الأسرة.'**
+  String get familyUnlinkDone;
+
+  /// No description provided for @familyGuardianUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'حُفظ التعديل.'**
+  String get familyGuardianUpdated;
+
+  /// No description provided for @familyGuardianLinkedExisting.
+  ///
+  /// In ar, this message translates to:
+  /// **'رُبط حساب موجود بالأطفال. كلمة مروره لم تتغيّر.'**
+  String get familyGuardianLinkedExisting;
+
+  /// No description provided for @familyGuardianLinked.
+  ///
+  /// In ar, this message translates to:
+  /// **'رُبط الوليّ بالأطفال.'**
+  String get familyGuardianLinked;
+
+  /// No description provided for @familyPhoneUnchangedHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتركه فارغًا لإبقاء الرقم الحالي'**
+  String get familyPhoneUnchangedHint;
+
+  /// No description provided for @familyPhoneChangeWarning.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير الرقم يُخرج الوليّ من التطبيق على كل أجهزته. يدخل من جديد بالرقم الجديد وكلمة المرور نفسها.'**
+  String get familyPhoneChangeWarning;
+
+  /// No description provided for @familyEditChild.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل الطفل'**
+  String get familyEditChild;
+
+  /// No description provided for @familyChildAdded.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُضيف الطفل إلى الأسرة.'**
+  String get familyChildAdded;
+
+  /// No description provided for @familyChildUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'حُفظ التعديل.'**
+  String get familyChildUpdated;
+
+  /// No description provided for @familyEditRecorded.
+  ///
+  /// In ar, this message translates to:
+  /// **'⦿ يُسجَّل التعديل باسمك.'**
+  String get familyEditRecorded;
+
+  /// No description provided for @familyNotFoundTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذه الأسرة لم تعد متاحة'**
+  String get familyNotFoundTitle;
+
+  /// No description provided for @familyNotFoundBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ربما تغيّر أولياؤها من جهاز آخر. ارجع إلى قائمة الأسر.'**
+  String get familyNotFoundBody;
+
+  /// No description provided for @familyBackToList.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلى الأسر'**
+  String get familyBackToList;
+
+  /// No description provided for @saveAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ'**
+  String get saveAction;
+
+  /// No description provided for @cancelAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get cancelAction;
+
   /// No description provided for @newGroupCta.
   ///
   /// In ar, this message translates to:

@@ -120,6 +120,12 @@ String? _abilityRedirect({required AppSession session, required String path}) {
       AbilityAction.read,
       const ResourceRef.type(AbilitySubject.dashboard),
     ),
+    // One household (`/manage/families/:id`): the same oversight surface as
+    // the hub it opens from. Matched by prefix, since the id is in the path.
+    _ when path.startsWith('${AppRoutes.manage}/') => (
+      AbilityAction.read,
+      const ResourceRef.type(AbilitySubject.dashboard),
+    ),
     _ => null,
   };
 

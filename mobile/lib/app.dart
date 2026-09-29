@@ -28,6 +28,7 @@ import 'features/educator/presentation/presence_overview_screen.dart';
 import 'features/educator/presentation/session_detail_screen.dart';
 import 'features/educator/presentation/session_edit_screen.dart';
 import 'features/educator/presentation/session_summary_screen.dart';
+import 'features/executive/domain/family.dart';
 import 'features/executive/presentation/announcement_composer_screen.dart';
 import 'features/executive/presentation/attendance_review_screen.dart';
 import 'features/executive/presentation/children_screen.dart';
@@ -35,6 +36,7 @@ import 'features/executive/presentation/conversation_screen.dart';
 import 'features/executive/presentation/executive_child_screen.dart';
 import 'features/executive/presentation/executive_providers.dart';
 import 'features/executive/presentation/executive_shell.dart';
+import 'features/executive/presentation/family_detail_screen.dart';
 import 'features/executive/presentation/group_detail_screen.dart';
 import 'features/executive/presentation/logs_screen.dart';
 import 'features/executive/presentation/manage_screen.dart';
@@ -210,6 +212,15 @@ final AppScreens appScreensTable = AppScreens(
   ),
   manageNewGroup: (context, state) => const NewGroupScreen(),
   manageNewFamily: (context, state) => const NewFamilyScreen(),
+  manageFamily: (context, state) => FamilyDetailScreen(
+    familyId: state.pathParameters['familyId'] ?? '',
+    // The card pushes the family it shows, so the page renders at once and
+    // fetches behind it; a cold deep link starts from the skeleton.
+    initial: state.extra is Family ? state.extra! as Family : null,
+    openAddChild:
+        state.uri.queryParameters[AppRoutes.manageFamilyActionParam] ==
+        AppRoutes.manageFamilyAddChildAction,
+  ),
   reports: (context, state) => const ReportsScreen(),
   structure: (context, state) => const StructureScreen(),
   logs: (context, state) => const LogsScreen(),

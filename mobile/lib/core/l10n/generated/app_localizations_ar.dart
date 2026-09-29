@@ -1659,6 +1659,107 @@ class AppL10nAr extends AppL10n {
   String get newFamilyCta => '+ أسرة جديدة';
 
   @override
+  String familyDetailSubtitle(int guardians, int children) {
+    String _temp0 = intl.Intl.pluralLogic(
+      guardians,
+      locale: localeName,
+      other: '$guardians وليّ',
+      many: '$guardians وليًّا',
+      few: '$guardians أولياء',
+      two: 'وليّان',
+      one: 'وليّ واحد',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      children,
+      locale: localeName,
+      other: '$children طفل',
+      many: '$children طفلًا',
+      few: '$children أطفال',
+      two: 'طفلان',
+      one: 'طفل واحد',
+    );
+    return '$_temp0 · $_temp1';
+  }
+
+  @override
+  String get familyGuardiansSection => 'الأولياء';
+
+  @override
+  String get familyChildrenSection => 'الأطفال';
+
+  @override
+  String get familyAddGuardian => '+ وليّ آخر';
+
+  @override
+  String get familyEditGuardian => 'تعديل الوليّ';
+
+  @override
+  String get familyUnlinkGuardian => 'فصل عن الأسرة';
+
+  @override
+  String familyUnlinkConfirmTitle(String name) {
+    return 'فصل $name عن الأسرة؟';
+  }
+
+  @override
+  String get familyUnlinkConfirmBody =>
+      'يبقى الأطفال مع أوليائهم الآخرين، ويبقى الحساب موجودًا دون أطفال. لا يمكن فصل آخر وليّ لطفل.';
+
+  @override
+  String get familyUnlinkRecorded => '⦿ يُسجَّل الفصل باسمك.';
+
+  @override
+  String get familyUnlinkCta => 'فصل';
+
+  @override
+  String get familyUnlinkDone => 'فُصل الوليّ عن الأسرة.';
+
+  @override
+  String get familyGuardianUpdated => 'حُفظ التعديل.';
+
+  @override
+  String get familyGuardianLinkedExisting =>
+      'رُبط حساب موجود بالأطفال. كلمة مروره لم تتغيّر.';
+
+  @override
+  String get familyGuardianLinked => 'رُبط الوليّ بالأطفال.';
+
+  @override
+  String get familyPhoneUnchangedHint => 'اتركه فارغًا لإبقاء الرقم الحالي';
+
+  @override
+  String get familyPhoneChangeWarning =>
+      'تغيير الرقم يُخرج الوليّ من التطبيق على كل أجهزته. يدخل من جديد بالرقم الجديد وكلمة المرور نفسها.';
+
+  @override
+  String get familyEditChild => 'تعديل الطفل';
+
+  @override
+  String get familyChildAdded => 'أُضيف الطفل إلى الأسرة.';
+
+  @override
+  String get familyChildUpdated => 'حُفظ التعديل.';
+
+  @override
+  String get familyEditRecorded => '⦿ يُسجَّل التعديل باسمك.';
+
+  @override
+  String get familyNotFoundTitle => 'هذه الأسرة لم تعد متاحة';
+
+  @override
+  String get familyNotFoundBody =>
+      'ربما تغيّر أولياؤها من جهاز آخر. ارجع إلى قائمة الأسر.';
+
+  @override
+  String get familyBackToList => 'إلى الأسر';
+
+  @override
+  String get saveAction => 'حفظ';
+
+  @override
+  String get cancelAction => 'إلغاء';
+
+  @override
   String get newGroupCta => '+ مجموعة جديدة';
 
   @override

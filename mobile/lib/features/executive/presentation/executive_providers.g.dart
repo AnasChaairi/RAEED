@@ -1967,6 +1967,136 @@ final class EducatorsProvider
 
 String _$educatorsHash() => r'81337890e4c52433f6455e09d63e89f0be576aca';
 
+/// One household (EXEC-M-10b), keyed by the id the page was opened with.
+///
+/// The id is the guardian set, so it goes stale the moment a guardian is
+/// linked or unlinked — which is why every mutation hands back the family
+/// as it now is and the page keeps *that*, through [apply], rather than
+/// re-fetching by a key that no longer names anything.
+
+@ProviderFor(FamilyDetail)
+const familyDetailProvider = FamilyDetailFamily._();
+
+/// One household (EXEC-M-10b), keyed by the id the page was opened with.
+///
+/// The id is the guardian set, so it goes stale the moment a guardian is
+/// linked or unlinked — which is why every mutation hands back the family
+/// as it now is and the page keeps *that*, through [apply], rather than
+/// re-fetching by a key that no longer names anything.
+final class FamilyDetailProvider
+    extends $AsyncNotifierProvider<FamilyDetail, Family> {
+  /// One household (EXEC-M-10b), keyed by the id the page was opened with.
+  ///
+  /// The id is the guardian set, so it goes stale the moment a guardian is
+  /// linked or unlinked — which is why every mutation hands back the family
+  /// as it now is and the page keeps *that*, through [apply], rather than
+  /// re-fetching by a key that no longer names anything.
+  const FamilyDetailProvider._({
+    required FamilyDetailFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'familyDetailProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$familyDetailHash();
+
+  @override
+  String toString() {
+    return r'familyDetailProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  FamilyDetail create() => FamilyDetail();
+
+  @override
+  bool operator ==(Object other) {
+    return other is FamilyDetailProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$familyDetailHash() => r'598ec2daad35b6ece01995feb2c43d10f459068e';
+
+/// One household (EXEC-M-10b), keyed by the id the page was opened with.
+///
+/// The id is the guardian set, so it goes stale the moment a guardian is
+/// linked or unlinked — which is why every mutation hands back the family
+/// as it now is and the page keeps *that*, through [apply], rather than
+/// re-fetching by a key that no longer names anything.
+
+final class FamilyDetailFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          FamilyDetail,
+          AsyncValue<Family>,
+          Family,
+          FutureOr<Family>,
+          String
+        > {
+  const FamilyDetailFamily._()
+    : super(
+        retry: null,
+        name: r'familyDetailProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// One household (EXEC-M-10b), keyed by the id the page was opened with.
+  ///
+  /// The id is the guardian set, so it goes stale the moment a guardian is
+  /// linked or unlinked — which is why every mutation hands back the family
+  /// as it now is and the page keeps *that*, through [apply], rather than
+  /// re-fetching by a key that no longer names anything.
+
+  FamilyDetailProvider call(String familyId) =>
+      FamilyDetailProvider._(argument: familyId, from: this);
+
+  @override
+  String toString() => r'familyDetailProvider';
+}
+
+/// One household (EXEC-M-10b), keyed by the id the page was opened with.
+///
+/// The id is the guardian set, so it goes stale the moment a guardian is
+/// linked or unlinked — which is why every mutation hands back the family
+/// as it now is and the page keeps *that*, through [apply], rather than
+/// re-fetching by a key that no longer names anything.
+
+abstract class _$FamilyDetail extends $AsyncNotifier<Family> {
+  late final _$args = ref.$arg as String;
+  String get familyId => _$args;
+
+  FutureOr<Family> build(String familyId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref = this.ref as $Ref<AsyncValue<Family>, Family>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<Family>, Family>,
+              AsyncValue<Family>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
 /// Which children on the unassigned list are ticked.
 
 @ProviderFor(UnassignedSelection)
