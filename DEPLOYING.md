@@ -37,38 +37,36 @@ ssh ubuntu@152.228.213.182 \
 
 ## Deploying a change
 
-Every push to `main` that touches `backend/` builds the API image in GitHub
-Actions (`.github/workflows/backend-image.yml`) and publishes it to
-`ghcr.io/anaschaairi/raeed-api`, tagged `latest` and `sha-<short commit>`. The
-tests gate it: nothing is published from a red commit. Then, from the laptop:
+The VM keeps a clone of the repository at `~/raeed/src`; its own SSH key is a
+deploy key on GitHub. From the laptop:
 
 ```bash
-infrastructure/deploy-server.sh                            # latest main
-RAEED_API_TAG=sha-1a2b3c4 infrastructure/deploy-server.sh  # roll back or forward to one commit
+infrastructure/deploy-server.sh                       # main
+RAEED_REF=1a2b3c4 infrastructure/deploy-server.sh     # any commit or branch — the rollback path
 ```
 
-It syncs `infrastructure/`, pulls the image on the VM, applies pending
-migrations and restarts. It never seeds and never touches `.env.server`.
+It checks out the ref on the VM, then runs the image GitHub Actions published
+for that exact commit (`.github/workflows/backend-image.yml` builds
+`ghcr.io/anaschaairi/raeed-api:sha-<commit>` on every push to `main` that
+touches `backend/`, after typecheck and tests) — or, while the registry refuses
+the VM, builds the same commit on the VM itself. Then it applies pending
+migrations from the image's `dist/` and restarts. It never seeds and never
+touches `.env.server`.
 
-The VM must be able to pull the package **once**: either make the package
-public (GitHub → Packages → `raeed-api` → Package settings → Change
-visibility), or sign the VM in with a token that has `read:packages`:
+`--pull` insists on the CI image and fails rather than build; `--build` always
+builds on the VM. For the CI image to be usable the VM has to be allowed to pull
+the package once: make it public (GitHub → Packages → `raeed-api` → Package
+settings → Change visibility), or sign the VM in with a token that has
+`read:packages`:
 
 ```bash
 ssh ubuntu@152.228.213.182 'echo <token> | docker login ghcr.io -u AnasChaairi --password-stdin'
 ```
 
-Without the registry (or before the first workflow run), the old path still
-works and builds on the VM itself:
-
-```bash
-infrastructure/deploy-server.sh --build
-```
-
 On the VM, the compose command is always:
 
 ```bash
-cd ~/raeed/infrastructure
+cd ~/raeed/src/infrastructure
 docker compose --env-file .env.server -f docker-compose.server.yml <ps|logs api|restart api|...>
 ```
 
