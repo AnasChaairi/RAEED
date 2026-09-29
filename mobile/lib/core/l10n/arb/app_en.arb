@@ -22,7 +22,7 @@
   "offlineRefreshFailed": "Couldn't refresh",
   "loginTitle": "Welcome to RAEED",
   "loginPhoneLabel": "Phone number",
-  "loginPhoneHint": "+212 6XX XXX XXX",
+  "loginPhoneHint": "6XX XXX XXX",
   "loginPhoneInvalid": "Enter a valid phone number.",
   "loginNoAccountNotice": "Accounts are created by the academy's administration only. If you don't have one, get in touch with them.",
   "loginSubtitle": "Enter your phone number and password.",

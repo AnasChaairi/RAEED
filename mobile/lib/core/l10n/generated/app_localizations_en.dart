@@ -81,7 +81,7 @@ class AppL10nEn extends AppL10n {
   String get loginPhoneLabel => 'Phone number';
 
   @override
-  String get loginPhoneHint => '+212 6XX XXX XXX';
+  String get loginPhoneHint => '6XX XXX XXX';
 
   @override
   String get loginPhoneInvalid => 'Enter a valid phone number.';

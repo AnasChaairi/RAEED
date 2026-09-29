@@ -80,7 +80,7 @@ class AppL10nAr extends AppL10n {
   String get loginPhoneLabel => 'رقم الهاتف';
 
   @override
-  String get loginPhoneHint => '‎+212 6XX XXX XXX';
+  String get loginPhoneHint => '6XX XXX XXX';
 
   @override
   String get loginPhoneInvalid => 'أدخل رقم هاتف صحيحًا.';
