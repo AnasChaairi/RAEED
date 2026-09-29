@@ -2133,6 +2133,30 @@ class AppL10nEn extends AppL10n {
   String get branchCreatedToast => 'Branch created';
 
   @override
+  String get newCategory => '+ New category';
+
+  @override
+  String get categoryNameHint => 'Category name';
+
+  @override
+  String get categoryCreatedToast => 'Category created';
+
+  @override
+  String get newSeason => '+ New season';
+
+  @override
+  String get seasonLabelHint => 'Season label, e.g. 2026-2027';
+
+  @override
+  String get seasonStartPick => 'Start date';
+
+  @override
+  String get seasonEndPick => 'End date';
+
+  @override
+  String get seasonCreatedToast => 'Season opened';
+
+  @override
   String get adminOnlyTitle => 'This section is for admins only';
 
   @override

@@ -2210,6 +2210,30 @@ class AppL10nAr extends AppL10n {
   String get branchCreatedToast => 'أُنشئ الفرع';
 
   @override
+  String get newCategory => '+ فئة جديدة';
+
+  @override
+  String get categoryNameHint => 'اسم الفئة';
+
+  @override
+  String get categoryCreatedToast => 'أُنشئت الفئة';
+
+  @override
+  String get newSeason => '+ موسم جديد';
+
+  @override
+  String get seasonLabelHint => 'اسم الموسم، مثل 2026-2027';
+
+  @override
+  String get seasonStartPick => 'تاريخ البداية';
+
+  @override
+  String get seasonEndPick => 'تاريخ النهاية';
+
+  @override
+  String get seasonCreatedToast => 'فُتح الموسم';
+
+  @override
   String get adminOnlyTitle => 'هذا القسم لمدير النظام فقط';
 
   @override

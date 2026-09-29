@@ -2148,6 +2148,30 @@ class AppL10nFr extends AppL10n {
   String get branchCreatedToast => 'Antenne créée';
 
   @override
+  String get newCategory => '+ Nouvelle catégorie';
+
+  @override
+  String get categoryNameHint => 'Nom de la catégorie';
+
+  @override
+  String get categoryCreatedToast => 'Catégorie créée';
+
+  @override
+  String get newSeason => '+ Nouvelle saison';
+
+  @override
+  String get seasonLabelHint => 'Libellé de la saison, ex. 2026-2027';
+
+  @override
+  String get seasonStartPick => 'Date de début';
+
+  @override
+  String get seasonEndPick => 'Date de fin';
+
+  @override
+  String get seasonCreatedToast => 'Saison ouverte';
+
+  @override
   String get adminOnlyTitle => 'Section réservée aux administrateurs';
 
   @override

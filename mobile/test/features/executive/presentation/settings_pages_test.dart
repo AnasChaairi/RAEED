@@ -591,6 +591,102 @@ void main() {
       verify(() => mocks.structure.archiveSeason('s1')).called(1);
     });
 
+    testWidgets('an admin adds a category by name and nothing else', (
+      tester,
+    ) async {
+      when(() => mocks.structure.fetchSeasons()).thenAnswer((_) async => []);
+      when(() => mocks.structure.createCategory(name: 'الأشبال')).thenAnswer(
+        (_) async => const Category(
+          id: 'cat-new',
+          name: 'الأشبال',
+          childCount: 0,
+          groupCount: 0,
+        ),
+      );
+      final container = await executiveContainer(
+        mocks,
+        roles: {RaeedRole.admin},
+      );
+
+      await pumpExecutive(tester, container, const StructureScreen());
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('الفئات'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('+ فئة جديدة'));
+      await tester.pumpAndSettle();
+
+      // One field: the age range and gender are not asked (open decision #1).
+      expect(find.byType(TextField), findsOneWidget);
+      await tester.enterText(
+        find.byKey(const Key('category-name')),
+        ' الأشبال ',
+      );
+      await tester.tap(find.byKey(const Key('structure-save')));
+      await tester.pumpAndSettle();
+
+      verify(() => mocks.structure.createCategory(name: 'الأشبال')).called(1);
+      expect(find.textContaining('أُنشئت الفئة'), findsOneWidget);
+    });
+
+    testWidgets('an admin opens a season once its dates are in order', (
+      tester,
+    ) async {
+      when(() => mocks.structure.fetchSeasons()).thenAnswer((_) async => []);
+      when(
+        () => mocks.structure.createSeason(
+          label: any(named: 'label'),
+          startDate: any(named: 'startDate'),
+          endDate: any(named: 'endDate'),
+        ),
+      ).thenAnswer(
+        (_) async => Season(
+          id: 's-new',
+          label: '2026-2027',
+          startDate: DateTime(2026, 9),
+          endDate: DateTime(2027, 6, 30),
+          status: SeasonStatus.active,
+          groupCount: 0,
+          childCount: 0,
+        ),
+      );
+      final container = await executiveContainer(
+        mocks,
+        roles: {RaeedRole.admin},
+      );
+
+      await pumpExecutive(tester, container, const StructureScreen());
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('+ موسم جديد'));
+      await tester.pumpAndSettle();
+
+      final save = find.byKey(const Key('structure-save'));
+      await tester.enterText(
+        find.byKey(const Key('season-label')),
+        '2026-2027',
+      );
+      await tester.pumpAndSettle();
+      // No dates yet: nothing to save.
+      expect(tester.widget<FilledButton>(save).onPressed, isNull);
+
+      // Start today, end today too — not after, so still refused on the device.
+      await tester.tap(find.byKey(const Key('season-start')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('حسنًا'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('season-end')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('حسنًا'));
+      await tester.pumpAndSettle();
+      expect(tester.widget<FilledButton>(save).onPressed, isNull);
+      verifyNever(
+        () => mocks.structure.createSeason(
+          label: any(named: 'label'),
+          startDate: any(named: 'startDate'),
+          endDate: any(named: 'endDate'),
+        ),
+      );
+    });
+
     testWidgets('the health tab of the logs asks for health views only', (
       tester,
     ) async {
