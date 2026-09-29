@@ -159,7 +159,7 @@ class _ChildFormSheetState extends ConsumerState<ChildFormSheet> {
           label: Text(
             _dob == null
                 ? '${l10n.dobLabel} · ${l10n.dobPick}'
-                : shortDate(locale, _dob!),
+                : fullDate(locale, _dob!),
           ),
         ),
         if (!_isEdit) ...[

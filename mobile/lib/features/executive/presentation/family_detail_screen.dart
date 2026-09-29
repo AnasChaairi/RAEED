@@ -341,7 +341,7 @@ class _Body extends StatelessWidget {
             for (final child in family.children)
               _ChildRow(
                 child: child,
-                subtitle: [if (child.dob != null) shortDate(locale, child.dob!)]
+                subtitle: [if (child.dob != null) fullDate(locale, child.dob!)]
                     .join(' · '),
                 onOpen: () => context.push(AppRoutes.childPath(child.id)),
                 onEdit: () => onEditChild(child),
