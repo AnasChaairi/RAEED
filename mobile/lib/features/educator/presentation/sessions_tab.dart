@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/generated/app_localizations.dart';
 import '../../../core/l10n/hijri_date.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/design_tokens.gen.dart';
 import '../../../core/theme/raeed_theme.dart';
 import '../../../shared/widgets/raeed_error_view.dart';
@@ -85,6 +87,17 @@ class _SessionsTabState extends ConsumerState<SessionsTab> {
                     ],
                   ),
                 ),
+                IconButton.filled(
+                  key: const Key('activity-new'),
+                  tooltip: l10n.activityNewTitle,
+                  onPressed: () => context.push(
+                    _groupId == null
+                        ? AppRoutes.sessionNew
+                        : '${AppRoutes.sessionNew}?group=$_groupId',
+                  ),
+                  icon: const Icon(Icons.add_rounded),
+                ),
+                const SizedBox(width: 6),
                 _WeekButton(
                   label: l10n.sessPrevWeek,
                   icon: Icons.arrow_forward_rounded,
@@ -246,6 +259,8 @@ class _WeekList extends StatelessWidget {
               item: item,
               now: now,
               meta: [
+                if (item.kind != SessionKind.session)
+                  _ActivityNewScreenLabels.kind(l10n, item.kind),
                 item.group.name,
                 if (item.materialCount > 0)
                   l10n.sessMetaMaterials(item.materialCount),
@@ -270,4 +285,13 @@ class _WeekList extends StatelessWidget {
       ],
     );
   }
+}
+
+/// The kind word for a row; the screen that creates them owns the mapping.
+abstract final class _ActivityNewScreenLabels {
+  static String kind(AppL10n l10n, SessionKind kind) => switch (kind) {
+    SessionKind.session => l10n.activityKindSession,
+    SessionKind.sport => l10n.activityKindSport,
+    SessionKind.workshop => l10n.activityKindWorkshop,
+  };
 }

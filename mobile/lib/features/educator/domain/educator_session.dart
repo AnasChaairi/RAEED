@@ -3,8 +3,10 @@ library;
 
 import 'package:meta/meta.dart';
 
+import '../../children/domain/session_kind.dart';
 import '../../executive/domain/executive_group.dart' show SessionStatus;
 
+export '../../children/domain/session_kind.dart';
 export '../../executive/domain/executive_group.dart' show SessionStatus;
 
 /// A named group, as sessions carry it.
@@ -36,6 +38,7 @@ class SessionItem {
     this.place,
     this.rescheduledFrom,
     this.coEducatorNames = const [],
+    this.kind = SessionKind.session,
   });
 
   final String id;
@@ -62,6 +65,9 @@ class SessionItem {
 
   /// Everyone leading the group, the caller included.
   final List<String> coEducatorNames;
+
+  /// The weekly حصة, or an activity added by hand.
+  final SessionKind kind;
 
   bool get isCancelled => status == SessionStatus.cancelled;
 
@@ -499,4 +505,72 @@ extension MaterialVisibilityWire on MaterialVisibility {
 
 extension MaterialKindWire on MaterialKind {
   String get wireValue => name;
+}
+
+/// An activity the educator is adding for one of their groups (EDU-M-03).
+@immutable
+class ActivityDraft {
+  const ActivityDraft({
+    this.groupId,
+    this.kind = SessionKind.sport,
+    this.day,
+    this.startsAt = '16:00',
+    this.endsAt = '18:00',
+    this.title = '',
+    this.place = '',
+    this.objectives = '',
+  });
+
+  final String? groupId;
+  final SessionKind kind;
+
+  /// The date; the times are "HH:mm" on it.
+  final DateTime? day;
+  final String startsAt;
+  final String endsAt;
+  final String title;
+  final String place;
+  final String objectives;
+
+  bool get isComplete =>
+      groupId != null &&
+      day != null &&
+      endsAt.compareTo(startsAt) > 0 &&
+      title.trim().length >= 2;
+
+  DateTime? get startsAtDateTime => _at(startsAt);
+  DateTime? get endsAtDateTime => _at(endsAt);
+
+  DateTime? _at(String hhmm) {
+    final day = this.day;
+    if (day == null) return null;
+    final parts = hhmm.split(':');
+    return DateTime(
+      day.year,
+      day.month,
+      day.day,
+      int.tryParse(parts.first) ?? 0,
+      int.tryParse(parts.length > 1 ? parts[1] : '0') ?? 0,
+    );
+  }
+
+  ActivityDraft copyWith({
+    String? groupId,
+    SessionKind? kind,
+    DateTime? day,
+    String? startsAt,
+    String? endsAt,
+    String? title,
+    String? place,
+    String? objectives,
+  }) => ActivityDraft(
+    groupId: groupId ?? this.groupId,
+    kind: kind ?? this.kind,
+    day: day ?? this.day,
+    startsAt: startsAt ?? this.startsAt,
+    endsAt: endsAt ?? this.endsAt,
+    title: title ?? this.title,
+    place: place ?? this.place,
+    objectives: objectives ?? this.objectives,
+  );
 }

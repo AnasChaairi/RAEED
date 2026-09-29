@@ -16,6 +16,7 @@ import 'features/auth/presentation/consent_screen.dart';
 import 'features/auth/presentation/login_screen.dart';
 import 'features/children/presentation/child_profile_screen.dart';
 import 'features/children/presentation/home_screen.dart';
+import 'features/educator/presentation/activity_new_screen.dart';
 import 'features/educator/presentation/educator_announcement_screen.dart';
 import 'features/educator/presentation/educator_child_screen.dart';
 import 'features/educator/presentation/educator_group_screen.dart';
@@ -224,6 +225,8 @@ final AppScreens appScreensTable = AppScreens(
   reports: (context, state) => const ReportsScreen(),
   structure: (context, state) => const StructureScreen(),
   logs: (context, state) => const LogsScreen(),
+  sessionNew: (context, state) =>
+      ActivityNewScreen(initialGroupId: state.uri.queryParameters['group']),
   session: (context, state) =>
       SessionDetailScreen(sessionId: state.pathParameters['sessionId'] ?? ''),
   sessionEdit: (context, state) =>

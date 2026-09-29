@@ -291,6 +291,16 @@ class _TodayBody extends ConsumerWidget {
                 onTap: () => context.push(AppRoutes.announcementCompose),
               ),
             ),
+            const SizedBox(width: RaeedSpacing.sm),
+            Expanded(
+              child: _Shortcut(
+                icon: Icons.sports_soccer_outlined,
+                background: palette.successSoft,
+                foreground: palette.success,
+                label: l10n.shortcutActivity,
+                onTap: () => context.push(AppRoutes.sessionNew),
+              ),
+            ),
           ],
         ),
         const SizedBox(height: RaeedSpacing.md),

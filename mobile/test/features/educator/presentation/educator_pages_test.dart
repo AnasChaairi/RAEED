@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:raeed/core/authorization/raeed_role.dart';
 import 'package:raeed/features/educator/domain/availability.dart';
@@ -7,6 +8,7 @@ import 'package:raeed/features/educator/domain/educator_child.dart';
 import 'package:raeed/features/educator/domain/educator_group.dart';
 import 'package:raeed/features/educator/domain/educator_session.dart';
 import 'package:raeed/features/educator/domain/memory_post.dart';
+import 'package:raeed/features/educator/presentation/activity_new_screen.dart';
 import 'package:raeed/features/educator/presentation/educator_announcement_screen.dart';
 import 'package:raeed/features/educator/presentation/educator_child_screen.dart';
 import 'package:raeed/features/educator/presentation/educator_more_screen.dart';
@@ -253,6 +255,99 @@ void main() {
       expect(find.text('بلا محتوى'), findsOneWidget);
       expect(find.textContaining('أُنشئت من الجدول'), findsOneWidget);
     });
+
+    testWidgets('the sessions tab offers a new activity for the picked group', (
+      tester,
+    ) async {
+      when(
+        () => mocks.sessions.fetchSessions(
+          from: any(named: 'from'),
+          to: any(named: 'to'),
+          groupId: any(named: 'groupId'),
+        ),
+      ).thenAnswer((_) async => [session()]);
+      final container = await executiveContainer(mocks, roles: educatorRoles);
+      await pumpExecutive(
+        tester,
+        container,
+        SessionsTab(now: now),
+        routes: {
+          '/sessions/new': Builder(
+            builder: (context) => Text(
+              'new ${GoRouterState.of(context).uri.queryParameters['group']}',
+            ),
+          ),
+        },
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('activity-new')));
+      await tester.pumpAndSettle();
+      expect(find.text('new null'), findsOneWidget);
+    });
+
+    testWidgets(
+      'an activity needs a group, a day and a title, then is created',
+      (tester) async {
+        when(() => mocks.groups.fetchGroups()).thenAnswer(
+          (_) async => const [
+            ExecutiveGroup(
+              id: 'g1',
+              name: 'الأشبال 1',
+              categoryName: 'الأشبال',
+              enrolledCount: 12,
+            ),
+          ],
+        );
+        when(() => mocks.sessions.createActivity(any()))
+            .thenAnswer((_) async => detail());
+        final container = await executiveContainer(mocks, roles: educatorRoles);
+        await pumpExecutive(
+          tester,
+          container,
+          ActivityNewScreen(now: now),
+          routes: {'/sessions/:id': const Text('session page')},
+        );
+        await tester.pumpAndSettle();
+
+        final create = find.byKey(const Key('activity-create'));
+        expect(tester.widget<FilledButton>(create).onPressed, isNull);
+
+        await tester.tap(find.text('الأشبال 1'));
+        await tester.tap(find.text('ورشة'));
+        await tester.enterText(
+          find.byKey(const Key('activity-title')),
+          'ورشة الخط',
+        );
+        await tester.enterText(
+          find.byKey(const Key('activity-place')),
+          'القاعة الكبرى',
+        );
+        await tester.pumpAndSettle();
+        expect(tester.widget<FilledButton>(create).onPressed, isNull);
+
+        await tester.tap(find.byKey(const Key('activity-day')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('حسنًا'));
+        await tester.pumpAndSettle();
+        expect(tester.widget<FilledButton>(create).onPressed, isNotNull);
+
+        await tester.tap(create);
+        await tester.pumpAndSettle();
+
+        final draft =
+            verify(() => mocks.sessions.createActivity(captureAny()))
+                    .captured
+                    .single
+                as ActivityDraft;
+        expect(draft.groupId, 'g1');
+        expect(draft.kind, SessionKind.workshop);
+        expect(draft.title, 'ورشة الخط');
+        expect(draft.place, 'القاعة الكبرى');
+        expect(draft.startsAtDateTime!.hour, 16);
+        expect(find.text('session page'), findsOneWidget);
+      },
+    );
 
     testWidgets('cancelling asks for a reason and tells everyone', (
       tester,

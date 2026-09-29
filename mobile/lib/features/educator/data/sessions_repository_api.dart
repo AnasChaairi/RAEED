@@ -28,6 +28,12 @@ class ApiSessionsRepository implements SessionsRepository {
   }
 
   @override
+  Future<SessionDetail> createActivity(ActivityDraft draft) async =>
+      sessionDetailFromJson(
+        await _client.post('/sessions', body: activityDraftToJson(draft)),
+      );
+
+  @override
   Future<SessionDetail> fetchSession(String sessionId) async =>
       sessionDetailFromJson(await _client.getObject('/sessions/$sessionId'));
 

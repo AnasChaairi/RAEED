@@ -58,6 +58,11 @@ abstract final class AppRoutes {
   static const String attendanceName = 'attendance';
 
   /// A conversation.
+  /// An activity the educator adds by hand (EDU-M-03). Registered before
+  /// the session page, so "new" is never read as a session id.
+  static const String sessionNew = '/sessions/new';
+  static const String sessionNewName = 'sessionNew';
+
   /// The educator's session pages (EDU-M-02, 04, 05).
   static const String session = '/sessions/:sessionId';
   static const String sessionName = 'session';

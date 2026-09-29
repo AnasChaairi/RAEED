@@ -1,6 +1,7 @@
 import '../../../core/network/api_envelope.dart';
 import 'child.dart';
 import 'child_detail.dart';
+import 'child_session.dart';
 
 /// Reads children, scoped server-side.
 ///
@@ -23,4 +24,12 @@ abstract interface class ChildrenRepository {
   /// the caller's scope — which the UI renders as "not available to you",
   /// never as "not found", so the two stay distinguishable.
   Future<ChildDetail> fetchChild(String childId);
+
+  /// The coming sessions and activities of [groupId], for the schedule tab.
+  /// Scoped server-side to the guardian's own children's groups.
+  Future<List<ChildSession>> fetchSessions({
+    required String groupId,
+    required DateTime from,
+    required DateTime to,
+  });
 }
