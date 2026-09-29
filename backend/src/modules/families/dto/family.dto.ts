@@ -64,3 +64,35 @@ export class InvitationDto {
   @IsUUID()
   user_id: string;
 }
+
+/** `PATCH /families/{id}/guardians/{gid}` — only what is sent changes. */
+export class UpdateGuardianDto {
+  @IsOptional()
+  @IsString()
+  @MinLength(2)
+  @MaxLength(120)
+  display_name?: string;
+
+  /** E.164 Moroccan mobile. Changing it signs the guardian out everywhere. */
+  @IsOptional()
+  @Matches(/^\+212[5-7]\d{8}$/)
+  phone?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  relationship?: string;
+}
+
+/** `PATCH /families/{id}/children/{cid}` — a name or birth-date correction. */
+export class UpdateChildDto {
+  @IsOptional()
+  @IsString()
+  @MinLength(2)
+  @MaxLength(120)
+  full_name?: string;
+
+  @IsOptional()
+  @IsISO8601({ strict: true })
+  dob?: string;
+}

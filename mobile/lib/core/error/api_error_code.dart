@@ -47,6 +47,14 @@ enum ApiErrorCode {
   /// guardian (409).
   childrenLastGuardian('children.last_guardian'),
 
+  /// `guardians.phone_taken` — another account already signs in with that
+  /// phone number (409).
+  guardiansPhoneTaken('guardians.phone_taken'),
+
+  /// `guardians.already_linked` — the account is already a guardian of every
+  /// child of the household (409).
+  guardiansAlreadyLinked('guardians.already_linked'),
+
   /// `validation.failed` — DTO-level schema validation failure (422); the
   /// `details` map carries the per-field errors.
   validationFailed('validation.failed'),

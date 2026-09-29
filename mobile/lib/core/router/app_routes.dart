@@ -114,6 +114,15 @@ abstract final class AppRoutes {
   static const String manageNewFamilyName = 'manageNewFamily';
   static const String manageTabParam = 'tab';
 
+  /// One household (EXEC-M-10b). The id is the family's guardian set as the
+  /// API returns it — uuids joined by commas, which is a legal path segment.
+  static const String manageFamily = '/manage/families/:familyId';
+  static const String manageFamilyName = 'manageFamily';
+
+  /// `?action=add-child` opens the page with the add-child sheet already up.
+  static const String manageFamilyActionParam = 'action';
+  static const String manageFamilyAddChildAction = 'add-child';
+
   /// Reports and export (EXEC-M-11).
   static const String reports = '/reports';
   static const String reportsName = 'reports';
@@ -175,6 +184,9 @@ abstract final class AppRoutes {
 
   /// Path to the families & groups hub opened on [tab].
   static String manageTabPath(String tab) => '/manage?tab=$tab';
+  static String manageFamilyPath(String familyId, {bool addChild = false}) =>
+      '/manage/families/$familyId'
+      '${addChild ? '?$manageFamilyActionParam=$manageFamilyAddChildAction' : ''}';
 
   /// Path to the attendance review for [sessionId] within [groupId].
   static String attendanceReviewPath(String groupId, String sessionId) =>

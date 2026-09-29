@@ -153,6 +153,24 @@ void main() {
   });
 
   group('ability-gated routes', () {
+    test('a family page is the oversight surface it opens from', () {
+      const location = '/manage/families/p1,p2?action=add-child';
+      final executive = sessionWith(
+        status: SessionStatus.active,
+        roles: {RaeedRole.executive},
+      );
+      expect(resolveRedirect(session: executive, location: location), isNull);
+      final educator = sessionWith(
+        status: SessionStatus.active,
+        roles: {RaeedRole.educator},
+        groups: {'group-1'},
+      );
+      expect(
+        resolveRedirect(session: educator, location: location),
+        AppRoutes.home,
+      );
+    });
+
     test('a parent cannot reach the dashboard', () {
       final session = sessionWith(
         status: SessionStatus.active,

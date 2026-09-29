@@ -22,19 +22,34 @@ class FamilyGuardian {
     required this.id,
     required this.displayName,
     required this.account,
+    this.relationship = 'parent',
+    this.phoneHint,
   });
 
   final String id;
   final String displayName;
   final AccountStatus account;
+
+  /// To this household's children — one value per guardian, per family.
+  final String relationship;
+
+  /// The last two digits, masked (`•• 34`). The number itself is a recorded
+  /// reveal on the child profile, never part of a list payload.
+  final String? phoneHint;
 }
 
 @immutable
 class FamilyChild {
-  const FamilyChild({required this.id, required this.fullName, this.group});
+  const FamilyChild({
+    required this.id,
+    required this.fullName,
+    this.dob,
+    this.group,
+  });
 
   final String id;
   final String fullName;
+  final DateTime? dob;
   final ChildGroupRef? group;
 }
 
@@ -175,6 +190,55 @@ class FamilyCreated {
 
   /// Each guardian with the first password of a new account, shown once.
   final List<GuardianCredential> guardians;
+}
+
+/// What changes on a guardian — only the fields that are set are sent, so an
+/// untouched phone stays untouched and no device gets signed out for nothing.
+@immutable
+class GuardianPatch {
+  const GuardianPatch({this.displayName, this.phone, this.relationship});
+
+  final String? displayName;
+
+  /// National digits after +212, as typed. Null: unchanged.
+  final String? phone;
+  final String? relationship;
+
+  bool get isEmpty =>
+      displayName == null && phone == null && relationship == null;
+
+  /// E.164, as the API wants it; null when the phone is not being changed.
+  String? get e164 => phone == null ? null : '+212$phone';
+}
+
+/// What changes on a child: a name or birth-date correction.
+@immutable
+class ChildPatch {
+  const ChildPatch({this.fullName, this.dateOfBirth});
+
+  final String? fullName;
+  final DateTime? dateOfBirth;
+
+  bool get isEmpty => fullName == null && dateOfBirth == null;
+}
+
+/// What linking a guardian did: the household as it now is (its id changed —
+/// it is the guardian set) and the credential to hand over.
+@immutable
+class GuardianAdded {
+  const GuardianAdded({required this.family, required this.credential});
+
+  final Family family;
+  final GuardianCredential credential;
+}
+
+/// What adding a child did.
+@immutable
+class ChildAdded {
+  const ChildAdded({required this.family, required this.childId});
+
+  final Family family;
+  final String childId;
 }
 
 /// A guardian's first password, handed over in person by the executive.

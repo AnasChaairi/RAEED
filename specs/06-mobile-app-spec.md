@@ -61,6 +61,7 @@ test/
 | `/memories/compose` | Post creation | educator or executive |
 | `/announcements/compose` | Announcement composer | educator (own groups) or executive (any audience) |
 | `/dashboard` | Executive mobile dashboard | executive/admin |
+| `/manage/families/:familyId` | Family detail (EXEC-M-10b) | executive/admin |
 
 ## Screen specs
 
@@ -228,6 +229,20 @@ Profile card (name, branch scope), a links card to the sections below (Children 
 | Components | Three tabs — **Unassigned** (multi-select → assign sheet showing each group's capacity after the move, with an over-capacity warning and confirm), **Families** (status chip active / partial / pending, resend invitation, add child), **Groups** (capacity bar, "assign children"); **New group** form (name, category chips, capacity stepper, schedule slot, educators, optional children, checklist, recorded marker); **New family** wizard (guardians → children with main group or "later" → review with what will happen) |
 | API | `GET /children?unassigned=true`, `POST /groups/{id}/children`, `GET /families`, `POST /invitations`, `GET /groups`, `GET /educators`, `GET /categories`, `POST /groups`, `POST /families` |
 | Empty | Unassigned: "every child is in a group" (reassuring) |
+
+#### EXEC-M-10b · Family detail (`/manage/families/:familyId`)
+
+| | |
+|---|---|
+| Purpose | Change a household after it was created: correct a guardian, link a second one, unlink one, add a child, fix a child's name or birth date (`ACC-05`, RAEED-9) |
+| Entry points | Tap a family card on the Families tab; the card's "+ طفل" opens the page with the add-child sheet already up (`?action=add-child`) |
+| Components | Header (family label, status chip); **Guardians** card — one row per guardian: name · relationship, account chip, masked phone hint (`•• 34`), then edit / unlink / resend-invitation actions; "+ ولي آخر" footer; **Children** card — one row per child: name, birth date, group chip (warning tone when unassigned), edit action, tap-through to the child profile; "+ طفل" footer. Edits happen in bottom sheets that reuse the wizard's fields (name, `+212` phone, relationship dropdown; child name, date picker, group pills) |
+| User actions | Edit a guardian (only changed fields are sent; typing a new number shows "this signs them out on every device"); unlink after a confirm that says the children keep their other guardians; add a guardian → handover dialog when a password comes back, otherwise "linked an existing account"; add a child; edit a child |
+| API | `GET /families/{id}`, `PATCH /families/{id}/guardians/{gid}`, `POST /families/{id}/guardians`, `DELETE /families/{id}/guardians/{gid}`, `POST /families/{id}/children`, `PATCH /families/{id}/children/{cid}` — every mutation returns the family as it now is, and the page replaces its state with it: the family id is the guardian set, so it changes after a link or unlink |
+| Loading | The card's `Family` object, pushed as `extra`, renders at once; otherwise a skeleton of two cards |
+| Empty | Not reachable — a household has at least one guardian and one child by construction |
+| Error | `scope.forbidden` (deleted or out of branch) → "this family is no longer available" with back; `children.last_guardian`, `guardians.phone_taken`, `guardians.already_linked` → one line inside the open sheet or dialog, which stays open with the values kept; offline → the network message with retry |
+| Success | Toast, the row re-renders from the returned family; the Families tab, the unassigned list and the touched child profiles are invalidated |
 
 #### EXEC-M-11 · Reports & export (`/reports`)
 

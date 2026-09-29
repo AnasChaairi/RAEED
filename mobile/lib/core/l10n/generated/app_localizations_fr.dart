@@ -55,6 +55,18 @@ class AppL10nFr extends AppL10n {
       'Vous n\'avez pas l\'autorisation de consulter ce contenu. Contactez l\'administration de l\'académie si vous pensez qu\'il s\'agit d\'une erreur.';
 
   @override
+  String get errorLastGuardian =>
+      'Impossible de retirer ce tuteur : un enfant n\'en aurait plus aucun. Ajoutez d\'abord un autre tuteur.';
+
+  @override
+  String get errorPhoneTaken =>
+      'Ce numéro est déjà utilisé par un autre compte.';
+
+  @override
+  String get errorGuardianAlreadyLinked =>
+      'Ce compte est déjà tuteur de ces enfants.';
+
+  @override
   String get errorSessionExpiredTitle => 'Session expirée';
 
   @override
@@ -1602,6 +1614,103 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get newFamilyCta => '+ Nouvelle famille';
+
+  @override
+  String familyDetailSubtitle(int guardians, int children) {
+    String _temp0 = intl.Intl.pluralLogic(
+      guardians,
+      locale: localeName,
+      other: '$guardians tuteurs',
+      one: '1 tuteur',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      children,
+      locale: localeName,
+      other: '$children enfants',
+      one: '1 enfant',
+    );
+    return '$_temp0 · $_temp1';
+  }
+
+  @override
+  String get familyGuardiansSection => 'Tuteurs';
+
+  @override
+  String get familyChildrenSection => 'Enfants';
+
+  @override
+  String get familyAddGuardian => '+ Autre tuteur';
+
+  @override
+  String get familyEditGuardian => 'Modifier le tuteur';
+
+  @override
+  String get familyUnlinkGuardian => 'Retirer de la famille';
+
+  @override
+  String familyUnlinkConfirmTitle(String name) {
+    return 'Retirer $name de la famille ?';
+  }
+
+  @override
+  String get familyUnlinkConfirmBody =>
+      'Les enfants gardent leurs autres tuteurs, et le compte reste, sans enfant. Le dernier tuteur d\'un enfant ne peut pas être retiré.';
+
+  @override
+  String get familyUnlinkRecorded => '⦿ Le retrait est enregistré à votre nom.';
+
+  @override
+  String get familyUnlinkCta => 'Retirer';
+
+  @override
+  String get familyUnlinkDone => 'Tuteur retiré de la famille.';
+
+  @override
+  String get familyGuardianUpdated => 'Enregistré.';
+
+  @override
+  String get familyGuardianLinkedExisting =>
+      'Un compte existant a été lié aux enfants. Son mot de passe est inchangé.';
+
+  @override
+  String get familyGuardianLinked => 'Tuteur lié aux enfants.';
+
+  @override
+  String get familyPhoneUnchangedHint =>
+      'Laisser vide pour garder le numéro actuel';
+
+  @override
+  String get familyPhoneChangeWarning =>
+      'Changer le numéro déconnecte le tuteur sur tous ses appareils. Il se reconnecte avec le nouveau numéro et le même mot de passe.';
+
+  @override
+  String get familyEditChild => 'Modifier l\'enfant';
+
+  @override
+  String get familyChildAdded => 'Enfant ajouté à la famille.';
+
+  @override
+  String get familyChildUpdated => 'Enregistré.';
+
+  @override
+  String get familyEditRecorded =>
+      '⦿ La modification est enregistrée à votre nom.';
+
+  @override
+  String get familyNotFoundTitle => 'Cette famille n\'est plus disponible';
+
+  @override
+  String get familyNotFoundBody =>
+      'Ses tuteurs ont peut-être changé depuis un autre appareil. Revenez à la liste des familles.';
+
+  @override
+  String get familyBackToList => 'Vers les familles';
+
+  @override
+  String get saveAction => 'Enregistrer';
+
+  @override
+  String get cancelAction => 'Annuler';
 
   @override
   String get newGroupCta => '+ Nouveau groupe';

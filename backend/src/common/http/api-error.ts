@@ -17,6 +17,8 @@ export const ApiErrorCode = {
   ATTENDANCE_UNKNOWN_CHILD: 'attendance.unknown_child',
   MEMORIES_CONSENT_BLOCKED: 'memories.consent_blocked',
   CHILDREN_LAST_GUARDIAN: 'children.last_guardian',
+  GUARDIANS_PHONE_TAKEN: 'guardians.phone_taken',
+  GUARDIANS_ALREADY_LINKED: 'guardians.already_linked',
   PRESENCE_REMINDER_ALREADY_SENT: 'presence.reminder_already_sent',
   SESSION_SUMMARY_ALREADY_SENT: 'session.summary_already_sent',
   VALIDATION_FAILED: 'validation.failed',
@@ -132,6 +134,39 @@ export class ApiError extends HttpException {
       'A tagged child’s image rights do not allow this post.',
       HttpStatus.UNPROCESSABLE_ENTITY,
       { child_ids: childIds },
+    );
+  }
+
+  /**
+   * 409 — unlinking this guardian would leave a child with none (`ACC-05`).
+   *
+   * `details.child_ids` names them, so the executive sees which child still
+   * needs another guardian before this one can go.
+   */
+  static childrenLastGuardian(childIds: string[]): ApiError {
+    return new ApiError(
+      ApiErrorCode.CHILDREN_LAST_GUARDIAN,
+      'A child would be left without a guardian.',
+      HttpStatus.CONFLICT,
+      { child_ids: childIds },
+    );
+  }
+
+  /** 409 — another account already signs in with that phone number. */
+  static guardianPhoneTaken(): ApiError {
+    return new ApiError(
+      ApiErrorCode.GUARDIANS_PHONE_TAKEN,
+      'Another account already uses this phone number.',
+      HttpStatus.CONFLICT,
+    );
+  }
+
+  /** 409 — the account is already a guardian of every child of the household. */
+  static guardianAlreadyLinked(): ApiError {
+    return new ApiError(
+      ApiErrorCode.GUARDIANS_ALREADY_LINKED,
+      'This account is already a guardian of these children.',
+      HttpStatus.CONFLICT,
     );
   }
 

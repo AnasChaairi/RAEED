@@ -112,6 +112,27 @@ export class IdentityService {
     );
   }
 
+  /**
+   * Signs [userId] out everywhere: every device row is revoked and every
+   * refresh token dropped. The path a phone change takes — the number is the
+   * sign-in identifier, so a session opened under the old one must not
+   * outlive it — and the password stays, so the person signs in again on the
+   * new number with what they already know. Returns how many devices it hit.
+   */
+  async revokeAllDevices(
+    tx: EntityManager | DataSource,
+    userId: string,
+  ): Promise<number> {
+    const rows: Array<{ id: string }> = await tx.query(
+      `update user_device set revoked_at = now()
+        where user_id = $1 and revoked_at is null
+        returning id`,
+      [userId],
+    );
+    await this.tokens.revokeAll(userId);
+    return rows.length;
+  }
+
   /** Rotates a refresh token, ending the session if it is not current. */
   async refresh(
     refreshToken: string,

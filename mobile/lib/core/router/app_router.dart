@@ -49,6 +49,7 @@ class AppScreens {
     required this.manage,
     required this.manageNewGroup,
     required this.manageNewFamily,
+    required this.manageFamily,
     required this.reports,
     required this.structure,
     required this.logs,
@@ -115,6 +116,7 @@ class AppScreens {
   final ScreenBuilder manage;
   final ScreenBuilder manageNewGroup;
   final ScreenBuilder manageNewFamily;
+  final ScreenBuilder manageFamily;
 
   /// Reports and export.
   final ScreenBuilder reports;
@@ -324,6 +326,12 @@ GoRouter appRouter(Ref ref) {
             path: 'families/new',
             name: AppRoutes.manageNewFamilyName,
             builder: screens.manageNewFamily,
+          ),
+          // After `families/new`, so the literal wins over the parameter.
+          GoRoute(
+            path: 'families/:familyId',
+            name: AppRoutes.manageFamilyName,
+            builder: screens.manageFamily,
           ),
         ],
       ),

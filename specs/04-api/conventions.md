@@ -40,6 +40,8 @@ Every request except `/auth/login` and `/auth/refresh` requires `Authorization: 
 | `attendance.unknown_child` | 422 | `child_id` isn't enrolled in this session's group |
 | `memories.consent_blocked` | 422 | A tagged child's current `image_rights_level` is `not_allowed` |
 | `children.last_guardian` | 409 | Attempted to unlink a child's only remaining guardian |
+| `guardians.phone_taken` | 409 | Another account already signs in with that phone number |
+| `guardians.already_linked` | 409 | The account is already a guardian of every child of the household |
 | `validation.failed` | 422 | DTO-level schema validation failure (class-validator) — `details` carries the field errors |
 
 ## Versioning

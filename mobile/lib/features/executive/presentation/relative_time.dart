@@ -38,6 +38,10 @@ String dayAndMonth(Locale locale, DateTime at) =>
 String shortDate(Locale locale, DateTime at) =>
     DateFormat('d MMMM', numberLocale(locale)).format(at.toLocal());
 
+/// "2 مايو 2018" — a date whose year matters, such as a birth date.
+String fullDate(Locale locale, DateTime at) =>
+    DateFormat('d MMMM y', numberLocale(locale)).format(at.toLocal());
+
 /// "0:23" for a voice note.
 String duration(int seconds) {
   final minutes = seconds ~/ 60;

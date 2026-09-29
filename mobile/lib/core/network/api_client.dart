@@ -113,6 +113,20 @@ class ApiClient {
     await _send(() => _dio.delete<Object?>(path, cancelToken: cancelToken));
   }
 
+  /// DELETEs a resource that answers with a body — the state it left behind,
+  /// such as a household after one guardian is unlinked.
+  Future<Map<String, Object?>> deleteObject(
+    String path, {
+    CancelToken? cancelToken,
+  }) async {
+    final response = await _send(
+      () => _dio.delete<Object?>(path, cancelToken: cancelToken),
+    );
+    return response == null
+        ? const <String, Object?>{}
+        : asJsonObject(response, context: 'DELETE $path');
+  }
+
   /// Uploads one file as `multipart/form-data` under [fieldName].
   Future<Map<String, Object?>> postFile(
     String path, {

@@ -459,6 +459,40 @@ Future<List<Family>> families(Ref ref) =>
 Future<List<Educator>> educators(Ref ref) =>
     ref.watch(familiesRepositoryProvider).fetchEducators();
 
+/// One household (EXEC-M-10b), keyed by the id the page was opened with.
+///
+/// The id is the guardian set, so it goes stale the moment a guardian is
+/// linked or unlinked — which is why every mutation hands back the family
+/// as it now is and the page keeps *that*, through [apply], rather than
+/// re-fetching by a key that no longer names anything.
+@riverpod
+class FamilyDetail extends _$FamilyDetail {
+  @override
+  Future<Family> build(String familyId) =>
+      ref.watch(familiesRepositoryProvider).fetchFamily(familyId);
+
+  /// Replaces the household with what a mutation returned and drops every
+  /// cached view it changed: the Families tab, the unassigned list, and the
+  /// profile of each child the household holds.
+  void apply(Family next) {
+    state = AsyncData(next);
+    ref.invalidate(familiesProvider);
+    ref.invalidate(unassignedChildrenProvider);
+    for (final child in next.children) {
+      ref.invalidate(executiveChildProfileProvider(child.id));
+    }
+  }
+
+  /// Re-reads the household by the id it has *now*, not the one in the route.
+  Future<void> refresh() async {
+    final id = state.value?.id ?? familyId;
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => ref.read(familiesRepositoryProvider).fetchFamily(id),
+    );
+  }
+}
+
 /// Which children on the unassigned list are ticked.
 @riverpod
 class UnassignedSelection extends _$UnassignedSelection {

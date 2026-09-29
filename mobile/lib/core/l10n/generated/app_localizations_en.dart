@@ -55,6 +55,18 @@ class AppL10nEn extends AppL10n {
       'You don\'t have permission to view this. Contact the academy\'s administration if you think this is a mistake.';
 
   @override
+  String get errorLastGuardian =>
+      'This guardian can\'t be unlinked: a child would be left without one. Add another guardian first.';
+
+  @override
+  String get errorPhoneTaken =>
+      'Another account already uses this phone number.';
+
+  @override
+  String get errorGuardianAlreadyLinked =>
+      'This account is already a guardian of these children.';
+
+  @override
   String get errorSessionExpiredTitle => 'Session expired';
 
   @override
@@ -1588,6 +1600,102 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get newFamilyCta => '+ New family';
+
+  @override
+  String familyDetailSubtitle(int guardians, int children) {
+    String _temp0 = intl.Intl.pluralLogic(
+      guardians,
+      locale: localeName,
+      other: '$guardians guardians',
+      one: '1 guardian',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      children,
+      locale: localeName,
+      other: '$children children',
+      one: '1 child',
+    );
+    return '$_temp0 · $_temp1';
+  }
+
+  @override
+  String get familyGuardiansSection => 'Guardians';
+
+  @override
+  String get familyChildrenSection => 'Children';
+
+  @override
+  String get familyAddGuardian => '+ Another guardian';
+
+  @override
+  String get familyEditGuardian => 'Edit guardian';
+
+  @override
+  String get familyUnlinkGuardian => 'Unlink from family';
+
+  @override
+  String familyUnlinkConfirmTitle(String name) {
+    return 'Unlink $name from the family?';
+  }
+
+  @override
+  String get familyUnlinkConfirmBody =>
+      'The children keep their other guardians, and the account stays, with no children. A child\'s last guardian can\'t be unlinked.';
+
+  @override
+  String get familyUnlinkRecorded => '⦿ The unlink is recorded in your name.';
+
+  @override
+  String get familyUnlinkCta => 'Unlink';
+
+  @override
+  String get familyUnlinkDone => 'Guardian unlinked from the family.';
+
+  @override
+  String get familyGuardianUpdated => 'Saved.';
+
+  @override
+  String get familyGuardianLinkedExisting =>
+      'An existing account was linked to the children. Its password is unchanged.';
+
+  @override
+  String get familyGuardianLinked => 'Guardian linked to the children.';
+
+  @override
+  String get familyPhoneUnchangedHint =>
+      'Leave empty to keep the current number';
+
+  @override
+  String get familyPhoneChangeWarning =>
+      'Changing the number signs the guardian out on every device. They sign in again with the new number and the same password.';
+
+  @override
+  String get familyEditChild => 'Edit child';
+
+  @override
+  String get familyChildAdded => 'Child added to the family.';
+
+  @override
+  String get familyChildUpdated => 'Saved.';
+
+  @override
+  String get familyEditRecorded => '⦿ The change is recorded in your name.';
+
+  @override
+  String get familyNotFoundTitle => 'This family is no longer available';
+
+  @override
+  String get familyNotFoundBody =>
+      'Its guardians may have changed from another device. Go back to the families list.';
+
+  @override
+  String get familyBackToList => 'To families';
+
+  @override
+  String get saveAction => 'Save';
+
+  @override
+  String get cancelAction => 'Cancel';
 
   @override
   String get newGroupCta => '+ New group';

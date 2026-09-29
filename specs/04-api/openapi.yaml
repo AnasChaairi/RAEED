@@ -315,6 +315,8 @@ components:
             properties:
               id: { type: string, format: uuid }
               display_name: { type: string }
+              relationship: { type: string, example: mother }
+              phone_hint: { type: string, nullable: true, description: The last two digits only, masked — the full number is a recorded reveal }
               account: { type: string, enum: [active, pending] }
         children:
           type: array
@@ -323,6 +325,7 @@ components:
             properties:
               id: { type: string, format: uuid }
               full_name: { type: string }
+              dob: { type: string, format: date, nullable: true }
               group:
                 type: object
                 nullable: true
@@ -1335,6 +1338,186 @@ paths:
                 properties:
                   user_id: { type: string, format: uuid }
                   password: { type: string }
+
+  /families/{familyId}:
+    parameters:
+      - name: familyId
+        in: path
+        required: true
+        description: The family's id as `GET /families` returns it — the sorted guardian ids, joined by commas. It changes when a guardian is linked or unlinked; every mutation below returns the family it now is.
+        schema: { type: string }
+    get:
+      summary: One household (EXEC-M-10b)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Family' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /families/{familyId}/guardians:
+    parameters:
+      - name: familyId
+        in: path
+        required: true
+        schema: { type: string }
+    post:
+      summary: Link a guardian to every child of the household (ACC-05) — Executive/Admin only
+      description: >
+        A phone that already has an account is linked, not duplicated, and
+        gets no new password. A new account is handed a generated first
+        password, returned once. Recorded as `guardian.link`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [display_name, phone, relationship]
+              properties:
+                display_name: { type: string }
+                phone: { type: string, example: "+2126XXXXXXXX" }
+                relationship: { type: string, example: father }
+      responses:
+        '201':
+          description: Linked — the family as it now is, and the credential to hand over
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  family: { $ref: '#/components/schemas/Family' }
+                  credential:
+                    type: object
+                    properties:
+                      id: { type: string, format: uuid }
+                      display_name: { type: string }
+                      password: { type: string, nullable: true, description: Null when the phone already had an account }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409':
+          description: "`guardians.already_linked` — this account is already a guardian of every child here"
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+
+  /families/{familyId}/guardians/{guardianId}:
+    parameters:
+      - name: familyId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: guardianId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    patch:
+      summary: Edit a guardian — name, phone, relationship to the household's children
+      description: >
+        Every field is optional; only what is sent changes. Changing the phone
+        changes the sign-in identifier: the password is kept, every device is
+        signed out at once, and the guardian signs in again on the new number.
+        The relationship applies to each of this household's children.
+        Recorded as `guardian.update` with the names of the changed fields —
+        never the number itself.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                display_name: { type: string }
+                phone: { type: string, example: "+2126XXXXXXXX" }
+                relationship: { type: string, example: mother }
+      responses:
+        '200':
+          description: The family as it now is
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Family' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409':
+          description: "`guardians.phone_taken` — another account already signs in with that number"
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    delete:
+      summary: Unlink a guardian from every child of the household (ACC-05) — Executive/Admin only
+      description: >
+        The link rows are closed (`unlinked_at`), never deleted; the account
+        itself stays. Refused when any child would be left without a guardian.
+        Recorded as `guardian.unlink`.
+      responses:
+        '200':
+          description: The family as it now is
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Family' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409':
+          description: "`children.last_guardian` — `details.child_ids` names the children who have no other guardian"
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+
+  /families/{familyId}/children:
+    parameters:
+      - name: familyId
+        in: path
+        required: true
+        schema: { type: string }
+    post:
+      summary: Add a child to the household — linked to every current guardian
+      description: >
+        Same shape as a child in `POST /families`: no health information here,
+        the guardian enters it (CHD-04). Recorded as `child.create`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [full_name, dob]
+              properties:
+                full_name: { type: string }
+                dob: { type: string, format: date }
+                group_id: { type: string, format: uuid }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  family: { $ref: '#/components/schemas/Family' }
+                  child_id: { type: string, format: uuid }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /families/{familyId}/children/{childId}:
+    parameters:
+      - name: familyId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: childId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    patch:
+      summary: Correct a child's name or date of birth
+      description: Recorded as `child.update` (every write to `child` is logged).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                full_name: { type: string }
+                dob: { type: string, format: date }
+      responses:
+        '200':
+          description: The family as it now is
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Family' }
+        '403': { $ref: '#/components/responses/Forbidden' }
 
   /educators:
     get:
