@@ -307,8 +307,12 @@ export class AttendanceService {
     const current = existing[0];
 
     if (current) {
-      // The conflict rule, stated once, here.
-      if (recordedAtClient.getTime() < current.recorded_at.getTime()) {
+      // The conflict rule, stated once, here. It guards against *two devices*
+      // marking the same child: the person who wrote the current record is
+      // correcting themselves, not colliding with anyone, so their later tap
+      // is a correction whatever their device's clock says next to ours.
+      const otherDevice = current.recorded_by !== user.id;
+      if (otherDevice && recordedAtClient.getTime() < current.recorded_at.getTime()) {
         throw ApiError.attendanceConflict({
           child_id: record.child_id,
           current: {

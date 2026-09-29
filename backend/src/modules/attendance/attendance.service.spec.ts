@@ -109,6 +109,26 @@ describe('AttendanceService', () => {
   }
 
   describe('case 1 — the conflict rule', () => {
+    it('a later tap by the same educator is a correction, not a conflict', async () => {
+      // The educator marked "present", then changed their mind two seconds
+      // later on a phone whose clock runs a little behind the server's.
+      const { service, inserted } = buildService({
+        existing: {
+          id: 'record-existing',
+          status: 'present',
+          recorded_at: new Date('2026-09-13T16:07:00Z'),
+          recorded_by: educator.id,
+        },
+      });
+
+      await service.apply(educator, 'session-1', [
+        { child_id: 'child-1', status: 'absent', recorded_at_client: '2026-09-13T16:06:58Z' },
+      ]);
+
+      expect(inserted).toHaveLength(1);
+      expect(inserted[0].params).toEqual(expect.arrayContaining(['absent', 'record-existing']));
+    });
+
     it('rejects a mark whose recorded_at_client predates the stored record', async () => {
       // Two devices marked the same child offline. This one's tap was earlier,
       // so the server already holds a newer truth.
