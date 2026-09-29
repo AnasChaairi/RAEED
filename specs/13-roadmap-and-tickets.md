@@ -21,7 +21,7 @@ Estimates are relative (S/M/L), not days — size them against your own team's v
 |---|---|---|---|---|
 | RAEED-7 | Branch/Season/Category CRUD (Admin) | Admin-only per ability matrix; the 8 category names seeded, `min_age`/`max_age`/`gender` nullable pending open decision #1 | M | RAEED-4 |
 | RAEED-8 | Group CRUD + `group_educator` assignment | Group requires category+season+branch; a group's children must match the category's `gender` enum (validated server-side, not just UI) | M | RAEED-7 |
-| RAEED-9 | Child profile CRUD + `parent_child` linking | Unlinking a child's last guardian is rejected (`children.last_guardian`, 409); guardian linking is Executive/Admin-only | M | RAEED-7 |
+| RAEED-9 | Child profile CRUD + `parent_child` linking | Unlinking a child's last guardian is rejected (`children.last_guardian`, 409); guardian linking is Executive/Admin-only. Family editing lives under `/families/{familyId}` (guardian edit / link / unlink, child add / edit) and on the mobile family detail page (EXEC-M-10b); a guardian's phone change keeps the password, signs every device out and is logged as `guardian.update` without the number | M | RAEED-7 |
 | RAEED-10 | Field-tier change requests | `POST /children/{id}/change-requests` implements the self-edit-instant / notify / approval tiers from `05-authorization.md` | M | RAEED-9 |
 | RAEED-11 | Excel bulk import | Dry-run/preview step shows row-level validation errors before commit — don't ship the "silent partial import" failure mode | L | RAEED-8, RAEED-9 |
 | RAEED-12 | Parent Home + Child Profile screens | Per the screen spec in `06-mobile-app-spec.md`: skeleton loading, cached-offline degrade, health-alert badge is icon-only in list views | M | RAEED-9, RAEED-6 |
