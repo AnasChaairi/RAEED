@@ -1845,7 +1845,7 @@
   "@actionOther": {},
   "eduTabToday": "اليوم",
   "@eduTabToday": {},
-  "eduTabSessions": "الجلسات",
+  "eduTabSessions": "الأنشطة",
   "@eduTabSessions": {},
   "eduTabGroups": "المجموعات",
   "@eduTabGroups": {},
@@ -2111,7 +2111,7 @@
   },
   "attStatusExcusedShort": "معذور",
   "@attStatusExcusedShort": {},
-  "sessTitle": "الجلسات",
+  "sessTitle": "الأنشطة",
   "@sessTitle": {},
   "sessWeekRange": "أسبوع {from} – {to}",
   "@sessWeekRange": {
