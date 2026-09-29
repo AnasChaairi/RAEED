@@ -259,21 +259,6 @@ class GuardianCredential {
   final String? password;
 }
 
-/// One weekly slot of a group's schedule.
-@immutable
-class ScheduleSlot {
-  const ScheduleSlot({
-    required this.weekday,
-    required this.startsAt,
-    required this.endsAt,
-  });
-
-  /// 0 is Sunday.
-  final int weekday;
-  final String startsAt;
-  final String endsAt;
-}
-
 /// The new-group form.
 @immutable
 class GroupDraft {
@@ -281,11 +266,6 @@ class GroupDraft {
     this.name = '',
     this.categoryId,
     this.capacity = 20,
-    this.slot = const ScheduleSlot(
-      weekday: 5,
-      startsAt: '16:00',
-      endsAt: '18:00',
-    ),
     this.educatorIds = const {},
     this.childIds = const {},
   });
@@ -293,7 +273,6 @@ class GroupDraft {
   final String name;
   final String? categoryId;
   final int capacity;
-  final ScheduleSlot slot;
   final Set<String> educatorIds;
   final Set<String> childIds;
 
@@ -305,14 +284,12 @@ class GroupDraft {
     String? name,
     String? categoryId,
     int? capacity,
-    ScheduleSlot? slot,
     Set<String>? educatorIds,
     Set<String>? childIds,
   }) => GroupDraft(
     name: name ?? this.name,
     categoryId: categoryId ?? this.categoryId,
     capacity: capacity ?? this.capacity,
-    slot: slot ?? this.slot,
     educatorIds: educatorIds ?? this.educatorIds,
     childIds: childIds ?? this.childIds,
   );

@@ -11,7 +11,6 @@ import '../domain/family.dart';
 import 'announcements_tab.dart' show FilterPill;
 import 'executive_providers.dart';
 import 'manage_screen.dart' show ManageTab;
-import 'widgets/executive_card.dart';
 import 'widgets/section_header.dart';
 
 /// EXEC-M-10 — the new-group form (`/manage/groups/new`).
@@ -66,15 +65,6 @@ class _NewGroupScreenState extends ConsumerState<NewGroupScreen> {
     final categories = ref.watch(categoriesProvider).value ?? const [];
     final educators = ref.watch(educatorsProvider).value ?? const [];
     final unassigned = ref.watch(unassignedChildrenProvider).value ?? const [];
-    final weekdays = [
-      l10n.weekdaySun,
-      l10n.weekdayMon,
-      l10n.weekdayTue,
-      l10n.weekdayWed,
-      l10n.weekdayThu,
-      l10n.weekdayFri,
-      l10n.weekdaySat,
-    ];
     final checklist = [
       _draft.hasName ? l10n.checklistNameOk : l10n.checklistNameMissing,
       if (_draft.categoryId == null) l10n.checklistCategoryMissing,
@@ -133,83 +123,10 @@ class _NewGroupScreenState extends ConsumerState<NewGroupScreen> {
                     ],
                   ),
                   const SizedBox(height: RaeedSpacing.md),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            label(l10n.fieldCapacity),
-                            _Stepper(
-                              value: _draft.capacity,
-                              onChanged: (v) =>
-                                  _update(_draft.copyWith(capacity: v)),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: RaeedSpacing.sm + 2),
-                      Expanded(
-                        flex: 13,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            label(l10n.fieldSchedule),
-                            ExecutiveCard(
-                              radius: RaeedRadius.lg,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: RaeedSpacing.md,
-                                vertical: RaeedSpacing.xs,
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton<int>(
-                                        value: _draft.slot.weekday,
-                                        isDense: true,
-                                        isExpanded: true,
-                                        style: context.type.label.copyWith(
-                                          color: palette.ink,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                        items: [
-                                          for (var i = 0; i < 7; i++)
-                                            DropdownMenuItem(
-                                              value: i,
-                                              child: Text(weekdays[i]),
-                                            ),
-                                        ],
-                                        onChanged: (v) => v == null
-                                            ? null
-                                            : _update(
-                                                _draft.copyWith(
-                                                  slot: ScheduleSlot(
-                                                    weekday: v,
-                                                    startsAt:
-                                                        _draft.slot.startsAt,
-                                                    endsAt: _draft.slot.endsAt,
-                                                  ),
-                                                ),
-                                              ),
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    '${_draft.slot.startsAt}–${_draft.slot.endsAt}',
-                                    style: context.type
-                                        .tabular(context.type.caption)
-                                        .copyWith(color: palette.inkDim),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  label(l10n.fieldCapacity),
+                  _Stepper(
+                    value: _draft.capacity,
+                    onChanged: (v) => _update(_draft.copyWith(capacity: v)),
                   ),
                   const SizedBox(height: RaeedSpacing.md),
                   label(l10n.fieldEducators),

@@ -226,7 +226,7 @@ Profile card (name, branch scope), a links card to the sections below (Children 
 | | |
 |---|---|
 | Purpose | Put every child in a group, invite every family, create groups |
-| Components | Three tabs — **Unassigned** (multi-select → assign sheet showing each group's capacity after the move, with an over-capacity warning and confirm), **Families** (status chip active / partial / pending, resend invitation, add child), **Groups** (capacity bar, "assign children"); **New group** form (name, category chips, capacity stepper, schedule slot, educators, optional children, checklist, recorded marker); **New family** wizard (guardians → children with main group or "later" → review with what will happen) |
+| Components | Three tabs — **Unassigned** (multi-select → assign sheet showing each group's capacity after the move, with an over-capacity warning and confirm), **Families** (status chip active / partial / pending, resend invitation, add child), **Groups** (capacity bar, "assign children"); **New group** form (name, category chips, capacity stepper, educators, optional children, checklist, recorded marker — no schedule here, it is set on the group afterwards); **New family** wizard (guardians → children with main group or "later" → review with what will happen) |
 | API | `GET /children?unassigned=true`, `POST /groups/{id}/children`, `GET /families`, `POST /invitations`, `GET /groups`, `GET /educators`, `GET /categories`, `POST /groups`, `POST /families` |
 | Empty | Unassigned: "every child is in a group" (reassuring) |
 
