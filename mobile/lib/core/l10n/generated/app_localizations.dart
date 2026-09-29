@@ -3786,7 +3786,7 @@ abstract class AppL10n {
   /// No description provided for @eduTabSessions.
   ///
   /// In ar, this message translates to:
-  /// **'الجلسات'**
+  /// **'الأنشطة'**
   String get eduTabSessions;
 
   /// No description provided for @eduTabGroups.
@@ -4152,7 +4152,7 @@ abstract class AppL10n {
   /// No description provided for @sessTitle.
   ///
   /// In ar, this message translates to:
-  /// **'الجلسات'**
+  /// **'الأنشطة'**
   String get sessTitle;
 
   /// No description provided for @sessWeekRange.

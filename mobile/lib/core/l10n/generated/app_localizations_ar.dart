@@ -2364,7 +2364,7 @@ class AppL10nAr extends AppL10n {
   String get eduTabToday => 'اليوم';
 
   @override
-  String get eduTabSessions => 'الجلسات';
+  String get eduTabSessions => 'الأنشطة';
 
   @override
   String get eduTabGroups => 'المجموعات';
@@ -2670,7 +2670,7 @@ class AppL10nAr extends AppL10n {
   String get attStatusExcusedShort => 'معذور';
 
   @override
-  String get sessTitle => 'الجلسات';
+  String get sessTitle => 'الأنشطة';
 
   @override
   String sessWeekRange(String from, String to) {
